@@ -6,7 +6,7 @@ include setup.py
 include lsa/__init__.py
 include lsa/compcore.cpp
 include lsa/compcore.h
-include lsa/compcore.i
+include lsa/compcore_wrap.h
 include lsa/compcore.py
 include lsa/lsaio.py
 include lsa/lsalib.py
