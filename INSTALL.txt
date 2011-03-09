@@ -1,0 +1,90 @@
+INSTALL.txt(v0.0.2)
+
+ALL PLATFORMS:
+
+    you need administrator privilege to install the software system wide
+    you can still use this package without installation under Linux/Unix/Mac(Darwin)
+    you can still use this package without installation under win32 
+    by using source distribution like as described following in Linux/Unix/Mac(Darwin) section
+
+Linux/Unix/Mac(Darwin):
+
+    1. check your python version is >= 2.5:
+        $ python --version
+    if not, download and install it from: http://www.python.org 
+
+    2. check numpy version is >= 1.0:
+        $ pydoc numpy.version | grep version\ =
+    if not, download and install it from: http://www.scipy.org
+
+    3. check scipy version is >= 0.6:
+        $ pydoc scipy.version | grep version\ =
+    if not, download and install it from: http://www.scipy.org
+    
+    4. download LSA package from: 
+        $ wget https://128.125.86.98/svn/lsa/tags/current/dist/lsa-0.0.2.tar.gz \
+            --no-check-certificate
+
+    5. unzip the archive:
+        $ tar -zxvf lsa-0.0.2.tar.gz
+
+    6. install:
+        $ cd lsa-0.0.2
+        $ sudo python setup.py install --install-scripts=~/scripts
+
+    7. check if /usr/bin is in your PATH
+        $ echo $PATH | grep /usr/bin
+       if not, add it into your .bashrc(bash) or other shell profile files
+        $ export PATH=$PATH:"/usr/bin"
+
+    8. test the excutables
+        $ lsa-compuate.py -h
+        $ lsa-query.py -h
+
+    9. you can save your time by add these two lines into your shell profile file
+        $ alias lsac="lsa-compute.py"
+        $ alias lsaq="lsa-query.py"
+
+    10. for analysis examples see documentation file at:
+            https://128.125.86.98/svn/lsa/tags/current/doc/Local%20Similarity%20Alignment.ppt
+
+Win32:
+
+    0. open a command line by run "cmd" command, it will give you a DOS prompt "..\>"
+       >
+       and make sure python is in your %PATH%, look at this documentation:
+       http://www.imladris.com/Scripts/PythonForWindows.html
+
+    1. eye check your python version is >= 2.5:
+       > python --version
+    if not, download and install it from: http://www.python.org 
+
+    2. eye check numpy version is >= 1.0, it is at the last line:
+        $ pydoc numpy.version
+    if not, download and install it from: http://www.scipy.org
+
+    3. check scipy version is >= 0.6, it is at the last line:
+        $ pydoc scipy.version 
+    if not, download and install it from: http://www.scipy.org
+    
+    4. download LSA package from: 
+        https://128.125.86.98/svn/lsa/tags/current/dist/lsa-0.0.2.win32.exe
+
+    5. run the installer and click all the next through process
+       check if python script directory(eg. "C:\Python\Scripts") is in your %PATH% environment variable
+        > echo %PATH%
+       if not, add it by click:
+        Control Panel -> System -> Advanced -> System Variables
+       edit "PATH" entry in it and add:
+        ";C:\Python\Scripts"
+       you can now check again by:
+        > echo %PATH%
+       
+    7 test the executables:
+        > lsa-compuate.py -h
+        > lsa-query.py -h
+    
+    8. for analysis examples see documentation file at:
+            https://128.125.86.98/svn/lsa/tags/current/doc/Local%20Similarity%20Alignment.ppt
+
+NOW YOU CAN ENJOY!
