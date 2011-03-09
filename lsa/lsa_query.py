@@ -42,7 +42,8 @@ import pdb
 #import lsaio
 from lsa import lsaio
 
-if __name__=="__main__":
+def main():
+
     parser = optparse.OptionParser("usage: %prog [options] lsaFile")
 
     # 3 optional arguments: delayLimit, fillMethod, permuNum
@@ -84,54 +85,58 @@ if __name__=="__main__":
     print >>sys.stderr, "threshold pValue=" + repr(pValue)
     print >>sys.stderr, "threshold pCorr=" + repr(pCorr)
 
-print >>sys.stderr, "testing lsaFile and outputFile..."
+    print >>sys.stderr, "testing lsaFile and outputFile..."
 
-lsaTable = lsaio.tryIO(lsaFile, "rU")
-rawTable = lsaio.readTable(lsaTable, '\t')
-outTable = sys.stdout
-if outputFile != "":
-    outTable=lsaio.tryIO(outputFile,"w")
+    lsaTable = lsaio.tryIO(lsaFile, "rU")
+    rawTable = lsaio.readTable(lsaTable, '\t')
+    outTable = sys.stdout
+    if outputFile != "":
+        outTable=lsaio.tryIO(outputFile,"w")
 
-print >>sys.stderr, "querying the lsatable..."
+    print >>sys.stderr, "querying the lsatable..."
 
-queryTable=lsaio.lowPartTable(rawTable, 8, pValue)
-queryTable=lsaio.lowPartTable(queryTable, 9, pCorr)
-queryTable=lsaio.upPartTable(queryTable, 9, -pCorr)
-queryTable=lsaio.lowPartTable(queryTable, 7, float(delayLimit))
-queryTable=lsaio.upPartTable(queryTable, 7, -float(delayLimit))
+    queryTable=lsaio.lowPartTable(rawTable, 8, pValue)
+    queryTable=lsaio.lowPartTable(queryTable, 9, pCorr)
+    queryTable=lsaio.upPartTable(queryTable, 9, -pCorr)
+    queryTable=lsaio.lowPartTable(queryTable, 7, float(delayLimit))
+    queryTable=lsaio.upPartTable(queryTable, 7, -float(delayLimit))
 
-print >>sys.stderr, "removing trivial case where zero vectors perfectly correlated..." 
+    print >>sys.stderr, "removing trivial case where zero vectors perfectly correlated..." 
 
-#if removeZeor == "yes": # remove zero vector trivial cases
-queryTable=lsaio.nonequalPartTable(queryTable, 3, 1.)
+    #if removeZeor == "yes": # remove zero vector trivial cases
+    queryTable=lsaio.nonequalPartTable(queryTable, 3, 1.)
 
-#if referFile != "":
-#    print "labeling the result table..."
-#    referTable=lsaio.tryIO(referFile, "r")
-#    factorLabels=lsaio.readFirstCol(referTable)
-#    lsaio.closeIO(referTable)
-#    queryTable=lsaio.labelTable(queryTable, 1, factorLabels)
-#    queryTable=lsaio.labelTable(queryTable, 2, factorLabels)
+    #if referFile != "":
+    #    print "labeling the result table..."
+    #    referTable=lsaio.tryIO(referFile, "r")
+    #    factorLabels=lsaio.readFirstCol(referTable)
+    #    lsaio.closeIO(referTable)
+    #    queryTable=lsaio.labelTable(queryTable, 1, factorLabels)
+    #    queryTable=lsaio.labelTable(queryTable, 2, factorLabels)
 
-if listFactors != "":
-    if referFile == "":
-        print >>sys.stderr, "Error: can't select the list of Facotrs w/o referFile, try again..."
-        exit(21)
-    else:
-        print >>sys.stderr, "selecting entries involve interested factors..."
-        listFactors = listFactors.split(',')
-        queryTable=lsaio.selectFactors(queryTable, listFactors)
+    if listFactors != "":
+        if referFile == "":
+            print >>sys.stderr, "Error: can't select the list of Facotrs w/o referFile, try again..."
+            exit(21)
+        else:
+            print >>sys.stderr, "selecting entries involve interested factors..."
+            listFactors = listFactors.split(',')
+            queryTable=lsaio.selectFactors(queryTable, listFactors)
 
-print >>sys.stderr, "writing up result file..."
-lsaio.writeTable(outTable, queryTable, '\t')
+    print >>sys.stderr, "writing up result file..."
+    lsaio.writeTable(outTable, queryTable, '\t')
 
-if sifFile != "":
-    print >>sys.stderr, "filtering result for as SIF file for cytoscape..."
-    sifTable=lsaio.tryIO(sifFile,"w")
-    lsaio.writeTable(sifTable, lsaio.toSif(queryTable), "\t")
-    lsaio.closeIO(sifTable)
+    if sifFile != "":
+        print >>sys.stderr, "filtering result for as SIF file for cytoscape..."
+        sifTable=lsaio.tryIO(sifFile,"w")
+        lsaio.writeTable(sifTable, lsaio.toSif(queryTable), "\t")
+        lsaio.closeIO(sifTable)
 
-print >>sys.stderr, "finishing up..."
-lsaio.closeIO(lsaTable)
-print >>sys.stderr, "Thank you for using lsa-query, byebye!"
-lsaio.closeIO(outTable)
+    print >>sys.stderr, "finishing up..."
+    lsaio.closeIO(lsaTable)
+    print >>sys.stderr, "Thank you for using lsa-query, byebye!"
+    lsaio.closeIO(outTable)
+
+if __name__=="__main__":
+    main()
+

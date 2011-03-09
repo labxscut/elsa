@@ -34,11 +34,10 @@ dependent pairwise correlation between two sequence of evenly spaced
 observation data. Permutation test is used to estimate the P-value. 
 The results can be summarized and easily queried for desired analysis.
 """
-
-from distutils.core import setup, Extension
+from setuptools import setup, find_packages
+from distutils.core import Extension
 from distutils.command import build
-import os
-import sys
+import os, sys
 
 doclines=__doc__.splitlines()
 
@@ -63,19 +62,32 @@ setup(name="lsa",
     version="0.1.0",
     description=doclines[0],
     long_description="\n".join(doclines[2:]),
-    author="Li Xia",
+    author="Li Charlie Xia",
     author_email="lxia@usc.edu",
-    url="somewhere to download",
+    url="http://meta.usc.edu/softs/lsa",
     license="BSD",
     platforms=["Linux"],
-    packages=['lsa'],
+    packages=find_packages(exclude=['ez_setup', 'test', 'doc']),
+    include_package_data=True,
+    #packages=['lsa'],
     requires=['numpy(>=1.1)','scipy(>=0.6)','python(>=2.5)','matplotlib(>=0.98)'],
+    #install_requires=['numpy(>=1.1)','scipy(>=0.6)','python(>=2.5)','matplotlib(>=0.98)'],
     provides=['lsa'],
+    #ext_modules = [Extension('lsa._compcore', sources = ['lsa/compcore_wrap.cpp', 'lsa/compcore.cpp'],
+    #                                          depends = ['lsa/compcore.h'],
+    #               )],
     ext_modules = [Extension('lsa._compcore', sources = ['lsa/compcore.i', 'lsa/compcore.cpp'],
                                    depends=['lsa/compcore.h'],
                                    swig_opts=['-c++', '-nomodern', '-classic', '-nomodernargs'])],
     py_modules = ['lsa.compcore', 'lsa.lsalib', 'lsa.lsaio', 'lsa.lsalibx'],
-    scripts = ['lsa-standalone/lsa-compute.py', 'lsa-standalone/lsa-query.py', 'lsa-standalone/lsa-infer.py'],
+    #scripts = ['lsa-standalone/lsa-compute.py', 'lsa-standalone/lsa-query.py', 'lsa-standalone/lsa-infer.py'],
     cmdclass = {'build': my_build},
     data_files = [('',['INSTALL.txt','LICENSE.txt', ])],
+    entry_points = { 
+        'console_scripts': [
+            'lsa_compute = lsa.lsa_compute:main',
+            'lsa_infer = lsa.lsa_infer:main',
+            'lsa_query = lsa.lsa_query:main',
+        ]
+    }
 )

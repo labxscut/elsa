@@ -50,7 +50,9 @@ from lsa import lsalib
 from lsa import lsalibx
 
 
-if __name__=="__main__":
+
+def main():
+
   parser = optparse.OptionParser("usage: %prog [options] referFile fLabel1 fLabel2 outFile")
 
   parser.add_option("-n", "--normalLize", dest="normalLize", default="",
@@ -178,3 +180,6 @@ if __name__=="__main__":
   print >>sys.stderr, "finishing up..."
   lsaio.closeIO(dataTable)
   print >>sys.stderr, "Thank you for using lsa-infer, byebye!"
+
+if __name__=="__main__":
+  main()

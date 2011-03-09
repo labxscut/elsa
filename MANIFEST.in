@@ -6,11 +6,11 @@ include setup.py
 include lsa/__init__.py
 include lsa/compcore.cpp
 include lsa/compcore.h
-include lsa/compcore_wrap.h
+include lsa/compcore_wrap.cpp
 include lsa/compcore.py
 include lsa/lsaio.py
 include lsa/lsalib.py
 include lsa/lsalibx.py
-include lsa-standalone/lsa-compute.py
-include lsa-standalone/lsa-infer.py
-include lsa-standalone/lsa-query.py
+include lsa/lsa_compute.py
+include lsa/lsa_infer.py
+include lsa/lsa_query.py
