@@ -73,6 +73,25 @@ public:
   MatrixInt trace;
 };
 
+
+//// LSA with replicates data types
+class LSA_Rep_Data{
+public:
+  int max_shift;
+  MatrixDouble X;
+  MatrixDouble Y;
+  LSA_Rep_Data(){ MatrixDouble X; MatrixDouble Y; max_shift=std::numeric_limits<int>::infinity(); };
+  LSA_Rep_Data(int shift, MatrixDouble x, MatrixDouble y): max_shift(shift), X(x), Y(y){ };
+  inline int random_shuffle();
+};
+
+int LSA_Rep_Data::random_shuffle(){  //shuffle rows, we want each column is a time sequence, do proper transformation at input
+  std::random_shuffle(X.begin(),X.end());
+  std::random_shuffle(Y.begin(),Y.end());
+  return 0;
+};
+
+//// Permutation test template
 class PT_Return {
 public:
 	VectorDouble scores;
@@ -83,6 +102,7 @@ public:
 LLA_Result DP_lla( const LLA_Data& ); //const: passing the reference not for modifying
 LA_Result ST_la( const LLA_Data& );
 LSA_Result DP_lsa( const LSA_Data& ); 
+LSA_Result DP_rep_lsa( const LSA_Rep_Data& );
 
 template <class DataType, class ResultType>
     PT_Return PT( DataType data, const ResultType& result, int pn, ResultType (*test_func)( const DataType& ) )

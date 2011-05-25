@@ -75,7 +75,7 @@ def main():
         parser.error("incorrect number of arguments, use -h to get more help")
 
     #get the arguments
-    print >>sys.stderr, "lsa-compute version 0.1.1"
+    print >>sys.stderr, "lsa-compute"
     print >>sys.stderr, "copyright Li Xia, lxia@usc.edu"
     print >>sys.stderr, "learning arguments..."
     delayLimit = int(options.delayLimit)
@@ -220,3 +220,4 @@ def main():
 
 if __name__=="__main__":
     main()
+    exit(0)
