@@ -117,7 +117,7 @@ def bootstrapCI(series1, series2, delayLimit, bootCI, bootNum, fTransform, zNorm
 
 	"""
 	
-  print "------Bootstrapping------"
+  ###print "------Bootstrapping------"
   lsad = compcore.LSA_Data()
   BS_set = np.zeros(bootNum, dtype='float')
   for i in range(0, bootNum):
@@ -146,7 +146,7 @@ def permuPvalue(series1, series2, delayLimit, permuNum, Smax, fTransform, zNorma
 
 	"""
 	
-  print "-------permutation------"
+  ###print "-------permutation------"
   lsad = compcore.LSA_Data()
   PP_set = np.zeros(permuNum, dtype='float')
   Xz = zNormalize(fTransform(series1))
@@ -196,8 +196,8 @@ def storeyQvalue(pvalues, lam=np.arange(0,0.9,0.05), method='smoother', robust=F
   pi_0 = np.max( [np.min( [np.min(pi_0), 1]), 0] ) #0<=pi_0<=1
   p_argsort = np.argsort(pvalues)
   p_ranks = tied_rank(pvalues)
-  print "lam,pi_set,pi_0:", lam, pi_set, pi_0
-  print "pi_0, p_ranks, pvalues, len(pvalues)", pi_0, p_ranks, pvalues, len(pvalues)
+  #print "lam,pi_set,pi_0:", lam, pi_set, pi_0
+  #print "pi_0, p_ranks, pvalues, len(pvalues)", pi_0, p_ranks, pvalues, len(pvalues)
   if robust:
     qvalues = pi_0*len(pvalues)*pvalues/(p_ranks*(1-np.power((1-pvalues),len(pvalues))))
   else:
@@ -274,13 +274,13 @@ def fillMissing(tseries, method):
 
     Args:
       tseries(np.array):  one time series with no replicates
-      method(str):  filling method, choices ['discard', 'zero', 'linear', 'slinear', 'nearest', 'quadratic', 'cubic'] 
+      method(str):  filling method, choices ['none', 'zero', 'linear', 'slinear', 'nearest', 'quadratic', 'cubic'] 
 
     Reterns:
       tseries with missing data filled
   """
   
-  if method == 'discard':
+  if method == 'none':
     return np.nan_to_num(tseries)
   else:
     y = tseries[np.logical_not(np.isnan(tseries))]
@@ -288,7 +288,7 @@ def fillMissing(tseries, method):
     try:
       spline_fit = sp.interpolate.interp1d( x, y, method )
     except:
-      print >>sys.stderr, "cannot fill missing values using ", method, "method, fall back to discard" 
+      print >>sys.stderr, "cannot fill missing values using ", method, "method, fall back to none" 
       return np.nan_to_num(tseries)
     yy = np.zeros( len(tseries), dtype='float' )
     for i in range(0, len(tseries)):
@@ -320,14 +320,16 @@ def applyAnalysis( cleanData, delayLimit=3, bootCI=.95, bootNum=1000, permuNum=1
   """	
 
   factorNum = cleanData.shape[0]
-  spotNum = cleanData.shape[1]
-  repNum = cleanData.shape[2]
+  repNum = cleanData.shape[1]
+  spotNum = cleanData.shape[2]
   lsaTable = [None]*(factorNum*(factorNum-1)/2)
   pvalues = np.zeros(factorNum*(factorNum-1)/2, dtype='float')
 
+  #print factorNum, repNum, spotNum, lsaTable, pvalues
+
   ti = 0
   for i in xrange(0, factorNum-1):
-    for j in xrange(i, factorNum):
+    for j in xrange(i+1, factorNum):
       LSA_result = singleLSA(cleanData[i], cleanData[j], delayLimit, fTransform, zNormalize, True)                          # do LSA computation
       Smax = LSA_result.score                                                                                         # get Smax
       (Sl, Su) = bootstrapCI(cleanData[i], cleanData[j], delayLimit, bootCI, bootNum, fTransform, zNormalize)         # do Bootstrap CI
@@ -335,10 +337,12 @@ def applyAnalysis( cleanData, delayLimit=3, bootCI=.95, bootNum=1000, permuNum=1
       pvalues[ti] = permuP
       Al = len(LSA_result.trace)
       (Xs, Ys, Al) = (LSA_result.trace[Al-1][0], LSA_result.trace[Al-1][1], len(LSA_result.trace))
-      PCC = sp.corrcoef( cleanData[i], cleanData[j] )[0,1]
-      tcdf = sp.stats.distributions.t.cdf( PCC*np.sqrt((spotNum-1)/np.float64(1.000000001-PCC**2)), (spotNum-1))
-      P_PCC = .5 + np.sign(PCC)*(.5 - tcdf )                                                                             #addhoc for perfect correlation
+      (PCC, P_PCC) = sp.stats.pearsonr(np.mean(cleanData[i], axis=0), np.mean(cleanData[j], axis=0))
+      #PCC = sp.corrcoef( cleanData[i], cleanData[j] )[0,1]
+      #tcdf = sp.stats.distributions.t.cdf( PCC*np.sqrt((spotNum-1)/np.float(1.000000001-PCC**2)), (spotNum-1))
+      #P_PCC = .5 + np.sign(PCC)*(.5 - tcdf )                                                                             #addhoc for perfect correlation
       lsaTable[ti] = [i, j, Smax, Sl, Su, Xs, Ys, Al, Xs-Ys, permuP, PCC, P_PCC]
+      ti += 1
 
   #print "pvalues", pvalues
   qvalues = storeyQvalue( pvalues )

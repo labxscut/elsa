@@ -34,11 +34,8 @@
     interpreting the parameter to actual list index
 """
 
-import os
-import sys
-import csv
+import os, sys, csv
 #for debug only
-import pdb
 
 def tryIO( file, mode ):
     """ Test the IO file before using it.
