@@ -2688,30 +2688,26 @@ SWIG_Python_MustGetPtr(PyObject *obj, swig_type_info *ty, int argnum, int flags)
 
 /* -------- TYPES TABLE (BEGIN) -------- */
 
-#define SWIGTYPE_p_LA_Result swig_types[0]
-#define SWIGTYPE_p_LLA_Data swig_types[1]
-#define SWIGTYPE_p_LLA_Result swig_types[2]
-#define SWIGTYPE_p_LSA_Data swig_types[3]
-#define SWIGTYPE_p_LSA_Result swig_types[4]
-#define SWIGTYPE_p_allocator_type swig_types[5]
-#define SWIGTYPE_p_char swig_types[6]
-#define SWIGTYPE_p_difference_type swig_types[7]
-#define SWIGTYPE_p_f_r_q_const__LSA_Data_bool__LSA_Result swig_types[8]
-#define SWIGTYPE_p_p_PyObject swig_types[9]
-#define SWIGTYPE_p_size_type swig_types[10]
-#define SWIGTYPE_p_std__invalid_argument swig_types[11]
-#define SWIGTYPE_p_std__vectorT_double_std__allocatorT_double_t_t swig_types[12]
-#define SWIGTYPE_p_std__vectorT_double_std__allocatorT_double_t_t__allocator_type swig_types[13]
-#define SWIGTYPE_p_std__vectorT_int_std__allocatorT_int_t_t swig_types[14]
-#define SWIGTYPE_p_std__vectorT_int_std__allocatorT_int_t_t__allocator_type swig_types[15]
-#define SWIGTYPE_p_std__vectorT_std__vectorT_double_std__allocatorT_double_t_t_std__allocatorT_std__vectorT_double_std__allocatorT_double_t_t_t_t swig_types[16]
-#define SWIGTYPE_p_std__vectorT_std__vectorT_double_std__allocatorT_double_t_t_std__allocatorT_std__vectorT_double_std__allocatorT_double_t_t_t_t__allocator_type swig_types[17]
-#define SWIGTYPE_p_std__vectorT_std__vectorT_int_std__allocatorT_int_t_t_std__allocatorT_std__vectorT_int_std__allocatorT_int_t_t_t_t swig_types[18]
-#define SWIGTYPE_p_std__vectorT_std__vectorT_int_std__allocatorT_int_t_t_std__allocatorT_std__vectorT_int_std__allocatorT_int_t_t_t_t__allocator_type swig_types[19]
-#define SWIGTYPE_p_swig__SwigPyIterator swig_types[20]
-#define SWIGTYPE_p_value_type swig_types[21]
-static swig_type_info *swig_types[23];
-static swig_module_info swig_module = {swig_types, 22, 0, 0, 0, 0};
+#define SWIGTYPE_p_LSA_Data swig_types[0]
+#define SWIGTYPE_p_LSA_Result swig_types[1]
+#define SWIGTYPE_p_allocator_type swig_types[2]
+#define SWIGTYPE_p_char swig_types[3]
+#define SWIGTYPE_p_difference_type swig_types[4]
+#define SWIGTYPE_p_p_PyObject swig_types[5]
+#define SWIGTYPE_p_size_type swig_types[6]
+#define SWIGTYPE_p_std__invalid_argument swig_types[7]
+#define SWIGTYPE_p_std__vectorT_double_std__allocatorT_double_t_t swig_types[8]
+#define SWIGTYPE_p_std__vectorT_double_std__allocatorT_double_t_t__allocator_type swig_types[9]
+#define SWIGTYPE_p_std__vectorT_int_std__allocatorT_int_t_t swig_types[10]
+#define SWIGTYPE_p_std__vectorT_int_std__allocatorT_int_t_t__allocator_type swig_types[11]
+#define SWIGTYPE_p_std__vectorT_std__vectorT_double_std__allocatorT_double_t_t_std__allocatorT_std__vectorT_double_std__allocatorT_double_t_t_t_t swig_types[12]
+#define SWIGTYPE_p_std__vectorT_std__vectorT_double_std__allocatorT_double_t_t_std__allocatorT_std__vectorT_double_std__allocatorT_double_t_t_t_t__allocator_type swig_types[13]
+#define SWIGTYPE_p_std__vectorT_std__vectorT_int_std__allocatorT_int_t_t_std__allocatorT_std__vectorT_int_std__allocatorT_int_t_t_t_t swig_types[14]
+#define SWIGTYPE_p_std__vectorT_std__vectorT_int_std__allocatorT_int_t_t_std__allocatorT_std__vectorT_int_std__allocatorT_int_t_t_t_t__allocator_type swig_types[15]
+#define SWIGTYPE_p_swig__SwigPyIterator swig_types[16]
+#define SWIGTYPE_p_value_type swig_types[17]
+static swig_type_info *swig_types[19];
+static swig_module_info swig_module = {swig_types, 18, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -12796,643 +12792,6 @@ SWIGINTERN PyObject *LSA_Result_swigregister(PyObject *SWIGUNUSEDPARM(self), PyO
   return SWIG_Py_Void();
 }
 
-SWIGINTERN PyObject *_wrap_LLA_Data_max_shift_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  LLA_Data *arg1 = (LLA_Data *) 0 ;
-  int arg2 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  int val2 ;
-  int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"OO:LLA_Data_max_shift_set",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LLA_Data, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LLA_Data_max_shift_set" "', argument " "1"" of type '" "LLA_Data *""'"); 
-  }
-  arg1 = reinterpret_cast< LLA_Data * >(argp1);
-  ecode2 = SWIG_AsVal_int(obj1, &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "LLA_Data_max_shift_set" "', argument " "2"" of type '" "int""'");
-  } 
-  arg2 = static_cast< int >(val2);
-  if (arg1) (arg1)->max_shift = arg2;
-  resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_LLA_Data_max_shift_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  LLA_Data *arg1 = (LLA_Data *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  int result;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:LLA_Data_max_shift_get",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LLA_Data, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LLA_Data_max_shift_get" "', argument " "1"" of type '" "LLA_Data *""'"); 
-  }
-  arg1 = reinterpret_cast< LLA_Data * >(argp1);
-  result = (int) ((arg1)->max_shift);
-  resultobj = SWIG_From_int(static_cast< int >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_LLA_Data_X_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  LLA_Data *arg1 = (LLA_Data *) 0 ;
-  VectorDouble *arg2 = (VectorDouble *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  void *argp2 = 0 ;
-  int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"OO:LLA_Data_X_set",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LLA_Data, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LLA_Data_X_set" "', argument " "1"" of type '" "LLA_Data *""'"); 
-  }
-  arg1 = reinterpret_cast< LLA_Data * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_std__vectorT_double_std__allocatorT_double_t_t, 0 |  0 );
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LLA_Data_X_set" "', argument " "2"" of type '" "VectorDouble *""'"); 
-  }
-  arg2 = reinterpret_cast< VectorDouble * >(argp2);
-  if (arg1) (arg1)->X = *arg2;
-  resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_LLA_Data_X_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  LLA_Data *arg1 = (LLA_Data *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  VectorDouble *result = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:LLA_Data_X_get",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LLA_Data, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LLA_Data_X_get" "', argument " "1"" of type '" "LLA_Data *""'"); 
-  }
-  arg1 = reinterpret_cast< LLA_Data * >(argp1);
-  result = (VectorDouble *)& ((arg1)->X);
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__vectorT_double_std__allocatorT_double_t_t, 0 |  0 );
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_LLA_Data_Y_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  LLA_Data *arg1 = (LLA_Data *) 0 ;
-  VectorDouble *arg2 = (VectorDouble *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  void *argp2 = 0 ;
-  int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"OO:LLA_Data_Y_set",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LLA_Data, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LLA_Data_Y_set" "', argument " "1"" of type '" "LLA_Data *""'"); 
-  }
-  arg1 = reinterpret_cast< LLA_Data * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_std__vectorT_double_std__allocatorT_double_t_t, 0 |  0 );
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LLA_Data_Y_set" "', argument " "2"" of type '" "VectorDouble *""'"); 
-  }
-  arg2 = reinterpret_cast< VectorDouble * >(argp2);
-  if (arg1) (arg1)->Y = *arg2;
-  resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_LLA_Data_Y_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  LLA_Data *arg1 = (LLA_Data *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  VectorDouble *result = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:LLA_Data_Y_get",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LLA_Data, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LLA_Data_Y_get" "', argument " "1"" of type '" "LLA_Data *""'"); 
-  }
-  arg1 = reinterpret_cast< LLA_Data * >(argp1);
-  result = (VectorDouble *)& ((arg1)->Y);
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__vectorT_double_std__allocatorT_double_t_t, 0 |  0 );
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_LLA_Data_Z_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  LLA_Data *arg1 = (LLA_Data *) 0 ;
-  VectorDouble *arg2 = (VectorDouble *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  void *argp2 = 0 ;
-  int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"OO:LLA_Data_Z_set",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LLA_Data, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LLA_Data_Z_set" "', argument " "1"" of type '" "LLA_Data *""'"); 
-  }
-  arg1 = reinterpret_cast< LLA_Data * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_std__vectorT_double_std__allocatorT_double_t_t, 0 |  0 );
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LLA_Data_Z_set" "', argument " "2"" of type '" "VectorDouble *""'"); 
-  }
-  arg2 = reinterpret_cast< VectorDouble * >(argp2);
-  if (arg1) (arg1)->Z = *arg2;
-  resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_LLA_Data_Z_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  LLA_Data *arg1 = (LLA_Data *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  VectorDouble *result = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:LLA_Data_Z_get",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LLA_Data, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LLA_Data_Z_get" "', argument " "1"" of type '" "LLA_Data *""'"); 
-  }
-  arg1 = reinterpret_cast< LLA_Data * >(argp1);
-  result = (VectorDouble *)& ((arg1)->Z);
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__vectorT_double_std__allocatorT_double_t_t, 0 |  0 );
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_new_LLA_Data__SWIG_0(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  LLA_Data *result = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)":new_LLA_Data")) SWIG_fail;
-  result = (LLA_Data *)new LLA_Data();
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_LLA_Data, SWIG_POINTER_NEW |  0 );
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_new_LLA_Data__SWIG_1(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  int arg1 ;
-  VectorDouble arg2 ;
-  VectorDouble arg3 ;
-  VectorDouble arg4 ;
-  int val1 ;
-  int ecode1 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  PyObject * obj2 = 0 ;
-  PyObject * obj3 = 0 ;
-  LLA_Data *result = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"OOOO:new_LLA_Data",&obj0,&obj1,&obj2,&obj3)) SWIG_fail;
-  ecode1 = SWIG_AsVal_int(obj0, &val1);
-  if (!SWIG_IsOK(ecode1)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "new_LLA_Data" "', argument " "1"" of type '" "int""'");
-  } 
-  arg1 = static_cast< int >(val1);
-  {
-    std::vector<double,std::allocator< double > > *ptr = (std::vector<double,std::allocator< double > > *)0;
-    int res = swig::asptr(obj1, &ptr);
-    if (!SWIG_IsOK(res) || !ptr) {
-      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "new_LLA_Data" "', argument " "2"" of type '" "VectorDouble""'"); 
-    }
-    arg2 = *ptr;
-    if (SWIG_IsNewObj(res)) delete ptr;
-  }
-  {
-    std::vector<double,std::allocator< double > > *ptr = (std::vector<double,std::allocator< double > > *)0;
-    int res = swig::asptr(obj2, &ptr);
-    if (!SWIG_IsOK(res) || !ptr) {
-      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "new_LLA_Data" "', argument " "3"" of type '" "VectorDouble""'"); 
-    }
-    arg3 = *ptr;
-    if (SWIG_IsNewObj(res)) delete ptr;
-  }
-  {
-    std::vector<double,std::allocator< double > > *ptr = (std::vector<double,std::allocator< double > > *)0;
-    int res = swig::asptr(obj3, &ptr);
-    if (!SWIG_IsOK(res) || !ptr) {
-      SWIG_exception_fail(SWIG_ArgError((ptr ? res : SWIG_TypeError)), "in method '" "new_LLA_Data" "', argument " "4"" of type '" "VectorDouble""'"); 
-    }
-    arg4 = *ptr;
-    if (SWIG_IsNewObj(res)) delete ptr;
-  }
-  result = (LLA_Data *)new LLA_Data(arg1,arg2,arg3,arg4);
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_LLA_Data, SWIG_POINTER_NEW |  0 );
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_new_LLA_Data(PyObject *self, PyObject *args) {
-  int argc;
-  PyObject *argv[5];
-  int ii;
-  
-  if (!PyTuple_Check(args)) SWIG_fail;
-  argc = (int)PyObject_Length(args);
-  for (ii = 0; (ii < argc) && (ii < 4); ii++) {
-    argv[ii] = PyTuple_GET_ITEM(args,ii);
-  }
-  if (argc == 0) {
-    return _wrap_new_LLA_Data__SWIG_0(self, args);
-  }
-  if (argc == 4) {
-    int _v;
-    {
-      int res = SWIG_AsVal_int(argv[0], NULL);
-      _v = SWIG_CheckState(res);
-    }
-    if (_v) {
-      int res = swig::asptr(argv[1], (std::vector<double,std::allocator< double > >**)(0));
-      _v = SWIG_CheckState(res);
-      if (_v) {
-        int res = swig::asptr(argv[2], (std::vector<double,std::allocator< double > >**)(0));
-        _v = SWIG_CheckState(res);
-        if (_v) {
-          int res = swig::asptr(argv[3], (std::vector<double,std::allocator< double > >**)(0));
-          _v = SWIG_CheckState(res);
-          if (_v) {
-            return _wrap_new_LLA_Data__SWIG_1(self, args);
-          }
-        }
-      }
-    }
-  }
-  
-fail:
-  SWIG_SetErrorMsg(PyExc_NotImplementedError,"Wrong number of arguments for overloaded function 'new_LLA_Data'.\n"
-    "  Possible C/C++ prototypes are:\n"
-    "    LLA_Data()\n"
-    "    LLA_Data(int,VectorDouble,VectorDouble,VectorDouble)\n");
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_delete_LLA_Data(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  LLA_Data *arg1 = (LLA_Data *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:delete_LLA_Data",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LLA_Data, SWIG_POINTER_DISOWN |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_LLA_Data" "', argument " "1"" of type '" "LLA_Data *""'"); 
-  }
-  arg1 = reinterpret_cast< LLA_Data * >(argp1);
-  delete arg1;
-  resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *LLA_Data_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *obj;
-  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
-  SWIG_TypeNewClientData(SWIGTYPE_p_LLA_Data, SWIG_NewClientData(obj));
-  return SWIG_Py_Void();
-}
-
-SWIGINTERN PyObject *_wrap_LLA_Result_score_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  LLA_Result *arg1 = (LLA_Result *) 0 ;
-  double arg2 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  double val2 ;
-  int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"OO:LLA_Result_score_set",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LLA_Result, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LLA_Result_score_set" "', argument " "1"" of type '" "LLA_Result *""'"); 
-  }
-  arg1 = reinterpret_cast< LLA_Result * >(argp1);
-  ecode2 = SWIG_AsVal_double(obj1, &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "LLA_Result_score_set" "', argument " "2"" of type '" "double""'");
-  } 
-  arg2 = static_cast< double >(val2);
-  if (arg1) (arg1)->score = arg2;
-  resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_LLA_Result_score_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  LLA_Result *arg1 = (LLA_Result *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  double result;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:LLA_Result_score_get",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LLA_Result, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LLA_Result_score_get" "', argument " "1"" of type '" "LLA_Result *""'"); 
-  }
-  arg1 = reinterpret_cast< LLA_Result * >(argp1);
-  result = (double) ((arg1)->score);
-  resultobj = SWIG_From_double(static_cast< double >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_LLA_Result_trace_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  LLA_Result *arg1 = (LLA_Result *) 0 ;
-  MatrixInt *arg2 = (MatrixInt *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  void *argp2 = 0 ;
-  int res2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"OO:LLA_Result_trace_set",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LLA_Result, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LLA_Result_trace_set" "', argument " "1"" of type '" "LLA_Result *""'"); 
-  }
-  arg1 = reinterpret_cast< LLA_Result * >(argp1);
-  res2 = SWIG_ConvertPtr(obj1, &argp2,SWIGTYPE_p_std__vectorT_std__vectorT_int_std__allocatorT_int_t_t_std__allocatorT_std__vectorT_int_std__allocatorT_int_t_t_t_t, 0 |  0 );
-  if (!SWIG_IsOK(res2)) {
-    SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "LLA_Result_trace_set" "', argument " "2"" of type '" "MatrixInt *""'"); 
-  }
-  arg2 = reinterpret_cast< MatrixInt * >(argp2);
-  if (arg1) (arg1)->trace = *arg2;
-  resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_LLA_Result_trace_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  LLA_Result *arg1 = (LLA_Result *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  MatrixInt *result = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:LLA_Result_trace_get",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LLA_Result, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LLA_Result_trace_get" "', argument " "1"" of type '" "LLA_Result *""'"); 
-  }
-  arg1 = reinterpret_cast< LLA_Result * >(argp1);
-  result = (MatrixInt *)& ((arg1)->trace);
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_std__vectorT_std__vectorT_int_std__allocatorT_int_t_t_std__allocatorT_std__vectorT_int_std__allocatorT_int_t_t_t_t, 0 |  0 );
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_new_LLA_Result(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  LLA_Result *result = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)":new_LLA_Result")) SWIG_fail;
-  result = (LLA_Result *)new LLA_Result();
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_LLA_Result, SWIG_POINTER_NEW |  0 );
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_delete_LLA_Result(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  LLA_Result *arg1 = (LLA_Result *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:delete_LLA_Result",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LLA_Result, SWIG_POINTER_DISOWN |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_LLA_Result" "', argument " "1"" of type '" "LLA_Result *""'"); 
-  }
-  arg1 = reinterpret_cast< LLA_Result * >(argp1);
-  delete arg1;
-  resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *LLA_Result_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *obj;
-  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
-  SWIG_TypeNewClientData(SWIGTYPE_p_LLA_Result, SWIG_NewClientData(obj));
-  return SWIG_Py_Void();
-}
-
-SWIGINTERN PyObject *_wrap_LA_Result_score_set(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  LA_Result *arg1 = (LA_Result *) 0 ;
-  double arg2 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  double val2 ;
-  int ecode2 = 0 ;
-  PyObject * obj0 = 0 ;
-  PyObject * obj1 = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"OO:LA_Result_score_set",&obj0,&obj1)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LA_Result, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LA_Result_score_set" "', argument " "1"" of type '" "LA_Result *""'"); 
-  }
-  arg1 = reinterpret_cast< LA_Result * >(argp1);
-  ecode2 = SWIG_AsVal_double(obj1, &val2);
-  if (!SWIG_IsOK(ecode2)) {
-    SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "LA_Result_score_set" "', argument " "2"" of type '" "double""'");
-  } 
-  arg2 = static_cast< double >(val2);
-  if (arg1) (arg1)->score = arg2;
-  resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_LA_Result_score_get(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  LA_Result *arg1 = (LA_Result *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  double result;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:LA_Result_score_get",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LA_Result, 0 |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "LA_Result_score_get" "', argument " "1"" of type '" "LA_Result *""'"); 
-  }
-  arg1 = reinterpret_cast< LA_Result * >(argp1);
-  result = (double) ((arg1)->score);
-  resultobj = SWIG_From_double(static_cast< double >(result));
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_new_LA_Result(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  LA_Result *result = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)":new_LA_Result")) SWIG_fail;
-  result = (LA_Result *)new LA_Result();
-  resultobj = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_LA_Result, SWIG_POINTER_NEW |  0 );
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_delete_LA_Result(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  LA_Result *arg1 = (LA_Result *) 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:delete_LA_Result",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1,SWIGTYPE_p_LA_Result, SWIG_POINTER_DISOWN |  0 );
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_LA_Result" "', argument " "1"" of type '" "LA_Result *""'"); 
-  }
-  arg1 = reinterpret_cast< LA_Result * >(argp1);
-  delete arg1;
-  resultobj = SWIG_Py_Void();
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *LA_Result_swigregister(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *obj;
-  if (!PyArg_ParseTuple(args,(char*)"O:swigregister", &obj)) return NULL;
-  SWIG_TypeNewClientData(SWIGTYPE_p_LA_Result, SWIG_NewClientData(obj));
-  return SWIG_Py_Void();
-}
-
-SWIGINTERN PyObject *_wrap_DP_lla(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  LLA_Data *arg1 = 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  LLA_Result result;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:DP_lla",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_LLA_Data,  0  | 0);
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "DP_lla" "', argument " "1"" of type '" "LLA_Data const &""'"); 
-  }
-  if (!argp1) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "DP_lla" "', argument " "1"" of type '" "LLA_Data const &""'"); 
-  }
-  arg1 = reinterpret_cast< LLA_Data * >(argp1);
-  result = DP_lla((LLA_Data const &)*arg1);
-  resultobj = SWIG_NewPointerObj((new LLA_Result(static_cast< const LLA_Result& >(result))), SWIGTYPE_p_LLA_Result, SWIG_POINTER_OWN |  0 );
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
-SWIGINTERN PyObject *_wrap_ST_la(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
-  PyObject *resultobj = 0;
-  LLA_Data *arg1 = 0 ;
-  void *argp1 = 0 ;
-  int res1 = 0 ;
-  PyObject * obj0 = 0 ;
-  LA_Result result;
-  
-  if (!PyArg_ParseTuple(args,(char *)"O:ST_la",&obj0)) SWIG_fail;
-  res1 = SWIG_ConvertPtr(obj0, &argp1, SWIGTYPE_p_LLA_Data,  0  | 0);
-  if (!SWIG_IsOK(res1)) {
-    SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "ST_la" "', argument " "1"" of type '" "LLA_Data const &""'"); 
-  }
-  if (!argp1) {
-    SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "ST_la" "', argument " "1"" of type '" "LLA_Data const &""'"); 
-  }
-  arg1 = reinterpret_cast< LLA_Data * >(argp1);
-  result = ST_la((LLA_Data const &)*arg1);
-  resultobj = SWIG_NewPointerObj((new LA_Result(static_cast< const LA_Result& >(result))), SWIGTYPE_p_LA_Result, SWIG_POINTER_OWN |  0 );
-  return resultobj;
-fail:
-  return NULL;
-}
-
-
 SWIGINTERN PyObject *_wrap_DP_lsa(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   LSA_Data *arg1 = 0 ;
@@ -13640,31 +12999,6 @@ static PyMethodDef SwigMethods[] = {
 	 { (char *)"new_LSA_Result", _wrap_new_LSA_Result, METH_VARARGS, NULL},
 	 { (char *)"delete_LSA_Result", _wrap_delete_LSA_Result, METH_VARARGS, NULL},
 	 { (char *)"LSA_Result_swigregister", LSA_Result_swigregister, METH_VARARGS, NULL},
-	 { (char *)"LLA_Data_max_shift_set", _wrap_LLA_Data_max_shift_set, METH_VARARGS, NULL},
-	 { (char *)"LLA_Data_max_shift_get", _wrap_LLA_Data_max_shift_get, METH_VARARGS, NULL},
-	 { (char *)"LLA_Data_X_set", _wrap_LLA_Data_X_set, METH_VARARGS, NULL},
-	 { (char *)"LLA_Data_X_get", _wrap_LLA_Data_X_get, METH_VARARGS, NULL},
-	 { (char *)"LLA_Data_Y_set", _wrap_LLA_Data_Y_set, METH_VARARGS, NULL},
-	 { (char *)"LLA_Data_Y_get", _wrap_LLA_Data_Y_get, METH_VARARGS, NULL},
-	 { (char *)"LLA_Data_Z_set", _wrap_LLA_Data_Z_set, METH_VARARGS, NULL},
-	 { (char *)"LLA_Data_Z_get", _wrap_LLA_Data_Z_get, METH_VARARGS, NULL},
-	 { (char *)"new_LLA_Data", _wrap_new_LLA_Data, METH_VARARGS, NULL},
-	 { (char *)"delete_LLA_Data", _wrap_delete_LLA_Data, METH_VARARGS, NULL},
-	 { (char *)"LLA_Data_swigregister", LLA_Data_swigregister, METH_VARARGS, NULL},
-	 { (char *)"LLA_Result_score_set", _wrap_LLA_Result_score_set, METH_VARARGS, NULL},
-	 { (char *)"LLA_Result_score_get", _wrap_LLA_Result_score_get, METH_VARARGS, NULL},
-	 { (char *)"LLA_Result_trace_set", _wrap_LLA_Result_trace_set, METH_VARARGS, NULL},
-	 { (char *)"LLA_Result_trace_get", _wrap_LLA_Result_trace_get, METH_VARARGS, NULL},
-	 { (char *)"new_LLA_Result", _wrap_new_LLA_Result, METH_VARARGS, NULL},
-	 { (char *)"delete_LLA_Result", _wrap_delete_LLA_Result, METH_VARARGS, NULL},
-	 { (char *)"LLA_Result_swigregister", LLA_Result_swigregister, METH_VARARGS, NULL},
-	 { (char *)"LA_Result_score_set", _wrap_LA_Result_score_set, METH_VARARGS, NULL},
-	 { (char *)"LA_Result_score_get", _wrap_LA_Result_score_get, METH_VARARGS, NULL},
-	 { (char *)"new_LA_Result", _wrap_new_LA_Result, METH_VARARGS, NULL},
-	 { (char *)"delete_LA_Result", _wrap_delete_LA_Result, METH_VARARGS, NULL},
-	 { (char *)"LA_Result_swigregister", LA_Result_swigregister, METH_VARARGS, NULL},
-	 { (char *)"DP_lla", _wrap_DP_lla, METH_VARARGS, NULL},
-	 { (char *)"ST_la", _wrap_ST_la, METH_VARARGS, NULL},
 	 { (char *)"DP_lsa", _wrap_DP_lsa, METH_VARARGS, NULL},
 	 { NULL, NULL, 0, NULL }
 };
@@ -13672,15 +13006,11 @@ static PyMethodDef SwigMethods[] = {
 
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
-static swig_type_info _swigt__p_LA_Result = {"_p_LA_Result", "LA_Result *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_LLA_Data = {"_p_LLA_Data", "LLA_Data *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_LLA_Result = {"_p_LLA_Result", "LLA_Result *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_LSA_Data = {"_p_LSA_Data", "LSA_Data *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_LSA_Result = {"_p_LSA_Result", "LSA_Result *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_allocator_type = {"_p_allocator_type", "allocator_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_difference_type = {"_p_difference_type", "difference_type *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_f_r_q_const__LSA_Data_bool__LSA_Result = {"_p_f_r_q_const__LSA_Data_bool__LSA_Result", "LSA_Result (*)(LSA_Data const &,bool)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_p_PyObject = {"_p_p_PyObject", "PyObject **", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_size_type = {"_p_size_type", "size_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_std__invalid_argument = {"_p_std__invalid_argument", "std::invalid_argument *", 0, 0, (void*)0, 0};
@@ -13696,15 +13026,11 @@ static swig_type_info _swigt__p_swig__SwigPyIterator = {"_p_swig__SwigPyIterator
 static swig_type_info _swigt__p_value_type = {"_p_value_type", "value_type *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
-  &_swigt__p_LA_Result,
-  &_swigt__p_LLA_Data,
-  &_swigt__p_LLA_Result,
   &_swigt__p_LSA_Data,
   &_swigt__p_LSA_Result,
   &_swigt__p_allocator_type,
   &_swigt__p_char,
   &_swigt__p_difference_type,
-  &_swigt__p_f_r_q_const__LSA_Data_bool__LSA_Result,
   &_swigt__p_p_PyObject,
   &_swigt__p_size_type,
   &_swigt__p_std__invalid_argument,
@@ -13720,15 +13046,11 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_value_type,
 };
 
-static swig_cast_info _swigc__p_LA_Result[] = {  {&_swigt__p_LA_Result, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_LLA_Data[] = {  {&_swigt__p_LLA_Data, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_LLA_Result[] = {  {&_swigt__p_LLA_Result, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_LSA_Data[] = {  {&_swigt__p_LSA_Data, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_LSA_Result[] = {  {&_swigt__p_LSA_Result, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_allocator_type[] = {  {&_swigt__p_allocator_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_difference_type[] = {  {&_swigt__p_difference_type, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_f_r_q_const__LSA_Data_bool__LSA_Result[] = {  {&_swigt__p_f_r_q_const__LSA_Data_bool__LSA_Result, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_p_PyObject[] = {  {&_swigt__p_p_PyObject, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_size_type[] = {  {&_swigt__p_size_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_std__invalid_argument[] = {  {&_swigt__p_std__invalid_argument, 0, 0, 0},{0, 0, 0, 0}};
@@ -13744,15 +13066,11 @@ static swig_cast_info _swigc__p_swig__SwigPyIterator[] = {  {&_swigt__p_swig__Sw
 static swig_cast_info _swigc__p_value_type[] = {  {&_swigt__p_value_type, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
-  _swigc__p_LA_Result,
-  _swigc__p_LLA_Data,
-  _swigc__p_LLA_Result,
   _swigc__p_LSA_Data,
   _swigc__p_LSA_Result,
   _swigc__p_allocator_type,
   _swigc__p_char,
   _swigc__p_difference_type,
-  _swigc__p_f_r_q_const__LSA_Data_bool__LSA_Result,
   _swigc__p_p_PyObject,
   _swigc__p_size_type,
   _swigc__p_std__invalid_argument,
@@ -13772,7 +13090,6 @@ static swig_cast_info *swig_cast_initial[] = {
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (END) -------- */
 
 static swig_const_info swig_const_table[] = {
-{ SWIG_PY_POINTER, (char*)"LSA_test", 0, 0, (void *)(DP_lsa), &SWIGTYPE_p_f_r_q_const__LSA_Data_bool__LSA_Result },
 {0, 0, 0, 0.0, 0, 0}};
 
 #ifdef __cplusplus
@@ -14358,7 +13675,6 @@ SWIG_init(void) {
   
   SWIG_InitializeModule(0);
   SWIG_InstallConstants(d,swig_const_table);
-  
   
   
 #if PY_VERSION_HEX >= 0x03000000

@@ -11,7 +11,10 @@ namespace std{
 };
 %include "compcore.h"  
 
-%constant LSA_Result (*LSA_test)(const LSA_Data&, bool keep_trace ) = DP_lsa; // call LSA_test
+/* %constant is like #define */
+//%constant LSA_Result (*LSA_test)(const LSA_Data&, bool) = DP_lsa; // call LSA_test
+//%constant LSA_Result (*LSA_test)(const LSA_Data&, bool) = LSA_DP; // call LSA_test
+
 //%constant LLA_Result (*LLA_test)( const LLA_Data& ) = DP_lla; // call LLA_test
 //%constant LA_Result (*LA_test)(const LLA_Data& ) = ST_la; // call LA_test
 //%template(LLA_PT) PT<LLA_Data, LLA_Result>;

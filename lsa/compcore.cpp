@@ -1,15 +1,13 @@
 #include "compcore.h"
 
-//
+//// LSA section
 void LSA_Data::assign(int shift, VectorDouble x, VectorDouble y){
   max_shift = shift;
   X.assign(x.begin(),x.end());
   Y.assign(y.begin(),y.end());
 }
 
-//// LSA functions
-
-LSA_Result DP_lsa( const LSA_Data& data, bool keep_trace=false ){
+LSA_Result DP_lsa( const LSA_Data& data, bool keep_trace ){  //python does not support default value
 	LSA_Result lsa_result;
 	int max_p[2]={0}; int porn=0;
 	double max_s=-std::numeric_limits<double>::infinity(); //initialize to negative infinite
@@ -32,18 +30,6 @@ LSA_Result DP_lsa( const LSA_Data& data, bool keep_trace=false ){
         //double s0=sm[i-1][j-1];
         psm[i][j] = std::max(0., psm[i-1][j-1]+s1);
         nsm[i][j] = std::max(0., nsm[i-1][j-1]-s1);
-        /*
-				int t=-std::numeric_limits<int>::infinity();
-				if(s0>0)
-					t=(s1>0)?0x0011:0x0000; //only move forward when strict larger than 0
-				else if(s0<0)
-					t=(s1<0)?0x0011:0x0000;
-				else
-					t=0x0000;
-        sm[i][j]=(t==0x0000)?s1:s0+s1;
-				tm[i][j]=t;
-				//cout << "sm["<<i<<","<<j<<","<<k<<"]="<<sm[i][j][k]<<";s1="<< s1 << ";s0=" << s0 << ";t="<<hex<<tm[i][j][k]<<endl;
-				*/
 				if ( psm[i][j] > max_s ) {
 					max_p[0] = i; max_p[1] = j; max_s = psm[i][j]; porn=1;
 				}
@@ -68,22 +54,13 @@ LSA_Result DP_lsa( const LSA_Data& data, bool keep_trace=false ){
       length++; lsa_result.trace.push_back(step); step.clear(); 
       step.push_back(max_p[0]-length); step.push_back(max_p[1]-length); }
   }
-  /*
-	for( int i=max_p[0], j=max_p[1]; ;
-				i-=(int)((tm[i][j]&0x0001)>0), j-=(int)((tm[i][j]&0x0010)>0) ){
-		vector<int> step;
-		step.push_back(i); step.push_back(j);
-		lsa_result.trace.push_back(step);
-		if (tm[i][j] == 0x0000) break;
-	}
-  */
 	//cout << "length="<<lsa_result.trace.size()<< endl;
 	return lsa_result;
 }
 
 
 //definitions of functions
-
+/*
 LLA_Result DP_lla( const LLA_Data& data ){
 	LLA_Result lla_result;
 	int max_p[3]={0};
@@ -145,7 +122,6 @@ LA_Result ST_la( const LLA_Data& la_data ) {
   return la_result;
 }
 
-/*
 LSA_Result DP_rep_lsa( const LSA_Rep_Data& data ){
 	LSA_Result lsa_result;
 	int max_p[2]={0}; int porn=0;
@@ -214,6 +190,7 @@ LSA_Result DP_rep_lsa( const LSA_Rep_Data& data ){
 	//cout << "length="<<lsa_result.trace.size()<< endl;
 	return lsa_result;
 */
+
 /*
 template <class DataType, class ResultType>
 	PT_Return PT( DataType data, const ResultType& result, int pn,  ResultType (*test_func)( const DataType& ) ){

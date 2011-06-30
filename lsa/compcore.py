@@ -312,77 +312,9 @@ class LSA_Result:
 LSA_Result_swigregister = _compcore.LSA_Result_swigregister
 LSA_Result_swigregister(LSA_Result)
 
-class LLA_Data:
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, LLA_Data, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, LLA_Data, name)
-    __repr__ = _swig_repr
-    __swig_setmethods__["max_shift"] = _compcore.LLA_Data_max_shift_set
-    __swig_getmethods__["max_shift"] = _compcore.LLA_Data_max_shift_get
-    __swig_setmethods__["X"] = _compcore.LLA_Data_X_set
-    __swig_getmethods__["X"] = _compcore.LLA_Data_X_get
-    __swig_setmethods__["Y"] = _compcore.LLA_Data_Y_set
-    __swig_getmethods__["Y"] = _compcore.LLA_Data_Y_get
-    __swig_setmethods__["Z"] = _compcore.LLA_Data_Z_set
-    __swig_getmethods__["Z"] = _compcore.LLA_Data_Z_get
-    def __init__(self, *args): 
-        this = _compcore.new_LLA_Data(*args)
-        try: self.this.append(this)
-        except: self.this = this
-    __swig_destroy__ = _compcore.delete_LLA_Data
-    __del__ = lambda self : None;
-LLA_Data_swigregister = _compcore.LLA_Data_swigregister
-LLA_Data_swigregister(LLA_Data)
-
-class LLA_Result:
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, LLA_Result, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, LLA_Result, name)
-    __repr__ = _swig_repr
-    __swig_setmethods__["score"] = _compcore.LLA_Result_score_set
-    __swig_getmethods__["score"] = _compcore.LLA_Result_score_get
-    __swig_setmethods__["trace"] = _compcore.LLA_Result_trace_set
-    __swig_getmethods__["trace"] = _compcore.LLA_Result_trace_get
-    def __init__(self): 
-        this = _compcore.new_LLA_Result()
-        try: self.this.append(this)
-        except: self.this = this
-    __swig_destroy__ = _compcore.delete_LLA_Result
-    __del__ = lambda self : None;
-LLA_Result_swigregister = _compcore.LLA_Result_swigregister
-LLA_Result_swigregister(LLA_Result)
-
-class LA_Result:
-    __swig_setmethods__ = {}
-    __setattr__ = lambda self, name, value: _swig_setattr(self, LA_Result, name, value)
-    __swig_getmethods__ = {}
-    __getattr__ = lambda self, name: _swig_getattr(self, LA_Result, name)
-    __repr__ = _swig_repr
-    __swig_setmethods__["score"] = _compcore.LA_Result_score_set
-    __swig_getmethods__["score"] = _compcore.LA_Result_score_get
-    def __init__(self): 
-        this = _compcore.new_LA_Result()
-        try: self.this.append(this)
-        except: self.this = this
-    __swig_destroy__ = _compcore.delete_LA_Result
-    __del__ = lambda self : None;
-LA_Result_swigregister = _compcore.LA_Result_swigregister
-LA_Result_swigregister(LA_Result)
-
-
-def DP_lla(*args):
-  return _compcore.DP_lla(*args)
-DP_lla = _compcore.DP_lla
-
-def ST_la(*args):
-  return _compcore.ST_la(*args)
-ST_la = _compcore.ST_la
 
 def DP_lsa(*args):
   return _compcore.DP_lsa(*args)
 DP_lsa = _compcore.DP_lsa
-LSA_test = _compcore.LSA_test
 
 

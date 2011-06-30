@@ -14,7 +14,7 @@ typedef vector<VectorDouble> MatrixDouble;
 typedef vector<int> VectorInt;
 typedef vector<VectorInt> MatrixInt;
 
-//// LSA data types
+//// LSA section
 
 class LSA_Data {
 public:
@@ -24,15 +24,7 @@ public:
 	LSA_Data(){ VectorDouble X; VectorDouble Y; max_shift=std::numeric_limits<int>::infinity(); };
 	LSA_Data(int shift, VectorDouble x, VectorDouble y): max_shift(shift),X(x),Y(y){ };
   void assign(int, VectorDouble, VectorDouble);
-	//inline int random_shuffle_x();
 };
-
-/*
-void LSA_Data::assign(int shift, VectorDouble x, VectorDouble y){
-  max_shift = shift; 
-  X.assign(x.begin(),x.end()); 
-  Y.assign(y.begin(),y.end());
-};*/
 
 class LSA_Result {
 public:
@@ -40,17 +32,11 @@ public:
   MatrixInt trace;
 };
 
-/*
-int LSA_Data::random_shuffle_x(){
-	std::random_shuffle(X.begin(),X.end());
-	//cout<<"X="<<X[0]<<","<<X[1]<<","<<X[2]<<","<<X[3]<<endl;
-	//std::random_shuffle(Y.begin(),Y.end());
-	//cout<<"Y="<<Y[0]<<","<<Y[1]<<","<<Y[2]<<","<<Y[3]<<endl;
-	return 0;
-};
-*/
+LSA_Result DP_lsa( const LSA_Data&, bool ); 
+
 
 //// LLA and LA data types
+/*
 class LLA_Data {
 public:
   int max_shift;
@@ -61,6 +47,7 @@ public:
 	LLA_Data(int shift, VectorDouble x, VectorDouble y, VectorDouble z): max_shift(shift),X(x),Y(y),Z(z){ };
 	//inline int random_shuffle();
 };
+*/
 
 /*
 int LLA_Data::random_shuffle(){
@@ -74,6 +61,7 @@ int LLA_Data::random_shuffle(){
 };
 */
 
+/*
 class LLA_Result {
 public:
 	double score;
@@ -84,6 +72,7 @@ class LA_Result {
 public:
   double score;
 };
+*/
 
 
 //// Permutation test template
@@ -96,12 +85,9 @@ public:
 */
 
 //Declaration of functions
-LLA_Result DP_lla( const LLA_Data& ); //const: passing the reference not for modifying
-LA_Result ST_la( const LLA_Data& );
+//LLA_Result DP_lla( const LLA_Data& ); //const: passing the reference not for modifying
+//LA_Result ST_la( const LLA_Data& );
 
-LSA_Result DP_lsa( const LSA_Data&, bool keep_trace ); 
-
-//LSA_Result DP_lsa_notrace( const LSA_Data&, true ); 
 
 /*
 template <class DataType, class ResultType>

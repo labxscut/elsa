@@ -36,7 +36,7 @@
 """
 
 #import public resources
-import csv, sys
+import csv, sys, random
 import numpy as np
 import scipy as sp
 import scipy.interpolate
@@ -67,9 +67,8 @@ except ImportError:
 #	[ f1, f2, L-score, L_low, L_up, X_start, Y_start, length, P/N, P-value, PCC,  PCC P-val,  Qvalue  ]
 #	[ 1,  2,  3,       4,     5,    6,       7,       8,      9,   10,      11,   12,         13      ]
 ############################### 
-
         
-def singleLSA(series1, series2, delayLimit, fTransform, zNormalize, keepTrace=False):
+def singleLSA(series1, series2, delayLimit, fTransform, zNormalize, keepTrace=True):
   """	do local simularity alignment 
 		
 		Args:
@@ -86,10 +85,22 @@ def singleLSA(series1, series2, delayLimit, fTransform, zNormalize, keepTrace=Fa
   """
 
   lsad=compcore.LSA_Data(delayLimit, zNormalize(fTransform(series1)), zNormalize(fTransform(series2)))
-  lsar=compcore.DP_lsa(lsad, True)
+  lsar=compcore.DP_lsa(lsad, keepTrace)
   return lsar
 	
-def bootstrapCI(series1, series2, delayLimit, bootCI, bootNum, fTransfrom, zNormalize):
+def sample_wr(population, k):
+  """ Chooses k random elements (with replacement) from a population
+  """
+
+  n = len(population)
+  _random, _int = random.random, int  # speed hack 
+  result = [None] * k
+  for i in xrange(k):
+    j = _int(_random() * n)
+    result[i] = population[j]
+  return np.array(result)
+
+def bootstrapCI(series1, series2, delayLimit, bootCI, bootNum, fTransform, zNormalize):
   """	do bootstrap CI estimation
 
 		Args:
@@ -106,16 +117,19 @@ def bootstrapCI(series1, series2, delayLimit, bootCI, bootNum, fTransfrom, zNorm
 
 	"""
 	
+  print "------Bootstrapping------"
   lsad = compcore.LSA_Data()
   BS_set = np.zeros(bootNum, dtype='float')
-  for i in xrange(0, bootNum):
-	lsad.assign( delayLimit, zNormalize(fTransform(sp.sample(series1,series1.shape[1]))), \
-								 zNormalize(fTransform(sp.sample(series2,series2.shape[1]))) )
-  BS_set[i] = compcore.DP_LSA(lsad, False).score
-  sp.sort( BS_set )
-  return ( BS_set[floor(bootNum*bootCI/2)], BS_set[floor(bootNum*(1-bootCI/2))] )
+  for i in range(0, bootNum):
+    Xb = np.array([ sample_wr(series1[:,j], series1.shape[0]) for j in xrange(0,series1.shape[1]) ]).T
+    Yb = np.array([ sample_wr(series2[:,j], series2.shape[0]) for j in xrange(0,series2.shape[1]) ]).T
+    lsad.assign( delayLimit, zNormalize(fTransform(Xb)), zNormalize(fTransform(Yb)) )
+    BS_set[i] = compcore.DP_lsa(lsad, False).score
+  BS_set.sort()
+  #print "BS_set=", BS_set
+  return ( BS_set[np.floor(bootNum*(1-bootCI)/2.0)], BS_set[np.floor(bootNum*bootCI/2.0)] )
 	
-def permuPvalue(series1, series2, delayLimit, permuNum, Smax, fTransform, fNormalize):
+def permuPvalue(series1, series2, delayLimit, permuNum, Smax, fTransform, zNormalize):
   """ do permutation Test
 
 		Args:
@@ -132,16 +146,22 @@ def permuPvalue(series1, series2, delayLimit, permuNum, Smax, fTransform, fNorma
 
 	"""
 	
+  print "-------permutation------"
   lsad = compcore.LSA_Data()
   PP_set = np.zeros(permuNum, dtype='float')
-  X_z = zNormalize(fTransform(series1))
+  Xz = zNormalize(fTransform(series1))
+  Y = series2
+  #print "Y=", Y, fTransform(Y), zNormalize(fTransform(Y))
   for i in xrange(0, permuNum):
-    lsad.assign( delayLimit, X_z, zNormalize(fTransform(sp.shuffle(series2,))) )
-    PP_set[i] = lcompcore.DP_LSA(lsad, False).score
-  return ( PP_set >= Smax ).sum(dim=1)/permuNum
+    for y in Y.T:
+      np.random.shuffle(y)
+    #print "Y=", Y, fTransform(Y), zNormalize(fTransform(Y))
+    lsad.assign( delayLimit, Xz, zNormalize(fTransform(Y)) )
+    PP_set[i] = np.abs(compcore.DP_lsa(lsad, False).score)
+  #print "PP_set", PP_set, PP_set >= Smax 
+  return np.sum(PP_set >= Smax)/np.float64(permuNum)
 
-
-def storeyQvalue(pvalues, lam=np.arange(0,0.9, 0.05), method='smoother', robust=False, smooth_df=3):
+def storeyQvalue(pvalues, lam=np.arange(0,0.9,0.05), method='smoother', robust=False, smooth_df=3):
   """ do Q-value calculation
 
     Args:
@@ -157,7 +177,7 @@ def storeyQvalue(pvalues, lam=np.arange(0,0.9, 0.05), method='smoother', robust=
   
   pi_set = np.zeros(len(lam), dtype='float')
   for i in xrange(0, len(lam)):
-    pi_set[i] = np.mean(pvalues[pvalues>=lam[i]])/(1-lam[i])
+    pi_set[i] = np.mean(pvalues>=lam[i])/(1-lam[i])
 
   if method=='smoother':
     spline_fit = sp.interpolate.interp1d(lam, pi_set, kind=smooth_df)
@@ -167,21 +187,23 @@ def storeyQvalue(pvalues, lam=np.arange(0,0.9, 0.05), method='smoother', robust=
     mse = np.zeros(100, dtype='float')
     pi_set_boot = np.zeros((100, len(lam)), dtype='float')
     for j in xrange(0, 100):
-      p_boot = sp.resample(pvalues, len(pvalues))
+      p_boot = sample_wr(pvalues, len(pvalues))
       for i in xrange(0, len(lam)):
-        pi_set_boot[i] = np.mean(p_boot[p_boot>=lam[i]])/(1-lam[i]) 
+        pi_set_boot[i] = np.mean(p_boot>=lam[i])/(1-lam[i]) 
       mse[j] = (pi_set_boot-pi_min)**2
-    pi_0 = min(pi_set[mse==min(mse)])
+    pi_0 = np.min(pi_set[mse==min(mse)])
 
-  pi_0 = min(pi_0, 1)
+  pi_0 = np.max( [np.min( [np.min(pi_0), 1]), 0] ) #0<=pi_0<=1
   p_argsort = np.argsort(pvalues)
   p_ranks = tied_rank(pvalues)
+  print "lam,pi_set,pi_0:", lam, pi_set, pi_0
+  print "pi_0, p_ranks, pvalues, len(pvalues)", pi_0, p_ranks, pvalues, len(pvalues)
   if robust:
-    qvalues = pi_0*len(pvalues)*pvalues/(p_ranks*(1-(1-pvalues)**len(pvalues)))
+    qvalues = pi_0*len(pvalues)*pvalues/(p_ranks*(1-np.power((1-pvalues),len(pvalues))))
   else:
     qvalues = pi_0*len(pvalues)*pvalues/p_ranks  
-  qvalues[p_argsort[len(pvalues)-1]] = np.min( [qvalues[len(pvalues)-1], 1] )
-  for i in reversed(range(0,len(pvalues)-1)):
+  qvalues[p_argsort[len(pvalues)-1]] = np.min( [qvalues[len(pvalues)-1], 1] ) # argsort in asscending order
+  for i in reversed(range(0,len(pvalues)-1)): #don't know why it is so complicated here, why not just use qvalues; to enssure desencing order!!!
     qvalues[p_argsort[i]] = np.min( [qvalues[p_argsort[i]], qvalues[p_argsort[i+1]], 1] )
   return qvalues
 
@@ -218,7 +240,8 @@ def tied_rank(values):
       values(np.array): a numeric array
 
     Returns:
-      one vector of asscendant ranks, ties are kept and label by largest rank 
+      one vector of asscendant ranks from 1
+       ties are kept and label by largest rank 
   """
 
   v_num = {}  #pvalues and counts
@@ -231,7 +254,7 @@ def tied_rank(values):
   for v in suvs:
     c += v_num[v]
     v_cum[v] = c
-  return np.array( [ v_cum[values[i]] for i in xrange(0, len(values))], dtype='float' )
+  return np.array( [ v_cum[values[i]] for i in xrange(0, len(values)) ], dtype='float' )
 
 
 def	scoreNormalize(tseries):
@@ -244,24 +267,36 @@ def	scoreNormalize(tseries):
       score normalized tseries
   """
   p_ranks = tied_rank(tseries)
-  return sp.stats.distributions.norm.ppf( p_ranks/(p_ranks.shape[0]+1) )
+  return sp.stats.distributions.norm.ppf( p_ranks/(len(p_ranks)+1) )
 
 def fillMissing(tseries, method):
   """ fill missing data
 
     Args:
       tseries(np.array):  one time series with no replicates
-      method(str):  filling method
+      method(str):  filling method, choices ['discard', 'zero', 'linear', 'slinear', 'nearest', 'quadratic', 'cubic'] 
 
     Reterns:
       tseries with missing data filled
   """
   
-  if method == 'zero':
+  if method == 'discard':
     return np.nan_to_num(tseries)
   else:
-    spline_fit = sp.interpolate.interp1d( xrange(0, tseries.shape[0]), tseries, method )
-    return spline_fit( xrange(0, tseries.shape[0]) )
+    y = tseries[np.logical_not(np.isnan(tseries))]
+    x = np.array(range(0, len(tseries)))[np.logical_not(np.isnan(tseries))]
+    try:
+      spline_fit = sp.interpolate.interp1d( x, y, method )
+    except:
+      print >>sys.stderr, "cannot fill missing values using ", method, "method, fall back to discard" 
+      return np.nan_to_num(tseries)
+    yy = np.zeros( len(tseries), dtype='float' )
+    for i in range(0, len(tseries)):
+      try:
+        yy[i] = spline_fit(i)
+      except ValueError:
+        yy[i] = 0
+    return yy
     
 def applyAnalysis( cleanData, delayLimit=3, bootCI=.95, bootNum=1000, permuNum=1000, fTransform=simpleAverage, zNormalize=scoreNormalize ):
   """ calculate pairwise LS scores and p-values
@@ -287,23 +322,25 @@ def applyAnalysis( cleanData, delayLimit=3, bootCI=.95, bootNum=1000, permuNum=1
   factorNum = cleanData.shape[0]
   spotNum = cleanData.shape[1]
   repNum = cleanData.shape[2]
-  lsaTable = list()
-  pvalues = list()
+  lsaTable = [None]*(factorNum*(factorNum-1)/2)
+  pvalues = np.zeros(factorNum*(factorNum-1)/2, dtype='float')
 
+  ti = 0
   for i in xrange(0, factorNum-1):
     for j in xrange(i, factorNum):
-      LSA_result = singleLSA(cleanData[i], cleanData[j], delayLimit, fTransform, zNormalize)                          # do LSA computation
+      LSA_result = singleLSA(cleanData[i], cleanData[j], delayLimit, fTransform, zNormalize, True)                          # do LSA computation
       Smax = LSA_result.score                                                                                         # get Smax
-      (Sl, Su) = bootstrapCI(cleanData[i], cleanData[j], delayLimit, bootCI, bootNum, fTransfrom, zNormalize)         # do Bootstrap CI
-      permuP = permuPvalue(cleanData[i], cleanData[j], delayLimit, permuNum, np.abs(Smax), fTransfrom, zNormalize)    # do Permutation Test
-      pvalues.append(permuP)
-      Al = len(lsar.trace)
-      (Xs, Ys, Al) = (lsar.trace[Al-1][0], lsar.trace[Al-1][1])
+      (Sl, Su) = bootstrapCI(cleanData[i], cleanData[j], delayLimit, bootCI, bootNum, fTransform, zNormalize)         # do Bootstrap CI
+      permuP = permuPvalue(cleanData[i], cleanData[j], delayLimit, permuNum, np.abs(Smax), fTransform, zNormalize)    # do Permutation Test
+      pvalues[ti] = permuP
+      Al = len(LSA_result.trace)
+      (Xs, Ys, Al) = (LSA_result.trace[Al-1][0], LSA_result.trace[Al-1][1], len(LSA_result.trace))
       PCC = sp.corrcoef( cleanData[i], cleanData[j] )[0,1]
-      tcdf = t.cdf( PCC*sqrt((spotNum-1)/(float64)(1.000000001-PCC**2)), (spotNum-1))
-      P_PCC = .5 + sign(PCC)*(.5 - tcdf )                                                                             #addhoc for perfect correlation
-      lsaTable.append( [i, j, Smax, Sl, Su, Xs, Ys, Al, X-Y, permuP, PCC, P_PCC] )
+      tcdf = sp.stats.distributions.t.cdf( PCC*np.sqrt((spotNum-1)/np.float64(1.000000001-PCC**2)), (spotNum-1))
+      P_PCC = .5 + np.sign(PCC)*(.5 - tcdf )                                                                             #addhoc for perfect correlation
+      lsaTable[ti] = [i, j, Smax, Sl, Su, Xs, Ys, Al, Xs-Ys, permuP, PCC, P_PCC]
 
+  #print "pvalues", pvalues
   qvalues = storeyQvalue( pvalues )
   for i in xrange(0, len(qvalues)):
     lsaTable[i].append( qvalues[i] )
@@ -314,7 +351,7 @@ def test():
   """ self test script
   """
   print >>sys.stderr, "###testing###"
-  test_data = np.array( [ [ [ 3, 2, 3, 4 ], [1, 6, 2, 3 ] ], [ [ np.nan, 2, np.nan, 3 ], [ 4, 5, 3, np.nan ] ] ], dtype='float' )
+  test_data = np.array( [ [ [ 3, 2, 3, 4], [1, 6, 2, 3], [6, 4, 6, 8] ], [ [np.nan, 2, np.nan, 3], [4, 5, 3, np.nan], [1, 1, 1, 1] ] ], dtype='float' )
   test_fN = test_data.shape[0]
   test_rN = test_data.shape[1]
   test_tN = test_data.shape[2]
@@ -325,6 +362,8 @@ def test():
   print >>sys.stderr, "linear:", fillMissing(test_data[1][0], 'linear')
   print >>sys.stderr, "quadratic:", fillMissing(test_data[1][0], 'quadratic')
   print >>sys.stderr, "cubic:", fillMissing(test_data[1][0], 'cubic')
+  print >>sys.stderr, "slinear:", fillMissing(test_data[1][0], 'slinear')
+  print >>sys.stderr, "nearest:", fillMissing(test_data[1][0], 'nearest')
   print >>sys.stderr, "###use zero as clean data###"
   clean_data = test_data
   for i in xrange(0, test_fN):
@@ -347,11 +386,11 @@ def test():
   lsar = singleLSA(clean_data[0], clean_data[1], delayLimit=1, fTransform=simpleAverage, zNormalize=scoreNormalize, keepTrace=True)
   print >>sys.stderr, lsar.score
   print >>sys.stderr, "---bootstrapCI---"
-  print >>sys.stderr, boobstrapCI(clean_data[0], clean_data[1], 1, .95, 10, simpleAverage, scoreNormalize)
+  print >>sys.stderr, bootstrapCI(clean_data[0], clean_data[1], 1, .95, 10, simpleAverage, scoreNormalize)
   print >>sys.stderr, "---permuPvalue---"
-  print >>sys.stderr, permuPvalue(clean_data[0], clean_data[1], 1, 10, np.abs(lsar.score), simpleAverage, scoreNormalize)
+  print >>sys.stderr, "p-value:", permuPvalue(clean_data[0], clean_data[1], 1, 3, np.abs(lsar.score), simpleAverage, scoreNormalize)
   print >>sys.stderr, "---applyAnalysis---"
-  print >>sys.stderr, applyAnalysis(clean_data, 1, .95, 10, 10, simpleAverage, scoreNormalize)
+  print >>sys.stderr, applyAnalysis(clean_data, 1, .95, 3, 3, simpleAverage, scoreNormalize)
   
 
 if __name__=="__main__":
