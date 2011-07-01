@@ -150,16 +150,16 @@ def permuPvalue(series1, series2, delayLimit, permuNum, Smax, fTransform, zNorma
   lsad = compcore.LSA_Data()
   PP_set = np.zeros(permuNum, dtype='float')
   Xz = zNormalize(fTransform(series1))
-  Y = series2
-  #print "Y=", Y, fTransform(Y), zNormalize(fTransform(Y))
+  Y = np.array(series2)                                               #use = only assigns reference, must use a constructor
+  #print "series2=", series2, fTransform(series2), zNormalize(fTransform(series2))
   for i in xrange(0, permuNum):
-    for y in Y.T:
-      np.random.shuffle(y)
+    np.random.shuffle(Y.T)
     #print "Y=", Y, fTransform(Y), zNormalize(fTransform(Y))
     lsad.assign( delayLimit, Xz, zNormalize(fTransform(Y)) )
     PP_set[i] = np.abs(compcore.DP_lsa(lsad, False).score)
-  #print "PP_set", PP_set, PP_set >= Smax 
-  return np.sum(PP_set >= Smax)/np.float64(permuNum)
+  #print "series2=", series2, fTransform(series2), zNormalize(fTransform(series2))
+  #print "PP_set", PP_set, PP_set >= Smax, np.sum(PP_set>=Smax), np.float(permuNum)
+  return np.sum(PP_set >= Smax)/np.float(permuNum)
 
 def storeyQvalue(pvalues, lam=np.arange(0,0.9,0.05), method='smoother', robust=False, smooth_df=3):
   """ do Q-value calculation
@@ -390,11 +390,11 @@ def test():
   lsar = singleLSA(clean_data[0], clean_data[1], delayLimit=1, fTransform=simpleAverage, zNormalize=scoreNormalize, keepTrace=True)
   print >>sys.stderr, lsar.score
   print >>sys.stderr, "---bootstrapCI---"
-  print >>sys.stderr, bootstrapCI(clean_data[0], clean_data[1], 1, .95, 10, simpleAverage, scoreNormalize)
+  print >>sys.stderr, bootstrapCI(clean_data[0], clean_data[1], 1, .99, 10, simpleAverage, scoreNormalize)
   print >>sys.stderr, "---permuPvalue---"
-  print >>sys.stderr, "p-value:", permuPvalue(clean_data[0], clean_data[1], 1, 3, np.abs(lsar.score), simpleAverage, scoreNormalize)
+  print >>sys.stderr, "p-value:", permuPvalue(clean_data[1], clean_data[0], 1, 10, np.abs(lsar.score), simpleAverage, scoreNormalize)
   print >>sys.stderr, "---applyAnalysis---"
-  print >>sys.stderr, applyAnalysis(clean_data, 1, .95, 3, 3, simpleAverage, scoreNormalize)
+  print >>sys.stderr, applyAnalysis(clean_data, 1, .99, 10, 10, simpleAverage, scoreNormalize)
   
 
 if __name__=="__main__":
