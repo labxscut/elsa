@@ -30,8 +30,8 @@
 #THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #public libs
-import optparse, sys, os, csv, re
-try
+import argparse, sys, os, csv, re
+try:
   # debug
   import lsaio
 except ImportError:
@@ -54,7 +54,7 @@ def main():
                       help="specify the qValue threshold for querying, default: 0.05") 
   parser.add_argument("-d", "--delayLimit", dest="delayLimit", default=3, type=int,
                       help="specify the longest delay threshhold for querying, default: 3")
-  parser.add_argument("-s", "--sifFile", dest="sifFile", default="", type=argparse.FileType('r'),
+  parser.add_argument("-s", "--sifFile", dest="sifFile", default="",
                       help="if specified, will also produce a SIF format file for cytoscape")
   parser.add_argument("-l", "--listFactors", dest="listFactors", default="",
                       help="query only the factors of interest in the list separated by comma: f1,f2,f3")
@@ -81,22 +81,23 @@ def main():
   #print >>sys.stderr, "testing lsaFile and outputFile..."
 
   # rawTable is a list-of-list, where the i-th list is:
-  # [ f1, f2, L-score, L_low, L_up, X_start, Y_start, length, P/N, P-value, PCC,  PCC P-val,  Qvalue  ]
-  # [ 1,  2,  3,       4,     5,    6,       7,       8,      9,   10,      11,   12,         13      ]
+  # [ f1, f2, L-score, L_low, L_up, X_start, Y_start, length, Delay, P-value, PCC,  PCC P-val,  Qvalue  ]
+  # [ 1,  2,  3,       4,     5,    6,       7,       8,      9,     10,      11,   12,         13      ]
 
   rawTable = lsaio.readTable(rawFile, '\t')
 
   print >>sys.stderr, "querying the lsatable..."
 
+  print "pValue, qValue, PCC, delayLimit, listFactors", pValue, qValue, PCC, delayLimit, listFactors
   queryTable=rawTable
   queryTable=lsaio.lowPartTable(queryTable, 10, pValue)                       #P<=pValue
-  queryTable=lsaio.lowPartTable(queryTable, 10, qValue)                       #Q<=qValue
-  queryTable=lsaio.lowPartTable(queryTable, 9,  PCC)                          #|pcc|<=PCC
-  queryTable=lsaio.upPartTable(queryTable, 9,  -PCC)
-  queryTable=lsaio.lowPartTable(queryTable, 7, float(delayLimit))             #|d|<=D
-  queryTable=lsaio.upPartTable(queryTable, 7, -float(delayLimit))
+  queryTable=lsaio.lowPartTable(queryTable, 13, qValue)                       #Q<=qValue
+  queryTable=lsaio.lowPartTable(queryTable, 11,  PCC)                          #|pcc|<=PCC
+  queryTable=lsaio.upPartTable(queryTable,  11,  -PCC)
+  queryTable=lsaio.lowPartTable(queryTable, 9, float(delayLimit))             #|d|<=D
+  queryTable=lsaio.upPartTable(queryTable,  9, -float(delayLimit))
 
-  print >>sys.stderr, "removing trivial case where zero vectors perfectly correlated..." 
+  #print >>sys.stderr, "removing trivial case where zero vectors perfectly correlated..." 
 
   #if removeZeor == "yes": # remove zero vector trivial cases
   #queryTable=lsaio.nonequalPartTable(queryTable, 3, 1.)
@@ -109,17 +110,19 @@ def main():
   #    queryTable=lsaio.labelTable(queryTable, 1, factorLabels)
   #    queryTable=lsaio.labelTable(queryTable, 2, factorLabels)
 
-  if listFactors != None:
+  if listFactors != "":
     print >>sys.stderr, "selecting entries involve interested factors..."
     listFactors = listFactors.split(',')
     queryTable=lsaio.selectFactors(queryTable, listFactors)
+
+  #print queryTable
 
   print >>sys.stderr, "writing up result file..."
   lsaio.writeTable(entryFile, queryTable, '\t')
 
   if sifFile != "":
-    print >>sys.stderr, "filtering result for as SIF file for cytoscape..."
-    lsaio.writeTable(sifFile, toSif(queryTable),  '\t')
+    print >>sys.stderr, "filtering result as a SIF file for cytoscape..."
+    lsaio.writeTable(lsaio.tryIO(sifFile,'w'), lsaio.toSif(queryTable),  '\t')
 
   print >>sys.stderr, "finishing up..."
   print >>sys.stderr, "Thank you for using lsa-query, byebye!"

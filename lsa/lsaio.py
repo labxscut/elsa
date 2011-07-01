@@ -104,6 +104,7 @@ def writeTable( handle, table, sep='\t' ):
   table - table to be written
   sep - spearator, '\t' for tab delimited, ',' for comma separated
   """
+  #print table
   csvWriter = csv.writer(handle, delimiter=sep, escapechar='"')
   csvWriter.writerows(table)
 
@@ -232,11 +233,12 @@ def toSif( table, LS_idx=3, Delay_idx=9, skiprows=1):
     if idx < skiprows:
       idx = idx +1
       sifTable.append(["X", "interaction", "Y", row[li], row[di]])
+      print row[li], row[di]
       continue
     else:
       relation = "u"
-      if int(row[li]) == 0: # non delayed, undirected
-        if float(row[di]) > 0:
+      if int(row[di]) == 0: # non delayed, undirected
+        if float(row[li]) > 0:
           relation = "pu"
         elif float(row[li]) < 0:
           relation = "nu"
