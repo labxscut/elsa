@@ -33,7 +33,6 @@ import sys, csv, re, os, time, argparse, string, tempfile
 #numeric libs
 import numpy as np
 import scipy as sp
-import lsalib
 try:
   #debug import
   import lsalib

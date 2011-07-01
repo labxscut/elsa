@@ -31,112 +31,99 @@
 
 #public libs
 import optparse, sys, os, csv, re
-#libs for debug use only
-import pdb
-#import hotshot
-#import hprofile
-#import hpstats
-#assume private lsa-lib is in the parent path
-#libPath = "../lsa-lib"
-#sys.path.append(libPath)
-#import lsaio
-from lsa import lsaio
+try
+  # debug
+  import lsaio
+except ImportError:
+  # installed 
+  from lsa import lsaio
 
 def main():
 
-    parser = optparse.OptionParser("usage: %prog [options] lsaFile")
+  # define arguments: delayLimit, fillMethod, permuNum
+  parser = argparse.ArgumentParser(description="Auxillary tool to new LSA package for querying lsa results")
 
-    # 3 optional arguments: delayLimit, fillMethod, permuNum
-    parser.add_option("-o", "--outputFile", dest="outputFile", default="",
-                      help="specify the output file, default: on the screen")
-    parser.add_option("-p", "--pValue", dest="pValue", default=0.05, type="float",
-                      help="specify the highest pValue threshold to display, default: 0.05") 
-    parser.add_option("-c", "--pCorr", dest="pCorr", default=1., type="float",
-                      help="specify the highest Pearson Correlation threshold to display, default: 1.0")
-    parser.add_option("-d", "--delayLimit", dest="delayLimit", default=3, type="int",
-                      help="specify the longest delay threshhold to display, default: 3")
-    parser.add_option("-r", "--referFile", dest="referFile", default="",
-                      help="if specified, will display factor label instead of factor indecies")
-    parser.add_option("-s", "--2sif", dest="sifFile", default="",
+  parser.add_argument("rawFile", metavar= "rawFile", type=argparse.FileType('r'), help="the raw lsa file")
+  parser.add_argument("entryFile", metavar= "entryFile", type=argparse.FileType('w'), help="the query result file")
+
+  parser.add_argument("-p", "--pValue", dest="pValue", default=0.05, type=float,
+                      help="specify the pValue threshold for querying, default: 0.05") 
+  parser.add_argument("-c", "--PCC", dest="PCC", default=1., type=float,
+                      help="specify the highest Pearson Correlation Coefficient for querying, default: 1.0")
+  parser.add_argument("-q", "--qValue", dest="qValue", default=0.05, type=float,
+                      help="specify the qValue threshold for querying, default: 0.05") 
+  parser.add_argument("-d", "--delayLimit", dest="delayLimit", default=3, type=int,
+                      help="specify the longest delay threshhold for querying, default: 3")
+  parser.add_argument("-s", "--sifFile", dest="sifFile", default="", type=argparse.FileType('r'),
                       help="if specified, will also produce a SIF format file for cytoscape")
-    parser.add_option("-l", "--listFactors", dest="listFactors", default="",
-        help="Specify the factor of interest in a list separateb by comma: f1,f2,f3")
-    (options, args) = parser.parse_args()
+  parser.add_argument("-l", "--listFactors", dest="listFactors", default="",
+                      help="query only the factors of interest in the list separated by comma: f1,f2,f3")
+  arg_namespace = parser.parse_args()
 
-    # 2 positional arguments: dataFile, resultFile
-    if len(args) != 1:
-        parser.error("incorrect number of arguments, use -h for more help")
+  #get the arguments
+  print >>sys.stderr, "lsa-query"
+  print >>sys.stderr, "copyright Li Xia, lxia@usc.edu"
+  print >>sys.stderr, "learning arguments..."
+  
+  rawFile = vars(arg_namespace)['rawFile']
+  entryFile = vars(arg_namespace)['entryFile']
+  pValue = vars(arg_namespace)['pValue']
+  PCC = vars(arg_namespace)['PCC']
+  qValue = vars(arg_namespace)['qValue']
+  delayLimit = vars(arg_namespace)['delayLimit']
+  sifFile = vars(arg_namespace)['sifFile']
+  listFactors = vars(arg_namespace)['listFactors']
 
-    #get the arguments
-    print >>sys.stderr, "lsa-query"
-    print >>sys.stderr, "copyright Li Xia, lxia@usc.edu"
-    print >>sys.stderr, "learning arguments..."
-    delayLimit = options.delayLimit
-    lsaFile = args[0]
-    outputFile = options.outputFile
-    referFile = options.referFile
-    pValue = options.pValue
-    pCorr = options.pCorr
-    delayLimit = options.delayLimit
-    sifFile = options.sifFile
-    listFactors = options.listFactors
-    #removeZero = options.removeZero
-    print >>sys.stderr, "delayLimit=" + repr(delayLimit)
-    print >>sys.stderr, "threshold pValue=" + repr(pValue)
-    print >>sys.stderr, "threshold pCorr=" + repr(pCorr)
+  #print >>sys.stderr, "delayLimit=" + repr(delayLimit)
+  #print >>sys.stderr, "threshold pValue=" + repr(pValue)
+  #print >>sys.stderr, "threshold pCorr=" + repr(pCorr)
 
-    print >>sys.stderr, "testing lsaFile and outputFile..."
+  #print >>sys.stderr, "testing lsaFile and outputFile..."
 
-    lsaTable = lsaio.tryIO(lsaFile, "rU")
-    rawTable = lsaio.readTable(lsaTable, '\t')
-    outTable = sys.stdout
-    if outputFile != "":
-        outTable=lsaio.tryIO(outputFile,"w")
+  # rawTable is a list-of-list, where the i-th list is:
+  # [ f1, f2, L-score, L_low, L_up, X_start, Y_start, length, P/N, P-value, PCC,  PCC P-val,  Qvalue  ]
+  # [ 1,  2,  3,       4,     5,    6,       7,       8,      9,   10,      11,   12,         13      ]
 
-    print >>sys.stderr, "querying the lsatable..."
+  rawTable = lsaio.readTable(rawFile, '\t')
 
-    queryTable=lsaio.lowPartTable(rawTable, 8, pValue)
-    queryTable=lsaio.lowPartTable(queryTable, 9, pCorr)
-    queryTable=lsaio.upPartTable(queryTable, 9, -pCorr)
-    queryTable=lsaio.lowPartTable(queryTable, 7, float(delayLimit))
-    queryTable=lsaio.upPartTable(queryTable, 7, -float(delayLimit))
+  print >>sys.stderr, "querying the lsatable..."
 
-    print >>sys.stderr, "removing trivial case where zero vectors perfectly correlated..." 
+  queryTable=rawTable
+  queryTable=lsaio.lowPartTable(queryTable, 10, pValue)                       #P<=pValue
+  queryTable=lsaio.lowPartTable(queryTable, 10, qValue)                       #Q<=qValue
+  queryTable=lsaio.lowPartTable(queryTable, 9,  PCC)                          #|pcc|<=PCC
+  queryTable=lsaio.upPartTable(queryTable, 9,  -PCC)
+  queryTable=lsaio.lowPartTable(queryTable, 7, float(delayLimit))             #|d|<=D
+  queryTable=lsaio.upPartTable(queryTable, 7, -float(delayLimit))
 
-    #if removeZeor == "yes": # remove zero vector trivial cases
-    queryTable=lsaio.nonequalPartTable(queryTable, 3, 1.)
+  print >>sys.stderr, "removing trivial case where zero vectors perfectly correlated..." 
 
-    #if referFile != "":
-    #    print "labeling the result table..."
-    #    referTable=lsaio.tryIO(referFile, "r")
-    #    factorLabels=lsaio.readFirstCol(referTable)
-    #    lsaio.closeIO(referTable)
-    #    queryTable=lsaio.labelTable(queryTable, 1, factorLabels)
-    #    queryTable=lsaio.labelTable(queryTable, 2, factorLabels)
+  #if removeZeor == "yes": # remove zero vector trivial cases
+  #queryTable=lsaio.nonequalPartTable(queryTable, 3, 1.)
 
-    if listFactors != "":
-        if referFile == "":
-            print >>sys.stderr, "Error: can't select the list of Facotrs w/o referFile, try again..."
-            exit(21)
-        else:
-            print >>sys.stderr, "selecting entries involve interested factors..."
-            listFactors = listFactors.split(',')
-            queryTable=lsaio.selectFactors(queryTable, listFactors)
+  #if referFile != "":
+  #    print "labeling the result table..."
+  #    referTable=lsaio.tryIO(referFile, "r")
+  #    factorLabels=lsaio.readFirstCol(referTable)
+  #    lsaio.closeIO(referTable)
+  #    queryTable=lsaio.labelTable(queryTable, 1, factorLabels)
+  #    queryTable=lsaio.labelTable(queryTable, 2, factorLabels)
 
-    print >>sys.stderr, "writing up result file..."
-    lsaio.writeTable(outTable, queryTable, '\t')
+  if listFactors != None:
+    print >>sys.stderr, "selecting entries involve interested factors..."
+    listFactors = listFactors.split(',')
+    queryTable=lsaio.selectFactors(queryTable, listFactors)
 
-    if sifFile != "":
-        print >>sys.stderr, "filtering result for as SIF file for cytoscape..."
-        sifTable=lsaio.tryIO(sifFile,"w")
-        lsaio.writeTable(sifTable, lsaio.toSif(queryTable), "\t")
-        lsaio.closeIO(sifTable)
+  print >>sys.stderr, "writing up result file..."
+  lsaio.writeTable(entryFile, queryTable, '\t')
 
-    print >>sys.stderr, "finishing up..."
-    lsaio.closeIO(lsaTable)
-    print >>sys.stderr, "Thank you for using lsa-query, byebye!"
-    lsaio.closeIO(outTable)
+  if sifFile != "":
+    print >>sys.stderr, "filtering result for as SIF file for cytoscape..."
+    lsaio.writeTable(sifFile, toSif(queryTable),  '\t')
+
+  print >>sys.stderr, "finishing up..."
+  print >>sys.stderr, "Thank you for using lsa-query, byebye!"
 
 if __name__=="__main__":
-    main()
-    exit(0)
+  main()
+  exit(0)
