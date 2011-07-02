@@ -41,14 +41,14 @@ LSA_Result DP_lsa( const LSA_Data& data, bool keep_trace ){  //python does not s
 	//cout << "max_s=" << max_s << ";max_p="<< max_p[0] <<","<<max_p[1]<<endl;
   int length=0; vector<int> step; step.push_back(max_p[0]); step.push_back(max_p[1]);
   if (porn == -1) {
-	  lsa_result.score=-1*nsm[max_p[0]][max_p[1]];
+	  lsa_result.score=-1*nsm[max_p[0]][max_p[1]]/data.X.size();      //though it is not enforced, assert(len(X)==len(Y))
     //cout<<"porn="<<porn<<":score="<<lsa_result.score<<endl;
     while(nsm[max_p[0]-length][max_p[1]-length]!=0. && keep_trace == true) { 
       length++; lsa_result.trace.push_back(step); step.clear(); 
       step.push_back(max_p[0]-length); step.push_back(max_p[1]-length); }
   }
   else {
-    lsa_result.score=psm[max_p[0]][max_p[1]];
+    lsa_result.score=psm[max_p[0]][max_p[1]]/data.X.size();         //though it is not enforced, assert(len(X)==len(Y))
     //cout<<"porn="<<porn<<":score="<<lsa_result.score<<endl;
     while(psm[max_p[0]-length][max_p[1]-length]!=0. && keep_trace == true) { 
       length++; lsa_result.trace.push_back(step); step.clear(); 

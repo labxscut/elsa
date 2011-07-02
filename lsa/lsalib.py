@@ -196,8 +196,8 @@ def storeyQvalue(pvalues, lam=np.arange(0,0.9,0.05), method='smoother', robust=F
   pi_0 = np.max( [np.min( [np.min(pi_0), 1]), 0] ) #0<=pi_0<=1
   p_argsort = np.argsort(pvalues)
   p_ranks = tied_rank(pvalues)
-  #print "lam,pi_set,pi_0:", lam, pi_set, pi_0
-  #print "pi_0, p_ranks, pvalues, len(pvalues)", pi_0, p_ranks, pvalues, len(pvalues)
+  print "lam,pi_set,pi_0:", lam, pi_set, pi_0
+  print "pi_0, p_ranks, pvalues, len(pvalues)", pi_0, p_ranks, pvalues, len(pvalues)
   if robust:
     qvalues = pi_0*len(pvalues)*pvalues/(p_ranks*(1-np.power((1-pvalues),len(pvalues))))
   else:

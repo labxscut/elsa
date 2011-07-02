@@ -7,4 +7,4 @@ lsa_compute.py ../test/olddata.txt ../test/olddata.lsa -r 1 -s 35 -d 3
 #query_olddata
 lsa_query.py ../test/olddata.lsa ../test/olddata.lsa.entry -s ../test/olddata.lsa.sif
 #newdata
-lsa_compute.py ../test/newdata.txt ../test/newdata.lsa -r 1 -s 35 -d 3
+#lsa_compute.py ../test/newdata.txt ../test/newdata.lsa -r 1 -s 35 -d 3
