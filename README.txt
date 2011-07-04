@@ -5,7 +5,7 @@ PACKAGE NAME:
     Local Similarity Analysis(LSA)
 
 DEPENDENCY:
-    Python(>=2.5) 
+    Python(>=2.7) 
         download @ http://www.python.org/
     Numpy(>=1.0)
         download @ http://www.scipy.org/
@@ -34,22 +34,14 @@ FILES:
 
 INSTALL:
     For Linux/Mac/Unix, after untar: 
-        python setup.py install #STANDALONE#
         python setup.py install --install-scripts=$HOME/bin
-    For Windows:
-        download the installer for win32 in dist sub folder and execute it
     Note: 
-        for details look into INSTALL.txt, you can find it at:
-            https://128.125.86.98/svn/lsa/tags/current/INSTALL.txt
+        for details look into INSTALL.txt
 
 EXECUTABLES:
     Unix/Linux: 
-        lsa-compute.py and lsa-query.py can be found in "/usr/bin/"
-        make sure "/usr/bin/" is in your PATH environment variable
-    Windows:
-        lsa-compute.py and lsa-query.py can be found in "%PYTHON_HOME%\Scripts\"
-        %PYTHON_HOME% stands for your Python installation directory, such as "D:\Python"
-        make sure "%PYTHON_HOME%\Scripts\" is in your %Path% envrironment variable
+        lsa-compute.py and lsa-query.py can be found in "$HOME/bin"
+        make sure "$HOME/bin" is in your PATH environment variable
 
 USAGE HELP:
     lsa-compute.py -h

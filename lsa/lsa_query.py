@@ -37,7 +37,6 @@ try:
 except ImportError:
   # debug
   import lsaio
-  np.seterr(all='raise')
 
 def main():
 
