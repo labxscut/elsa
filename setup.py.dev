@@ -85,3 +85,6 @@ setup(name="lsa",
         ]
     }
 )
+
+#if not sys.path.exists( "lsa/_compcore.so" ):
+#  subprocess.Popen( "ln -s ../build/lib.macosx-10.6-intel-2.7/lsa/_compcore.so

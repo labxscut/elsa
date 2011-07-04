@@ -32,11 +32,12 @@
 #public libs
 import argparse, sys, os, csv, re
 try:
-  # debug
-  import lsaio
-except ImportError:
   # installed 
   from lsa import lsaio
+except ImportError:
+  # debug
+  import lsaio
+  np.seterr(all='raise')
 
 def main():
 

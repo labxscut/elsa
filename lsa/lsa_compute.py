@@ -34,11 +34,12 @@ import sys, csv, re, os, time, argparse, string, tempfile
 import numpy as np
 import scipy as sp
 try:
-  #debug import
-  import lsalib
-except ImportError:
   #installed import
   from lsa import lsalib
+except ImportError:
+  #debug import
+  import lsalib
+  #np.seterr(all='raise')
 
 def main():  
 
@@ -140,9 +141,10 @@ def main():
   #[ Seq X's Idx, Seq Y's Idx, LS Score, CI_low, CI_high, X's Start Position, 
   #        Y's Start Position, Alignment Length, X delay to Y,
   #        P-value, Pearson' Correlation, P-value of PCC, Q-value ]
-
-  print >>sys.stderr, "writing results..."
+  print >>sys.stderr, "data size factorNum, repNum, spotNum = %s, %s, %s" % (cleanData.shape[0], cleanData.shape[1], cleanData.shape[2])
+  print >>sys.stderr, "calculating ..."
   lsaTable = lsalib.applyAnalysis( cleanData, delayLimit=delayLimit, bootNum=bootNum, permuNum=permuNum, fTransform=fTransform )
+  print >>sys.stderr, "writing results ..."
   print >>resultFile,  "\t".join(['X','Y','LS','lowCI','upCI','Xs','Ys','Len','Delay','P','PCC','Ppcc','Q'])
   for row in lsaTable:
     #print [factorLabels[row[0]], factorLabels[row[1]]] + ["%.4f" % v if isinstance(v, float) else v for v in row[2:]]

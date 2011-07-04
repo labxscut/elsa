@@ -1,5 +1,4 @@
 #lsalib.py -- Library of Local Similarity Analysis(LSA) Package
-
 #LICENSE: BSD
 
 #Copyright (c) 2008 Li Charles Xia
@@ -44,11 +43,11 @@ import scipy.stats
 
 #import lower level resource
 try:
-  #try for debug
-  import compcore
-except ImportError:
   #else run as installed
   from lsa import compcore
+except ImportError:
+  #try for debug
+  import compcore
 
 """Synopsis:
     #Xf = simpleAverage( X )												#F: transform function
@@ -182,28 +181,41 @@ def storeyQvalue(pvalues, lam=np.arange(0,0.9,0.05), method='smoother', robust=F
   if method=='smoother':
     spline_fit = sp.interpolate.interp1d(lam, pi_set, kind=smooth_df)
     pi_0 = spline_fit(np.max(lam))
-  else: #bootstrap, currently not working !!!
+    pi_0 = np.max( [np.min( [np.min(pi_0), 1]), 0] ) #0<=pi_0<=1
+    if pi_0 == 0:
+      print >>sys.stderr, "Warning: smoother method not working, fall back to bootstrap"
+      method='bootstrap'
+
+  if method=='bootstrap':                            #bootstrap
     pi_min = np.min(pi_set)
     mse = np.zeros(100, dtype='float')
     pi_set_boot = np.zeros((100, len(lam)), dtype='float')
     for j in xrange(0, 100):
       p_boot = sample_wr(pvalues, len(pvalues))
       for i in xrange(0, len(lam)):
-        pi_set_boot[i] = np.mean(p_boot>=lam[i])/(1-lam[i]) 
-      mse[j] = (pi_set_boot-pi_min)**2
-    pi_0 = np.min(pi_set[mse==min(mse)])
+        pi_set_boot[j][i] = np.mean(p_boot>=lam[i])/(1-lam[i]) 
+      mse[j] = (pi_set_boot[j]-pi_min)**2
+    pi_0 = np.min(pi_set_boot[mse==np.min(mse)])
+    pi_0 = np.max( [np.min( [np.min(pi_0), 1]), 0] ) #0<=pi_0<=1
+    if pi_0 == 0:
+      print >>sys.stderr, "Warning: bootstrap method not working, cannot estimate qvalues"
+      return np.array( [np.nan] * len(pvalues) )
 
-  pi_0 = np.max( [np.min( [np.min(pi_0), 1]), 0] ) #0<=pi_0<=1
+  #print "pvalues=", pvalues
+  #print "pi_0=", pi_0
   p_argsort = np.argsort(pvalues)
+  #print "argsort of p=", pvalues[p_argsort]
   p_ranks = tied_rank(pvalues)
-  print "lam,pi_set,pi_0:", lam, pi_set, pi_0
-  print "pi_0, p_ranks, pvalues, len(pvalues)", pi_0, p_ranks, pvalues, len(pvalues)
+  #print "tied rank of p=", p_ranks
+  #print "lam,pi_set,pi_0:", lam, pi_set, pi_0
+  #print "pi_0, p_ranks, pvalues, len(pvalues)", pi_0, p_ranks, pvalues, len(pvalues)
   if robust:
     qvalues = pi_0*len(pvalues)*pvalues/(p_ranks*(1-np.power((1-pvalues),len(pvalues))))
   else:
     qvalues = pi_0*len(pvalues)*pvalues/p_ranks  
-  qvalues[p_argsort[len(pvalues)-1]] = np.min( [qvalues[len(pvalues)-1], 1] ) # argsort in asscending order
-  for i in reversed(range(0,len(pvalues)-1)): #don't know why it is so complicated here, why not just use qvalues; to enssure desencing order!!!
+  #print "qvalues=", qvalues
+  qvalues[p_argsort[len(qvalues)-1]] = np.min( [qvalues[p_argsort[len(qvalues)-1]], 1] ) # argsort in asscending order
+  for i in reversed(range(0,len(qvalues)-1)): #don't know why it is so complicated here, why not just use qvalues; to enssure desencing order!!!
     qvalues[p_argsort[i]] = np.min( [qvalues[p_argsort[i]], qvalues[p_argsort[i+1]], 1] )
   return qvalues
 
@@ -337,7 +349,8 @@ def applyAnalysis( cleanData, delayLimit=3, bootCI=.95, bootNum=1000, permuNum=1
       pvalues[ti] = permuP
       Al = len(LSA_result.trace)
       (Xs, Ys, Al) = (LSA_result.trace[Al-1][0], LSA_result.trace[Al-1][1], len(LSA_result.trace))
-      (PCC, P_PCC) = sp.stats.pearsonr(np.mean(cleanData[i], axis=0), np.mean(cleanData[j], axis=0))
+      #print cleanData[i], cleanData[j], np.mean(cleanData[i], axis=0)+np.finfo(np.double).eps, np.mean(cleanData[j], axis=0)+np.finfo(np.double).eps
+      (PCC, P_PCC) = sp.stats.pearsonr(np.mean(cleanData[i], axis=0), np.mean(cleanData[j], axis=0))# +epsilon to avoid all zeros
       #PCC = sp.corrcoef( cleanData[i], cleanData[j] )[0,1]
       #tcdf = sp.stats.distributions.t.cdf( PCC*np.sqrt((spotNum-1)/np.float(1.000000001-PCC**2)), (spotNum-1))
       #P_PCC = .5 + np.sign(PCC)*(.5 - tcdf )                                                                             #addhoc for perfect correlation
