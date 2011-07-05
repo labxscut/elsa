@@ -56,12 +56,12 @@ def main():
   parser.add_argument("-b", "--bootNum", dest="bootNum", default=100, type=int, choices=[100, 200, 500, 1000, 2000],
                     	help="specify the number of bootstraps for 95%% confidence interval estimation, default: 100,\n \
                           choices: 100, 200, 500, 1000, 2000.")   #use %% to print %
-  parser.add_argument("-r", "--repNum", dest="repNum", default=1, type=int, choices=range(1,10),
+  parser.add_argument("-r", "--repNum", dest="repNum", default=1, type=int,
                     	help="specify the number of replicates each time spot, default: 1,      \n \
-                          choices: 1 to 10.")
+                          must be provided and valid. ")
   parser.add_argument("-s", "--spotNum", dest="spotNum", default=4, type=int, 
-                    	help="specify the number of time spots, default: 1,                     \n \
-                          choices: 1 to 1000.")
+                    	help="specify the number of time spots, default: 4,                     \n \
+                          must be provided and valid. ")
   parser.add_argument("-t", "--transFunc", dest="transFunc", default='simple', choices=['simple', 'SD'],
                       help="specify the method to summarize replicates data, default: simple, \n \
                           choices: simple, SD                                                 \n \
@@ -69,14 +69,14 @@ def main():
                           simple: simple averaging                                            \n \
                           SD: standard deviation weighted averaging;" )
   parser.add_argument("-f", "--fillMethod", dest="fillMethod", default='none', choices=['none', 'zero', 'linear', 'quadratic', 'cubic', 'slinear', 'nearest'],
-                    	help= "specify the method to fill missing, default: zero,               \n \
-                          choices: discard, zero, linear, quadratic, cubic, slinear, nearest  \n \
+                    	help= "specify the method to fill missing, default: none,               \n \
+                          choices: none, zero, linear, quadratic, cubic, slinear, nearest  \n \
                           NOTE:                                            \n \
                           none: fill up with zeros;                        \n \
                           zero: fill up with zero order splines;           \n \
                           linear: fill up with linear splines;             \n \
                           slinear: fill up with slinear;                   \n \
-                          quad: fill up with quadratic spline;             \n \
+                          quadratic: fill up with quadratic spline;             \n \
                           cubic: fill up with cubic spline;                \n \
                           nearest: fill up with nearest neighbor") 
   
