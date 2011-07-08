@@ -54,8 +54,8 @@ def main():
                       help="specify the qValue threshold for querying, default: 0.05") 
   parser.add_argument("-d", "--delayLimit", dest="delayLimit", default=3, type=int,
                       help="specify the longest delay threshhold for querying, default: 3")
-  parser.add_argument("-s", "--sifFile", dest="sifFile", default="",
-                      help="if specified, will also produce a SIF format file for cytoscape")
+  parser.add_argument("-x", "--xgmmlFile", dest="xgmmlFile", default="",
+                      help="if specified, will also produce a XGMML format file for cytoscape")
   parser.add_argument("-l", "--listFactors", dest="listFactors", default="",
                       help="query only the factors of interest in the list separated by comma: f1,f2,f3")
   arg_namespace = parser.parse_args()
@@ -71,8 +71,9 @@ def main():
   PCC = vars(arg_namespace)['PCC']
   qValue = vars(arg_namespace)['qValue']
   delayLimit = vars(arg_namespace)['delayLimit']
-  sifFile = vars(arg_namespace)['sifFile']
+  xgmmlFile = vars(arg_namespace)['xgmmlFile']
   listFactors = vars(arg_namespace)['listFactors']
+  analysisTitle = os.path.basename(rawFile.name)
 
   #print >>sys.stderr, "delayLimit=" + repr(delayLimit)
   #print >>sys.stderr, "threshold pValue=" + repr(pValue)
@@ -120,9 +121,9 @@ def main():
   print >>sys.stderr, "writing up result file..."
   lsaio.writeTable(entryFile, queryTable, '\t')
 
-  if sifFile != "":
-    print >>sys.stderr, "filtering result as a SIF file for cytoscape..."
-    lsaio.writeTable(lsaio.tryIO(sifFile,'w'), lsaio.toSif(queryTable),  '\t')
+  if xgmmlFile != "":
+    print >>sys.stderr, "filtering result as a XGMML file for visualization such as cytoscape..."
+    print >>lsaio.tryIO(xgmmlFile,'w'), lsaio.toXgmml(queryTable, analysisTitle)
 
   print >>sys.stderr, "finishing up..."
   print >>sys.stderr, "Thank you for using lsa-query, byebye!"

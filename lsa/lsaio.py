@@ -35,6 +35,8 @@
 """
 
 import os, sys, csv
+import xml.etree.ElementTree as etree
+import xml.dom.minidom
 
 def tryIO( file, mode ):
   """ Test the IO file before using it.
@@ -219,6 +221,80 @@ def selectFactors( table, list, skiprows=1 ):
     elif (entry[0] in list) or (entry[1] in list):
       newTable.append(entry)
   return newTable
+
+# filter of XGMML 
+def toXgmml( table, title, skiprows=1 ):
+  """ filter lsa table into xgmml format
+  table - input table
+  """
+  
+  nodes = set()
+  for i in xrange(skiprows, len(table)):
+    nodes.add(table[i][0])
+    nodes.add(table[i][1])
+
+  xgmml_element=etree.Element('graph')
+  xgmml_element.set('xmlns:dc', "http://purl.org/dc/elements/1.1/")
+  xgmml_element.set('xmlns:xlink', "http://www.w3.org/1999/xlink")
+  xgmml_element.set('xmlns:rdf', "http://www.w3.org/1999/02/22-rdf-syntax-ns#")
+  xgmml_element.set('xmlns:cy', "http://www.cytoscape.org")
+  xgmml_element.set('xmlns', "http://www.cs.rpi.edu/XGMML")
+  xgmml_element.set('directed', "1")
+  xgmml_element.set('label', "LSA Network") 
+
+  for node in nodes:
+    node_element = etree.SubElement(xgmml_element, 'node')
+    node_element.set('id', node)
+    node_element.set('name', node)
+    node_element.set('label', node)
+    factorName_element = etree.SubElement(node_element, 'att')
+    factorName_element.set('type', 'string')
+    factorName_element.set('name', 'factorName')
+    factorName_element.set('value', node)
+
+  #[ f1, f2, LS, lowCI, upCI, Xs, Ys, Len, Delay, P, PCC,  Ppcc,  Q ]
+  #[ 1,  2,  3,      4,    5,  6,  7,   8,     9,10,  11,    12, 13 ]
+
+  di = 8
+  li = 2
+
+  for i in xrange(skiprows, len(table)):
+    if table[i][di] > 0:
+      rcode = 'dr'      #direction lead
+    elif table[i][di] < 0:
+      rcode = 'dl'      #direction retard
+    else:
+      rcode = 'u'
+    if table[i][li] >= 0:
+      ccode = 'p'
+    else:
+      ccode = 'n'
+    interaction = ccode+rcode
+    edge_label = '_'.join( [table[i][0], interaction, table[i][1]] )
+    edge_element = etree.SubElement(xgmml_element, 'edge')
+    edge_element.set('label', edge_label )
+    edge_element.set('source', table[i][0] )
+    edge_element.set('target', table[i][1] )
+    interaction_element = etree.SubElement(edge_element, 'att')
+    interaction_element.set('type', 'string')
+    interaction_element.set('name', 'interaction')
+    interaction_element.set('value', interaction)
+    LS_element = etree.SubElement(edge_element, 'att')
+    LS_element.set('type', 'real')
+    LS_element.set('name', 'LS')
+    LS_element.set('value', table[i][2])
+    #P_element = etree.SubElement(edge_element, 'att')
+    #P_element.set('type', 'real')
+    #P_element.set('name', 'P')
+    #P_element.set('value', table[i][9])
+    #Q_element = etree.SubElement(edge_element, 'att')
+    #Q_element.set('type','real')
+    #Q_element.set('name','Q')
+    #Q_element.set('value',table[i][12])
+
+  xgmml_string = etree.tostring(xgmml_element, encoding='utf-8')
+  return xml.dom.minidom.parseString(xgmml_string).toprettyxml('  ')
+
 
 # filter for SIF format table
 def toSif( table, LS_idx=3, Delay_idx=9, skiprows=1):

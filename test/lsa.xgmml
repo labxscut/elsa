@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+<graph label="lsa" directed="1" xmlns="http://www.cs.rpi.edu/XGMML" xmlns:cy="http://www.cytoscape.org" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <node id="50" label="50" name="50">
+    <att type="string" name="factorName" value="50"/>
+  </node>
+  <node id="51" label="51" name="51">
+    <att type="string" name="factorName" value="51"/>
+  </node>
+  <node id="52" label="52" name="52">
+    <att type="string" name="factorName" value="52"/>
+  </node>
+  <node id="53" label="53" name="53">
+    <att type="string" name="factorName" value="53"/>
+  </node>
+  <edge label="50_pdl_51" source="50" target="51">
+    <att name="interaction" type="string" value="pdl"/>
+    <att name="LS" type="real" value="1.11"/>
+  </edge>
+  <edge label="50_ndl_52" source="50" target="52">
+    <att name="interaction" type="string" value="ndl"/>
+    <att name="LS" type="real" value="2.22"/>
+  </edge>
+  <edge label="50_pdr_53" source="50" target="53">
+    <att name="interaction" type="string" value="pdr"/>
+    <att name="LS" type="real" value="3.33"/>
+  </edge>
+  <edge label="51_ndr_52" source="51" target="52">
+    <att name="interaction" type="string" value="ndr"/>
+    <att name="LS" type="real" value="4.44"/>
+  </edge>
+  <edge label="51_pu_53" source="51" target="53">
+    <att name="interaction" type="string" value="pu"/>
+    <att name="LS" type="real" value="5.55"/>
+  </edge>
+  <edge label="52_pu_53" source="52" target="53">
+    <att name="interaction" type="string" value="nu"/>
+    <att name="LS" type="real" value="6.66"/>
+  </edge>
+</graph>
