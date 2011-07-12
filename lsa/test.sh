@@ -8,3 +8,5 @@ lsa_compute.py ../test/olddata.txt ../test/olddata.lsa -r 1 -s 35 -d 3
 lsa_query.py ../test/olddata.lsa ../test/olddata.lsa.entry -x ../test/olddata.lsa.xgmml
 #newdata
 #lsa_compute.py ../test/newdata.txt ../test/newdata.lsa -r 1 -s 35 -d 3
+#debug
+lsa_query.py ../debug/debug2.lsa ../debug/debug2.lsa.entry -x ../debug2.lsa.xgmml
