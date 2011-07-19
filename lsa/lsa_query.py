@@ -89,8 +89,8 @@ def main():
 
   print >>sys.stderr, "querying the lsatable..."
 
-  print "pValue, qValue, PCC, delayLimit, listFactors", pValue, qValue, PCC, delayLimit, listFactors
-  print rawTable
+  #print "pValue, qValue, PCC, delayLimit, listFactors", pValue, qValue, PCC, delayLimit, listFactors
+  #print rawTable
   queryTable=rawTable
   queryTable=lsaio.lowPartTable(queryTable, 10, pValue)                       #P<=pValue
   queryTable=lsaio.lowPartTable(queryTable, 13, qValue)                       #Q<=qValue
@@ -117,7 +117,7 @@ def main():
     listFactors = listFactors.split(',')
     queryTable=lsaio.selectFactors(queryTable, listFactors)
 
-  print queryTable
+  #print queryTable
 
   print >>sys.stderr, "writing up result file..."
   lsaio.writeTable(entryFile, queryTable, '\t')

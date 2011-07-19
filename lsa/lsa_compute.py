@@ -48,7 +48,7 @@ def main():
 
   parser.add_argument("dataFile", metavar= "dataFile", type=argparse.FileType('r'), help="the input data file")
   parser.add_argument("resultFile", metavar= "resultFile", type=argparse.FileType('w'), help="the output result file")
-  parser.add_argument("-d", "--delayLimit", dest="delayLimit", default=3, type=int,
+  parser.add_argument("-d", "--delayLimit", dest="delayLimit", default=3, type=int, 
                     	help="specify the maximum delay possible, default: 3,\n choices: 0 to 6")
   parser.add_argument("-p", "--permuNum", dest="permuNum", default=1000, type=int, choices=[100, 200, 500, 1000, 2000],
                     	help="specify the number of permutations for p-value estimation, default: 1000,\n \
