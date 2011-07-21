@@ -125,8 +125,9 @@ def bootstrapCI(series1, series2, delayLimit, bootCI, bootNum, fTransform, zNorm
     lsad.assign( delayLimit, zNormalize(fTransform(Xb)), zNormalize(fTransform(Yb)) )
     BS_set[i] = compcore.DP_lsa(lsad, False).score
   BS_set.sort()
+  BS_mean = np.mean(BS_set)
   #print "BS_set=", BS_set
-  return ( BS_set[np.floor(bootNum*(1-bootCI)/2.0)], BS_set[np.floor(bootNum*bootCI/2.0)] )
+  return ( BS_mean, BS_set[np.floor(bootNum*(1-bootCI)/2.0)], BS_set[np.floor(bootNum*bootCI/2.0)] )
 	
 def permuPvalue(series1, series2, delayLimit, permuNum, Smax, fTransform, zNormalize):
   """ do permutation Test
@@ -147,7 +148,7 @@ def permuPvalue(series1, series2, delayLimit, permuNum, Smax, fTransform, zNorma
 	
   ###print "-------permutation------"
   lsad = compcore.LSA_Data()
-  PP_set = np.zeros(permuNum, dtype='float')
+  PP_set = np.zeros(permuNum+1, dtype='float')
   Xz = zNormalize(fTransform(series1))
   Y = np.array(series2)                                               #use = only assigns reference, must use a constructor
   #print "series2=", series2, fTransform(series2), zNormalize(fTransform(series2))
@@ -156,9 +157,10 @@ def permuPvalue(series1, series2, delayLimit, permuNum, Smax, fTransform, zNorma
     #print "Y=", Y, fTransform(Y), zNormalize(fTransform(Y))
     lsad.assign( delayLimit, Xz, zNormalize(fTransform(Y)) )
     PP_set[i] = np.abs(compcore.DP_lsa(lsad, False).score)
+  PP_set[permuNum]=Smax                                               #the original test is also considerred
   #print "series2=", series2, fTransform(series2), zNormalize(fTransform(series2))
   #print "PP_set", PP_set, PP_set >= Smax, np.sum(PP_set>=Smax), np.float(permuNum)
-  return np.sum(PP_set >= Smax)/np.float(permuNum)
+  return np.sum(PP_set >= Smax)/np.float(permuNum+1)
 
 def storeyQvalue(pvalues, lam=np.arange(0,0.9,0.05), method='smoother', robust=False, smooth_df=3):
   """ do Q-value calculation
@@ -188,7 +190,7 @@ def storeyQvalue(pvalues, lam=np.arange(0,0.9,0.05), method='smoother', robust=F
 
   if method=='bootstrap':                            #bootstrap
     pi_min = np.min(pi_set)
-    mse = np.zeros(100, dtype='float')
+    mse = np.zeros((100, len(lam)), dtype='float')
     pi_set_boot = np.zeros((100, len(lam)), dtype='float')
     for j in xrange(0, 100):
       p_boot = sample_wr(pvalues, len(pvalues))
@@ -336,6 +338,7 @@ def applyAnalysis( cleanData, delayLimit=3, bootCI=.95, bootNum=1000, permuNum=1
   spotNum = cleanData.shape[2]
   lsaTable = [None]*(factorNum*(factorNum-1)/2)
   pvalues = np.zeros(factorNum*(factorNum-1)/2, dtype='float')
+  pccpvalues = np.zeros(factorNum*(factorNum-1)/2, dtype='float')
 
   #print factorNum, repNum, spotNum, lsaTable, pvalues
 
@@ -343,14 +346,16 @@ def applyAnalysis( cleanData, delayLimit=3, bootCI=.95, bootNum=1000, permuNum=1
   for i in xrange(0, factorNum-1):
     for j in xrange(i+1, factorNum):
       LSA_result = singleLSA(cleanData[i], cleanData[j], delayLimit, fTransform, zNormalize, True)                          # do LSA computation
-      Smax = LSA_result.score                                                                                         # get Smax
-      (Sl, Su) = bootstrapCI(cleanData[i], cleanData[j], delayLimit, bootCI, bootNum, fTransform, zNormalize)         # do Bootstrap CI
-      permuP = permuPvalue(cleanData[i], cleanData[j], delayLimit, permuNum, np.abs(Smax), fTransform, zNormalize)    # do Permutation Test
+      Smax = LSA_result.score                                                                                               # get Smax
+      (Sm, Sl, Su) = bootstrapCI(cleanData[i], cleanData[j], delayLimit, bootCI, bootNum, fTransform, zNormalize)           # do Bootstrap CI
+      (Sl, Su) = (Sl-(Sm-Smax), Su-(Sm-Smax))                                                                               # bootstrap bias corrected
+      permuP = permuPvalue(cleanData[i], cleanData[j], delayLimit, permuNum, np.abs(Smax), fTransform, zNormalize)          # do Permutation Test
       pvalues[ti] = permuP
       Al = len(LSA_result.trace)
       (Xs, Ys, Al) = (LSA_result.trace[Al-1][0], LSA_result.trace[Al-1][1], len(LSA_result.trace))
       #print cleanData[i], cleanData[j], np.mean(cleanData[i], axis=0)+np.finfo(np.double).eps, np.mean(cleanData[j], axis=0)+np.finfo(np.double).eps
       (PCC, P_PCC) = sp.stats.pearsonr(np.mean(cleanData[i], axis=0), np.mean(cleanData[j], axis=0))# +epsilon to avoid all zeros
+      pccpvalues[ti] = P_PCC
       #PCC = sp.corrcoef( cleanData[i], cleanData[j] )[0,1]
       #tcdf = sp.stats.distributions.t.cdf( PCC*np.sqrt((spotNum-1)/np.float(1.000000001-PCC**2)), (spotNum-1))
       #P_PCC = .5 + np.sign(PCC)*(.5 - tcdf )                                                                             #addhoc for perfect correlation
@@ -359,8 +364,10 @@ def applyAnalysis( cleanData, delayLimit=3, bootCI=.95, bootNum=1000, permuNum=1
 
   #print "pvalues", pvalues
   qvalues = storeyQvalue( pvalues )
+  pccqvalues = storeyQvalue( pccpvalues )
   for i in xrange(0, len(qvalues)):
     lsaTable[i].append( qvalues[i] )
+    lsaTable[i].append( pccqvalues[i] )
 
   return lsaTable
 
@@ -403,11 +410,11 @@ def test():
   lsar = singleLSA(clean_data[0], clean_data[1], delayLimit=1, fTransform=simpleAverage, zNormalize=scoreNormalize, keepTrace=True)
   print >>sys.stderr, lsar.score
   print >>sys.stderr, "---bootstrapCI---"
-  print >>sys.stderr, bootstrapCI(clean_data[0], clean_data[1], 1, .99, 10, simpleAverage, scoreNormalize)
+  print >>sys.stderr, bootstrapCI(clean_data[0], clean_data[1], 1, .95, 10, simpleAverage, scoreNormalize)
   print >>sys.stderr, "---permuPvalue---"
   print >>sys.stderr, "p-value:", permuPvalue(clean_data[1], clean_data[0], 1, 10, np.abs(lsar.score), simpleAverage, scoreNormalize)
   print >>sys.stderr, "---applyAnalysis---"
-  print >>sys.stderr, applyAnalysis(clean_data, 1, .99, 10, 10, simpleAverage, scoreNormalize)
+  print >>sys.stderr, applyAnalysis(clean_data, 1, .95, 10, 10, simpleAverage, scoreNormalize)
   
 
 if __name__=="__main__":

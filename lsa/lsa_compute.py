@@ -145,13 +145,12 @@ def main():
   print >>sys.stderr, "calculating ..."
   lsaTable = lsalib.applyAnalysis( cleanData, delayLimit=delayLimit, bootNum=bootNum, permuNum=permuNum, fTransform=fTransform )
   print >>sys.stderr, "writing results ..."
-  print >>resultFile,  "\t".join(['X','Y','LS','lowCI','upCI','Xs','Ys','Len','Delay','P','PCC','Ppcc','Q'])
+  print >>resultFile,  "\t".join(['X','Y','LS','lowCI','upCI','Xs','Ys','Len','Delay','P','PCC','Ppcc','Q', 'Qpcc'])
+  #print lsaTable
   for row in lsaTable:
-    #print [factorLabels[row[0]], factorLabels[row[1]]] + ["%.4f" % v if isinstance(v, float) else v for v in row[2:]]
-    print >>resultFile, "\t".join(['%s']*13) % \
-          tuple([factorLabels[row[0]], factorLabels[row[1]] ] + ["%.4f" % v if isinstance(v, float) else v for v in row[2:]])
-
-  #output
+    #print [factorLabels[row[0]], factorLabels[row[1]]] + ["%.4f" % v if isinstance(v, float) else v for v in row[2:13]]
+    print >>resultFile, "\t".join(['%s']*14) % \
+          tuple([factorLabels[row[0]], factorLabels[row[1]] ] + ["%.5f" % np.round(v, decimals=5) if isinstance(v, float) else v for v in row[2:]])
 
   print >>sys.stderr, "finishing up..."
   resultFile.close()
