@@ -275,7 +275,7 @@ def	scoreNormalize(tseries):
   """	score normalizing
 
     Args:
-      tseries(np.array):  one time series with replicates
+      tseries(np.array):  time series matrix with replicates
 
     Reterns:
       score normalized tseries
@@ -296,6 +296,19 @@ def	scoreNormalize(tseries):
   #print Xz.shape, shape
   Xz.shape = shape
   return Xz
+
+def noneNormalize(tseries):
+  """ no normalizaing
+
+    Args:
+      tseries(np.array):  time series matrix
+
+    Returns:
+      non normalized tseries
+  """
+
+  return np.nan_to_num(tseries) 
+
 
 def fillMissing(tseries, method):
   """ fill missing data
@@ -360,21 +373,21 @@ def applyAnalysis( cleanData, delayLimit=3, bootCI=.95, bootNum=1000, permuNum=1
   for i in xrange(0, factorNum-1):
     Xz = zNormalize(cleanData[i])
     for j in xrange(i+1, factorNum):
-      print "normalizing..."
+      #print "normalizing..."
       Yz = zNormalize(cleanData[j])
-      print "lsa computing..."
+      #print "lsa computing..."
       LSA_result = singleLSA(Xz, Yz, delayLimit, fTransform, True)                          # do LSA computation
       Smax = LSA_result.score                                                                                               # get Smax
-      print "bootstrap computing..."
+      #print "bootstrap computing..."
       (Sm, Sl, Su) = bootstrapCI(Xz, Yz, delayLimit, bootCI, bootNum, fTransform)           # do Bootstrap CI
       (Sl, Su) = (Sl-(Sm-Smax), Su-(Sm-Smax))                                                                               # bootstrap bias corrected
-      print "permutation test..."
+      #print "permutation test..."
       permuP = permuPvalue(Xz, Yz, delayLimit, permuNum, np.abs(Smax), fTransform)          # do Permutation Test
       pvalues[ti] = permuP
       Al = len(LSA_result.trace)
       (Xs, Ys, Al) = (LSA_result.trace[Al-1][0], LSA_result.trace[Al-1][1], len(LSA_result.trace))
-      print "PPC..." 
-      print np.mean(Xz, axis=0), np.mean(Yz, axis=0)
+      #print "PPC..." 
+      #print np.mean(Xz, axis=0), np.mean(Yz, axis=0)
       (PCC, P_PCC) = sp.stats.pearsonr(np.mean(Xz, axis=0), np.mean(Yz, axis=0))# +epsilon to avoid all zeros
       pccpvalues[ti] = P_PCC
       #PCC = sp.corrcoef( cleanData[i], cleanData[j] )[0,1]
@@ -382,9 +395,9 @@ def applyAnalysis( cleanData, delayLimit=3, bootCI=.95, bootNum=1000, permuNum=1
       #P_PCC = .5 + np.sign(PCC)*(.5 - tcdf )                                                                             #addhoc for perfect correlation
       lsaTable[ti] = [i, j, Smax, Sl, Su, Xs, Ys, Al, Xs-Ys, permuP, PCC, P_PCC]
       ti += 1
-      print "finalizing..."
+      #print "finalizing..."
 
-  print "qvalues ..."
+  #print "qvalues ..."
   #print "pvalues", pvalues
   qvalues = storeyQvalue( pvalues )
   pccqvalues = storeyQvalue( pccpvalues )

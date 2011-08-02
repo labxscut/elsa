@@ -79,6 +79,12 @@ def main():
                           quadratic: fill up with quadratic spline;             \n \
                           cubic: fill up with cubic spline;                \n \
                           nearest: fill up with nearest neighbor") 
+  parser.add_argument("-n", "--normMethod", dest="normMethod", default='score', choices=['none', 'score'],
+                      help= "specify the method to normalize data, default: score,       \n \
+                          choices: none, score                                          \n \
+                          NOTE:                                                         \n \
+                          score: score normalization                                    \n \
+                          none: none normalization")
   
   arg_namespace = parser.parse_args()
 
@@ -89,6 +95,7 @@ def main():
   
   delayLimit = vars(arg_namespace)['delayLimit']
   fillMethod = vars(arg_namespace)['fillMethod']
+  normMethod = vars(arg_namespace)['normMethod']
   permuNum = vars(arg_namespace)['permuNum']
   dataFile = vars(arg_namespace)['dataFile']				#dataFile
   resultFile = vars(arg_namespace)['resultFile']			#resultFile
@@ -101,10 +108,18 @@ def main():
   if repNum < 5 and transFunc == 'SD':
     print >>sys.stderr, "Not enough replicates for SD-weighted averaging, fall back to simple"
     transFunc = 'simple'
+
   if transFunc == 'simple':
     fTransform = lsalib.simpleAverage
   else:
     fTransform = lsalib.sdAverage
+  
+  #check normMethod
+  if normMethod == 'none':
+    zNormalize = lsalib.noneNormalize
+  else:
+    zNormalize = lsalib.scoreNormalize
+  
   #print "\t".join([ 'delayLimit', 'fillMethod', 'permuNum', 'dataFile', 'resultFile', 'repNum', 'spotNum', 'bootNum', 'transFunc' ])
   #print "\t".join(['%s']*9) % (delayLimit, fillMethod, permuNum, dataFile, resultFile, repNum, spotNum, bootNum, transFunc)
   
@@ -143,14 +158,14 @@ def main():
   #        P-value, Pearson' Correlation, P-value of PCC, Q-value ]
   print >>sys.stderr, "data size factorNum, repNum, spotNum = %s, %s, %s" % (cleanData.shape[0], cleanData.shape[1], cleanData.shape[2])
   print >>sys.stderr, "calculating ..."
-  lsaTable = lsalib.applyAnalysis( cleanData, delayLimit=delayLimit, bootNum=bootNum, permuNum=permuNum, fTransform=fTransform )
+  lsaTable = lsalib.applyAnalysis( cleanData, delayLimit=delayLimit, bootNum=bootNum, permuNum=permuNum, fTransform=fTransform, zNormalize=zNormalize )
   print >>sys.stderr, "writing results ..."
   print >>resultFile,  "\t".join(['X','Y','LS','lowCI','upCI','Xs','Ys','Len','Delay','P','PCC','Ppcc','Q', 'Qpcc'])
   #print lsaTable
   for row in lsaTable:
     #print [factorLabels[row[0]], factorLabels[row[1]]] + ["%.4f" % v if isinstance(v, float) else v for v in row[2:13]]
     print >>resultFile, "\t".join(['%s']*14) % \
-          tuple([factorLabels[row[0]], factorLabels[row[1]] ] + ["%.5f" % np.round(v, decimals=5) if isinstance(v, float) else v for v in row[2:]])
+          tuple([factorLabels[row[0]], factorLabels[row[1]] ] + ["%.4f" % np.round(v, decimals=4) if isinstance(v, float) else v for v in row[2:]])
 
   print >>sys.stderr, "finishing up..."
   resultFile.close()
