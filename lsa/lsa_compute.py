@@ -68,8 +68,8 @@ def main():
                           NOTE:                                                               \n \
                           simple: simple averaging                                            \n \
                           SD: standard deviation weighted averaging;" )
-  parser.add_argument("-f", "--fillMethod", dest="fillMethod", default='none', choices=['none', 'zero', 'linear', 'quadratic', 'cubic', 'slinear', 'nearest'],
-                    	help= "specify the method to fill missing, default: none,               \n \
+  parser.add_argument("-f", "--fillMethod", dest="fillMethod", default='linear', choices=['none', 'zero', 'linear', 'quadratic', 'cubic', 'slinear', 'nearest'],
+                    	help= "specify the method to fill missing, default: linear,               \n \
                           choices: none, zero, linear, quadratic, cubic, slinear, nearest  \n \
                           NOTE:                                            \n \
                           none: fill up with zeros;                        \n \
@@ -98,7 +98,7 @@ def main():
   spotNum = vars(arg_namespace)['spotNum']
 
   #check transFunc and repNum compatibility
-  if repNum <= 5 and transFunc == 'SD':
+  if repNum < 5 and transFunc == 'SD':
     print >>sys.stderr, "Not enough replicates for SD-weighted averaging, fall back to simple"
     transFunc = 'simple'
   if transFunc == 'simple':

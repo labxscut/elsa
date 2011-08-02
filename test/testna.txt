@@ -1,4 +1,4 @@
-Fact\T	t1	t2	t3	t4
+#Fact\T	t1	t2	t3	t4
 f1	na	2	3	0
 f2	10	na	na	3
 f3	-2	-4	na	1
