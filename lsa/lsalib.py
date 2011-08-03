@@ -230,7 +230,7 @@ def simpleAverage(tseries):
   return np.average(tseries, axis=0)
 
 
-def	sdAverage(tseries):
+def sdAverage(tseries):
   """	sd weighted averaging 
 
     Args:
