@@ -81,7 +81,9 @@ def singleLSA(series1, series2, delayLimit, fTransform, keepTrace=True):
       new implemented similarity alignment using external C++ routine in compcore
     
   """
-
+  
+  #print "f1=", fTransform(series1)
+  #print "f2=", fTransform(series2)
   lsad=compcore.LSA_Data(delayLimit, fTransform(series1), fTransform(series2))
   lsar=compcore.DP_lsa(lsad, keepTrace)
   return lsar
@@ -241,7 +243,8 @@ def	sdAverage(tseries):
   for v in sd:
     if v == 0:
       return np.average(tseries, axis=0)
-  return np.average(tseries, axis=0)/sd
+  Xf = (np.average(tseries, axis=0)/sd)/np.sum(1/sd)/sd   #sd-weighted sample
+  return (Xf - np.average(Xf))/(np.sqrt(Xf.shape)*np.std(Xf))  #rescale and centralized
 
 
 def tied_rank(values):
@@ -280,8 +283,8 @@ def	scoreNormalize(tseries):
     Reterns:
       score normalized tseries
   """
-
   Xz = tseries              #make a copy
+  #print "before normal, Xz=", Xz
   shape = Xz.shape          #save shape
   Xz = Xz.ravel()                #flatten
   #print Xz.ravel()
@@ -295,6 +298,7 @@ def	scoreNormalize(tseries):
   #print Xz
   #print Xz.shape, shape
   Xz.shape = shape
+  #print "after normal, Xz=", Xz
   return Xz
 
 def noneNormalize(tseries):
@@ -339,7 +343,7 @@ def fillMissing(tseries, method):
         yy[i] = 0
     return yy
     
-def applyAnalysis( cleanData, delayLimit=3, bootCI=.95, bootNum=1000, permuNum=1000, fTransform=simpleAverage, zNormalize=scoreNormalize ):
+def applyAnalysis(cleanData, delayLimit=3, bootCI=.95, bootNum=100, permuNum=1000, fTransform=simpleAverage, zNormalize=scoreNormalize):
   """ calculate pairwise LS scores and p-values
 
     	Args:
@@ -376,11 +380,14 @@ def applyAnalysis( cleanData, delayLimit=3, bootCI=.95, bootNum=1000, permuNum=1
       #print "normalizing..."
       Yz = zNormalize(cleanData[j])
       #print "lsa computing..."
+      #print "Xz=", Xz
+      #print "Yz=", Yz
       LSA_result = singleLSA(Xz, Yz, delayLimit, fTransform, True)                          # do LSA computation
-      Smax = LSA_result.score                                                                                               # get Smax
+      Smax = LSA_result.score                                                               # get Smax
+      #print Smax
       #print "bootstrap computing..."
       (Sm, Sl, Su) = bootstrapCI(Xz, Yz, delayLimit, bootCI, bootNum, fTransform)           # do Bootstrap CI
-      (Sl, Su) = (Sl-(Sm-Smax), Su-(Sm-Smax))                                                                               # bootstrap bias corrected
+      (Sl, Su) = (Sl-(Sm-Smax), Su-(Sm-Smax))                                               # bootstrap bias corrected
       #print "permutation test..."
       permuP = permuPvalue(Xz, Yz, delayLimit, permuNum, np.abs(Smax), fTransform)          # do Permutation Test
       pvalues[ti] = permuP

@@ -84,7 +84,7 @@ def main():
                           choices: none, score                                          \n \
                           NOTE:                                                         \n \
                           score: score normalization                                    \n \
-                          none: none normalization")
+                          none: no normalization")
   
   arg_namespace = parser.parse_args()
 
@@ -109,19 +109,19 @@ def main():
     print >>sys.stderr, "Not enough replicates for SD-weighted averaging, fall back to simple"
     transFunc = 'simple'
 
-  if transFunc == 'simple':
-    fTransform = lsalib.simpleAverage
-  else:
+  if transFunc == 'SD':
     fTransform = lsalib.sdAverage
+  else:
+    fTransform = lsalib.simpleAverage   # fallback to default
   
   #check normMethod
   if normMethod == 'none':
     zNormalize = lsalib.noneNormalize
   else:
-    zNormalize = lsalib.scoreNormalize
+    zNormalize = lsalib.scoreNormalize  # fallback to default
   
-  #print "\t".join([ 'delayLimit', 'fillMethod', 'permuNum', 'dataFile', 'resultFile', 'repNum', 'spotNum', 'bootNum', 'transFunc' ])
-  #print "\t".join(['%s']*9) % (delayLimit, fillMethod, permuNum, dataFile, resultFile, repNum, spotNum, bootNum, transFunc)
+  print "\t".join(['delayLimit','fillMethod','permuNum','dataFile','resultFile','repNum','spotNum','bootNum','transFunc','normMethod' ])
+  print "\t".join(['%s']*10) % (delayLimit,fillMethod,permuNum,dataFile,resultFile,repNum,spotNum,bootNum,transFunc,normMethod)
   
   #start timing main
   start_time = time.time()
@@ -146,19 +146,20 @@ def main():
     for j in xrange(0, repNum):
       #print rawData[i], j, spotNum*repNum, repNum, np.arange(j,spotNum*repNum, repNum)
       cleanData[i,j] = rawData[i][np.arange(j,spotNum*repNum,repNum)]
-  ###print cleanData
+  print cleanData
 
   for i in xrange(0, factorNum):
     for j in range(0, repNum):
       cleanData[i,j] = lsalib.fillMissing( cleanData[i,j], fillMethod )
     
+  #print cleanData
   #calculation
   #[ Seq X's Idx, Seq Y's Idx, LS Score, CI_low, CI_high, X's Start Position, 
   #        Y's Start Position, Alignment Length, X delay to Y,
   #        P-value, Pearson' Correlation, P-value of PCC, Q-value ]
   print >>sys.stderr, "data size factorNum, repNum, spotNum = %s, %s, %s" % (cleanData.shape[0], cleanData.shape[1], cleanData.shape[2])
   print >>sys.stderr, "calculating ..."
-  lsaTable = lsalib.applyAnalysis( cleanData, delayLimit=delayLimit, bootNum=bootNum, permuNum=permuNum, fTransform=fTransform, zNormalize=zNormalize )
+  lsaTable=lsalib.applyAnalysis(cleanData,delayLimit=delayLimit,bootNum=bootNum,permuNum=permuNum,fTransform=fTransform,zNormalize=zNormalize)
   print >>sys.stderr, "writing results ..."
   print >>resultFile,  "\t".join(['X','Y','LS','lowCI','upCI','Xs','Ys','Len','Delay','P','PCC','Ppcc','Q', 'Qpcc'])
   #print lsaTable
