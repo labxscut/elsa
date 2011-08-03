@@ -146,7 +146,7 @@ def main():
     for j in xrange(0, repNum):
       #print rawData[i], j, spotNum*repNum, repNum, np.arange(j,spotNum*repNum, repNum)
       cleanData[i,j] = rawData[i][np.arange(j,spotNum*repNum,repNum)]
-  print cleanData
+  #print cleanData
 
   for i in xrange(0, factorNum):
     for j in range(0, repNum):
