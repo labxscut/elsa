@@ -67,7 +67,7 @@ except ImportError:
 #	[ 1,  2,  3,       4,     5,    6,       7,       8,      9,   10,      11,   12,         13      ]
 ############################### 
         
-def singleLSA(series1, series2, delayLimit, fTransform, keepTrace=True):
+def singleLSA(series1, series2, delayLimit, fTransform, zNormalize, keepTrace=True):
   """	do local simularity alignment 
 		
 		Args:
@@ -84,7 +84,7 @@ def singleLSA(series1, series2, delayLimit, fTransform, keepTrace=True):
   
   #print "f1=", fTransform(series1)
   #print "f2=", fTransform(series2)
-  lsad=compcore.LSA_Data(delayLimit, fTransform(series1), fTransform(series2))
+  lsad=compcore.LSA_Data(delayLimit, zNormalize(fTransform(series1)), zNormalize(fTransform(series2)))
   lsar=compcore.DP_lsa(lsad, keepTrace)
   return lsar
 	
@@ -100,7 +100,7 @@ def sample_wr(population, k):
     result[i] = population[j]
   return np.array(result)
 
-def bootstrapCI(series1, series2, delayLimit, bootCI, bootNum, fTransform):
+def bootstrapCI(series1, series2, delayLimit, bootCI, bootNum, fTransform, zNormalize):
   """	do bootstrap CI estimation
 
 		Args:
@@ -122,14 +122,14 @@ def bootstrapCI(series1, series2, delayLimit, bootCI, bootNum, fTransform):
   for i in range(0, bootNum):
     Xb = np.array([ sample_wr(series1[:,j], series1.shape[0]) for j in xrange(0,series1.shape[1]) ]).T
     Yb = np.array([ sample_wr(series2[:,j], series2.shape[0]) for j in xrange(0,series2.shape[1]) ]).T
-    lsad.assign( delayLimit, fTransform(Xb), fTransform(Yb) )
+    lsad.assign( delayLimit, zNormalize(fTransform(Xb)), zNormalize(fTransform(Yb)) )
     BS_set[i] = compcore.DP_lsa(lsad, False).score
   BS_set.sort()
   BS_mean = np.mean(BS_set)
   #print "BS_set=", BS_set
   return ( BS_mean, BS_set[np.floor(bootNum*(1-bootCI)/2.0)], BS_set[np.floor(bootNum*bootCI/2.0)] )
 	
-def permuPvalue(series1, series2, delayLimit, permuNum, Smax, fTransform):
+def permuPvalue(series1, series2, delayLimit, permuNum, Smax, fTransform, zNormalize):
   """ do permutation Test
 
 		Args:
@@ -148,11 +148,11 @@ def permuPvalue(series1, series2, delayLimit, permuNum, Smax, fTransform):
   ###print "-------permutation------"
   lsad = compcore.LSA_Data()
   PP_set = np.zeros(permuNum+1, dtype='float')
-  Xz = fTransform(series1)
+  Xz = zNormalize(fTransform(series1))
   Y = np.array(series2)                                               #use = only assigns reference, must use a constructor
   for i in xrange(0, permuNum):
     np.random.shuffle(Y.T)
-    lsad.assign( delayLimit, Xz, fTransform(Y) )
+    lsad.assign( delayLimit, Xz, zNormalize(fTransform(Y)) )
     PP_set[i] = np.abs(compcore.DP_lsa(lsad, False).score)
   PP_set[permuNum]=Smax                                               #the original test is also considerred
   #print "PP_set", PP_set, PP_set >= Smax, np.sum(PP_set>=Smax), np.float(permuNum)
@@ -225,9 +225,12 @@ def simpleAverage(tseries):
 
     Reterns:
       one row with replicates averaged
+
+    Note:
+      if nan in tseries, it is treated as zeros, this will happen if fTransform before zNormalize
   """
 
-  return np.average(tseries, axis=0)
+  return np.average(np.nan_to_num(tseries), axis=0)
 
 
 def sdAverage(tseries):
@@ -238,13 +241,17 @@ def sdAverage(tseries):
 
     Reterns:
       one row with replicates sd weighted averaged
+
+    Note:
+      if nan in tseries, it is treated as zeros, this will happen if fTransform before zNormalize
   """
-  sd = np.std(tseries,axis=0,ddof=1)
+  sd = np.std(np.nan_to_num(tseries),axis=0,ddof=1)
   for v in sd:
     if v == 0:
-      return np.average(tseries, axis=0)
-  Xf = (np.average(tseries, axis=0)/sd)/np.sum(1/sd)/sd   #sd-weighted sample
-  return (Xf - np.average(Xf))/(np.sqrt(Xf.shape)*np.std(Xf))  #rescale and centralized
+      return np.average(np.nan_to_num(tseries), axis=0)
+  Xf = (np.average(np.nan_to_num(tseries), axis=0)/sd)/np.sum(1/sd)/sd   #sd-weighted sample
+  #return (Xf - np.average(Xf))/(np.sqrt(Xf.shape)*np.std(Xf))  #rescale and centralized
+  return Xf
 
 
 def tied_rank(values):
@@ -274,14 +281,14 @@ def tied_rank(values):
   return np.array( [ v_cum[values[i]] for i in xrange(0, len(values)) ], dtype='float' )
 
 
-def	scoreNormalize(tseries):
-  """	score normalizing
+def	wholeNormalize(tseries):
+  """	whole normalizing
 
     Args:
       tseries(np.array):  time series matrix with replicates
 
-    Reterns:
-      score normalized tseries
+    Returns:
+      wholely score normalized tseries
   """
   Xz = tseries              #make a copy
   #print "before normal, Xz=", Xz
@@ -300,6 +307,18 @@ def	scoreNormalize(tseries):
   Xz.shape = shape
   #print "after normal, Xz=", Xz
   return Xz
+
+def scoreNormalize(tseries):
+  """ score normalizing
+
+    Args:
+      tseries(np.array): 1-d time series
+    
+    Returns:
+      score normalized time series
+  """
+  ranks = tied_rank(tseries)
+  return sp.stats.distributions.norm.ppf( ranks/(len(ranks)+1) )
 
 def noneNormalize(tseries):
   """ no normalizaing
@@ -326,7 +345,7 @@ def fillMissing(tseries, method):
   """
   
   if method == 'none':
-    return tseries #return with na's
+    return tseries #return with nan's
   else:
     y = tseries[np.logical_not(np.isnan(tseries))]
     x = np.array(range(0, len(tseries)))[np.logical_not(np.isnan(tseries))]
@@ -347,7 +366,7 @@ def applyAnalysis(cleanData, delayLimit=3, bootCI=.95, bootNum=100, permuNum=100
   """ calculate pairwise LS scores and p-values
 
     	Args:
-    		cleanData(np.array): 	numpy data array with correct format factor_num x timespot_num x replicte_num, no missing values
+    		cleanData(np.array): 	numpy data array with correct format factor_num x timespot_num x replicte_num, possibly nans
     		delayLimit(int): 	maximum time unit of delayed response allowed
      		bootCI(float): 		bootstrap confidence interval size, 0 to 1
     		bootNum(int): 		bootstrap number
@@ -375,31 +394,32 @@ def applyAnalysis(cleanData, delayLimit=3, bootCI=.95, bootNum=100, permuNum=100
 
   ti = 0
   for i in xrange(0, factorNum-1):
-    Xz = zNormalize(cleanData[i])
+    Xz = cleanData[i]
     for j in xrange(i+1, factorNum):
       #print "normalizing..."
-      Yz = zNormalize(cleanData[j])
+      Yz = cleanData[j]
       #print "lsa computing..."
       #print "Xz=", Xz
       #print "Yz=", Yz
-      LSA_result = singleLSA(Xz, Yz, delayLimit, fTransform, True)                          # do LSA computation
+      LSA_result = singleLSA(Xz, Yz, delayLimit, fTransform, zNormalize, True)                          # do LSA computation
       Smax = LSA_result.score                                                               # get Smax
       #print Smax
       #print "bootstrap computing..."
-      (Sm, Sl, Su) = bootstrapCI(Xz, Yz, delayLimit, bootCI, bootNum, fTransform)           # do Bootstrap CI
+      (Sm, Sl, Su) = bootstrapCI(Xz, Yz, delayLimit, bootCI, bootNum, fTransform, zNormalize)           # do Bootstrap CI
       (Sl, Su) = (Sl-(Sm-Smax), Su-(Sm-Smax))                                               # bootstrap bias corrected
       #print "permutation test..."
-      permuP = permuPvalue(Xz, Yz, delayLimit, permuNum, np.abs(Smax), fTransform)          # do Permutation Test
+      permuP = permuPvalue(Xz, Yz, delayLimit, permuNum, np.abs(Smax), fTransform, zNormalize)          # do Permutation Test
       pvalues[ti] = permuP
       Al = len(LSA_result.trace)
       (Xs, Ys, Al) = (LSA_result.trace[Al-1][0], LSA_result.trace[Al-1][1], len(LSA_result.trace))
       #print "PPC..." 
       #print np.mean(Xz, axis=0), np.mean(Yz, axis=0)
-      (PCC, P_PCC) = sp.stats.pearsonr(np.mean(Xz, axis=0), np.mean(Yz, axis=0))# +epsilon to avoid all zeros
+      (PCC, P_PCC) = sp.stats.pearsonr(np.mean(np.nan_to_num(Xz), axis=0), np.mean(np.nan_to_num(Yz), axis=0))
+      # need +epsilon to avoid all zeros
       pccpvalues[ti] = P_PCC
       #PCC = sp.corrcoef( cleanData[i], cleanData[j] )[0,1]
       #tcdf = sp.stats.distributions.t.cdf( PCC*np.sqrt((spotNum-1)/np.float(1.000000001-PCC**2)), (spotNum-1))
-      #P_PCC = .5 + np.sign(PCC)*(.5 - tcdf )                                                                             #addhoc for perfect correlation
+      #P_PCC = .5 + np.sign(PCC)*(.5 - tcdf ) #addhoc for perfect correlation
       lsaTable[ti] = [i, j, Smax, Sl, Su, Xs, Ys, Al, Xs-Ys, permuP, PCC, P_PCC]
       ti += 1
       #print "finalizing..."
@@ -441,25 +461,30 @@ def test():
   print >>sys.stderr, "---tied-rank---"
   print >>sys.stderr, tied_rank(clean_data[0][0])
   print >>sys.stderr, "---scoreNormalize---"
-  print >>sys.stderr, scoreNormalize(clean_data[0])
-  print >>sys.stderr, scoreNormalize(clean_data[1])
+  print >>sys.stderr, scoreNormalize(clean_data[0][0])
+  print >>sys.stderr, scoreNormalize(clean_data[0][1])
+  print >>sys.stderr, "---wholeNormalize---"
+  print >>sys.stderr, wholeNormalize(clean_data[0])
+  print >>sys.stderr, wholeNormalize(clean_data[0])
   print >>sys.stderr, "---simpleAverage---" 
-  print >>sys.stderr, simpleAverage(clean_data[0])
+  print >>sys.stderr, simpleAverage(clean_data[1])
   print >>sys.stderr, "---sdAverage---"
-  print >>sys.stderr, sdAverage(clean_data[0])
+  print >>sys.stderr, sdAverage(clean_data[1])
   print >>sys.stderr, "---storeyQvalue---"
   pvalues = np.array([0.01, 0.02, 0.03, 0.04, 0.05, 0.02, 0.03, 0.04, 0.03, 0.03], dtype='float')
   print >>sys.stderr, "pvalues:", pvalues 
   print >>sys.stderr, storeyQvalue(pvalues)
   print >>sys.stderr, "---singleLSA---"
-  lsar = singleLSA(clean_data[0], clean_data[1], delayLimit=1, fTransform=simpleAverage, keepTrace=True)
+  lsar = singleLSA(clean_data[0], clean_data[1], delayLimit=1, fTransform=simpleAverage, zNormalize=scoreNormalize, keepTrace=True)
   print >>sys.stderr, lsar.score
   print >>sys.stderr, "---bootstrapCI---"
-  print >>sys.stderr, bootstrapCI(clean_data[0], clean_data[1], 1, .95, 10, simpleAverage)
+  print >>sys.stderr, bootstrapCI(clean_data[0], clean_data[1], 1, .95, 10, simpleAverage, scoreNormalize)
   print >>sys.stderr, "---permuPvalue---"
-  print >>sys.stderr, "p-value:", permuPvalue(clean_data[1], clean_data[0], 1, 10, np.abs(lsar.score), simpleAverage)
+  print >>sys.stderr, "p-value:", permuPvalue(clean_data[1], clean_data[0], 1, 10, np.abs(lsar.score), simpleAverage, scoreNormalize)
   print >>sys.stderr, "---applyAnalysis---"
   print >>sys.stderr, applyAnalysis(clean_data, 1, .95, 10, 10, simpleAverage, scoreNormalize)
+  print >>sys.stderr, "---applyAnalysis---"
+  print >>sys.stderr, applyAnalysis(clean_data, 1, .95, 10, 10, sdAverage, scoreNormalize)
   
 
 if __name__=="__main__":
