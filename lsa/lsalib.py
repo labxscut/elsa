@@ -100,7 +100,7 @@ def sample_wr(population, k):
     result[i] = population[j]
   return np.array(result)
 
-def bootstrapCI(series1, series2, delayLimit, bootCI, bootNum, fTransform, zNormalize):
+def bootstrapCI(series1, series2, Smax, delayLimit, bootCI, bootNum, fTransform, zNormalize, debug=0):
   """	do bootstrap CI estimation
 
 		Args:
@@ -115,7 +115,11 @@ def bootstrapCI(series1, series2, delayLimit, bootCI, bootNum, fTransform, zNorm
       Confidence Interval
 
 	"""
-	
+
+  ### no feasible, skipping bootstraping
+  if series1.shape[0] == 1:
+    return (Smax, Smax, Smax)
+
   ###print "------Bootstrapping------"
   lsad = compcore.LSA_Data()
   BS_set = np.zeros(bootNum, dtype='float')
@@ -124,10 +128,22 @@ def bootstrapCI(series1, series2, delayLimit, bootCI, bootNum, fTransform, zNorm
     Yb = np.array([ sample_wr(series2[:,j], series2.shape[0]) for j in xrange(0,series2.shape[1]) ]).T
     lsad.assign( delayLimit, zNormalize(fTransform(Xb)), zNormalize(fTransform(Yb)) )
     BS_set[i] = compcore.DP_lsa(lsad, False).score
-  BS_set.sort()
+  BS_set.sort()                                 #from smallest to largest
   BS_mean = np.mean(BS_set)
-  #print "BS_set=", BS_set
-  return ( BS_mean, BS_set[np.floor(bootNum*(1-bootCI)/2.0)], BS_set[np.floor(bootNum*bootCI/2.0)] )
+  #print np.histogram(BS_set, bins=10)
+  a1 = (1-bootCI)/2.0
+  a2 = bootCI+(1-bootCI)/2.0
+  #bias correction steps
+  if debug in [1, 3]:
+    # correct Smax
+    Smax = 2*Smax - BS_mean
+  if debug in [2, 3]:
+    # correct CI
+    z0 = sp.stats.distributions.norm.ppf(np.sum(BS_set <= Smax)/float(bootNum))
+    a1 = sp.stats.distributions.norm.cdf(2*z0+sp.stats.distributions.norm.ppf(a1))
+    a2 = sp.stats.distributions.norm.cdf(2*z0+sp.stats.distributions.norm.ppf(a2))
+    #print "z0=", z0, "a1=", a1, "a2=", a2
+  return ( BS_mean, BS_set[np.floor(bootNum*a1)-1], BS_set[np.ceil(bootNum*a2)-1] )
 	
 def permuPvalue(series1, series2, delayLimit, permuNum, Smax, fTransform, zNormalize):
   """ do permutation Test
@@ -362,7 +378,7 @@ def fillMissing(tseries, method):
         yy[i] = 0
     return yy
     
-def applyAnalysis(cleanData, delayLimit=3, bootCI=.95, bootNum=100, permuNum=1000, fTransform=simpleAverage, zNormalize=scoreNormalize):
+def applyAnalysis(cleanData, delayLimit=3, bootCI=.95, bootNum=1000, permuNum=1000, fTransform=simpleAverage, zNormalize=scoreNormalize):
   """ calculate pairwise LS scores and p-values
 
     	Args:
@@ -403,10 +419,8 @@ def applyAnalysis(cleanData, delayLimit=3, bootCI=.95, bootNum=100, permuNum=100
       #print "Yz=", Yz
       LSA_result = singleLSA(Xz, Yz, delayLimit, fTransform, zNormalize, True)                          # do LSA computation
       Smax = LSA_result.score                                                               # get Smax
-      #print Smax
       #print "bootstrap computing..."
-      (Sm, Sl, Su) = bootstrapCI(Xz, Yz, delayLimit, bootCI, bootNum, fTransform, zNormalize)           # do Bootstrap CI
-      (Sl, Su) = (Sl-(Sm-Smax), Su-(Sm-Smax))                                               # bootstrap bias corrected
+      (Smax, Sl, Su) = bootstrapCI(Xz, Yz, Smax, delayLimit, bootCI, bootNum, fTransform, zNormalize)           # do Bootstrap CI
       #print "permutation test..."
       permuP = permuPvalue(Xz, Yz, delayLimit, permuNum, np.abs(Smax), fTransform, zNormalize)          # do Permutation Test
       pvalues[ti] = permuP
