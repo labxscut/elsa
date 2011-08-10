@@ -252,17 +252,17 @@ def toXgmml( table, title, skiprows=1 ):
     factorName_element.set('name', 'factorName')
     factorName_element.set('value', node)
 
-  #[ f1, f2, LS, lowCI, upCI, Xs, Ys, Len, Delay, P, PCC,  Ppcc,  Q ]
-  #[ 1,  2,  3,      4,    5,  6,  7,   8,     9,10,  11,    12, 13 ]
+  #[ f1, f2, LS, lowCI, upCI, Xs, Ys, Len, Delay, P, PCC,  Ppcc,  Q, Qpcc ]
+  #[ 1,  2,  3,      4,    5,  6,  7,   8,     9,10,  11,    12, 13, 14 ]
 
   di = 8
   li = 2
 
   for i in xrange(skiprows, len(table)):
     if table[i][di] > 0:
-      rcode = 'dr'      #direction lead
+      rcode = 'dr'      #direction retard
     elif table[i][di] < 0:
-      rcode = 'dl'      #direction retard
+      rcode = 'dl'      #direction lead
     else:
       rcode = 'u'
     if table[i][li] >= 0:
@@ -303,13 +303,15 @@ def toSif( table, LS_idx=3, Delay_idx=9, skiprows=1):
   skiprows - number of rows to skip
   """
   sifTable = []
-  li, di = LS_idx-1, Delay_idx-1
+  li = LS_idx-1
+  di = Delay_idx-1
+  #(li, di) = (LS_idx-1, Delay_idx-1)
   idx = 0
   for row in table:
     if idx < skiprows:
       idx = idx +1
-      sifTable.append(["X", "interaction", "Y", row[li], row[di]])
-      print row[li], row[di]
+      sifTable.append( [row[0], "interaction"] + row[1:] )
+      #print row[li], row[di]
       continue
     else:
       relation = "u"
@@ -328,7 +330,7 @@ def toSif( table, LS_idx=3, Delay_idx=9, skiprows=1):
           relation = "pdr"
         elif float(row[li]) < 0:
           relation = "ndr"
-      sifTable.append([row[0], relation, row[1], row[li], row[di]])
+      sifTable.append( [row[0], relation] + row[1:] )
   return sifTable
 
 if __name__ == "__main__":

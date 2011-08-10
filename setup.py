@@ -89,5 +89,5 @@ setup(name="lsa",
             'lsa_compute = lsa.lsa_compute:main',
             'lsa_query = lsa.lsa_query:main',
         ]
-    }
+    },
 )
