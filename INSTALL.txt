@@ -25,10 +25,10 @@ Linux/Unix/Mac(Darwin):
         $ sudo python setup.py install
 
     6. learn the usage of the excutables
-        $ lsa-compuate.py -h
-        $ lsa-query.py -h
+        $ lsa_compuate -h
+        $ lsa_query -h
 
-Win32 (This Part Is OUTDATED, Currently Not Supported):
+Win32 (This Part Is OUTDATED and NOT Supported):
 
     0. open a command line by run "cmd" command, it will give you a DOS prompt "..\>"
        >

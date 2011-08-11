@@ -19,22 +19,19 @@ FILES:
     MANIFEST.in
     setup.py
     lsa/__init__.py
-    lsa/lsalibx.py
     lsa/lsalib.py
     lsa/lsaio.py
     lsa/compcore.h
     lsa/compcore.cpp
     lsa/compcore.py
-    lsa-standalone/lsa-compute.py
-    lsa-standalone/lsa-query.py
-    lsa-standalone/lsa-infer.py
+    lsa/lsa-compute.py
+    lsa/lsa-query.py
     doc/*
-    dist/*
     test/*
 
 INSTALL:
-    For Linux/Mac/Unix, after untar: 
-        python setup.py install --install-scripts=$HOME/bin
+    For Linux/Mac/Unix, first install all prequisites, then after untar: 
+        python setup.py install
     Note: 
         for details look into INSTALL.txt
 
@@ -44,8 +41,8 @@ EXECUTABLES:
         make sure "$HOME/bin" is in your PATH environment variable
 
 USAGE HELP:
-    lsa-compute.py -h
-    lsa-query.py -h
+    lsa_compute -h
+    lsa_query -h
 
 DOCUMENTATION:
     (i) developement information of lsa package and lsa.lsaio and lsa.lsalib models 
