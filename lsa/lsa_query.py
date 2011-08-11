@@ -47,13 +47,19 @@ def main():
   parser.add_argument("entryFile", metavar= "entryFile", type=argparse.FileType('w'), help="the query result file")
 
   parser.add_argument("-p", "--pValue", dest="pValue", default=0.05, type=float,
-                      help="specify the pValue threshold for querying, default: 0.05") 
+                      help="specify the highest pValue threshold for querying, default: 0.05") 
+  parser.add_argument("-q", "--qValue", dest="qValue", default=0.05, type=float,
+                      help="specify the highest qValue threshold for querying, default: 0.05") 
   parser.add_argument("-c", "--PCC", dest="PCC", default=1., type=float,
                       help="specify the highest Pearson Correlation Coefficient for querying, default: 1.0")
-  parser.add_argument("-q", "--qValue", dest="qValue", default=0.05, type=float,
-                      help="specify the qValue threshold for querying, default: 0.05") 
+  #parser.add_argument("-pc", "--pPCC", dest="pPCC", default=0.00, type=float,
+  #                    help="specify the lowest Pearson Correlation Coefficient p-value for querying, default: 0")
+  #parser.add_argument("-qc", "--qPCC", dest="qPCC", default=0.00, type=float,
+  #                    help="specify the lowest Pearson Correlation Coefficient q-value for querying, default: 0")
   parser.add_argument("-d", "--delayLimit", dest="delayLimit", default=3, type=int,
                       help="specify the longest delay threshhold for querying, default: 3")
+  #parser.add_argument("-e", "--delayLeast", dest="delayLeast", default=0, type=int,
+  #                    help="specify the least delay threshhold for querying, default: 0")
   parser.add_argument("-l", "--listFactors", dest="listFactors", default="",
                       help="query only the factors of interest in the list separated by comma: f1,f2,f3")
   parser.add_argument("-x", "--xgmmlFile", dest="xgmmlFile", default="",
@@ -70,9 +76,12 @@ def main():
   rawFile = vars(arg_namespace)['rawFile']
   entryFile = vars(arg_namespace)['entryFile']
   pValue = vars(arg_namespace)['pValue']
-  PCC = vars(arg_namespace)['PCC']
   qValue = vars(arg_namespace)['qValue']
+  PCC = vars(arg_namespace)['PCC']
+  #pPCC = vars(arg_namespace)['pPCC']
+  #qPCC = vars(arg_namespace)['qPCC']
   delayLimit = vars(arg_namespace)['delayLimit']
+  #delayLeast = vars(arg_namespace)['delayLeast']
   xgmmlFile = vars(arg_namespace)['xgmmlFile']
   sifFile = vars(arg_namespace)['sifFile']
   listFactors = vars(arg_namespace)['listFactors']
@@ -85,8 +94,8 @@ def main():
   #print >>sys.stderr, "testing lsaFile and outputFile..."
 
   # rawTable is a list-of-list, where the i-th list is:
-  # [ f1, f2, L-score, L_low, L_up, X_start, Y_start, length, Delay, P-value, PCC,  PCC P-val,  Qvalue  ]
-  # [ 1,  2,  3,       4,     5,    6,       7,       8,      9,     10,      11,   12,         13      ]
+  # [ f1, f2, L-score, L_low, L_up, X_start, Y_start, length, Delay, P-value, PCC,  PCC P-val,  Qvalue, Qpcc  ]
+  # [ 1,  2,  3,       4,     5,    6,       7,       8,      9,     10,      11,   12,         13    , 14  ]
 
   rawTable = lsaio.readTable(rawFile, '\t')
 
@@ -95,12 +104,16 @@ def main():
   #print "pValue, qValue, PCC, delayLimit, listFactors", pValue, qValue, PCC, delayLimit, listFactors
   #print rawTable
   queryTable=rawTable
-  queryTable=lsaio.lowPartTable(queryTable, 10, pValue)                       #P<=pValue
-  queryTable=lsaio.lowPartTable(queryTable, 13, qValue)                       #Q<=qValue
-  queryTable=lsaio.lowPartTable(queryTable, 11,  PCC)                          #|pcc|<=PCC
-  queryTable=lsaio.upPartTable(queryTable,  11,  -PCC)
-  queryTable=lsaio.lowPartTable(queryTable, 9, float(delayLimit))             #|d|<=D
+  queryTable=lsaio.lowPartTable(queryTable, 10, pValue)                        #P<=pValue
+  queryTable=lsaio.lowPartTable(queryTable, 13, qValue)                        #Q<=qValue
+  queryTable=lsaio.lowPartTable(queryTable, 11, PCC)                          #|PCC|<=PCC
+  queryTable=lsaio.upPartTable(queryTable,  11, -PCC)
+  #queryTable=lsaio.upPartTable(queryTable,  12, pPCC)                         #Ppcc<pPCC
+  #queryTable=lsaio.upPartTable(queryTable,  13, qPCC)                          #Qpcc<qPCC
+  queryTable=lsaio.lowPartTable(queryTable, 9, float(delayLimit))              #|d|<=D
   queryTable=lsaio.upPartTable(queryTable,  9, -float(delayLimit))
+  #queryTable=lsaio.upPartTable(queryTable, 9, float(delayLeast))               #|d|>=E
+  #queryTable=lsaio.lowPartTable(queryTable,  9, -float(delayLeast))
 
   #print >>sys.stderr, "removing trivial case where zero vectors perfectly correlated..." 
 
