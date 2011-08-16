@@ -81,9 +81,8 @@ setup(name="lsa",
     #                               depends=['lsa/compcore.h'],
     #                               swig_opts=['-c++', '-nomodern', '-classic', '-nomodernargs'])],
     py_modules = ['lsa.compcore', 'lsa.lsalib', 'lsa.lsaio'],
-    #scripts = ['lsa-standalone/lsa-compute.py', 'lsa-standalone/lsa-query.py', 'lsa-standalone/lsa-infer.py'],
     cmdclass = {'build': my_build},
-    data_files = [('',['INSTALL.txt','LICENSE.txt', ])],
+    data_files = [('',['README.txt','LICENSE.txt', ])],
     entry_points = { 
         'console_scripts': [
             'lsa_compute = lsa.lsa_compute:main',
