@@ -11,4 +11,4 @@ lsa_query ../test/olddata.lsa ../test/olddata.lsa.entry -x ../test/olddata.lsa.x
 #newdata
 #lsa_compute.py ../test/newdata.txt ../test/newdata.lsa -r 1 -s 35 -d 3
 #debug
-lsa_query ../debug/debug2.lsa ../debug/debug2.lsa.entry -x ../debug2.lsa.xgmml
+#lsa_query ../debug/debug2.lsa ../debug/debug2.lsa.entry -x ../debug2.lsa.xgmml

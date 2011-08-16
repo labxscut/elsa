@@ -46,7 +46,10 @@ def main():
   # define arguments: delayLimit, fillMethod, permuNum
   parser = argparse.ArgumentParser(description="New LSA Commandline Tool")
 
-  parser.add_argument("dataFile", metavar= "dataFile", type=argparse.FileType('r'), help="the input data file")
+  parser.add_argument("dataFile", metavar= "dataFile", type=argparse.FileType('r'), help="the input data file,\n \
+                        m by (r * s)tab delimited text; top left cell start with '#' to mark this is the header line; \n \
+                        m is number of variables, r is number of replicates, s it number of time spots; \n \
+                        first row: #header  s1r1 s1r2 s2r1 s2r2; second row: x  ?.?? ?.?? ?.?? ?.??; for a 1 by (2*2) data")
   parser.add_argument("resultFile", metavar= "resultFile", type=argparse.FileType('w'), help="the output result file")
   parser.add_argument("-d", "--delayLimit", dest="delayLimit", default=3, type=int, 
                     	help="specify the maximum delay possible, default: 3,\n choices: 0 to 6")
