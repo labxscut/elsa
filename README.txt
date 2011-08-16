@@ -43,6 +43,8 @@ INSTALL:
         $tar -zxvf charade-lsa-release.tar.gz
         $cd charade-lsa-release
         $python setup.py install
+        $cd lsa
+        $. test.sh    #ad hoc test of the script on test data
 
     [MAC] (Snow Leopard)
 
