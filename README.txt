@@ -8,8 +8,8 @@ INSTRODUCTION:
 		http://meta.usc.edu/softs/lsa
 
 DEPENDENCIES:
-	C++ build environment
-		e.g. build-essentials and libstdc++ in Ubuntu and Xcode in Mac 
+    C++ build environment
+        e.g. build-essentials and libstdc++ in Ubuntu and Xcode in Mac 
     Python(>=2.7) 
         download @ http://www.python.org/
     Numpy(>=1.0)
@@ -31,7 +31,7 @@ FILES:
 
 INSTALL:
 	
-	[Prerequisites]
+	  [Prerequisites]
 
     Please fullfill the prerequisites of C++, Python (with development and setuptools),
     numpy, scipy and biopython as described in README.txt before installing eLSA.
@@ -55,7 +55,7 @@ INSTALL:
     [Development]
 
     eLSA is open source and the version controlled repository is @:
-    	https://bitbucket.org/charade/lsa.
+    	  https://bitbucket.org/charade/lsa.
     Use mercurial tools (http://mercurial.selenic.com) to download a local copy:
         $hg clone ssh://hg@bitbucket.org/charade/lsa lsa-tip
 
