@@ -19,7 +19,7 @@ DEPENDENCIES:
     
     For setting up the dependencies, users may refer to the author's development document @
 		http://dl.dropbox.com/u/35182955/Mac_development_environment.html
-		http://dl.dropbox.com/u/35182955/Ubuntu_developement_environment.html
+		http://dl.dropbox.com/u/35182955/Ubuntu_development_environment.html
 
 FILES:
     LICENSE.txt
