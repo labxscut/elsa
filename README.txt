@@ -30,8 +30,8 @@ FILES:
     test/*
 
 INSTALL:
-	
-	  [Prerequisites]
+
+    [Prerequisites]
 
     Please fullfill the prerequisites of C++, Python (with development and setuptools),
     numpy, scipy and biopython as described in README.txt before installing eLSA.
@@ -43,7 +43,7 @@ INSTALL:
         $tar -zxvf charade-lsa-release.tar.gz
         $cd charade-lsa-release
         $python setup.py install
-        $cd lsa
+        $cd test      #test the scripts are workable
         $. test.sh    #ad hoc test of the script on test data
 
     [MAC] (Snow Leopard)
@@ -75,4 +75,4 @@ USAGE HELP:
     (ii) A simple test example is available at 'lsa/test.sh' and explained within.
 
 CONTACT:
-    lxia@usc.edu
+    lxia at usc dot edu
