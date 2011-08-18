@@ -65,12 +65,14 @@ def main():
   parser.add_argument("-s", "--spotNum", dest="spotNum", default=4, type=int, 
                     	help="specify the number of time spots, default: 4,                     \n \
                           must be provided and valid. ")
-  parser.add_argument("-t", "--transFunc", dest="transFunc", default='simple', choices=['simple', 'SD'],
+  parser.add_argument("-t", "--transFunc", dest="transFunc", default='simple', choices=['simple', 'SD', 'Med', 'MAD'],
                       help="specify the method to summarize replicates data, default: simple, \n \
-                          choices: simple, SD                                                 \n \
+                          choices: simple, SD, Med, MAD                                       \n \
                           NOTE:                                                               \n \
                           simple: simple averaging                                            \n \
-                          SD: standard deviation weighted averaging;" )
+                          SD: standard deviation weighted averaging                           \n \
+                          Med: simple Median                                                  \n \
+                          MAD: median absolute deviation weighted median;" )
   parser.add_argument("-f", "--fillMethod", dest="fillMethod", default='linear', choices=['none', 'zero', 'linear', 'quadratic', 'cubic', 'slinear', 'nearest'],
                     	help= "specify the method to fill missing, default: linear,               \n \
                           choices: none, zero, linear, quadratic, cubic, slinear, nearest  \n \
@@ -107,16 +109,25 @@ def main():
   bootNum = vars(arg_namespace)['bootNum']
   spotNum = vars(arg_namespace)['spotNum']
 
-  #check transFunc and repNum compatibility
-  if repNum < 5 and transFunc == 'SD':
-    print >>sys.stderr, "Not enough replicates for SD-weighted averaging, fall back to simple"
-    transFunc = 'simple'
-
+  #assign transform function
   if transFunc == 'SD':
     fTransform = lsalib.sdAverage
+  elif transFunc == 'Med':
+    fTransform = lsalib.simpleMedian   # Median
+  elif transFunc == 'MAD':
+    fTransform = lsalib.madMedian      # Median/MAD
   else:
-    fTransform = lsalib.simpleAverage   # fallback to default
+    fTransform = lsalib.simpleAverage   # fallback to default Avg
   
+  #check transFunc and repNum compatibility
+  if repNum < 5 and ( transFunc == 'SD' ):
+    print >>sys.stderr, "Not enough replicates for SD-weighted averaging, fall back to simpleAverage"
+    transFunc = 'simple'
+
+  if repNum < 5 and ( transFunc == 'MAD' ):
+    print >>sys.stderr, "Not enough replicates for Median Absolute Deviation, fall back to simpleMedian"
+    transFunc = 'Med'
+
   #check normMethod
   if normMethod == 'none':
     zNormalize = lsalib.noneNormalize

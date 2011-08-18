@@ -248,15 +248,14 @@ def simpleAverage(tseries):
 
   return np.average(np.nan_to_num(tseries), axis=0)
 
-
 def sdAverage(tseries):
-  """	sd weighted averaging 
+  """	SD weighted averaging 
 
     Args:
       tseries(np.array):  one time series with replicates, each row is a replicate
 
     Reterns:
-      one row with replicates sd weighted averaged
+      one row with replicates SD weighted averaged
 
     Note:
       if nan in tseries, it is treated as zeros, this will happen if fTransform before zNormalize
@@ -264,11 +263,45 @@ def sdAverage(tseries):
   sd = np.std(np.nan_to_num(tseries),axis=0,ddof=1)
   for v in sd:
     if v == 0:
-      return np.average(np.nan_to_num(tseries), axis=0)
-  Xf = (np.average(np.nan_to_num(tseries), axis=0)/sd)/np.sum(1/sd)/sd   #sd-weighted sample
+      return np.average(np.nan_to_num(tseries), axis=0)                  #sd = 0, fall back to simpleAverage
+  Xf = ((np.average(np.nan_to_num(tseries), axis=0)/sd)/np.sum(1/sd))/sd   #sd-weighted sample
   #return (Xf - np.average(Xf))/(np.sqrt(Xf.shape)*np.std(Xf))  #rescale and centralized
   return Xf
 
+def simpleMedian(tseries):
+  """ simple median
+
+    Args:
+      tseries(np.array):  one time series with replicates, each row is a replicate
+
+    Reterns:
+      one row with replicates summarized by median
+
+    Note:
+      if nan in tseries, it is treated as zeros, this will happen if fTransform before zNormalize
+  """
+
+  return np.median(np.nan_to_num(tseries), axis=0)
+
+def madMedian(tseries):
+  """	MAD weighted averaging 
+
+    Args:
+      tseries(np.array):  one time series with replicates, each row is a replicate
+
+    Reterns:
+      one row with replicates summarized by MAD weighted median
+
+    Note:
+      if nan in tseries, it is treated as zeros, this will happen if fTransform before zNormalize
+  """
+  Xf = np.nan_to_num(tseries)
+  mad = np.median( np.abs(Xf - np.median(Xf, axis=0)), axis=0 )
+  for v in mad:
+    if v == 0:
+      return np.median(np.nan_to_num(tseries), axis=0)                  #mad = 0, fall back to simpleMedian
+  Xf = ((np.median(Xf, axis=0)/mad)/np.sum(1/mad))/mad                    #mad-weighted sample
+  return Xf
 
 def tied_rank(values):
   """ rank pvalues with ties, tie is ranked as the largest rank
@@ -481,6 +514,10 @@ def test():
   print >>sys.stderr, simpleAverage(clean_data[1])
   print >>sys.stderr, "---sdAverage---"
   print >>sys.stderr, sdAverage(clean_data[1])
+  print >>sys.stderr, "---simpleMedian---" 
+  print >>sys.stderr, simpleMedian(clean_data[1])
+  print >>sys.stderr, "---madMedian---"
+  print >>sys.stderr, madMedian(clean_data[1])
   print >>sys.stderr, "---storeyQvalue---"
   pvalues = np.array([0.01, 0.02, 0.03, 0.04, 0.05, 0.02, 0.03, 0.04, 0.03, 0.03], dtype='float')
   print >>sys.stderr, "pvalues:", pvalues 
