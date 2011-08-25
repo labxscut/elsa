@@ -163,14 +163,14 @@ def permuPvalue(series1, series2, delayLimit, permuNum, Smax, fTransform, zNorma
 	
   ###print "-------permutation------"
   lsad = compcore.LSA_Data()
-  PP_set = np.zeros(permuNum+1, dtype='float')
+  PP_set = np.zeros(permuNum, dtype='float')
   Xz = zNormalize(fTransform(series1))
   Y = np.array(series2)                                               #use = only assigns reference, must use a constructor
   for i in xrange(0, permuNum):
     np.random.shuffle(Y.T)
     lsad.assign( delayLimit, Xz, zNormalize(fTransform(Y)) )
     PP_set[i] = np.abs(compcore.DP_lsa(lsad, False).score)
-  PP_set[permuNum]=Smax                                               #the original test is also considerred
+  #PP_set[permuNum]=Smax                                               #the original test shall not be considerred
   #print "PP_set", PP_set, PP_set >= Smax, np.sum(PP_set>=Smax), np.float(permuNum)
   return np.sum(PP_set >= Smax)/np.float(permuNum)
 
