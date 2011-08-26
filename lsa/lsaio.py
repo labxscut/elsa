@@ -255,21 +255,24 @@ def toXgmml( table, title, skiprows=1 ):
   #[ f1, f2, LS, lowCI, upCI, Xs, Ys, Len, Delay, P, PCC,  Ppcc,  Q, Qpcc ]
   #[ 1,  2,  3,      4,    5,  6,  7,   8,     9,10,  11,    12, 13, 14 ]
 
-  di = 8
-  li = 2
+  di = 8 #9-1
+  li = 2 #3-1
 
   for i in xrange(skiprows, len(table)):
-    if table[i][di] > 0:
-      rcode = 'dr'      #direction retard
-    elif table[i][di] < 0:
-      rcode = 'dl'      #direction lead
+    #c_code=''
+    #d_code=''
+    if int(table[i][di]) > 0:
+      d_code = 'dr'      #direction retard
+    elif int(table[i][di]) < 0:
+      d_code = 'dl'      #direction lead
     else:
-      rcode = 'u'
-    if table[i][li] >= 0:
-      ccode = 'p'
+      d_code = 'u'
+    if float(table[i][li]) >= 0:
+      c_code = 'p'
     else:
-      ccode = 'n'
-    interaction = ccode+rcode
+      c_code = 'n'
+    interaction = c_code+d_code
+    #print table[i][di], table[i][li], interaction
     edge_label = '_'.join( [table[i][0], interaction, table[i][1]] )
     edge_element = etree.SubElement(xgmml_element, 'edge')
     edge_element.set('label', edge_label )
