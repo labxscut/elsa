@@ -172,7 +172,7 @@ def permuPvalue(series1, series2, delayLimit, permuNum, Smax, fTransform, zNorma
     PP_set[i] = np.abs(compcore.DP_lsa(lsad, False).score)
   #PP_set[permuNum]=Smax                                               #the original test shall not be considerred
   #print "PP_set", PP_set, PP_set >= Smax, np.sum(PP_set>=Smax), np.float(permuNum)
-  return np.sum(PP_set >= Smax)/np.float(permuNum)
+  return np.sum(PP_set >= np.abs(Smax))/np.float(permuNum)
 
 def storeyQvalue(pvalues, lam=np.arange(0,0.9,0.05), method='smoother', robust=False, smooth_df=3):
   """ do Q-value calculation
