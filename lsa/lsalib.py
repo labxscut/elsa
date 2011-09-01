@@ -169,10 +169,14 @@ def permuPvalue(series1, series2, delayLimit, permuNum, Smax, fTransform, zNorma
   for i in xrange(0, permuNum):
     np.random.shuffle(Y.T)
     lsad.assign( delayLimit, Xz, zNormalize(fTransform(Y)) )
-    PP_set[i] = np.abs(compcore.DP_lsa(lsad, False).score)
+    PP_set[i] = compcore.DP_lsa(lsad, False).score
   #PP_set[permuNum]=Smax                                               #the original test shall not be considerred
   #print "PP_set", PP_set, PP_set >= Smax, np.sum(PP_set>=Smax), np.float(permuNum)
-  return np.sum(PP_set >= np.abs(Smax))/np.float(permuNum)
+  if Smax >= 0:
+    P_one_tail = np.sum(PP_set >= Smax)/np.float(permuNum)
+  else:
+    P_one_tail = np.sum(PP_set <= Smax)/np.float(permuNum)
+  return P_one_tail
 
 def storeyQvalue(pvalues, lam=np.arange(0,0.9,0.05), method='smoother', robust=False, smooth_df=3):
   """ do Q-value calculation
@@ -461,7 +465,8 @@ def applyAnalysis(cleanData, delayLimit=3, bootCI=.95, bootNum=1000, permuNum=10
       (Xs, Ys, Al) = (LSA_result.trace[Al-1][0], LSA_result.trace[Al-1][1], len(LSA_result.trace))
       #print "PPC..." 
       #print np.mean(Xz, axis=0), np.mean(Yz, axis=0)
-      (PCC, P_PCC) = sp.stats.pearsonr(np.mean(np.nan_to_num(Xz), axis=0), np.mean(np.nan_to_num(Yz), axis=0))
+      (PCC, P_PCC) = sp.stats.pearsonr(np.mean(np.nan_to_num(Xz), axis=0), np.mean(np.nan_to_num(Yz), axis=0)) # two tailed p-value
+      P_PCC = P_PCC/2   # one tailed p-value
       # need +epsilon to avoid all zeros
       pccpvalues[ti] = P_PCC
       lsaTable[ti] = [i, j, Smax, Sl, Su, Xs, Ys, Al, Xs-Ys, permuP, PCC, P_PCC]
