@@ -37,6 +37,7 @@
 #import public resources
 import csv, sys, random
 import numpy as np
+#import numpy.ma as np.ma
 import scipy as sp
 import scipy.interpolate
 import scipy.stats
@@ -45,9 +46,12 @@ import scipy.stats
 try:
   #else run as installed
   from lsa import compcore
+  np.seterr(all='ignore')                             #ignore RuntimeWarning of abs in installed mode
 except ImportError:
   #try for debug
   import compcore
+  np.seterr(all='warn')
+
 
 """Synopsis:
     #Xf = simpleAverage( X )												#F: transform function
@@ -61,7 +65,7 @@ except ImportError:
 """
 
 ###############################
-# applyAnalsysi
+# applyAnalsys
 # return a list-of-list, where the i-th list is:
 #	[ f1, f2, L-score, L_low, L_up, X_start, Y_start, length, P/N, P-value, PCC,  PCC P-val,  Qvalue  ]
 #	[ 1,  2,  3,       4,     5,    6,       7,       8,      9,   10,      11,   12,         13      ]
@@ -94,11 +98,25 @@ def sample_wr(population, k):
 
   n = len(population)
   _random, _int = random.random, int  # speed hack 
-  result = [None] * k
+  result = np.array([np.nan] * k)
   for i in xrange(k):
     j = _int(_random() * n)
-    result[i] = population[j]
-  return np.array(result)
+    if type(population) == np.ma.MaskedArray:
+      if population.mask[j]:
+        result[i] = np.nan
+      else:
+        result[i] = population[j]
+    else:
+      result[i] = population[j]
+  if type(population) == np.ma.MaskedArray:
+    result = np.ma.masked_invalid(result)
+  return result
+
+def ma_median(ts, axis=0):
+  ns = np.ma.median(ts, axis=axis)
+  if type(ns.mask) == np.bool_:       #fix broken ma.median, mask=False instead of [False, ...] for all mask
+    ns.mask = [ns.mask] * ns.shape[axis]
+  return ns
 
 def bootstrapCI(series1, series2, Smax, delayLimit, bootCI, bootNum, fTransform, zNormalize, debug=0):
   """	do bootstrap CI estimation
@@ -124,8 +142,10 @@ def bootstrapCI(series1, series2, Smax, delayLimit, bootCI, bootNum, fTransform,
   lsad = compcore.LSA_Data()
   BS_set = np.zeros(bootNum, dtype='float')
   for i in range(0, bootNum):
-    Xb = np.array([ sample_wr(series1[:,j], series1.shape[0]) for j in xrange(0,series1.shape[1]) ]).T
-    Yb = np.array([ sample_wr(series2[:,j], series2.shape[0]) for j in xrange(0,series2.shape[1]) ]).T
+    Xb = np.ma.array([ sample_wr(series1[:,j], series1.shape[0]) for j in xrange(0,series1.shape[1]) ]).T
+    Yb = np.ma.array([ sample_wr(series2[:,j], series2.shape[0]) for j in xrange(0,series2.shape[1]) ]).T
+    #print "Xb=", Xb
+    #print "Yb=", Yb
     lsad.assign( delayLimit, zNormalize(fTransform(Xb)), zNormalize(fTransform(Yb)) )
     BS_set[i] = compcore.DP_lsa(lsad, False).score
   BS_set.sort()                                 #from smallest to largest
@@ -165,7 +185,7 @@ def permuPvalue(series1, series2, delayLimit, permuNum, Smax, fTransform, zNorma
   lsad = compcore.LSA_Data()
   PP_set = np.zeros(permuNum, dtype='float')
   Xz = zNormalize(fTransform(series1))
-  Y = np.array(series2)                                               #use = only assigns reference, must use a constructor
+  Y = np.ma.array(series2)                                               #use = only assigns reference, must use a constructor
   for i in xrange(0, permuNum):
     np.random.shuffle(Y.T)
     lsad.assign( delayLimit, Xz, zNormalize(fTransform(Y)) )
@@ -249,8 +269,9 @@ def simpleAverage(tseries):
     Note:
       if nan in tseries, it is treated as zeros, this will happen if fTransform before zNormalize
   """
-
-  return np.average(np.nan_to_num(tseries), axis=0)
+  #print "data=", tseries
+  #print "simpleAverage=", np.ma.average(tseries, axis=0)
+  return np.ma.average(tseries, axis=0)
 
 def sdAverage(tseries):
   """	SD weighted averaging 
@@ -264,12 +285,15 @@ def sdAverage(tseries):
     Note:
       if nan in tseries, it is treated as zeros, this will happen if fTransform before zNormalize
   """
-  sd = np.std(np.nan_to_num(tseries),axis=0,ddof=1)
+  sd = np.ma.std(tseries,axis=0,ddof=1)
   for v in sd:
-    if v == 0:
-      return np.average(np.nan_to_num(tseries), axis=0)                  #sd = 0, fall back to simpleAverage
-  Xf = ((np.average(np.nan_to_num(tseries), axis=0)/sd)/np.sum(1/sd))/sd   #sd-weighted sample
+    if v == 0.:
+      return np.ma.average(tseries, axis=0)                       #sd = 0, fall back to simpleAverage
+  #print "tseries=", tseries
+  #print "sd=", sd
+  Xf = ((np.ma.average(tseries, axis=0)/sd)/np.ma.sum(1/sd))/sd   #sd-weighted sample
   #return (Xf - np.average(Xf))/(np.sqrt(Xf.shape)*np.std(Xf))  #rescale and centralized
+  #print "sdAverage=", Xf
   return Xf
 
 def simpleMedian(tseries):
@@ -284,8 +308,10 @@ def simpleMedian(tseries):
     Note:
       if nan in tseries, it is treated as zeros, this will happen if fTransform before zNormalize
   """
-
-  return np.median(np.nan_to_num(tseries), axis=0)
+  
+  Xf = ma_median(tseries, axis=0)
+  #print "simpleMedian=", Xf, Xf.mask, type(Xf.mask) #ma.median broken
+  return Xf
 
 def madMedian(tseries):
   """	MAD weighted averaging 
@@ -299,16 +325,18 @@ def madMedian(tseries):
     Note:
       if nan in tseries, it is treated as zeros, this will happen if fTransform before zNormalize
   """
-  Xf = np.nan_to_num(tseries)
-  mad = np.median( np.abs(Xf - np.median(Xf, axis=0)), axis=0 )
+  Xf = tseries
+  mad = ma_median( np.ma.abs(Xf - ma_median(Xf, axis=0)), axis=0 ) #current throw a warning 
   for v in mad:
     if v == 0:
-      return np.median(np.nan_to_num(tseries), axis=0)                  #mad = 0, fall back to simpleMedian
-  Xf = ((np.median(Xf, axis=0)/mad)/np.sum(1/mad))/mad                    #mad-weighted sample
+      return ma_median(tseries, axis=0)                  #mad = 0, fall back to simpleMedian
+  Xf = ((ma_median(Xf, axis=0)/mad)/np.ma.sum(1/mad))/mad                    #mad-weighted sample
+
+  #print "medMedian=", Xf, Xf.mask, type(Xf.mask)
   return Xf
 
 def tied_rank(values):
-  """ rank pvalues with ties, tie is ranked as the largest rank
+  """ rank pvalues with ties, tie is ranked as the largest rank, now allow na's non-ranked
 
     Args:
       values(np.array): a numeric array
@@ -318,9 +346,18 @@ def tied_rank(values):
        ties are kept and label by largest rank 
   """
 
-  v_num = {}  #pvalues and counts
-  v_cum = {} #cumulated rank, take largest for tie
-  for v in values:
+  V = values
+  #print "nonzero(V.mask)=", np.nonzero(V.mask)
+  #print "V=", V
+  if type(V) == np.ma.MaskedArray:
+    #print "V.mask=", V.mask
+    nans = (np.nonzero(V.mask)[0]).tolist()         #record indecies
+    V = V[-V.mask]                               #remove nan's
+    #print "V=", V
+
+  v_num = {}  #values and counts
+  v_cum = {}  #cumulated rank, take largest for tie
+  for v in V:
     v_num[v] = v_num.get(v,0) + 1
   suvs = v_num.keys()  #sorted unique pvaludes
   suvs.sort() 
@@ -328,38 +365,44 @@ def tied_rank(values):
   for v in suvs:
     c += v_num[v]
     v_cum[v] = c
-  #print suvs
-  #print v_cum
+  #print "sorted unique values=", suvs
+  #print "cumulative number=", v_cum
   #print [ v_cum[values[i]] for i in xrange(0, len(values)) ]
-  return np.array( [ v_cum[values[i]] for i in xrange(0, len(values)) ], dtype='float' )
+  sV = np.array( [ v_cum[V[i]] for i in xrange(0, len(V)) ], dtype='float' ) #sorted V
+  #print "sV=", sV
+  #print "nans=", nans
+  
+  if type(V) == np.ma.MaskedArray:
+    #mV = sV
+    for nan in nans:
+      sV = np.insert(sV, nan, np.nan)   #insert nan to original place, need return masked? yes
+    sV = np.ma.masked_invalid(sV)
+    #print "sV=", sV
 
+  return sV 
 
-def	wholeNormalize(tseries):
-  """	whole normalizing
-
-    Args:
-      tseries(np.array):  time series matrix with replicates
-
-    Returns:
-      wholely score normalized tseries
-  """
-  Xz = tseries              #make a copy
-  #print "before normal, Xz=", Xz
-  shape = Xz.shape          #save shape
-  Xz = Xz.ravel()                #flatten
-  #print Xz.ravel()
-  nanb = np.isnan(Xz)       #find nans
-  nans = (np.nonzero(nanb)[0]).tolist()   #save nans
-  Xz = Xz[-nanb]            #cleaned, 
-  ranks = tied_rank(Xz)     #rank na
-  Xz = sp.stats.distributions.norm.ppf( ranks/(len(ranks)+1) )
-  for nan in nans:
-    Xz = np.insert(Xz, nan, 0.)   #insert zeros
-  #print Xz
-  #print Xz.shape, shape
-  Xz.shape = shape
-  #print "after normal, Xz=", Xz
-  return Xz
+#def	wholeNormalize(tseries):
+#  """	whole normalizing
+#
+#    Args:
+#      tseries(np.array):  time series matrix with replicates
+#
+#    Returns:
+#      wholely score normalized tseries
+#  """
+#  Xz = tseries              #make a copy
+#  #print "before normal, Xz=", Xz
+#  shape = Xz.shape          #save shape
+#  Xz = Xz.ravel()                #flatten
+#  #print Xz.ravel()
+#  ranks = tied_rank(Xz)     #rank na
+#
+#  Xz = sp.stats.distributions.norm.ppf( ranks/(len(ranks)+1) )
+#  #print Xz
+#  #print Xz.shape, shape
+#  Xz.shape = shape
+#  #print "after normal, Xz=", Xz
+#  return Xz
 
 def scoreNormalize(tseries):
   """ score normalizing
@@ -371,7 +414,10 @@ def scoreNormalize(tseries):
       score normalized time series
   """
   ranks = tied_rank(tseries)
-  return sp.stats.distributions.norm.ppf( ranks/(len(ranks)+1) )
+  nt = sp.stats.distributions.norm.ppf( ranks/(len(ranks)+1) )
+  #print "nt=", nt
+  nt = np.nan_to_num(nt)  #filling zeros to nan, shall be no na's from here 
+  return nt
 
 def noneNormalize(tseries):
   """ no normalizaing
@@ -383,8 +429,7 @@ def noneNormalize(tseries):
       non normalized tseries
   """
 
-  return np.nan_to_num(tseries) 
-
+  return np.nan_to_num(tseries)  #filling zeros to nan
 
 def fillMissing(tseries, method):
   """ fill missing data
@@ -447,10 +492,10 @@ def applyAnalysis(cleanData, delayLimit=3, bootCI=.95, bootNum=1000, permuNum=10
 
   ti = 0
   for i in xrange(0, factorNum-1):
-    Xz = cleanData[i]
+    Xz = np.ma.masked_invalid(cleanData[i]) #need to convert to masked array with na's
     for j in xrange(i+1, factorNum):
       #print "normalizing..."
-      Yz = cleanData[j]
+      Yz = np.ma.masked_invalid(cleanData[j]) # need to convert to masked array with na's
       #print "lsa computing..."
       #print "Xz=", Xz
       #print "Yz=", Yz
@@ -465,7 +510,7 @@ def applyAnalysis(cleanData, delayLimit=3, bootCI=.95, bootNum=1000, permuNum=10
       (Xs, Ys, Al) = (LSA_result.trace[Al-1][0], LSA_result.trace[Al-1][1], len(LSA_result.trace))
       #print "PPC..." 
       #print np.mean(Xz, axis=0), np.mean(Yz, axis=0)
-      (PCC, P_PCC) = sp.stats.pearsonr(np.mean(np.nan_to_num(Xz), axis=0), np.mean(np.nan_to_num(Yz), axis=0)) # two tailed p-value
+      (PCC, P_PCC) = sp.stats.pearsonr(np.ma.average(Xz, axis=0), np.ma.average(Yz, axis=0)) # two tailed p-value
       P_PCC = P_PCC/2   # one tailed p-value
       # need +epsilon to avoid all zeros
       pccpvalues[ti] = P_PCC
@@ -486,6 +531,7 @@ def applyAnalysis(cleanData, delayLimit=3, bootCI=.95, bootNum=1000, permuNum=10
 def test():
   """ self test script
   """
+  np.seterr(all='warn')
   print >>sys.stderr, "###testing###"
   test_data = np.array( [ [ [ 3, 2, 3, 4], [1, 6, 2, 3], [6, 4, 6, 8] ], [ [np.nan, 2, np.nan, 3], [4, 5, 3, np.nan], [1, 1, 1, 1] ] ], dtype='float' )
   test_fN = test_data.shape[0]
@@ -507,33 +553,39 @@ def test():
     for j in xrange(0, test_rN):
       clean_data[i][j] = fillMissing(test_data[i][j], 'none')
   print >>sys.stderr, "clean_data", clean_data
+  print >>sys.stderr, "---masked_array---"
+  masked_data = np.ma.masked_invalid(clean_data)
+  print >>sys.stderr, "masked_data", masked_data
   print >>sys.stderr, "---tied-rank---"
-  print >>sys.stderr, tied_rank(clean_data[0][0])
-  print >>sys.stderr, "---scoreNormalize---"
-  print >>sys.stderr, scoreNormalize(clean_data[0][0])
-  print >>sys.stderr, scoreNormalize(clean_data[0][1])
-  print >>sys.stderr, "---wholeNormalize---"
-  print >>sys.stderr, wholeNormalize(clean_data[0])
-  print >>sys.stderr, wholeNormalize(clean_data[0])
+  print >>sys.stderr, "data:", masked_data[1][0]
+  print >>sys.stderr, tied_rank(masked_data[1][0])
+  print >>sys.stderr, "data:", masked_data[1][1]
+  print >>sys.stderr, tied_rank(masked_data[1][1])
+  #print >>sys.stderr, "---wholeNormalize---"
+  #print >>sys.stderr, wholeNormalize(clean_data[0])
+  #print >>sys.stderr, wholeNormalize(clean_data[0])
   print >>sys.stderr, "---simpleAverage---" 
-  print >>sys.stderr, simpleAverage(clean_data[1])
+  print >>sys.stderr, simpleAverage(masked_data[1])
   print >>sys.stderr, "---sdAverage---"
-  print >>sys.stderr, sdAverage(clean_data[1])
+  print >>sys.stderr, sdAverage(masked_data[1])
   print >>sys.stderr, "---simpleMedian---" 
-  print >>sys.stderr, simpleMedian(clean_data[1])
+  print >>sys.stderr, simpleMedian(masked_data[1])
   print >>sys.stderr, "---madMedian---"
-  print >>sys.stderr, madMedian(clean_data[1])
+  print >>sys.stderr, madMedian(masked_data[1])
+  print >>sys.stderr, "---scoreNormalize---"
+  print >>sys.stderr, scoreNormalize(masked_data[1][0])
+  print >>sys.stderr, scoreNormalize(masked_data[1][1])
   print >>sys.stderr, "---storeyQvalue---"
   pvalues = np.array([0.01, 0.02, 0.03, 0.04, 0.05, 0.02, 0.03, 0.04, 0.03, 0.03], dtype='float')
   print >>sys.stderr, "pvalues:", pvalues 
   print >>sys.stderr, storeyQvalue(pvalues)
   print >>sys.stderr, "---singleLSA---"
-  lsar = singleLSA(clean_data[0], clean_data[1], delayLimit=1, fTransform=simpleAverage, zNormalize=scoreNormalize, keepTrace=True)
-  print >>sys.stderr, lsar.score
+  lsar = singleLSA(masked_data[0], masked_data[1], delayLimit=1, fTransform=simpleAverage, zNormalize=scoreNormalize, keepTrace=True)
+  print >>sys.stderr, "lsar.score=", lsar.score
   print >>sys.stderr, "---bootstrapCI---"
-  print >>sys.stderr, bootstrapCI(clean_data[0], clean_data[1], lsar.score, 1, .95, 10, simpleAverage, scoreNormalize)
+  print >>sys.stderr, "Bset=", bootstrapCI(masked_data[0], masked_data[1], lsar.score, 1, .95, 2, simpleAverage, scoreNormalize)
   print >>sys.stderr, "---permuPvalue---"
-  print >>sys.stderr, "p-value:", permuPvalue(clean_data[1], clean_data[0], 1, 10, np.abs(lsar.score), simpleAverage, scoreNormalize)
+  print >>sys.stderr, "P=", permuPvalue(masked_data[1], masked_data[0], 1, 2, np.abs(lsar.score), simpleAverage, scoreNormalize)
   print >>sys.stderr, "---PCC---"
   (nPCC, nP_PCC) = sp.stats.pearsonr(np.mean(np.nan_to_num(test_data[0]), axis=0), np.mean(np.nan_to_num(test_data[1]), axis=0))
   oPCC = sp.corrcoef( np.mean(np.nan_to_num(test_data[0]),axis=0), np.mean(np.nan_to_num(test_data[1]),axis=0) )[0,1]
@@ -542,10 +594,13 @@ def test():
   print >>sys.stderr, "nPCC", "nP_PCC", "oPCC", "oP_PCC", "otcdf"
   print >>sys.stderr, nPCC, nP_PCC, oPCC, oP_PCC, otcdf
   print >>sys.stderr, "---applyAnalysis---"
+  print >>sys.stderr, applyAnalysis(clean_data, 1, .95, 10, 10, sdAverage, scoreNormalize)
+  print >>sys.stderr, "---applyAnalysis---"
   print >>sys.stderr, applyAnalysis(clean_data, 1, .95, 10, 10, simpleAverage, scoreNormalize)
   print >>sys.stderr, "---applyAnalysis---"
-  print >>sys.stderr, applyAnalysis(clean_data, 1, .95, 10, 10, sdAverage, scoreNormalize)
-  
+  print >>sys.stderr, applyAnalysis(clean_data, 1, .95, 10, 10, simpleMedian, scoreNormalize)
+  print >>sys.stderr, "---applyAnalysis---"
+  print >>sys.stderr, applyAnalysis(clean_data, 1, .95, 10, 10, madMedian, scoreNormalize)
 
 if __name__=="__main__":
   print "hello world!"
