@@ -7,6 +7,14 @@ void LSA_Data::assign(int shift, VectorDouble x, VectorDouble y){
   Y.assign(y.begin(),y.end());
 }
 
+/*
+void LSA_Data::assign(int shift, VectorDouble x, VectorDouble y, VectorDouble z){
+  max_shift = shift;
+  X.assign(x.begin(),x.end());
+  Y.assign(y.begin(),y.end());
+}
+*/
+
 LSA_Result DP_lsa( const LSA_Data& data, bool keep_trace ){  //python does not support default value
 	LSA_Result lsa_result;
 	int max_p[2]={0}; int porn=0;

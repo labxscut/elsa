@@ -164,6 +164,17 @@ def bootstrapCI(series1, series2, Smax, delayLimit, bootCI, bootNum, fTransform,
     a2 = sp.stats.distributions.norm.cdf(2*z0+sp.stats.distributions.norm.ppf(a2))
     #print "z0=", z0, "a1=", a1, "a2=", a2
   return ( BS_mean, BS_set[np.floor(bootNum*a1)-1], BS_set[np.ceil(bootNum*a2)-1] )
+
+def theoPvalue(xx, timespots, D, Kcut):
+  A = (1/xx)
+  B = 2*D+1
+  P = 1
+  for k in xrange(1,Kcut+1):
+    B = (2*k-1)**2
+    P = P-(8**B)*((A+pipi_inv*(1/C))*exp(-C*pipi/(2*xx))**B)
+  #if P <= 0:
+  #  P = 0.
+  return P
 	
 def permuPvalue(series1, series2, delayLimit, permuNum, Smax, fTransform, zNormalize):
   """ do permutation Test
@@ -460,11 +471,13 @@ def fillMissing(tseries, method):
         yy[i] = 0
     return yy
     
-def applyAnalysis(cleanData, delayLimit=3, bootCI=.95, bootNum=1000, permuNum=1000, fTransform=simpleAverage, zNormalize=scoreNormalize):
+def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, bootNum=1000, permuNum=1000, fTransform=simpleAverage, zNormalize=scoreNormalize):
   """ calculate pairwise LS scores and p-values
 
     	Args:
-    		cleanData(np.array): 	numpy data array with correct format factor_num x timespot_num x replicte_num, possibly nans
+    		firstData(np.array): 	numpy data array with correct format factor_num x timespot_num x replicte_num, possibly nans
+    		secondData(np.array): 	numpy data array with correct format factor_num x timespot_num x replicte_num, possibly nans
+                noDiag(bool):           no results for diagnol comparisions
     		delayLimit(int): 	maximum time unit of delayed response allowed
      		bootCI(float): 		bootstrap confidence interval size, 0 to 1
     		bootNum(int): 		bootstrap number
@@ -481,40 +494,67 @@ def applyAnalysis(cleanData, delayLimit=3, bootCI=.95, bootNum=1000, permuNum=10
         	
   """	
 
-  factorNum = cleanData.shape[0]
-  repNum = cleanData.shape[1]
-  spotNum = cleanData.shape[2]
-  lsaTable = [None]*(factorNum*(factorNum-1)/2)
-  pvalues = np.zeros(factorNum*(factorNum-1)/2, dtype='float')
-  pccpvalues = np.zeros(factorNum*(factorNum-1)/2, dtype='float')
+  pipi = math.pi**2 # pi^2
+  pipi_inv = 1/pipi
 
+  firstFactorNum = firstData.shape[0]
+  firstRepNum = firstData.shape[1]
+  firstSpotNum = firstData.shape[2]
+  secondFactorNum = secondData.shape[0]
+  secondRepNum = secondData.shape[1]
+  secondSpotNum = secondData.shape[2]
+  #for now let's assume it is square
+  #assert secondFactorNum == firstFactorNum and secondRepNum == firstRepNum and secondSpotNum == firstSpotNum 
+  if onDiag:  # if assigned jobs are on the diagnal
+    assert firstFactorNum == secondFactorNum
+    pairwiseNum = firstFactorNum*(firstFactorNum-1)/2
+  else:
+    pairwiseNum = firstFactorNum*scecondFactorNum
+  lsaTable = [None]*pairwiseNum
+  pvalues = np.zeros(pairwiseNum, dtype='float')
+  pccpvalues = np.zeros(pairwiseNum, dtype='float')
   #print factorNum, repNum, spotNum, lsaTable, pvalues
 
   ti = 0
-  for i in xrange(0, factorNum-1):
-    Xz = np.ma.masked_invalid(cleanData[i]) #need to convert to masked array with na's
-    for j in xrange(i+1, factorNum):
+  for i in xrange(0, firstFactorNum):
+    Xz = np.ma.masked_invalid(firstData[i]) #need to convert to masked array with na's
+    for j in xrange(0, secondFactorNum):
+      if onDiag and i<=j:
+        continue   #only care lower triangle entries
       #print "normalizing..."
-      Yz = np.ma.masked_invalid(cleanData[j]) # need to convert to masked array with na's
+      Yz = np.ma.masked_invalid(secondData[j]) # need to convert to masked array with na's
+      timespots = Yz.shape[1]
       #print "lsa computing..."
       #print "Xz=", Xz
       #print "Yz=", Yz
       LSA_result = singleLSA(Xz, Yz, delayLimit, fTransform, zNormalize, True)                          # do LSA computation
       Smax = LSA_result.score                                                               # get Smax
-      #print "bootstrap computing..."
-      (Smax, Sl, Su) = bootstrapCI(Xz, Yz, Smax, delayLimit, bootCI, bootNum, fTransform, zNormalize)           # do Bootstrap CI
-      #print "permutation test..."
-      permuP = permuPvalue(Xz, Yz, delayLimit, permuNum, np.abs(Smax), fTransform, zNormalize)          # do Permutation Test
-      pvalues[ti] = permuP
       Al = len(LSA_result.trace)
       (Xs, Ys, Al) = (LSA_result.trace[Al-1][0], LSA_result.trace[Al-1][1], len(LSA_result.trace))
+      #print "bootstrap computing..."
+      if bootNum > 0: #do BS
+        (Smax, Sl, Su) = bootstrapCI(Xz, Yz, Smax, delayLimit, bootCI, bootNum, fTransform, zNormalize)           # do Bootstrap CI
+      else: #skip BS
+        (Smax, Sl, Su) = (Smax, Smax, Smax)
+      #print "permutation test..."
+      if permuNum >= 0:
+        lsaP = permuPvalue(Xz, Yz, delayLimit, permuNum, np.abs(Smax), fTransform, zNormalize)          # do Permutation Test
+      else:
+        xx = (np.abs(Smax)*np.sqrt(timespots))**2
+        pipi_over_xx = pipi/xx
+        D = np.abs(Xs-Ys)
+        alpha = 1/permuNum/10
+        Kcut = np.ceil( .5 - np.log( alpha/(8**(2*D+1))*xx*(1-exp(-pipi_over_xx))/2 )/pipi_over_xx )
+        print Kcut
+        lsaP = theoPvalue(xx, D, Al, Kcut)  #Rn/sqrt(n)=Smax*sqrt(n)
+      pvalues[ti] = lsaP
       #print "PPC..." 
       #print np.mean(Xz, axis=0), np.mean(Yz, axis=0)
       (PCC, P_PCC) = sp.stats.pearsonr(np.ma.average(Xz, axis=0), np.ma.average(Yz, axis=0)) # two tailed p-value
       P_PCC = P_PCC/2   # one tailed p-value
       # need +epsilon to avoid all zeros
       pccpvalues[ti] = P_PCC
-      lsaTable[ti] = [i, j, Smax, Sl, Su, Xs, Ys, Al, Xs-Ys, permuP, PCC, P_PCC]
+      lsaTable[ti] = [i, j, Smax, Sl, Su, Xs, Ys, Al, Xs-Ys, lsaP, PCC, P_PCC]
       ti += 1
       #print "finalizing..."
 
