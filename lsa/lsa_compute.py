@@ -196,12 +196,13 @@ def main():
   lsaTable=lsalib.applyAnalysis(cleanData[0], cleanData[1], onDiag=onDiag, \
       delayLimit=delayLimit,bootNum=bootNum,pvalueMethod=pvalueMethod,fTransform=fTransform,zNormalize=zNormalize)
   print >>sys.stderr, "writing results ..."
-  print >>resultFile,  "\t".join(['X','Y','LS','lowCI','upCI','Xs','Ys','Len','Delay','P','PCC','Ppcc','Q', 'Qpcc'])
+  col_labels= ['X','Y','LS','lowCI','upCI','Xs','Ys','Len','Delay','P','PCC','Ppcc','SPCC','Pspcc','Q','Qpcc']
+  print >>resultFile,  "\t".join(col_labels)
 
   #print lsaTable
   for row in lsaTable:
     #print [factorLabels[row[0]], factorLabels[row[1]]] + ["%.4f" % v if isinstance(v, float) else v for v in row[2:13]]
-    print >>resultFile, "\t".join(['%s']*14) % \
+    print >>resultFile, "\t".join(['%s']*len(col_labels)) % \
       tuple([firstFactorLabels[row[0]], secondFactorLabels[row[1]] ] + ["%.4f" % np.round(v, decimals=4) if isinstance(v, float) else v for v in row[2:]])
 
   print >>sys.stderr, "finishing up..."

@@ -66,8 +66,8 @@ except ImportError:
 
 #global variable, stores calculated p-values.
 P_table = dict()
-my_step = 0.01    # preset x step size for P_table
-pipi = math.pi**2 # pi^2
+my_decimal = 2    # preset x step size for P_table
+pipi = np.pi**2 # pi^2
 pipi_inv = 1/pipi
 
 ###############################
@@ -171,32 +171,51 @@ def bootstrapCI(series1, series2, Smax, delayLimit, bootCI, bootNum, fTransform,
     #print "z0=", z0, "a1=", a1, "a2=", a2
   return ( BS_mean, BS_set[np.floor(bootNum*a1)-1], BS_set[np.ceil(bootNum*a2)-1] )
 
-def readPvalue(S, timespots, x_step=0.01):
+def readPvalue(S, timespots, x_decimal=2):
   # x = S*sqrt(timespots) => S=x/sqrt(timespots);
-  x = np.round(S*sqrt(timespots),x_step)
-  if x in P_table:
-    return P_table[x]
+  # has to ceil the x value to avoid round to 0, which is not amenable to calculation
+  #print "x=", int(np.around(S*np.sqrt(timespots)*(10**x_decimal)))
+  xi = int(np.around(S*np.sqrt(timespots)*(10**x_decimal)))
+  if xi in P_table:
+    return P_table[xi]
   else:
     return 0
 
-def theoPvalue(timespots, Dmax, precision, x_step=0.01)
-  for x in np.arange(0,x_step,timespots): 
+def theoPvalue(timespots, Dmax, precision, x_decimal=2):
+  #print np.linspace(0,timespots,timespots/10**(-x_decimal)+1)
+  for xi in xrange(0,timespots*(10**(x_decimal))+1): 
+    if xi == 0:
+      P_table[xi] = .5
+      continue
+    #print x
+    x = xi/float(10**(x_decimal))
     xx = x**2
     pipi_over_xx = pipi/xx
-    alpah = precision
+    alpha = precision
     B = 2*Dmax+1
-    Kcut = np.ceil( .5 - np.log( alpha/(8**B)*xx*(1-exp(-pipi_over_xx))/2 )/pipi_over_xx )
-    print Kcut
-    A = (1/xx)
-    P = 1
-    for k in xrange(1,Kcut):
-      B = (2*k-1)**2
-      P = P-(8**B)*((A+pipi_inv*(1/C))*exp(-C*pipi/(2*xx))**B)
+    #print pipi_over_xx
+    #print alpha
+    #print np.log(alpha*xx*(1-np.exp(-pipi_over_xx))/(8**B)/2)
+    #print np.log(alpha*xx*(1-np.exp(-pipi_over_xx))/(8**B)/2) / pipi_over_xx
+    Kcut = int(np.ceil( .5 - np.log( (alpha/(2**B-1))**(1/B) *xx*(1-np.exp(-pipi_over_xx))/8/2 )/pipi_over_xx ))
+    #Kcut = 200
+    A = 1/xx
+    R = 0     # root of cdf
+
+    for k in xrange(1,Kcut+1):
+      C = (2*k-1)**2
+      R = R + (A+pipi_inv/C)*np.exp(-C*pipi_over_xx/2)
+      P = 1 - (8**B)*(R**B)
+      #if x==2.52:
+      #  print "k=",k, "A=",A, "B=",B, "C=",C, "F=",(8**B)*(R**B), "dR=",(A+pipi_inv/C)*np.exp(-C*pipi_over_xx/2), "P=",P,"pipi_inv=",pipi_inv,"pipi_over_xx=",pipi_over_xx 
+    #print xi, x, Kcut, P, P/2;
+
     if P <= precision:
-      P_table[x] = 0
+      P_table[xi] = 0
       break
     else:
-      P_table[x] = P
+      P_table[xi] = P/2 #return one tailed probability
+
   return
 	
 def permuPvalue(series1, series2, delayLimit, pvalueMethod, Smax, fTransform, zNormalize):
@@ -245,7 +264,11 @@ def storeyQvalue(pvalues, lam=np.arange(0,0.9,0.05), method='smoother', robust=F
     Returns:
       a set of qvalues
   """
-  
+
+  if len(pvalues) == 1:
+    print >>sys.stderr, "WARN: not enough number of pvalues for q-value evaluation! nan will be filled!"
+    return np.array([np.nan], dtype='float')
+
   pi_set = np.zeros(len(lam), dtype='float')
   for i in xrange(0, len(lam)):
     pi_set[i] = np.mean(pvalues>=lam[i])/(1-lam[i])
@@ -255,7 +278,7 @@ def storeyQvalue(pvalues, lam=np.arange(0,0.9,0.05), method='smoother', robust=F
     pi_0 = spline_fit(np.max(lam))
     pi_0 = np.max( [np.min( [np.min(pi_0), 1]), 0] ) #0<=pi_0<=1
     if pi_0 == 0:
-      print >>sys.stderr, "Warning: smoother method not working, fall back to bootstrap"
+      print >>sys.stderr, "WARN: smoother method not working, fall back to bootstrap"
       method='bootstrap'
 
   if method=='bootstrap':                            #bootstrap
@@ -270,7 +293,7 @@ def storeyQvalue(pvalues, lam=np.arange(0,0.9,0.05), method='smoother', robust=F
     pi_0 = np.min(pi_set_boot[mse==np.min(mse)])
     pi_0 = np.max( [np.min( [np.min(pi_0), 1]), 0] ) #0<=pi_0<=1
     if pi_0 == 0:
-      print >>sys.stderr, "Warning: bootstrap method not working, cannot estimate qvalues"
+      print >>sys.stderr, "WARN: bootstrap method not working, cannot estimate qvalues"
       return np.array( [np.nan] * len(pvalues) )
 
   #print "pvalues=", pvalues
@@ -543,7 +566,8 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
   ti = 0
   timespots = secondSpotNum #same length already assumed
   if pvalueMethod < 0:
-    theoPvalue(timespots, delayLimit, 1./np.abs(pvalueMethod), my_step)
+    theoPvalue(timespots, delayLimit, 1./np.abs(pvalueMethod), my_decimal)
+    #print P_table
   for i in xrange(0, firstFactorNum):
     Xz = np.ma.masked_invalid(firstData[i]) #need to convert to masked array with na's, not F-normalized
     for j in xrange(0, secondFactorNum):
@@ -569,16 +593,24 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
         lsaP = permuPvalue(Xz, Yz, delayLimit, pvalueMethod, np.abs(Smax), fTransform, zNormalize)          # do Permutation Test
       else:
         #x = np.abs(Smax)*np.sqrt(timespots) # x=Rn/sqrt(n)=Smax*sqrt(n)
-        lsaP = readPvalue(np.abs(Smax), 1./np.abs(pvalueMethod), my_step) #one-tailed  
+        lsaP = readPvalue(np.abs(Smax), timespots, my_decimal) #one-tailed  
       pvalues[ti] = lsaP
       #print "PPC..." 
       #print np.mean(Xz, axis=0), np.mean(Yz, axis=0)
       (PCC, P_PCC) = sp.stats.pearsonr(np.ma.average(Xz, axis=0), np.ma.average(Yz, axis=0)) # two tailed p-value
       P_PCC = P_PCC/2   # one tailed p-value
       #(DPCC, P_DPCC) = sp.stats.pearsonr(np.ma.average(Xz[:,Xs-1:Xs+Al],
+      #print Xs, Ys, Al, Ys-Xs
+      #print Xz[:,:Al].shape
+      #print Yz[:,(Ys-Xs):].shape
+      if Xs <= Ys:
+        (SPCC, P_SPCC) = sp.stats.pearsonr(np.ma.average(Xz[:,:Al], axis=0), np.ma.average(Yz[:,(Ys-Xs):], axis=0)) # corr for shifted-cut seq
+      else:
+        (SPCC, P_SPCC) = sp.stats.pearsonr(np.ma.average(Xz[:,(Xs-Ys):], axis=0), np.ma.average(Yz[:,:Al], axis=0)) # corr for shifted-cut seq
+
       # need +epsilon to avoid all zeros
       pccpvalues[ti] = P_PCC
-      lsaTable[ti] = [i, j, Smax, Sl, Su, Xs, Ys, Al, Xs-Ys, lsaP, PCC, P_PCC]
+      lsaTable[ti] = [i, j, Smax, Sl, Su, Xs, Ys, Al, Xs-Ys, lsaP, PCC, P_PCC, SPCC, P_SPCC]
       ti += 1
       #print "finalizing..."
 
@@ -590,6 +622,7 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
     lsaTable[i].append( qvalues[i] )
     lsaTable[i].append( pccqvalues[i] )
 
+  #print lsaTable
   return lsaTable
 
 def test():
