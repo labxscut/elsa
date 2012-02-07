@@ -59,10 +59,16 @@ except ImportError:
     #Xz = scoreNormalize( X )												#N: normalize function
     #S_max = singleLSA( X, Y, D )											#D: delayLimit	
     #(S_low, S_up) = bootstrapCI( X, Y, D, alpha, B )						#B: bootNum, alpha: interval size
-    #p = permuPvalue( X, Y, S_max, P )										#P: permuNum
+    #p = permuPvalue( X, Y, S_max, P )										#P: pvalueMethod
     #q = storeyQvalue( p_set )												#p_set: set of p-values
-    #lsaTable = applyAnalysis( rawData, delayLimit=D, ftransform=F, znormalize=N, bootCI=alpha, bootNum=B, permuNum=P )  
+    #lsaTable = applyAnalysis( rawData, delayLimit=D, ftransform=F, znormalize=N, bootCI=alpha, bootNum=B, pvalueMethod=P )  
 """
+
+#global variable, stores calculated p-values.
+P_table = dict()
+my_step = 0.01    # preset x step size for P_table
+pipi = math.pi**2 # pi^2
+pipi_inv = 1/pipi
 
 ###############################
 # applyAnalsys
@@ -165,25 +171,42 @@ def bootstrapCI(series1, series2, Smax, delayLimit, bootCI, bootNum, fTransform,
     #print "z0=", z0, "a1=", a1, "a2=", a2
   return ( BS_mean, BS_set[np.floor(bootNum*a1)-1], BS_set[np.ceil(bootNum*a2)-1] )
 
-def theoPvalue(xx, timespots, D, Kcut):
-  A = (1/xx)
-  B = 2*D+1
-  P = 1
-  for k in xrange(1,Kcut+1):
-    B = (2*k-1)**2
-    P = P-(8**B)*((A+pipi_inv*(1/C))*exp(-C*pipi/(2*xx))**B)
-  #if P <= 0:
-  #  P = 0.
-  return P
+def readPvalue(S, timespots, x_step=0.01):
+  # x = S*sqrt(timespots) => S=x/sqrt(timespots);
+  x = np.round(S*sqrt(timespots),x_step)
+  if x in P_table:
+    return P_table[x]
+  else:
+    return 0
+
+def theoPvalue(timespots, Dmax, precision, x_step=0.01)
+  for x in np.arange(0,x_step,timespots): 
+    xx = x**2
+    pipi_over_xx = pipi/xx
+    alpah = precision
+    B = 2*Dmax+1
+    Kcut = np.ceil( .5 - np.log( alpha/(8**B)*xx*(1-exp(-pipi_over_xx))/2 )/pipi_over_xx )
+    print Kcut
+    A = (1/xx)
+    P = 1
+    for k in xrange(1,Kcut):
+      B = (2*k-1)**2
+      P = P-(8**B)*((A+pipi_inv*(1/C))*exp(-C*pipi/(2*xx))**B)
+    if P <= precision:
+      P_table[x] = 0
+      break
+    else:
+      P_table[x] = P
+  return
 	
-def permuPvalue(series1, series2, delayLimit, permuNum, Smax, fTransform, zNormalize):
+def permuPvalue(series1, series2, delayLimit, pvalueMethod, Smax, fTransform, zNormalize):
   """ do permutation Test
 
 		Args:
 			series1(np.array): 	sequence data of Seq X
 			series2(np.array): 	sequence data of Seq Y
 			delayLimit(int): 	maximum time unit of delayed response allowed	
-      permuNum(int): number of permutations
+      pvalueMethod(int): number of permutations
       Smax(int): maximum LSA
 			fTransform(func):	replicate summarizing function
 
@@ -194,19 +217,19 @@ def permuPvalue(series1, series2, delayLimit, permuNum, Smax, fTransform, zNorma
 	
   ###print "-------permutation------"
   lsad = compcore.LSA_Data()
-  PP_set = np.zeros(permuNum, dtype='float')
+  PP_set = np.zeros(pvalueMethod, dtype='float')
   Xz = zNormalize(fTransform(series1))
   Y = np.ma.array(series2)                                               #use = only assigns reference, must use a constructor
-  for i in xrange(0, permuNum):
+  for i in xrange(0, pvalueMethod):
     np.random.shuffle(Y.T)
     lsad.assign( delayLimit, Xz, zNormalize(fTransform(Y)) )
     PP_set[i] = compcore.DP_lsa(lsad, False).score
-  #PP_set[permuNum]=Smax                                               #the original test shall not be considerred
-  #print "PP_set", PP_set, PP_set >= Smax, np.sum(PP_set>=Smax), np.float(permuNum)
+  #PP_set[pvalueMethod]=Smax                                               #the original test shall not be considerred
+  #print "PP_set", PP_set, PP_set >= Smax, np.sum(PP_set>=Smax), np.float(pvalueMethod)
   if Smax >= 0:
-    P_one_tail = np.sum(PP_set >= Smax)/np.float(permuNum)
+    P_one_tail = np.sum(PP_set >= Smax)/np.float(pvalueMethod)
   else:
-    P_one_tail = np.sum(PP_set <= Smax)/np.float(permuNum)
+    P_one_tail = np.sum(PP_set <= Smax)/np.float(pvalueMethod)
   return P_one_tail
 
 def storeyQvalue(pvalues, lam=np.arange(0,0.9,0.05), method='smoother', robust=False, smooth_df=3):
@@ -471,7 +494,7 @@ def fillMissing(tseries, method):
         yy[i] = 0
     return yy
     
-def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, bootNum=1000, permuNum=1000, fTransform=simpleAverage, zNormalize=scoreNormalize):
+def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, bootNum=1000, pvalueMethod=1000, fTransform=simpleAverage, zNormalize=scoreNormalize):
   """ calculate pairwise LS scores and p-values
 
     	Args:
@@ -481,7 +504,7 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
     		delayLimit(int): 	maximum time unit of delayed response allowed
      		bootCI(float): 		bootstrap confidence interval size, 0 to 1
     		bootNum(int): 		bootstrap number
-    		permuNum(int): 		number of permutations
+    		pvalueMethod(int): 	pvalue estimation method and precision
     		ftransform(func): 	summarizing function for replicated data
     		znormalize(func): 	normalizing function for ftransformed data
     		
@@ -494,8 +517,6 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
         	
   """	
 
-  pipi = math.pi**2 # pi^2
-  pipi_inv = 1/pipi
 
   firstFactorNum = firstData.shape[0]
   firstRepNum = firstData.shape[1]
@@ -504,7 +525,11 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
   secondRepNum = secondData.shape[1]
   secondSpotNum = secondData.shape[2]
   #for now let's assume it is square
-  #assert secondFactorNum == firstFactorNum and secondRepNum == firstRepNum and secondSpotNum == firstSpotNum 
+  #assert secondFactorNum == firstFactorNum 
+  #for now let's assume same rep number
+  #assert secondRepNum == firstRepNum 
+  #for now let's assume same length
+  assert secondSpotNum == firstSpotNum 
   if onDiag:  # if assigned jobs are on the diagnal
     assert firstFactorNum == secondFactorNum
     pairwiseNum = firstFactorNum*(firstFactorNum-1)/2
@@ -516,14 +541,16 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
   #print factorNum, repNum, spotNum, lsaTable, pvalues
 
   ti = 0
+  timespots = secondSpotNum #same length already assumed
+  if pvalueMethod < 0:
+    theoPvalue(timespots, delayLimit, 1./np.abs(pvalueMethod), my_step)
   for i in xrange(0, firstFactorNum):
-    Xz = np.ma.masked_invalid(firstData[i]) #need to convert to masked array with na's
+    Xz = np.ma.masked_invalid(firstData[i]) #need to convert to masked array with na's, not F-normalized
     for j in xrange(0, secondFactorNum):
       if onDiag and i<=j:
         continue   #only care lower triangle entries
       #print "normalizing..."
-      Yz = np.ma.masked_invalid(secondData[j]) # need to convert to masked array with na's
-      timespots = Yz.shape[1]
+      Yz = np.ma.masked_invalid(secondData[j]) # need to convert to masked array with na's, not F-normalized
       #print "lsa computing..."
       #print "Xz=", Xz
       #print "Yz=", Yz
@@ -537,21 +564,18 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
       else: #skip BS
         (Smax, Sl, Su) = (Smax, Smax, Smax)
       #print "permutation test..."
-      if permuNum >= 0:
-        lsaP = permuPvalue(Xz, Yz, delayLimit, permuNum, np.abs(Smax), fTransform, zNormalize)          # do Permutation Test
+      #This should be modified.
+      if pvalueMethod >= 0:
+        lsaP = permuPvalue(Xz, Yz, delayLimit, pvalueMethod, np.abs(Smax), fTransform, zNormalize)          # do Permutation Test
       else:
-        xx = (np.abs(Smax)*np.sqrt(timespots))**2
-        pipi_over_xx = pipi/xx
-        D = np.abs(Xs-Ys)
-        alpha = 1/permuNum/10
-        Kcut = np.ceil( .5 - np.log( alpha/(8**(2*D+1))*xx*(1-exp(-pipi_over_xx))/2 )/pipi_over_xx )
-        print Kcut
-        lsaP = theoPvalue(xx, D, Al, Kcut)  #Rn/sqrt(n)=Smax*sqrt(n)
+        #x = np.abs(Smax)*np.sqrt(timespots) # x=Rn/sqrt(n)=Smax*sqrt(n)
+        lsaP = readPvalue(np.abs(Smax), 1./np.abs(pvalueMethod), my_step) #one-tailed  
       pvalues[ti] = lsaP
       #print "PPC..." 
       #print np.mean(Xz, axis=0), np.mean(Yz, axis=0)
       (PCC, P_PCC) = sp.stats.pearsonr(np.ma.average(Xz, axis=0), np.ma.average(Yz, axis=0)) # two tailed p-value
       P_PCC = P_PCC/2   # one tailed p-value
+      #(DPCC, P_DPCC) = sp.stats.pearsonr(np.ma.average(Xz[:,Xs-1:Xs+Al],
       # need +epsilon to avoid all zeros
       pccpvalues[ti] = P_PCC
       lsaTable[ti] = [i, j, Smax, Sl, Su, Xs, Ys, Al, Xs-Ys, lsaP, PCC, P_PCC]

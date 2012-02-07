@@ -15,6 +15,34 @@ except ImportError:
   #installed import
   from lsa import lsalib
 
+def ji_calc_trend(oSeries, lengthSeries, thresh):
+  #Liping Ji and Kian-Lee Tan, Bioinformatics 2005
+
+  tSeries = np.zeros((1,lengthSeries), dtype='float')
+
+  for i in xrange(0, lengthSeries):
+    if oSeries[0][i] == 0 and oSeries[0][i+1] > 0:
+      trend = 1
+    elif oSeries[0][i] == 0 and oSeries[0][i+1] < 0:
+      trend = -1
+    elif oSeries[0][i] == 0 and oSeries[0][i+1] == 0:
+      trend = 0
+    else:
+      trend = (oSeries[0][i+1]-oSeries[0][i])/np.abs(oSeries[0][i])
+
+    if trend >= thresh:
+      tSeries[0][i] = 1
+    elif trend <= -thresh:
+      tSeries[0][i] = -1
+    else:
+      tSeries[0][i] = 0
+
+  #print thresh
+  #print oSeries
+  #print tSeries
+
+  return tSeries
+
 def main():
 
   # define arguments: delayLimit, fillMethod, permuNum
@@ -27,7 +55,7 @@ def main():
   parser.add_argument("-L", "--lengthSeries", dest="lengthSeries", default=50, type=int,
                               help="specify the length of series to generate, default: 50")
   parser.add_argument("-T", "--trendSeries", dest="trendSeries", default=None,
-                              help="if specified, will generate trend series")
+                              help="if specified must be a number, will generate trend series, with the specified threshold")
   arg_namespace = parser.parse_args()
 
   # parse arguments: 
@@ -39,7 +67,7 @@ def main():
     trendSeries = False
   else:
     trendSeries = True
-  trend_threshold = int(trendSeries)
+    trend_threshold = int(vars(arg_namespace)['trendSeries'])
 
   print >>sys.stderr, "simulating...",
   start_time = time.time()
@@ -54,40 +82,11 @@ def main():
     else:
       # x trend
       OxSeries = np.random.randn(1,lengthSeries+1)
-      xSeries = np.zeros((1,lengthSeries), dtype='float')
-      for i in xrange(0, lengthSeries):
-        if OxSeries[0][i] == 0 and OxSeries[0][i+1] > 0:
-          x_trend = 1
-        elif OxSeries[0][i] == 0 and OxSeries[0][i+1] < 0:
-          x_trend = -1
-        elif OxSeries[0][i] == 0 and OxSeries[0][i+1] == 0:
-          x_trend = 0
-        else:
-          x_trend = (OxSeries[0][i+1]-OxSeries[0][i])/np.abs(OxSeries[0][i])
-        if x_trend >= trend_threshold:
-          xSeries[0][i] = 1
-        elif x_trend <= -trend_threshold:
-          xSeries[0][i] = -1
-        else:
-          xSeries[0][i] = 0
+      xSeries = ji_calc_trend(OxSeries, lengthSeries, trend_threshold)
       # y trend
       OySeries = np.random.randn(1,lengthSeries+1)
-      ySeries = np.zeros((1,lengthSeries), dtype='float')
-      for i in xrange(0, lengthSeries):
-        if OySeries[0][i] == 0 and OySeries[0][i+1] > 0:
-          y_trend = 1
-        elif OySeries[0][i] == 0 and OySeries[0][i+1] < 0:
-          y_trend = -1
-        elif OySeries[0][i] == 0 and OySeries[0][i+1] == 0:
-          y_trend = 0
-        else:
-          y_trend = (OySeries[0][i+1]-OySeries[0][i])/np.abs(OySeries[0][i])
-        if y_trend >= trend_threshold:
-          ySeries[0][i] = 1
-        elif y_trend <= -trend_threshold:
-          ySeries[0][i] = -1
-        else:
-          ySeries[0][i] = 0
+      ySeries = ji_calc_trend(OySeries, lengthSeries, trend_threshold)
+      # mask_na
       xSeries = np.ma.masked_invalid(xSeries)
       ySeries = np.ma.masked_invalid(ySeries)
       #print xSeries.shape

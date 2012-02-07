@@ -43,7 +43,7 @@ except ImportError:
 
 def main():  
 
-  # define arguments: delayLimit, fillMethod, permuNum
+  # define arguments: delayLimit, fillMethod, pvalueMethod
   parser = argparse.ArgumentParser(description="New LSA Commandline Tool")
 
   parser.add_argument("dataFile", metavar="dataFile", type=argparse.FileType('r'), help="the input data file,\n \
@@ -56,10 +56,10 @@ def main():
                             and only lower triangle entries of pairwise matrix will be computed")
   parser.add_argument("-d", "--delayLimit", dest="delayLimit", default=3, type=int, 
                     	help="specify the maximum delay possible, default: 3,\n choices: 0 to 6")
-  parser.add_argument("-p", "--permuNum", dest="permuNum", default=1000, type=int,
-                    	help="specify the mode=sgn(permuNum) and precision=1/abs(permuNum) for p-value estimation, \n \
-                            default: permuNum=1000, i.e. precision=0.001 and mode=permutation \n \
-                            +: permutation; -: theoretica. ")
+  parser.add_argument("-p", "--pvalueMethod", dest="pvalueMethod", default=1000, type=int,
+                    	help="specify the method=sgn(pvalueMethod) and precision=1/abs(pvalueMethod) for p-value estimation, \n \
+                            default: pvalueMethod=1000, i.e. precision=0.001 and mode=permutation \n \
+                            mode +: permutation approximaton; -: theoretical approximation. ")
   parser.add_argument("-b", "--bootNum", dest="bootNum", default=100, type=int, choices=[0, 100, 200, 500, 1000, 2000],
                     	help="specify the number of bootstraps for 95%% confidence interval estimation, default: 100,\n \
                           choices: 0, 100, 200, 500, 1000, 2000. \n \
@@ -107,7 +107,7 @@ def main():
   delayLimit = vars(arg_namespace)['delayLimit']
   fillMethod = vars(arg_namespace)['fillMethod']
   normMethod = vars(arg_namespace)['normMethod']
-  permuNum = vars(arg_namespace)['permuNum']
+  pvalueMethod = vars(arg_namespace)['pvalueMethod']
   dataFile = vars(arg_namespace)['dataFile']				#dataFile
   extraFile = vars(arg_namespace)['extraFile']				#extraFile
   resultFile = vars(arg_namespace)['resultFile']			#resultFile
@@ -141,8 +141,8 @@ def main():
   else:
     zNormalize = lsalib.scoreNormalize  # fallback to default
   
-  print "\t".join(['delayLimit','fillMethod','permuNum','dataFile','resultFile','repNum','spotNum','bootNum','transFunc','normMethod' ])
-  print "\t".join(['%s']*10) % (delayLimit,fillMethod,permuNum,dataFile,resultFile,repNum,spotNum,bootNum,transFunc,normMethod)
+  print "\t".join(['delayLimit','fillMethod','pvalueMethod','dataFile','resultFile','repNum','spotNum','bootNum','transFunc','normMethod' ])
+  print "\t".join(['%s']*10) % (delayLimit,fillMethod,pvalueMethod,dataFile,resultFile,repNum,spotNum,bootNum,transFunc,normMethod)
   
   #start timing main
   start_time = time.time()
@@ -194,7 +194,7 @@ def main():
   #print >>sys.stderr, "data size factorNum, repNum, spotNum = %s, %s, %s" % (cleanData.shape[0], cleanData.shape[1], cleanData.shape[2])
   #print >>sys.stderr, "calculating ..."
   lsaTable=lsalib.applyAnalysis(cleanData[0], cleanData[1], onDiag=onDiag, \
-      delayLimit=delayLimit,bootNum=bootNum,permuNum=permuNum,fTransform=fTransform,zNormalize=zNormalize)
+      delayLimit=delayLimit,bootNum=bootNum,pvalueMethod=pvalueMethod,fTransform=fTransform,zNormalize=zNormalize)
   print >>sys.stderr, "writing results ..."
   print >>resultFile,  "\t".join(['X','Y','LS','lowCI','upCI','Xs','Ys','Len','Delay','P','PCC','Ppcc','Q', 'Qpcc'])
 
