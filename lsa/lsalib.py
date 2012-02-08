@@ -601,12 +601,14 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
       P_PCC = P_PCC/2   # one tailed p-value
       #(DPCC, P_DPCC) = sp.stats.pearsonr(np.ma.average(Xz[:,Xs-1:Xs+Al],
       #print Xs, Ys, Al, Ys-Xs
-      #print Xz[:,:Al].shape
-      #print Yz[:,(Ys-Xs):].shape
       if Xs <= Ys:
-        (SPCC, P_SPCC) = sp.stats.pearsonr(np.ma.average(Xz[:,:Al], axis=0), np.ma.average(Yz[:,(Ys-Xs):], axis=0)) # corr for shifted-cut seq
+        #print Xz[:,:Al].shape
+        #print Yz[:,(Ys-Xs):(Ys-Xs)+Al].shape
+        (SPCC, P_SPCC) = sp.stats.pearsonr(np.ma.average(Xz[:,:Al], axis=0), np.ma.average(Yz[:,(Ys-Xs):(Ys-Xs+Al)], axis=0)) # corr for shifted-cut seq
       else:
-        (SPCC, P_SPCC) = sp.stats.pearsonr(np.ma.average(Xz[:,(Xs-Ys):], axis=0), np.ma.average(Yz[:,:Al], axis=0)) # corr for shifted-cut seq
+        #print Xz[:,(Xs-Ys):(Xs-Ys)+Al].shape
+        #print Yz[:,:Al].shape
+        (SPCC, P_SPCC) = sp.stats.pearsonr(np.ma.average(Xz[:,(Xs-Ys):(Xs-Ys+Al)], axis=0), np.ma.average(Yz[:,:Al], axis=0)) # corr for shifted-cut seq
 
       # need +epsilon to avoid all zeros
       pccpvalues[ti] = P_PCC
