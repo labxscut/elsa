@@ -573,7 +573,7 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
   for i in xrange(0, firstFactorNum):
     Xz = np.ma.masked_invalid(firstData[i]) #need to convert to masked array with na's, not F-normalized
     for j in xrange(0, secondFactorNum):
-      if onDiag and i<=j:
+      if onDiag and i<j:
         continue   #only care lower triangle entries
       #print "normalizing..."
       Yz = np.ma.masked_invalid(secondData[j]) # need to convert to masked array with na's, not F-normalized
@@ -583,7 +583,15 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
       LSA_result = singleLSA(Xz, Yz, delayLimit, fTransform, zNormalize, True)                          # do LSA computation
       Smax = LSA_result.score                                                               # get Smax
       Al = len(LSA_result.trace)
-      (Xs, Ys, Al) = (LSA_result.trace[Al-1][0], LSA_result.trace[Al-1][1], len(LSA_result.trace))
+      if Al == 0:
+        (Xs, Ys, Al) = (np.nan, np.nan, Al)
+      else:
+        (Xs, Ys, Al) = (LSA_result.trace[Al-1][0], LSA_result.trace[Al-1][1], len(LSA_result.trace))
+      #try:
+      #except IndexError:
+      #  print "Xz=", Xz
+      #  print "Yz=", Yz
+      #  print "Xs=", Xs, "Ys=", Ys, "Al=", Al  
       #print "bootstrap computing..."
       if bootNum > 0: #do BS
         (Smax, Sl, Su) = bootstrapCI(Xz, Yz, Smax, delayLimit, bootCI, bootNum, fTransform, zNormalize)           # do Bootstrap CI

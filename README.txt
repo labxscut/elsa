@@ -9,7 +9,7 @@ INSTRODUCTION:
 
 DEPENDENCIES:
     C++ build environment
-        e.g. build-essentials and libstdc++ in Ubuntu and Xcode in Mac 
+        e.g. build-essential and libstdc++6 in Ubuntu and Xcode in Mac 
     Python(>=2.7) 
         download @ http://www.python.org/
     Numpy(>=1.0)
