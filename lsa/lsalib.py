@@ -179,13 +179,13 @@ def readPvalue(S, timespots, x_decimal=2):
   if xi in P_table:
     return P_table[xi]
   else:
-    return 0
+    return 0.
 
-def theoPvalue(timespots, Dmax, precision, x_decimal=2):
+def theoPvalue(timespots, Dmax, precision, x_decimal=2):   #let's produce 2 tail-ed p-value
   #print np.linspace(0,timespots,timespots/10**(-x_decimal)+1)
   for xi in xrange(0,timespots*(10**(x_decimal))+1): 
     if xi == 0:
-      P_table[xi] = .5
+      P_table[xi] = 1
       continue
     #print x
     x = xi/float(10**(x_decimal))
@@ -205,23 +205,23 @@ def theoPvalue(timespots, Dmax, precision, x_decimal=2):
     for k in xrange(1,Kcut+1):
       C = (2*k-1)**2
       R = R + (A+pipi_inv/C)*np.exp(-C*pipi_over_xx/2)
-      P = 1 - (8**B)*(R**B)
+      P_two_tail = 1 - (8**B)*(R**B)
       #if x==2.52:
       #  print "k=",k, "A=",A, "B=",B, "C=",C, "F=",(8**B)*(R**B), "dR=",(A+pipi_inv/C)*np.exp(-C*pipi_over_xx/2), "P=",P,"pipi_inv=",pipi_inv,"pipi_over_xx=",pipi_over_xx 
     #print xi, x, Kcut, P, P/2;
 
-    if P <= precision:
-      P_table[xi] = 0
+    if P_two_tail < precision:
+      P_table[xi] = P_two_tail
       break
     else:
-      P_table[xi] = P/2 #return one tailed probability
+      P_table[xi] = P_two_tail #return one tailed probability
 
   return
 	
 def permuPvalue(series1, series2, delayLimit, pvalueMethod, Smax, fTransform, zNormalize):
   """ do permutation Test
 
-		Args:
+    Args:
 			series1(np.array): 	sequence data of Seq X
 			series2(np.array): 	sequence data of Seq Y
 			delayLimit(int): 	maximum time unit of delayed response allowed	
@@ -246,10 +246,10 @@ def permuPvalue(series1, series2, delayLimit, pvalueMethod, Smax, fTransform, zN
   #PP_set[pvalueMethod]=Smax                                               #the original test shall not be considerred
   #print "PP_set", PP_set, PP_set >= Smax, np.sum(PP_set>=Smax), np.float(pvalueMethod)
   if Smax >= 0:
-    P_one_tail = np.sum(PP_set >= Smax)/np.float(pvalueMethod)
+    P_two_tail = np.sum(np.abs(PP_set) >= Smax)/np.float(pvalueMethod)
   else:
-    P_one_tail = np.sum(PP_set <= Smax)/np.float(pvalueMethod)
-  return P_one_tail
+    P_two_tail = np.sum(np.abs(PP_set) <= Smax)/np.float(pvalueMethod)
+  return P_two_tail
 
 def storeyQvalue(pvalues, lam=np.arange(0,0.9,0.05), method='smoother', robust=False, smooth_df=3):
   """ do Q-value calculation
@@ -264,6 +264,8 @@ def storeyQvalue(pvalues, lam=np.arange(0,0.9,0.05), method='smoother', robust=F
     Returns:
       a set of qvalues
   """
+  
+  #print pvalues
 
   if len(pvalues) == 1:
     print >>sys.stderr, "WARN: not enough number of pvalues for q-value evaluation! nan will be filled!"
@@ -598,7 +600,7 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
       #print "PPC..." 
       #print np.mean(Xz, axis=0), np.mean(Yz, axis=0)
       (PCC, P_PCC) = sp.stats.pearsonr(np.ma.average(Xz, axis=0), np.ma.average(Yz, axis=0)) # two tailed p-value
-      P_PCC = P_PCC/2   # one tailed p-value
+      #P_PCC = P_PCC/2   # one tailed p-value
       #(DPCC, P_DPCC) = sp.stats.pearsonr(np.ma.average(Xz[:,Xs-1:Xs+Al],
       #print Xs, Ys, Al, Ys-Xs
       if Xs <= Ys:
@@ -617,9 +619,11 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
       #print "finalizing..."
 
   #print "qvalues ..."
-  #print "pvalues", pvalues
+  print "pvalues", pvalues
   qvalues = storeyQvalue( pvalues )
+  print "qvalues", qvalues
   pccqvalues = storeyQvalue( pccpvalues )
+
   for i in xrange(0, len(qvalues)):
     lsaTable[i].append( qvalues[i] )
     lsaTable[i].append( pccqvalues[i] )
