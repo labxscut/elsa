@@ -41,6 +41,8 @@ import os, sys
 
 doclines=__doc__.splitlines()
 
+os.environ['CC'] = 'g++'  #temporary measure to trick distutils use g++, need update to distutils2
+
 if os.path.exists('MANIFEST'): os.remove('MANIFEST')
 
 #compcore_module = Extension('lsa/_compcore', sources=['lsa/compcore_wrap.cpp', 'lsa/compcore.cpp'] , )

@@ -262,25 +262,35 @@ def storeyQvalue(pvalues, lam=np.arange(0,0.9,0.05), method='smoother', robust=F
       smooth_df(int): order of spline function
 
     Returns:
-      a set of qvalues
+      qvalues(np.array): a set of qvalues
   """
   
-  #print pvalues
+  #assume pvalues is an array with possible nans
+  #get a list of non nan pvalues, do the same procedure, putback to original list
+  mpvalues = np.ma.masked_invalid(pvalues)
+  rpvalues = mpvalues[~mpvalues.mask]
+  p_num = len(pvalues)
+  rp_num = len(rpvalues)
+  #print "p_num=", p_num, "rp_num=", rp_num
+  #print "rpvalues=", rpvalues
 
-  if len(pvalues) == 1:
-    print >>sys.stderr, "WARN: not enough number of pvalues for q-value evaluation! nan will be filled!"
-    return np.array([np.nan], dtype='float')
+  if rp_num <= 1:
+    #print >>sys.stderr, "WARN: not enough number of pvalues for q-value evaluation! nan will be filled!"
+    return np.array( [np.nan] * p_num, dtype='float')
 
   pi_set = np.zeros(len(lam), dtype='float')
   for i in xrange(0, len(lam)):
-    pi_set[i] = np.mean(pvalues>=lam[i])/(1-lam[i])
+    pi_set[i] = np.mean(rpvalues>=lam[i])/(1-lam[i])
 
+  #print "pi_set=", pi_set
   if method=='smoother':
     spline_fit = sp.interpolate.interp1d(lam, pi_set, kind=smooth_df)
     pi_0 = spline_fit(np.max(lam))
+    #print "pi_0=", pi_0
     pi_0 = np.max( [np.min( [np.min(pi_0), 1]), 0] ) #0<=pi_0<=1
+    #print "pi_0=", pi_0
     if pi_0 == 0:
-      print >>sys.stderr, "WARN: smoother method not working, fall back to bootstrap"
+      #print >>sys.stderr, "WARN: smoother method not working, fall back to bootstrap"
       method='bootstrap'
 
   if method=='bootstrap':                            #bootstrap
@@ -288,42 +298,53 @@ def storeyQvalue(pvalues, lam=np.arange(0,0.9,0.05), method='smoother', robust=F
     mse = np.zeros((100, len(lam)), dtype='float')
     pi_set_boot = np.zeros((100, len(lam)), dtype='float')
     for j in xrange(0, 100):
-      p_boot = sample_wr(pvalues, len(pvalues))
+      p_boot = sample_wr(rpvalues, rp_num)
       for i in xrange(0, len(lam)):
         pi_set_boot[j][i] = np.mean(p_boot>=lam[i])/(1-lam[i]) 
       mse[j] = (pi_set_boot[j]-pi_min)**2
-    pi_0 = np.min(pi_set_boot[mse==np.min(mse)])
-    pi_0 = np.max( [np.min( [np.min(pi_0), 1]), 0] ) #0<=pi_0<=1
+    min_mse_j = np.argmin(mse)
+    pi_0 = np.min(pi_set_boot[min_mse_j])
+    #print "pi_0=", pi_0
+    pi_0 = np.max([np.min( [np.min(pi_0), 1]), 0]) #0<=pi_0<=1
+    #print "pi_0=", pi_0
     if pi_0 == 0:
-      print >>sys.stderr, "WARN: bootstrap method not working, cannot estimate qvalues"
-      return np.array( [np.nan] * len(pvalues) )
+      #print >>sys.stderr, "WARN: bootstrap method not working, cannot estimate qvalues"
+      return np.array( [np.nan] * p_num, dtype='float' )
 
-  #print "pvalues=", pvalues
   #print "pi_0=", pi_0
-  p_argsort = np.argsort(pvalues)
-  #print "argsort of p=", pvalues[p_argsort]
-  p_ranks = tied_rank(pvalues)
-  #print "tied rank of p=", p_ranks
+  rp_argsort = np.argsort(rpvalues)                     #np.nan will be sorted as maximum (the largest rank)
+  #print "argsort of rps=", rpvalues[rp_argsort]
+  rp_ranks = tied_rank(rpvalues)
+  #print "tied rank of rps=", rp_ranks
   #print "lam,pi_set,pi_0:", lam, pi_set, pi_0
   #print "pi_0, p_ranks, pvalues, len(pvalues)", pi_0, p_ranks, pvalues, len(pvalues)
   if robust:
-    qvalues = pi_0*len(pvalues)*pvalues/(p_ranks*(1-np.power((1-pvalues),len(pvalues))))
+    rqvalues = pi_0*rp_num*rpvalues*(1/(rp_ranks*(1-np.power((1-rpvalues),rp_num))))
   else:
-    qvalues = pi_0*len(pvalues)*pvalues/p_ranks  
-  #print "qvalues=", qvalues
-  qvalues[p_argsort[len(qvalues)-1]] = np.min( [qvalues[p_argsort[len(qvalues)-1]], 1] ) # argsort in asscending order
-  for i in reversed(range(0,len(qvalues)-1)): #don't know why it is so complicated here, why not just use qvalues; to enssure desencing order!!!
-    qvalues[p_argsort[i]] = np.min( [qvalues[p_argsort[i]], qvalues[p_argsort[i+1]], 1] )
+    rqvalues = pi_0*rp_num*rpvalues*(1/rp_ranks) 
+  #print "rqs=", rqvalues
+  rqvalues[rp_argsort[rp_num-1]] = np.min( [rqvalues[rp_argsort[rp_num-1]], 1] ) # argsort in asscending order
+  for i in reversed(range(0,rp_num-1)): #don't know why it is so complicated here, why not just use qvalues; to enssure desencing order!!!
+    rqvalues[rp_argsort[i]] = np.min( [rqvalues[rp_argsort[i]], rqvalues[rp_argsort[i+1]], 1] )
+
+  qvalues=np.array([np.nan]*p_num)
+  j=0
+  for i in range(0, p_num):
+    if not mpvalues.mask[i]:
+      qvalues[i]=rqvalues[j]
+      j += 1
+
+  #print "qs=", qvalues
   return qvalues
 
 def simpleAverage(tseries):
   """ simple averaging 
 
     Args:
-      tseries(np.array):  one time series with replicates, each row is a replicate
+      tseries(np.ma.array):  one 2d time series (masked array) with replicates, each row is a replicate
 
     Reterns:
-      one row with replicates averaged
+      (1d np.ma.array) one row with replicates averaged
 
     Note:
       if nan in tseries, it is treated as zeros, this will happen if fTransform before zNormalize
@@ -336,21 +357,39 @@ def sdAverage(tseries):
   """	SD weighted averaging 
 
     Args:
-      tseries(np.array):  one time series with replicates, each row is a replicate
+      tseries(np.ma.array):  one 2d time series (masked array) with replicates, each row is a replicate
 
     Reterns:
-      one row with replicates SD weighted averaged
+      (1d np.ma.array): one row with replicates SD weighted averaged
 
     Note:
       if nan in tseries, it is treated as zeros, this will happen if fTransform before zNormalize
   """
-  sd = np.ma.std(tseries,axis=0,ddof=1)
-  for v in sd:
-    if v == 0.:
-      return np.ma.average(tseries, axis=0)                       #sd = 0, fall back to simpleAverage
+  #print tseries
+  try:
+    sd = np.ma.std(tseries,axis=0,ddof=1)
+  except FloatingPointError:
+    return np.ma.average(tseries, axis=0)                       #sd = 0, fall back to simpleAverage
+  if np.any(sd.mask) or (np.ma.sum(sd==0))>0:
+    #print sd, sd.mask, sd==0
+    #print np.ma.average(tseries, axis=0)
+    return np.ma.average(tseries, axis=0)                       #sd = 0, fall back to simpleAverage
   #print "tseries=", tseries
   #print "sd=", sd
-  Xf = ((np.ma.average(tseries, axis=0)/sd)/np.ma.sum(1/sd))/sd   #sd-weighted sample
+  #print "average=", np.ma.average(tseries, axis=0)
+  #av_inv_sd = np.ma.average(tseries, axis=0)/sd
+  #sum_inv_sd = np.ma.sum(1/sd)
+  #print "sum(1/sd)=", np.ma.sum(1/sd)
+  #av_inv_sum = av_inv_sd/sum_inv_sd
+  #print "av/sum(1/sd)", av_inv_sum
+  #print "inv_sd=", 1/sd
+  #Xf = av_inv_sum*(1/sd)
+  #print "Xf=", Xf
+  Xf = np.ma.average(tseries, axis=0)*(1/sd)*(1/np.ma.sum(1/sd))*(1/sd)   #sd-weighted sample
+  #print "Xf=", Xf
+  #Xf = np.divide(np.divide(np.divide(np.ma.average(tseries, axis=0),sd),np.ma.sum(1/sd)),sd)   #sd-weighted sample
+  #Xf = ((np.ma.average(tseries, axis=0)/sd)/np.ma.sum(1/sd))/sd   
+  #wierd warning: ma/core.py:772: RuntimeWarning: underflow encountered in multiply return umath.absolute(a) * self.tolerance >= umath.absolute(b)
   #return (Xf - np.average(Xf))/(np.sqrt(Xf.shape)*np.std(Xf))  #rescale and centralized
   #print "sdAverage=", Xf
   return Xf
@@ -359,10 +398,10 @@ def simpleMedian(tseries):
   """ simple median
 
     Args:
-      tseries(np.array):  one time series with replicates, each row is a replicate
+      tseries(2d np.mp.array):  one time series with replicates, each row is a replicate
 
     Reterns:
-      one row with replicates summarized by median
+      1d np.mp.array: one row with replicates summarized by median
 
     Note:
       if nan in tseries, it is treated as zeros, this will happen if fTransform before zNormalize
@@ -376,29 +415,29 @@ def madMedian(tseries):
   """	MAD weighted averaging 
 
     Args:
-      tseries(np.array):  one time series with replicates, each row is a replicate
+      tseries(2d np.ma.array):  one time series with replicates, each row is a replicate
 
     Reterns:
-      one row with replicates summarized by MAD weighted median
+      1d np.ma.array: one row with replicates summarized by MAD weighted median
 
     Note:
       if nan in tseries, it is treated as zeros, this will happen if fTransform before zNormalize
   """
   Xf = tseries
   mad = ma_median( np.ma.abs(Xf - ma_median(Xf, axis=0)), axis=0 ) #current throw a warning 
-  for v in mad:
-    if v == 0:
-      return ma_median(tseries, axis=0)                  #mad = 0, fall back to simpleMedian
-  Xf = ((ma_median(Xf, axis=0)/mad)/np.ma.sum(1/mad))/mad                    #mad-weighted sample
+  #print mad, mad.mask, mad==0
+  if np.any(mad.mask) or (np.ma.sum(mad==0))>0:
+    return ma_median(tseries, axis=0)                  #mad = 0, fall back to simpleMedian
+  Xf = ma_median(Xf, axis=0)*(1/mad)*(1/np.ma.sum(1/mad))*(1/mad)                   #mad-weighted sample
 
   #print "medMedian=", Xf, Xf.mask, type(Xf.mask)
   return Xf
 
 def tied_rank(values):
-  """ rank pvalues with ties, tie is ranked as the largest rank, now allow na's non-ranked
+  """ rank values with ties, tie is ranked as the largest rank, now allow nans non-ranked
 
     Args:
-      values(np.array): a numeric array
+      values(1d np.ma.array): a numeric array
 
     Returns:
       one vector of asscendant ranks from 1
@@ -410,7 +449,7 @@ def tied_rank(values):
   #print "V=", V
   if type(V) == np.ma.MaskedArray:
     #print "V.mask=", V.mask
-    nans = (np.nonzero(V.mask)[0]).tolist()         #record indecies
+    nans = (np.nonzero(V.mask)[0]).tolist()      #record indecies
     V = V[-V.mask]                               #remove nan's
     #print "V=", V
 
@@ -475,7 +514,7 @@ def scoreNormalize(tseries):
   ranks = tied_rank(tseries)
   nt = sp.stats.distributions.norm.ppf( ranks/(len(ranks)+1) )
   #print "nt=", nt
-  nt = np.nan_to_num(nt)  #filling zeros to nan, shall be no na's from here 
+  nt = np.nan_to_num(nt)       #filling zeros to nan, shall be no na's from here
   return nt
 
 def noneNormalize(tseries):
@@ -490,7 +529,7 @@ def noneNormalize(tseries):
 
   return np.nan_to_num(tseries)  #filling zeros to nan
 
-def fillMissing(tseries, method):
+def fillMissing(tseries, method): #teseries is 2d matrix unmasked
   """ fill missing data
 
     Args:
@@ -502,7 +541,7 @@ def fillMissing(tseries, method):
   """
   
   if method == 'none':
-    return tseries #return with nan's
+    return tseries                #return with nans
   else:
     y = tseries[np.logical_not(np.isnan(tseries))]
     x = np.array(range(0, len(tseries)))[np.logical_not(np.isnan(tseries))]
@@ -510,13 +549,13 @@ def fillMissing(tseries, method):
       spline_fit = sp.interpolate.interp1d( x, y, method )
     except:
       print >>sys.stderr, "cannot fill missing values using ", method, "method, fall back to none" 
-      return np.nan_to_num(tseries)
+      return tseries              #return with nans
     yy = np.zeros( len(tseries), dtype='float' )
     for i in range(0, len(tseries)):
       try:
         yy[i] = spline_fit(i)
       except ValueError:
-        yy[i] = 0
+        yy[i] = tseries[i] #keep nans
     return yy
     
 def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, bootNum=1000, pvalueMethod=1000, fTransform=simpleAverage, zNormalize=scoreNormalize):
@@ -573,20 +612,27 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
   for i in xrange(0, firstFactorNum):
     Xz = np.ma.masked_invalid(firstData[i]) #need to convert to masked array with na's, not F-normalized
     for j in xrange(0, secondFactorNum):
-      if onDiag and i<j:
-        continue   #only care lower triangle entries
-      #print "normalizing..."
-      Yz = np.ma.masked_invalid(secondData[j]) # need to convert to masked array with na's, not F-normalized
+      if onDiag and i<=j:
+        continue   #only care lower triangle entries, ignore i=j entries
+      Yz = np.ma.masked_invalid(secondData[j])    # need to convert to masked array with na's, not F-normalized
+      #if i == 36 or j == 36:
+        #print "i=",i,"data=",firstData[i]
+        #print "j=",j,"data=",secondData[j]
+        #print Xz, Yz
+        #print np.all(Yz.mask), np.all(Xz.mask), np.all(Yz.mask) or np.all(Xz.mask)
+      if np.all(Yz.mask) or np.all(Xz.mask):  # not any unmasked value in Xz or Yz, all nan in input, continue
+        lsaTable[ti] = [i, j, np.nan, np.nan, np.nan, 0, 0, 0, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan]
+        pvalues[ti] = np.nan
+        pccpvalues[ti] = np.nan
+        ti += 1
+        continue
       #print "lsa computing..."
       #print "Xz=", Xz
       #print "Yz=", Yz
       LSA_result = singleLSA(Xz, Yz, delayLimit, fTransform, zNormalize, True)                          # do LSA computation
       Smax = LSA_result.score                                                               # get Smax
       Al = len(LSA_result.trace)
-      if Al == 0:
-        (Xs, Ys, Al) = (np.nan, np.nan, Al)
-      else:
-        (Xs, Ys, Al) = (LSA_result.trace[Al-1][0], LSA_result.trace[Al-1][1], len(LSA_result.trace))
+      (Xs, Ys, Al) = (LSA_result.trace[Al-1][0], LSA_result.trace[Al-1][1], len(LSA_result.trace))
       #try:
       #except IndexError:
       #  print "Xz=", Xz
@@ -626,11 +672,16 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
       ti += 1
       #print "finalizing..."
 
+  #print lsaTable
   #print "qvalues ..."
-  print "pvalues", pvalues
+  #pvalues = np.ma.masked_invalid(pvalues)
+  #pccpvalues = np.ma.masked_invalid(pccpvalues)
+  #print "pvalues", pvalues, np.isnan(np.sum(pvalues))
+  #print "pccpvalues", pccpvalues, np.isnan(np.sum(pccpvalues))
   qvalues = storeyQvalue( pvalues )
-  print "qvalues", qvalues
   pccqvalues = storeyQvalue( pccpvalues )
+  #print "qvalues", qvalues
+  #print "pccqvalues", pccqvalues
 
   for i in xrange(0, len(qvalues)):
     lsaTable[i].append( qvalues[i] )
@@ -642,23 +693,24 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
 def test():
   """ self test script
   """
-  np.seterr(all='warn')
+  np.seterr(all='raise')
   print >>sys.stderr, "###testing###"
-  test_data = np.array( [ [ [ 3, 2, 3, 4], [1, 6, 2, 3], [6, 4, 6, 8] ], [ [np.nan, 2, np.nan, 3], [4, 5, 3, np.nan], [1, 1, 1, 1] ] ], dtype='float' )
+  test_data = np.array( [ [ [ 3, 2, 3, 4], [1, 6, 2, 3], [6, 4, 6, 8], [np.nan, np.nan, np.nan, np.nan] ], 
+                          [ [np.nan, 2, np.nan, 3], [4, 5, 3, np.nan], [1, 1, 1, 1], [ np.nan, np.nan, np.nan, np.nan ] ] ], dtype='float' )
   test_fN = test_data.shape[0]
   test_rN = test_data.shape[1]
   test_tN = test_data.shape[2]
   print >>sys.stderr, "fN, tN, rN", test_fN, test_tN, test_rN
   print >>sys.stderr, "test_data", test_data
   print >>sys.stderr, "---fillMissing---"
-  print >>sys.stderr, "none:", fillMissing(test_data[1][0], 'none')
-  print >>sys.stderr, "zero:", fillMissing(test_data[1][0], 'zero')
-  print >>sys.stderr, "linear:", fillMissing(test_data[1][0], 'linear')
-  print >>sys.stderr, "quadratic:", fillMissing(test_data[1][0], 'quadratic')
-  print >>sys.stderr, "cubic:", fillMissing(test_data[1][0], 'cubic')
-  print >>sys.stderr, "slinear:", fillMissing(test_data[1][0], 'slinear')
-  print >>sys.stderr, "nearest:", fillMissing(test_data[1][0], 'nearest')
-  print >>sys.stderr, "###use zero as clean data###"
+  print >>sys.stderr, "none:", test_data[1][0], "->", fillMissing(test_data[1][0], 'none')
+  print >>sys.stderr, "zero (spline at zero order):", test_data[1][0], "->", fillMissing(test_data[1][0], 'zero')
+  print >>sys.stderr, "linear:", test_data[1][0], "->", fillMissing(test_data[1][0], 'linear')
+  print >>sys.stderr, "quadratic:", test_data[1][0], "->", fillMissing(test_data[1][0], 'quadratic')
+  print >>sys.stderr, "cubic:", test_data[1][0], "->", fillMissing(test_data[1][0], 'cubic')
+  print >>sys.stderr, "slinear:", test_data[1][0], "->", fillMissing(test_data[1][0], 'slinear')
+  print >>sys.stderr, "nearest:", test_data[1][0], "->", fillMissing(test_data[1][0], 'nearest')
+  print >>sys.stderr, "###use none as clean data###"
   clean_data = test_data
   for i in xrange(0, test_fN):
     for j in xrange(0, test_rN):
@@ -668,10 +720,8 @@ def test():
   masked_data = np.ma.masked_invalid(clean_data)
   print >>sys.stderr, "masked_data", masked_data
   print >>sys.stderr, "---tied-rank---"
-  print >>sys.stderr, "data:", masked_data[1][0]
-  print >>sys.stderr, tied_rank(masked_data[1][0])
-  print >>sys.stderr, "data:", masked_data[1][1]
-  print >>sys.stderr, tied_rank(masked_data[1][1])
+  print >>sys.stderr, "data:", masked_data[1][0], "->", tied_rank(masked_data[1][0])
+  print >>sys.stderr, "data:", masked_data[1][1], "->", tied_rank(masked_data[1][1])
   #print >>sys.stderr, "---wholeNormalize---"
   #print >>sys.stderr, wholeNormalize(clean_data[0])
   #print >>sys.stderr, wholeNormalize(clean_data[0])
@@ -687,12 +737,19 @@ def test():
   print >>sys.stderr, scoreNormalize(masked_data[1][0])
   print >>sys.stderr, scoreNormalize(masked_data[1][1])
   print >>sys.stderr, "---storeyQvalue---"
+  pvalues = np.array([0.01, 0.2, 0.03, 0.4, 0.05, np.nan, 0.03, 0.4, 0.03, 0.3], dtype='float')
+  print >>sys.stderr, "pvalues:", pvalues 
+  print >>sys.stderr, "qvalues:", storeyQvalue(pvalues)
   pvalues = np.array([0.01, 0.02, 0.03, 0.04, 0.05, 0.02, 0.03, 0.04, 0.03, 0.03], dtype='float')
   print >>sys.stderr, "pvalues:", pvalues 
-  print >>sys.stderr, storeyQvalue(pvalues)
+  print >>sys.stderr, "qvalues:", storeyQvalue(pvalues)
   print >>sys.stderr, "---singleLSA---"
-  lsar = singleLSA(masked_data[0], masked_data[1], delayLimit=1, fTransform=simpleAverage, zNormalize=scoreNormalize, keepTrace=True)
-  print >>sys.stderr, "lsar.score=", lsar.score
+  print >>sys.stderr, "input data:", scoreNormalize(simpleAverage(masked_data[0])), \
+                                     scoreNormalize(simpleAverage(masked_data[1]))
+  lsar=singleLSA(masked_data[0], masked_data[1], delayLimit=1, fTransform=simpleAverage, zNormalize=scoreNormalize, keepTrace=True)
+  print >>sys.stderr, "lsar.score=", lsar.score 
+  Al=len(lsar.trace)
+  print >>sys.stderr, "lsar.align=",(lsar.trace[Al-1][0], lsar.trace[Al-1][1], len(lsar.trace)) 
   print >>sys.stderr, "---bootstrapCI---"
   print >>sys.stderr, "Bset=", bootstrapCI(masked_data[0], masked_data[1], lsar.score, 1, .95, 2, simpleAverage, scoreNormalize)
   print >>sys.stderr, "---permuPvalue---"
@@ -705,13 +762,13 @@ def test():
   print >>sys.stderr, "nPCC", "nP_PCC", "oPCC", "oP_PCC", "otcdf"
   print >>sys.stderr, nPCC, nP_PCC, oPCC, oP_PCC, otcdf
   print >>sys.stderr, "---applyAnalysis---"
-  print >>sys.stderr, applyAnalysis(clean_data, 1, .95, 10, 10, sdAverage, scoreNormalize)
+  print >>sys.stderr, applyAnalysis(clean_data, clean_data, True, 1, .95, 10, 10, sdAverage, scoreNormalize)
   print >>sys.stderr, "---applyAnalysis---"
-  print >>sys.stderr, applyAnalysis(clean_data, 1, .95, 10, 10, simpleAverage, scoreNormalize)
+  print >>sys.stderr, applyAnalysis(clean_data, clean_data, True, 1, .95, 10, 10, simpleAverage, scoreNormalize)
   print >>sys.stderr, "---applyAnalysis---"
-  print >>sys.stderr, applyAnalysis(clean_data, 1, .95, 10, 10, simpleMedian, scoreNormalize)
+  print >>sys.stderr, applyAnalysis(clean_data, clean_data, True, 1, .95, 10, 10, simpleMedian, scoreNormalize)
   print >>sys.stderr, "---applyAnalysis---"
-  print >>sys.stderr, applyAnalysis(clean_data, 1, .95, 10, 10, madMedian, scoreNormalize)
+  print >>sys.stderr, applyAnalysis(clean_data, clean_data, True, 1, .95, 10, 10, madMedian, scoreNormalize)
 
 if __name__=="__main__":
   print "hello world!"
