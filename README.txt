@@ -65,7 +65,8 @@ INSTALL:
         In the new window click Finish.
 
     4. Double click on the new virtual machine created – it will be called SunLab
-        – to boot it for the first time.
+        – to boot it for the first time. The default username and password is:
+	user
 
     5. Review any messages that are shown, and select whatever options are best
         for you.
