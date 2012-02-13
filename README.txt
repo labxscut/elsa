@@ -31,6 +31,45 @@ FILES:
 
 INSTALL:
 
+    [VirtualBox]
+    The procedure is similar to QIIME VirtualBox install,
+        see http://qiime.org/install/virtual_box.html.
+
+    1. Download and install the VirtualBox (VB) version for your machine,
+        at http://www.virtualbox.org
+
+    2. Download the SunLab Virtual Box,
+        at http://meta.usc.edu/softs/vbox/SunLab.vdi
+        This file is large so it may take
+        between a few minutes and a few hours depending on your Internet
+	connection speed. You will need to unzip this file, which you can typically do by
+        double-clicking on it.
+
+    3. Create a new virtual machine:
+        Launch VirtualBox, and create a new machine (press the New button).
+        A new window will show up. Click ‘Next’.
+
+        In this screen type SunLab as the name for the virtual machine. Then
+        select Linux as the Operating System, and Ubuntu as the version.
+        Click Next.
+
+        Select the amount of RAM (memory). You will need at least 512MB, but
+        the best option is based on your machine. After selecting the amount of RAM,
+        click Next.
+
+        Select “Use existing hard drive”, and click the folder icon next to
+        the selector (it has a green up arrow). In the new window click ‘Add’, and
+        locate the virtual hard drive that was downloaded in step 2. Click Select and
+        then click Next.
+
+        In the new window click Finish.
+
+    4. Double click on the new virtual machine created – it will be called SunLab
+        – to boot it for the first time.
+
+    5. Review any messages that are shown, and select whatever options are best
+        for you.
+
     [Prerequisites]
 
     Please fullfill the prerequisites of C++, Python (with development and setuptools),
