@@ -90,12 +90,12 @@ def main():
                           quadratic: fill up with quadratic spline;             \n \
                           cubic: fill up with cubic spline;                \n \
                           nearest: fill up with nearest neighbor") 
-  parser.add_argument("-n", "--normMethod", dest="normMethod", default='score', choices=['none', 'score'],
-                      help= "specify the method to normalize data, default: score,       \n \
-                          choices: none, score                                          \n \
+  parser.add_argument("-n", "--normMethod", dest="normMethod", default='percentile',
+                      help= "specify the method to normalize data, default: percentile,       \n \
+                          choices: percentile, none                                        \n \
                           NOTE:                                                         \n \
-                          score: score normalization                                    \n \
-                          none: no normalization")
+                          percentile: percentile normalization                                    \n \
+                          none or a number: no normalization, but with user specified variance for theory, default=1 ")
   
   arg_namespace = parser.parse_args()
 
@@ -136,13 +136,17 @@ def main():
     transFunc = 'Med'
 
   #check normMethod
+  varianceX = 1
   if normMethod == 'none':
     zNormalize = lsalib.noneNormalize
+  elif normMethod == 'percentile':
+    zNormalize = lsalib.percentileNormalize  # fallback to default
   else:
-    zNormalize = lsalib.scoreNormalize  # fallback to default
+    zNormalize = lsalib.noneNormalize
+    varianceX = float(normMethod)
   
-  print "\t".join(['delayLimit','fillMethod','pvalueMethod','dataFile','resultFile','repNum','spotNum','bootNum','transFunc','normMethod' ])
-  print "\t".join(['%s']*10) % (delayLimit,fillMethod,pvalueMethod,dataFile,resultFile,repNum,spotNum,bootNum,transFunc,normMethod)
+  print "\t".join(['delayLimit','fillMethod','pvalueMethod','dataFile','resultFile','repNum','spotNum','bootNum','transFunc','normMethod','varianceX'])
+  print "\t".join(['%s']*11) % (delayLimit,fillMethod,pvalueMethod,dataFile.name,resultFile.name,repNum,spotNum,bootNum,transFunc,normMethod,str(varianceX))
   
   #start timing main
   start_time = time.time()
@@ -194,9 +198,10 @@ def main():
   #print >>sys.stderr, "data size factorNum, repNum, spotNum = %s, %s, %s" % (cleanData.shape[0], cleanData.shape[1], cleanData.shape[2])
   #print >>sys.stderr, "calculating ..."
   lsaTable=lsalib.applyAnalysis(cleanData[0], cleanData[1], onDiag=onDiag, \
-      delayLimit=delayLimit,bootNum=bootNum,pvalueMethod=pvalueMethod,fTransform=fTransform,zNormalize=zNormalize)
+      delayLimit=delayLimit,bootNum=bootNum,pvalueMethod=pvalueMethod,fTransform=fTransform,zNormalize=zNormalize,varianceX=varianceX)
   print >>sys.stderr, "writing results ..."
-  col_labels= ['X','Y','LS','lowCI','upCI','Xs','Ys','Len','Delay','P','PCC','Ppcc','SPCC','Pspcc','Q','Qpcc']
+  col_labels= ['X','Y','LS','lowCI','upCI','Xs','Ys','Len','Delay','P','PCC','Ppcc','SPCC','Pspcc','SCC','Pscc','SSCC','Psscc',
+      'Q','Qpcc','Qspcc','Qscc','Qsscc']
   print >>resultFile,  "\t".join(col_labels)
 
   #print lsaTable
@@ -209,7 +214,7 @@ def main():
   resultFile.close()
   end_time=time.time()
   print >>sys.stderr, "time elapsed %f seconds" % (end_time-start_time)
-  print >>sys.stderr, "Thank you for using lsa-compute, byebye"
+  #print >>sys.stderr, "Thank you for using lsa-compute, byebye"
 
 if __name__=="__main__":
   main()
