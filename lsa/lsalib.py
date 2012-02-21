@@ -65,7 +65,8 @@ except ImportError:
 """
 
 #global variable, stores calculated p-values.
-P_table = dict()
+#P_table = dict()
+kcut_min=100
 my_decimal = 3    # preset x step size for P_table
 pipi = np.pi**2 # pi^2
 pipi_inv = 1/pipi
@@ -171,7 +172,7 @@ def bootstrapCI(series1, series2, Smax, delayLimit, bootCI, bootNum, fTransform,
     #print "z0=", z0, "a1=", a1, "a2=", a2
   return ( BS_mean, BS_set[np.floor(bootNum*a1)-1], BS_set[np.ceil(bootNum*a2)-1] )
 
-def readPvalue(S, timespots, x_var=1, x_decimal=2):
+def readPvalue(P_table, S, timespots, x_var=1, x_decimal=2):
   # x = S*sqrt(timespots) => S=x/sqrt(timespots);
   # has to ceil the x value to avoid round to 0, which is not amenable to calculation
   #print "x=", int(np.around(S*np.sqrt(timespots)*(10**x_decimal)))
@@ -183,6 +184,7 @@ def readPvalue(S, timespots, x_var=1, x_decimal=2):
 
 def theoPvalue(timespots, Dmax, precision=.001, x_var=1, x_decimal=2):   #let's produce 2 tail-ed p-value
   #print np.linspace(0,timespots,timespots/10**(-x_decimal)+1) #x_decimal is for augment x_index
+  P_table = dict()
   for xi in xrange(0,timespots*(10**(x_decimal))+1): 
     if xi == 0:
       P_table[xi] = 1
@@ -197,7 +199,7 @@ def theoPvalue(timespots, Dmax, precision=.001, x_var=1, x_decimal=2):   #let's 
     #print alpha
     #print np.log(alpha*xx*(1-np.exp(-pipi_over_xx))/(8**B)/2)
     #print np.log(alpha*xx*(1-np.exp(-pipi_over_xx))/(8**B)/2) / pipi_over_xx
-    Kcut = int(np.ceil( .5 - np.log( (alpha/(2**B-1))**(1/B) *xx*(1-np.exp(-pipi_over_xx))/8/2 )/pipi_over_xx ))
+    Kcut = np.max((kcut_min, int(np.ceil( .5 - np.log( (alpha/(2**B-1))**(1/B) *xx*(1-np.exp(-pipi_over_xx))/8/2 )/pipi_over_xx ))))
     #Kcut = 200
     A = 1/xx
     R = 0     # root of cdf
@@ -210,13 +212,14 @@ def theoPvalue(timespots, Dmax, precision=.001, x_var=1, x_decimal=2):   #let's 
       #  print "k=",k, "A=",A, "B=",B, "C=",C, "F=",(8**B)*(R**B), "dR=",(A+pipi_inv/C)*np.exp(-C*pipi_over_xx/2), "P=",P,"pipi_inv=",pipi_inv,"pipi_over_xx=",pipi_over_xx 
     #print xi, x, Kcut, P, P/2;
 
-    if P_two_tail < precision:
-      P_table[xi] = P_two_tail
+    print "xi=", xi, "Kut=", Kcut, "k=", k
+    if P_two_tail <= precision:
+      P_table[xi] = precision
       break
     else:
-      P_table[xi] = P_two_tail #return one tailed probability
+      P_table[xi] = P_two_tail #return two tailed probability
 
-  return
+  return P_table
 	
 def permuPvalue(series1, series2, delayLimit, pvalueMethod, Smax, fTransform, zNormalize):
   """ do permutation Test
@@ -610,7 +613,7 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
   ti = 0
   timespots = secondSpotNum #same length already assumed
   if pvalueMethod < 0:
-    theoPvalue(timespots, delayLimit, precision=1./np.abs(pvalueMethod), x_var=varianceX, x_decimal=my_decimal)
+    P_table = theoPvalue(timespots, delayLimit, precision=1./np.abs(pvalueMethod), x_var=varianceX, x_decimal=my_decimal)
     #print P_table
   for i in xrange(0, firstFactorNum):
     Xz = np.ma.masked_invalid(firstData[i]) #need to convert to masked array with na's, not F-normalized
@@ -670,7 +673,7 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
         lsaP = permuPvalue(Xz, Yz, delayLimit, pvalueMethod, np.abs(Smax), fTransform, zNormalize)          # do Permutation Test
       else:
         #x = np.abs(Smax)*np.sqrt(timespots) # x=Rn/sqrt(n)=Smax*sqrt(n)
-        lsaP = readPvalue(np.abs(Smax), timespots, x_var=varianceX, x_decimal=my_decimal) # read two-tailed  
+        lsaP = readPvalue(P_table, np.abs(Smax), timespots, x_var=varianceX, x_decimal=my_decimal) # read two-tailed  
       pvalues[ti] = lsaP
       #print "PPC..." 
       #print np.mean(Xz, axis=0), np.mean(Yz, axis=0)
@@ -802,6 +805,18 @@ def test():
   print >>sys.stderr, applyAnalysis(clean_data, clean_data, True, 1, .95, 10, 10, simpleMedian, percentileNormalize)
   print >>sys.stderr, "---applyAnalysis---"
   print >>sys.stderr, applyAnalysis(clean_data, clean_data, True, 1, .95, 10, 10, madMedian, percentileNormalize)
+  #print >>sys.stderr, "---theoPvalue--- d=0, xi=(0 to 100)*100, x=(xi/100)*x_var"
+  #T_table = theoPvalue(100, 0, precision=.0001, x_var=1, x_decimal=2)   #let's produce 2 tail-ed p-value
+  #print >>sys.stderr, "\n".join([ "%s\t%s" % (str(v/100.*1.), str(T_table[v])) for v in T_table.keys() ])
+  #print >>sys.stderr, "---theoPvalue--- d=1, xi=(0 to 100)*100, x=(xi/100)*x_var"
+  #T_table = theoPvalue(100, 1, precision=.0001, x_var=1, x_decimal=2)   #let's produce 2 tail-ed p-value
+  #print >>sys.stderr, "\n".join([ "%s\t%s" % (str(v/100.*1.), str(T_table[v])) for v in T_table.keys() ])
+  #print >>sys.stderr, "---theoPvalue--- d=2, xi=(0 to 100)*100, x=(xi/100)*x_var"
+  #T_table = theoPvalue(100, 2, precision=.0001, x_var=1, x_decimal=2)   #let's produce 2 tail-ed p-value
+  #print >>sys.stderr, "\n".join([ "%s\t%s" % (str(v/100.*1.), str(T_table[v])) for v in T_table.keys() ])
+  print >>sys.stderr, "---theoPvalue--- d=3, xi=(0 to 100)*100, x=(xi/100)*x_var"
+  T_table = theoPvalue(100, 3, precision=.0001, x_var=1, x_decimal=2)   #let's produce 2 tail-ed p-value
+  print >>sys.stderr, "\n".join([ "%s\t%s" % (str(v/100.*1.), str(T_table[v])) for v in T_table.keys() ])
 
 if __name__=="__main__":
   print "hello world!"
