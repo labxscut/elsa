@@ -95,7 +95,13 @@ def singleLSA(series1, series2, delayLimit, fTransform, zNormalize, keepTrace=Tr
   
   #print "f1=", fTransform(series1)
   #print "f2=", fTransform(series2)
+  #try:
   lsad=compcore.LSA_Data(delayLimit, zNormalize(fTransform(series1)), zNormalize(fTransform(series2)))
+  #except NotImplementedError:
+  #  print series1, series1.mask, series2, series2.mask
+  #  print fTransform, fTransform(series1), fTransform(series1).mask, fTransform(series2), fTransform(series2).mask
+  #  print zNormalize, zNormalize(fTransform(series1)), zNormalize(fTransform(series1)).mask, zNormalize(fTransform(series2)), zNormalize(fTransform(series2)).mask
+  #  quit()
   lsar=compcore.DP_lsa(lsad, keepTrace)
   return lsar
 	
@@ -212,7 +218,7 @@ def theoPvalue(timespots, Dmax, precision=.001, x_var=1, x_decimal=2):   #let's 
       #  print "k=",k, "A=",A, "B=",B, "C=",C, "F=",(8**B)*(R**B), "dR=",(A+pipi_inv/C)*np.exp(-C*pipi_over_xx/2), "P=",P,"pipi_inv=",pipi_inv,"pipi_over_xx=",pipi_over_xx 
     #print xi, x, Kcut, P, P/2;
 
-    print "xi=", xi, "Kut=", Kcut, "k=", k
+    #print "xi=", xi, "Kut=", Kcut, "k=", k
     if P_two_tail <= precision:
       P_table[xi] = precision
       break
@@ -530,7 +536,8 @@ def noneNormalize(tseries):
       non normalized tseries
   """
 
-  return np.nan_to_num(tseries)  #filling zeros to nan
+  nt = tseries.filled(fill_value=0)  #filling zeros to nan
+  return nt
 
 def fillMissing(tseries, method): #teseries is 2d matrix unmasked
   """ fill missing data
@@ -637,9 +644,13 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
         ti += 1
         continue
       #print "lsa computing..."
-      #print "Xz=", Xz
-      #print "Yz=", Yz
+      #try:
       LSA_result = singleLSA(Xz, Yz, delayLimit, fTransform, zNormalize, True)                          # do LSA computation
+      #except NotImplementedError:
+      #  print "Xz=", Xz
+      #  print "Yz=", Yz
+      #  quit()
+          
       Smax = LSA_result.score                                                               # get Smax
       Al = len(LSA_result.trace)
       if Al == 0: #handel align impossibility, usually too many nas'
