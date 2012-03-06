@@ -34,6 +34,14 @@
         first column is the time spot labels
 """
 
+#Author Note:
+#Clearification of current Handling of Data Matrix:
+# -input-> numpy.ndarray(with na) -fillMissing-> np.ndarray(with na) -applyAnalysis->
+# np.masked(na masked) -fTransform-> np.masked(na masked) -zNormalize-> np.ndarray(masked=0, no na)
+
+#Considering not using numpy.masked array (their implementation having errors, how to report?)
+#Considering using R for simple numerics, rpy or use swig+R?
+
 #import public resources
 import csv, sys, random
 import numpy as np
@@ -523,7 +531,8 @@ def percentileNormalize(tseries):
   ranks = tied_rank(tseries)
   nt = sp.stats.distributions.norm.ppf( ranks/(len(ranks)+1) )
   #print "nt=", nt
-  nt = np.nan_to_num(nt)       #filling zeros to nan, shall be no na's from here
+  #nt = np.nan_to_num(nt)              #filling zeros to nan, shall be no na's from here on
+  nt = nt.filled(fill_value=0)         #filling zeros to nan, shall be no na's from here on
   return nt
 
 def noneNormalize(tseries):
@@ -536,7 +545,7 @@ def noneNormalize(tseries):
       non normalized tseries
   """
 
-  nt = tseries.filled(fill_value=0)  #filling zeros to nan
+  nt = tseries.filled(fill_value=0)   #filling zeros to nan, shall be no na's from here on
   return nt
 
 def fillMissing(tseries, method): #teseries is 2d matrix unmasked
@@ -558,7 +567,7 @@ def fillMissing(tseries, method): #teseries is 2d matrix unmasked
     try:
       spline_fit = sp.interpolate.interp1d( x, y, method )
     except:
-      print >>sys.stderr, "cannot fill missing values using ", method, "method, fall back to none" 
+      #print >>sys.stderr, "cannot fill missing values using ", method, "method, fall back to none" 
       return tseries              #return with nans
     yy = np.zeros( len(tseries), dtype='float' )
     for i in range(0, len(tseries)):
@@ -828,6 +837,8 @@ def test():
   print >>sys.stderr, "---theoPvalue--- d=3, xi=(0 to 100)*100, x=(xi/100)*x_var"
   T_table = theoPvalue(100, 3, precision=.0001, x_var=1, x_decimal=2)   #let's produce 2 tail-ed p-value
   print >>sys.stderr, "\n".join([ "%s\t%s" % (str(v/100.*1.), str(T_table[v])) for v in T_table.keys() ])
+  #print >>sys.stderr, P=readPvalue(T_table, .1876, 140, x_var=1, x_decimal=my_decimal) # read two-tailed  
+  #print >>sys.stderr, "theoP=", P
 
 if __name__=="__main__":
   print "hello world!"
