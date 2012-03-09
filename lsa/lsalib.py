@@ -270,7 +270,10 @@ def permuPvalue(series1, series2, delayLimit, pvalueMethod, Smax, fTransform, zN
     P_two_tail = np.sum(np.abs(PP_set) <= Smax)/np.float(pvalueMethod)
   return P_two_tail
 
-def storeyQvalue(pvalues, lam=np.arange(0,0.9,0.05), method='smoother', robust=False, smooth_df=3):
+Q_lam_step = 0.01
+Q_lam_max = 0.95
+
+def storeyQvalue(pvalues, lam=np.arange(0,Q_lam_max,Q_lam_step), method='smoother', robust=False, smooth_df=3):
   """ do Q-value calculation
 
     Args:
@@ -288,8 +291,11 @@ def storeyQvalue(pvalues, lam=np.arange(0,0.9,0.05), method='smoother', robust=F
   #get a list of non nan pvalues, do the same procedure, putback to original list
   mpvalues = np.ma.masked_invalid(pvalues)
   rpvalues = mpvalues[~mpvalues.mask]
+  rp_max = np.max(rpvalues)
   p_num = len(pvalues)
   rp_num = len(rpvalues)
+  #rp_nnz = len(np.nonzero(rpvalues))
+  rp_lam = lam[(lam-Q_lam_step)<rp_max]
   #print "p_num=", p_num, "rp_num=", rp_num
   #print "rpvalues=", rpvalues
 
@@ -297,29 +303,36 @@ def storeyQvalue(pvalues, lam=np.arange(0,0.9,0.05), method='smoother', robust=F
     #print >>sys.stderr, "WARN: not enough number of pvalues for q-value evaluation! nan will be filled!"
     return np.array( [np.nan] * p_num, dtype='float')
 
-  pi_set = np.zeros(len(lam), dtype='float')
-  for i in xrange(0, len(lam)):
-    pi_set[i] = np.mean(rpvalues>=lam[i])/(1-lam[i])
+  if len(rp_lam) <= 1:
+    return np.array( [np.nan if np.isnan(pvalues[i]) else 0 for i in xrange(0,p_num)],  dtype='float')
+
+  pi_set = np.zeros(len(rp_lam), dtype='float')
+  for i in xrange(0, len(rp_lam)): 
+    pi_set[i] = np.mean(rpvalues>=rp_lam[i])/(1-rp_lam[i])
+
+  #print "p=",pvalues
+  #print len(pi_set), rp_max, len(rp_lam) #rp_nnz
 
   #print "pi_set=", pi_set
   if method=='smoother':
-    spline_fit = sp.interpolate.interp1d(lam, pi_set, kind=smooth_df)
-    pi_0 = spline_fit(np.max(lam))
+    spline_fit = sp.interpolate.interp1d(rp_lam, pi_set, kind=smooth_df)
+    pi_0 = spline_fit(np.max(rp_lam))
     #print "pi_0=", pi_0
     pi_0 = np.max( [np.min( [np.min(pi_0), 1]), 0] ) #0<=pi_0<=1
     #print "pi_0=", pi_0
     if pi_0 == 0:
       #print >>sys.stderr, "WARN: smoother method not working, fall back to bootstrap"
+      #print pi_set, rp_max, rp_lam, pi_0
       method='bootstrap'
 
   if method=='bootstrap':                            #bootstrap
     pi_min = np.min(pi_set)
-    mse = np.zeros((100, len(lam)), dtype='float')
-    pi_set_boot = np.zeros((100, len(lam)), dtype='float')
+    mse = np.zeros((100, len(rp_lam)), dtype='float')
+    pi_set_boot = np.zeros((100, len(rp_lam)), dtype='float')
     for j in xrange(0, 100):
       p_boot = sample_wr(rpvalues, rp_num)
-      for i in xrange(0, len(lam)):
-        pi_set_boot[j][i] = np.mean(p_boot>=lam[i])/(1-lam[i]) 
+      for i in xrange(0, len(rp_lam)):
+        pi_set_boot[j][i] = np.mean(p_boot>=rp_lam[i])/(1-rp_lam[i]) 
       mse[j] = (pi_set_boot[j]-pi_min)**2
     min_mse_j = np.argmin(mse)
     pi_0 = np.min(pi_set_boot[min_mse_j])
@@ -335,7 +348,6 @@ def storeyQvalue(pvalues, lam=np.arange(0,0.9,0.05), method='smoother', robust=F
   #print "argsort of rps=", rpvalues[rp_argsort]
   rp_ranks = tied_rank(rpvalues)
   #print "tied rank of rps=", rp_ranks
-  #print "lam,pi_set,pi_0:", lam, pi_set, pi_0
   #print "pi_0, p_ranks, pvalues, len(pvalues)", pi_0, p_ranks, pvalues, len(pvalues)
   if robust:
     rqvalues = pi_0*rp_num*rpvalues*(1/(rp_ranks*(1-np.power((1-rpvalues),rp_num))))
@@ -352,6 +364,12 @@ def storeyQvalue(pvalues, lam=np.arange(0,0.9,0.05), method='smoother', robust=F
     if not mpvalues.mask[i]:
       qvalues[i]=rqvalues[j]
       j += 1
+ 
+  #if np.all(np.isnan(qvalues)):
+  #print method
+  #print "q=",qvalues
+  #print "rp_sort",rp_argsort
+  #print "rp_rank",rp_ranks
 
   #print "qs=", qvalues
   return qvalues
@@ -370,7 +388,7 @@ def simpleAverage(tseries):
   """
   #print "data=", tseries
   #print "simpleAverage=", np.ma.average(tseries, axis=0)
-  return np.ma.average(tseries, axis=0)
+  return np.ma.mean(tseries, axis=0)
 
 def sdAverage(tseries):
   """	SD weighted averaging 
@@ -388,11 +406,10 @@ def sdAverage(tseries):
   try:
     sd = np.ma.std(tseries,axis=0,ddof=1)
   except FloatingPointError:
-    return np.ma.average(tseries, axis=0)                       #sd = 0, fall back to simpleAverage
+    return np.ma.mean(tseries, axis=0)                       #sd = 0, fall back to simpleAverage
   if np.any(sd.mask) or (np.ma.sum(sd==0))>0:
     #print sd, sd.mask, sd==0
-    #print np.ma.average(tseries, axis=0)
-    return np.ma.average(tseries, axis=0)                       #sd = 0, fall back to simpleAverage
+    return np.ma.mean(tseries, axis=0)                       #sd = 0, fall back to simpleAverage
   #print "tseries=", tseries
   #print "sd=", sd
   #print "average=", np.ma.average(tseries, axis=0)
@@ -404,7 +421,7 @@ def sdAverage(tseries):
   #print "inv_sd=", 1/sd
   #Xf = av_inv_sum*(1/sd)
   #print "Xf=", Xf
-  Xf = np.ma.average(tseries, axis=0)*(1/sd)*(1/np.ma.sum(1/sd))*(1/sd)   #sd-weighted sample
+  Xf = np.ma.mean(tseries, axis=0)*(1/sd)*(1/np.ma.sum(1/sd))*(1/sd)   #sd-weighted sample
   #print "Xf=", Xf
   #Xf = np.divide(np.divide(np.divide(np.ma.average(tseries, axis=0),sd),np.ma.sum(1/sd)),sd)   #sd-weighted sample
   #Xf = ((np.ma.average(tseries, axis=0)/sd)/np.ma.sum(1/sd))/sd   
@@ -637,7 +654,7 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
   for i in xrange(0, firstFactorNum):
     Xz = np.ma.masked_invalid(firstData[i]) #need to convert to masked array with na's, not F-normalized
     for j in xrange(0, secondFactorNum):
-      if onDiag and i<=j:
+      if onDiag and i>=j:
         continue   #only care lower triangle entries, ignore i=j entries
       Yz = np.ma.masked_invalid(secondData[j])    # need to convert to masked array with na's, not F-normalized
       #if i == 36 or j == 36:
@@ -666,13 +683,8 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
       Smax = LSA_result.score                                                               # get Smax
       Al = len(LSA_result.trace)
       if Al == 0: #handel align impossibility, usually too many nas'
-        (PCC, P_PCC) = sp.stats.pearsonr(np.ma.average(Xz, axis=0), np.ma.average(Yz, axis=0)) # two tailed p-value
-        if np.isnan(PCC):
-          print Xz, Yz
-          print np.ma.average(Xz, axis=0), np.ma.average(Yz, axis=0)
-          print sp.stats.pearsonr(np.ma.average(Xz, axis=0), np.ma.average(Yz, axis=0))
-          quit()
-        (SCC, P_SCC) = sp.stats.spearmanr(np.ma.average(Xz, axis=0), np.ma.average(Yz, axis=0)) # two tailed p-value
+        (PCC, P_PCC) = sp.stats.pearsonr(np.ma.mean(Xz, axis=0), np.ma.mean(Yz, axis=0)) # two tailed p-value
+        (SCC, P_SCC) = sp.stats.spearmanr(np.ma.mean(Xz, axis=0), np.ma.mean(Yz, axis=0)) # two tailed p-value
         pvalues[ti] = np.nan
         pccpvalues[ti] = P_PCC
         spccpvalues[ti] = np.nan
@@ -690,36 +702,51 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
       #  print "Yz=", Yz
       #  print "Xs=", Xs, "Ys=", Ys, "Al=", Al  
       #  quit()
-      #print "bootstrap computing..."
-      if bootNum > 0: #do BS
-        (Smax, Sl, Su) = bootstrapCI(Xz, Yz, Smax, delayLimit, bootCI, bootNum, fTransform, zNormalize)           # do Bootstrap CI
-      else: #skip BS
-        (Smax, Sl, Su) = (Smax, Smax, Smax)
-      #print "permutation test..."
-      #This should be modified.
-      if pvalueMethod >= 0:
-        lsaP = permuPvalue(Xz, Yz, delayLimit, pvalueMethod, np.abs(Smax), fTransform, zNormalize)          # do Permutation Test
-      else:
-        #x = np.abs(Smax)*np.sqrt(timespots) # x=Rn/sqrt(n)=Smax*sqrt(n)
-        lsaP = readPvalue(P_table, np.abs(Smax), timespots, x_var=varianceX, x_decimal=my_decimal) # read two-tailed  
-      pvalues[ti] = lsaP
       #print "PPC..." 
       #print np.mean(Xz, axis=0), np.mean(Yz, axis=0)
-      (PCC, P_PCC) = sp.stats.pearsonr(np.ma.average(Xz, axis=0), np.ma.average(Yz, axis=0)) # two tailed p-value
-      (SCC, P_SCC) = sp.stats.spearmanr(np.ma.average(Xz, axis=0), np.ma.average(Yz, axis=0)) # two tailed p-value
+
+      (PCC, P_PCC) = sp.stats.pearsonr(np.ma.mean(Xz, axis=0), np.ma.mean(Yz, axis=0)) # two tailed p-value
+      (SCC, P_SCC) = sp.stats.spearmanr(np.ma.mean(Xz, axis=0), np.ma.mean(Yz, axis=0)) # two tailed p-value
       #P_PCC = P_PCC/2   # one tailed p-value
       #(DPCC, P_DPCC) = sp.stats.pearsonr(np.ma.average(Xz[:,Xs-1:Xs+Al],
       #print Xs, Ys, Al, Ys-Xs
       if Xs <= Ys:
         #print Xz[:,:Al].shape
         #print Yz[:,(Ys-Xs):(Ys-Xs)+Al].shape
-        (SPCC, P_SPCC) = sp.stats.pearsonr(np.ma.average(Xz[:,:Al], axis=0), np.ma.average(Yz[:,(Ys-Xs):(Ys-Xs+Al)], axis=0)) # corr for shifted-cut seq
-        (SSCC, P_SSCC) = sp.stats.spearmanr(np.ma.average(Xz[:,:Al], axis=0), np.ma.average(Yz[:,(Ys-Xs):(Ys-Xs+Al)], axis=0)) # corr for shifted-cut seq
+        (SPCC, P_SPCC) = sp.stats.pearsonr(np.ma.mean(Xz[:,:Al], axis=0), np.ma.mean(Yz[:,(Ys-Xs):(Ys-Xs+Al)], axis=0)) # corr for shifted-cut seq
+        (SSCC, P_SSCC) = sp.stats.spearmanr(np.ma.mean(Xz[:,:Al], axis=0), np.ma.mean(Yz[:,(Ys-Xs):(Ys-Xs+Al)], axis=0)) # corr for shifted-cut seq
       else:
         #print Xz[:,(Xs-Ys):(Xs-Ys)+Al].shape
         #print Yz[:,:Al].shape
-        (SPCC, P_SPCC) = sp.stats.pearsonr(np.ma.average(Xz[:,(Xs-Ys):(Xs-Ys+Al)], axis=0), np.ma.average(Yz[:,:Al], axis=0)) # corr for shifted-cut seq
-        (SSCC, P_SSCC) = sp.stats.pearsonr(np.ma.average(Xz[:,(Xs-Ys):(Xs-Ys+Al)], axis=0), np.ma.average(Yz[:,:Al], axis=0)) # corr for shifted-cut seq
+        (SPCC, P_SPCC) = sp.stats.pearsonr(np.ma.mean(Xz[:,(Xs-Ys):(Xs-Ys+Al)], axis=0), np.ma.mean(Yz[:,:Al], axis=0)) # corr for shifted-cut seq
+        (SSCC, P_SSCC) = sp.stats.pearsonr(np.ma.mean(Xz[:,(Xs-Ys):(Xs-Ys+Al)], axis=0), np.ma.mean(Yz[:,:Al], axis=0)) # corr for shifted-cut seq
+      
+      #This Part Must Follow Static Calculation Part
+      #Otherwise Yz may be changed
+      #np.ma.array(copy=True) to copy, otherwise is only reference
+      if pvalueMethod >= 0:
+        Xp = np.ma.array(Xz,copy=True)
+        Yp = np.ma.array(Yz,copy=True)
+        lsaP = permuPvalue(Xp, Yp, delayLimit, pvalueMethod, np.abs(Smax), fTransform, zNormalize)          # do Permutation Test
+      else:
+        #x = np.abs(Smax)*np.sqrt(timespots) # x=Rn/sqrt(n)=Smax*sqrt(n)
+        lsaP = readPvalue(P_table, np.abs(Smax), timespots, x_var=varianceX, x_decimal=my_decimal) # read two-tailed  
+      pvalues[ti] = lsaP
+      #print "bootstrap computing..."
+      if bootNum > 0: #do BS
+        Xb = np.ma.array(Xz,copy=True)
+        Yb = np.ma.array(Yz,copy=True)
+        (Smax, Sl, Su) = bootstrapCI(Xb, Yb, Smax, delayLimit, bootCI, bootNum, fTransform, zNormalize)           # do Bootstrap CI
+      else: #skip BS
+        (Smax, Sl, Su) = (Smax, Smax, Smax)
+
+      #uncomment to verify Xz, Yz unchanged by bootstrap and permutation
+      #print 'i=',i,"Data=",firstData[i],"Xz=",Xz,"mask=",Xz.mask, "mask_invalid=", np.ma.masked_invalid(firstData[i])
+      #print 'j=',j,"Data=",secondData[j],"Yz=",Yz,"mask=",Yz.mask, "mask_invalid=", np.ma.masked_invalid(secondData[j])
+      #print np.ma.mean(Xz, axis=0), "mask=", np.ma.mean(Xz, axis=0).mask
+      #print np.ma.mean(Yz, axis=0), "mask=", np.ma.mean(Yz, axis=0).mask
+      #print sp.stats.pearsonr(np.ma.mean(Xz, axis=0), np.ma.mean(Yz, axis=0))
+      #quit()
 
       # need +epsilon to avoid all zeros
       pccpvalues[ti] = P_PCC
@@ -736,20 +763,23 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
   #pccpvalues = np.ma.masked_invalid(pccpvalues)
   #print "pvalues", pvalues, np.isnan(np.sum(pvalues))
   #print "pccpvalues", pccpvalues, np.isnan(np.sum(pccpvalues))
+  #print "lsaP"
   qvalues = storeyQvalue( pvalues )
+  #print "pccP"
   pccqvalues = storeyQvalue( pccpvalues )
+  #print "sccP"
   sccqvalues = storeyQvalue( sccpvalues )
+  #print "spccP"
   spccqvalues = storeyQvalue( spccpvalues )
+  #print "ssccP"
   ssccqvalues = storeyQvalue( ssccpvalues )
-  #print "qvalues", qvalues
-  #print "pccqvalues", pccqvalues
 
-  for i in xrange(0, len(qvalues)):
-    lsaTable[i].append( qvalues[i] )
-    lsaTable[i].append( pccqvalues[i] )
-    lsaTable[i].append( spccqvalues[i] )
-    lsaTable[i].append( sccqvalues[i] )
-    lsaTable[i].append( ssccqvalues[i] )
+  for k in xrange(0, len(qvalues)):
+    lsaTable[k].append( qvalues[k] )
+    lsaTable[k].append( pccqvalues[k] )
+    lsaTable[k].append( spccqvalues[k] )
+    lsaTable[k].append( sccqvalues[k] )
+    lsaTable[k].append( ssccqvalues[k] )
 
   #print lsaTable
   return lsaTable
