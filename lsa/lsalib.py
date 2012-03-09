@@ -101,8 +101,10 @@ def singleLSA(series1, series2, delayLimit, fTransform, zNormalize, keepTrace=Tr
     
   """
   
-  #print "f1=", fTransform(series1)
-  #print "f2=", fTransform(series2)
+  #print "f1=", isinstance(series1,np.ma.core.MaskedArray)
+  #print "f2=", isinstance(series2,np.ma.core.MaskedArray)
+  #print "f1=", isinstance(fTransform(series1),np.ma.core.MaskedArray)
+  #print "f2=", isinstance(fTransform(series2),np.ma.core.MaskedArray)
   #try:
   lsad=compcore.LSA_Data(delayLimit, zNormalize(fTransform(series1)), zNormalize(fTransform(series2)))
   #except NotImplementedError:
@@ -529,7 +531,8 @@ def percentileNormalize(tseries):
       score normalized time series
   """
   ranks = tied_rank(tseries)
-  nt = sp.stats.distributions.norm.ppf( ranks/(len(ranks)+1) )
+  #print "ranks=", ranks
+  nt = np.ma.masked_invalid(sp.stats.distributions.norm.ppf( ranks/(len(ranks)+1) ))
   #print "nt=", nt
   #nt = np.nan_to_num(nt)              #filling zeros to nan, shall be no na's from here on
   nt = nt.filled(fill_value=0)         #filling zeros to nan, shall be no na's from here on

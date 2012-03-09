@@ -51,7 +51,7 @@ def main():
                         m is number of variables, r is number of replicates, s it number of time spots; \n \
                         first row: #header  s1r1 s1r2 s2r1 s2r2; second row: x  ?.?? ?.?? ?.?? ?.??; for a 1 by (2*2) data")
   parser.add_argument("resultFile", metavar="resultFile", type=argparse.FileType('w'), help="the output result file")
-  parser.add_argument("-E", "--extraFile", dest="extraFile", default="",
+  parser.add_argument("-e", "--extraFile", dest="extraFile", default="",
                         help="specify an extra datafile, otherwise the first datafile will be used \n \
                             and only lower triangle entries of pairwise matrix will be computed")
   parser.add_argument("-d", "--delayLimit", dest="delayLimit", default=3, type=int, 
@@ -60,7 +60,7 @@ def main():
                     	help="specify the method=sgn(pvalueMethod) and precision=1/abs(pvalueMethod) for p-value estimation, \n \
                             default: pvalueMethod=1000, i.e. precision=0.001 and mode=permutation \n \
                             mode +: permutation approximaton; -: theoretical approximation. ")
-  parser.add_argument("-b", "--bootNum", dest="bootNum", default=100, type=int, choices=[0, 100, 200, 500, 1000, 2000],
+  parser.add_argument("-b", "--bootNum", dest="bootNum", default=0, type=int, choices=[0, 100, 200, 500, 1000, 2000],
                     	help="specify the number of bootstraps for 95%% confidence interval estimation, default: 100,\n \
                           choices: 0, 100, 200, 500, 1000, 2000. \n \
                           Setting bootNum=0 avoids bootstrap. Bootstrap is not suitable for non-replicated data.")   #use %% to print %
@@ -91,19 +91,17 @@ def main():
                           quadratic: fill up with quadratic spline;             \n \
                           cubic: fill up with cubic spline;                \n \
                           nearest: fill up with nearest neighbor") 
-  parser.add_argument("-n", "--normMethod", dest="normMethod", default='percentile',
+  parser.add_argument("-n", "--normMethod", dest="normMethod", default='percentile', #choices=['percentile', 'none'],
                       help= "specify the method to normalize data, default: percentile,       \n \
                           choices: percentile, none                                        \n \
                           NOTE:                                                         \n \
                           percentile: percentile normalization                                    \n \
-                          none or a number: no normalization, but with user specified variance for theory, default=1 ")
+                          none or a number: no normalization, but with user specified variance for theoP, default=1 ")
   
   arg_namespace = parser.parse_args()
 
   #get arguments
-  print >>sys.stderr, "lsa-compute"
-  print >>sys.stderr, "copyright Li Xia, lxia@usc.edu"
-  print >>sys.stderr, "learning arguments..."
+  print >>sys.stderr, "lsa-compute - copyright Li Charlie Xia, lxia@usc.edu"
   
   delayLimit = vars(arg_namespace)['delayLimit']
   fillMethod = vars(arg_namespace)['fillMethod']
@@ -137,7 +135,7 @@ def main():
     transFunc = 'Med'
 
   #check normMethod
-  varianceX = 1
+  varianceX=1
   if normMethod == 'none':
     zNormalize = lsalib.noneNormalize
   elif normMethod == 'percentile':
@@ -146,7 +144,7 @@ def main():
     zNormalize = lsalib.noneNormalize
     varianceX = float(normMethod)
   
-  print "\t".join(['delayLimit','fillMethod','pvalueMethod','dataFile','resultFile','repNum','spotNum','bootNum','transFunc','normMethod','varianceX'])
+  print "\t".join(['delayLimit','fillMethod','pvalueMethod','dataFile','resultFile','repNum','spotNum','bootNum','transFunc','normMethod','xVariance'])
   print "\t".join(['%s']*11) % (delayLimit,fillMethod,pvalueMethod,dataFile.name,resultFile.name,repNum,spotNum,bootNum,transFunc,normMethod,str(varianceX))
   
   #start timing main
