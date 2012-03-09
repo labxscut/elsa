@@ -6,6 +6,8 @@ INSTRODUCTION:
     It might work for Windows with Cygwin (not tested).
     More current information of this package is available @
 		http://meta.usc.edu/softs/lsa
+    Wiki like manual is available @
+		http://bitbucket.org/charade/lsa/wiki/Home
 
 DEPENDENCIES:
     C++ build environment

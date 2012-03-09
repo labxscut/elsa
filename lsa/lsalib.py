@@ -667,6 +667,11 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
       Al = len(LSA_result.trace)
       if Al == 0: #handel align impossibility, usually too many nas'
         (PCC, P_PCC) = sp.stats.pearsonr(np.ma.average(Xz, axis=0), np.ma.average(Yz, axis=0)) # two tailed p-value
+        if np.isnan(PCC):
+          print Xz, Yz
+          print np.ma.average(Xz, axis=0), np.ma.average(Yz, axis=0)
+          print sp.stats.pearsonr(np.ma.average(Xz, axis=0), np.ma.average(Yz, axis=0))
+          quit()
         (SCC, P_SCC) = sp.stats.spearmanr(np.ma.average(Xz, axis=0), np.ma.average(Yz, axis=0)) # two tailed p-value
         pvalues[ti] = np.nan
         pccpvalues[ti] = P_PCC
