@@ -270,7 +270,7 @@ def permuPvalue(series1, series2, delayLimit, pvalueMethod, Smax, fTransform, zN
     P_two_tail = np.sum(np.abs(PP_set) <= Smax)/np.float(pvalueMethod)
   return P_two_tail
 
-Q_lam_step = 0.01
+Q_lam_step = 0.05
 Q_lam_max = 0.95
 
 def storeyQvalue(pvalues, lam=np.arange(0,Q_lam_max,Q_lam_step), method='smoother', robust=False, smooth_df=3):
@@ -295,9 +295,8 @@ def storeyQvalue(pvalues, lam=np.arange(0,Q_lam_max,Q_lam_step), method='smoothe
   p_num = len(pvalues)
   rp_num = len(rpvalues)
   #rp_nnz = len(np.nonzero(rpvalues))
-  rp_lam = lam[(lam-Q_lam_step)<rp_max]
+  rp_lam = lam[lam<rp_max]
   #print "p_num=", p_num, "rp_num=", rp_num
-  #print "rpvalues=", rpvalues
 
   if rp_num <= 1:
     #print >>sys.stderr, "WARN: not enough number of pvalues for q-value evaluation! nan will be filled!"
@@ -305,6 +304,8 @@ def storeyQvalue(pvalues, lam=np.arange(0,Q_lam_max,Q_lam_step), method='smoothe
 
   if len(rp_lam) <= 1:
     return np.array( [np.nan if np.isnan(pvalues[i]) else 0 for i in xrange(0,p_num)],  dtype='float')
+
+  #print "rpvalues=", rpvalues, rp_num, rp_lam
 
   pi_set = np.zeros(len(rp_lam), dtype='float')
   for i in xrange(0, len(rp_lam)): 
@@ -324,6 +325,8 @@ def storeyQvalue(pvalues, lam=np.arange(0,Q_lam_max,Q_lam_step), method='smoothe
       #print >>sys.stderr, "WARN: smoother method not working, fall back to bootstrap"
       #print pi_set, rp_max, rp_lam, pi_0
       method='bootstrap'
+  #print "pi_set=", pi_set
+  #print "pi_0=", pi_0
 
   if method=='bootstrap':                            #bootstrap
     pi_min = np.min(pi_set)
@@ -337,11 +340,12 @@ def storeyQvalue(pvalues, lam=np.arange(0,Q_lam_max,Q_lam_step), method='smoothe
     min_mse_j = np.argmin(mse)
     pi_0 = np.min(pi_set_boot[min_mse_j])
     #print "pi_0=", pi_0
-    pi_0 = np.max([np.min( [np.min(pi_0), 1]), 0]) #0<=pi_0<=1
+    pi_0 = np.max([np.min( [np.min(pi_0), 1]), ]) #0<=pi_0<=1
     #print "pi_0=", pi_0
     if pi_0 == 0:
       #print >>sys.stderr, "WARN: bootstrap method not working, cannot estimate qvalues"
-      return np.array( [np.nan] * p_num, dtype='float' )
+      pi_0 = Q_lam_step #non-fixable peculiar case, show some reasonable results, refer to Tibshirani et al.
+      #return np.array( [np.nan] * p_num, dtype='float' )
 
   #print "pi_0=", pi_0
   rp_argsort = np.argsort(rpvalues)                     #np.nan will be sorted as maximum (the largest rank)
