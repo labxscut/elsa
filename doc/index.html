@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../style/softs.css" type="text/css" />
+    <style type="text/css">
+	</style>
+</head>
+<body>
+	<div id="banner">
+		<div id="name">
+			<div id="name_title">
+				Extended Local Similarity Analysis
+			</div>
+			<div id="name_description">
+				-- Finding Time-Dependent Associations in Time Series Datasets
+			</div>
+			</div>
+		<img id="logo_image" src="logo.png" alt="LSA.Logo"/>
+	</div>
+	<div id="main_text">
+		<div id="introduction" class="section">
+			<h2>Introduction</h2>
+			<p>
+				In recent years, advances in molecular technologies have empowered researchers with the ability to spatially and temporally characterize natural microbial communities without lab cultivation (Fuhrman, 2009). Mining and analyzing co-occurrence patterns in these new datasets are fundamental to revealing existing symbiosis relations and microbe-environment interactions (Chaffron et al., 2010; Steele et al., 2011). Time series data, in particular, are receiving more and more attention, since not only undirected but also directed associations can be inferred from these datasets. 
+			</p>
+			<p>		
+				Researchers typically use techniques like principal component analysis (PCA), multidimensional scaling (MDS), discriminant function analysis (DFA) and canonical correlation analysis (CCA)) to analyze microbial community data under various conditions. Different from these methods, the Local Similarity Analysis (LSA) technique is unique to capture the time-dependent associations (possibly time-shifted) between microbes and between microbe and environmental factors (Ruan et al., 2006). Significant LSA associations can be interpreted as a partially directed association network for further network-based analysis. 
+			</p>
+			<p>
+				Studies adopting the LSA technique have shown interesting and novel discoveries for microbial communities (Paver et al., 2010; Shade et al., 2010; Beman et al., 2011; Steele et al., 2011). However current dataset scale has outdated the old script. To improve computation efficiency, incorporate new features,  such as time series data with replicates, and make the analysis technique more accessible to users, we have re-implemented the LSA algorithm as a C++ extension to Python. We also integrated the new LSA tool set with the popular Galaxy framework (Goecks et al., 2010) for web based pipeline analysis. 
+			</p>
+		</div>
+		<div id="Implementation" class="section">
+		<h2>Implementation</h2>
+			<div id="pipeline">
+				<img id="pipeline_image" src="http://meta.usc.edu/softs/lsa/pipeline.png" alt="LSA.Pipeline"/>
+				<p>
+					<b>Figure 1.</b> 
+					The analysis workflow of Local Similarity Analysis (LSA) tools. Users start with raw data (matrices of time series) as input and specify their requirements as parameters. The LSA tools subsequently <it>F</it>-transform and normalize the raw data and then calculate the Local Similarity (LS) Scores and the Pearson’s Correlation Coefficients. The tools then assess the statistical significance (P-values) of these correlation statistics using permutation test and filter out insignificant results. Finally, the tools construct a partially directed association network from significant associations.
+				</p> 
+			</div>			
+		</div>
+		<div id="availability" class="section">
+			<h2>Availability</h2>
+			<p><ul>
+        <li>
+          Download and use SunLab virtual box machine with pre-installed eLSA at:
+          <a href=http://meta.usc.edu/softs/vbox/SunLab.vdi.tgz>http://meta.usc.edu/softs/vbox/SunLab.vdi.tgz</a>.
+          Check the md5sum to ensure integrity of the file:
+          <a href=http://meta.usc.edu/softs/vbox/SunLab.vdi.tgz.md5.txt>http://meta.usc.edu/softs/vbox/SunLab.vdi.tgz.md5.txt</a>.
+          Look into the README.txt file viewable from 
+          <a href=https://bitbucket.org/charade/lsa>https://bitbucket.org/charade/lsa</a> for detailed information.
+        </li>
+				<li>
+					Download released standalone source code package at: <a href="https://bitbucket.org/charade/lsa/get/release.tar.gz">
+					https://bitbucket.org/charade/lsa/get/release.tar.gz</a> and install.
+          <!--
+					<pre>$tar -zxvf charade-lsa-release.tar.gz</pre>
+					<pre>$cd charade-lsa-release</pre>
+					<pre>$python setup.py install</pre>
+          -->
+					Look into the README.txt file within the package (also viewable from
+					<a href="https://bitbucket.org/charade/lsa">https://bitbucket.org/charade/lsa</a>)
+					for detailed installation information and others. 
+				</li>
+        <!--
+				<li>Galaxy-based Web Service at: <a href="http://meta.cmb.usc.edu">http://meta.cmb.usc.edu</a>.<br/>
+					You can look for the LSA Compute and LSA Query service under the Sun Lab Services section. 
+					We also explain the usage in detail and prepare a demo data set at: 
+					<a href="http://meta.cmb.usc.edu/u/charlie/p/lsa-demo">http://meta.cmb.usc.edu/u/charlie/p/lsa-demo</a>.<br/>
+				</li>
+        -->
+				<li>
+					Source code access at: <a href="https://bitbucket.org/charade/lsa">https://bitbucket.org/charade/lsa</a>.<br/>
+					The python package is made open source for advanced users to pipeline the analysis or implement other variants.
+				</li>				
+			</ul></p>
+		</div>
+		<div id="contacts" class="section">
+			<h2>Contacts</h2>
+			<p>Questions and comments shall be addressed to <a href="mailto:lxia@usc.edu">lxia at usc dot edu</a>.</p>
+		</div>
+		<div id="references" class="section">
+			<h2>References</h2>
+			<ol>
+				                                <li>
+								          Li C Xia, Joshua A Steele, Jacob A Cram, Zoe G Cardon, Sheri L Simmons, Joseph J Vallino, Jed A Fuhrman and Fengzhu Sun
+									            <a href=http://www.biomedcentral.com/1752-0509/5/S2/S15/>
+											                <b> Extended local similarity analysis (eLSA) of microbial community and other time series data with replicates </b>
+													          </a>
+														            <i>BMC Systems Biology</i> 2011, <b>5</b>(Suppl 2):S15
+															                              </li>
+																		                              </ol>
+		</div>
+	</div>
+</body>
+</html>

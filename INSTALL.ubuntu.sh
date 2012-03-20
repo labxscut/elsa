@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 
 #Compiler Dependencies:
 sudo apt-get install build-essential libstdc++6 gfortran
