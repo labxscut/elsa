@@ -63,16 +63,22 @@ def main():
   delayLimit = vars(arg_namespace)['delayLimit']
   lengthSeries = vars(arg_namespace)['lengthSeries']
   resultFile = vars(arg_namespace)['resultFile']
+  precision = 0.001
   if not vars(arg_namespace)['trendSeries']:
     trendSeries = False
+    x_var = 1
   else:
     trendSeries = True
+    x_var = 0.25
     trend_threshold = int(vars(arg_namespace)['trendSeries'])
 
   print >>sys.stderr, "simulating...",
   start_time = time.time()
 
   LS_values = np.zeros(simTimes, dtype='float')
+  P_theo = np.zeros(simTimes, dtype='float')
+  P_perm = np.zeros(simTimes, dtype='float')
+  P_table = lsalib.theoPvalue(lengthSeries, delayLimit, precision, x_var, 2)
   for j in range(0, simTimes):
     if not trendSeries:
       xSeries = np.ma.masked_invalid(np.random.randn(1,lengthSeries))
@@ -92,10 +98,13 @@ def main():
       #print xSeries.shape
       #print ySeries.shape
     #singleLSA call
-    LS_values[j] = lengthSeries * lsalib.singleLSA(xSeries, ySeries, delayLimit, lsalib.simpleAverage, lsalib.noneNormalize, False).score
+    LS_values[j] = np.abs( lengthSeries * lsalib.singleLSA(xSeries, ySeries, delayLimit, lsalib.simpleAverage, lsalib.noneNormalize, False).score )
+    P_theo[j] = lsalib.readPvalue(P_table, LS_values[j]/lengthSeries, lengthSeries, x_var, 2)
+    P_perm[j] = lsalib.permuPvalue(xSeries, ySeries, delayLimit, int(1/precision), LS_values[j]/lengthSeries, lsalib.simpleAverage, lsalib.noneNormalize)
   #print LS_values
 
-  print >>resultFile, '\n'.join([str(v) for v in LS_values])
+  print >>resultFile, "LS*n\tP_theo\tP_perm"
+  print >>resultFile, '\n'.join(['\t'.join([str(LS_values[i]),str(P_theo[i]),str(P_perm[i])]) for i in xrange(0,simTimes)])
 
   end_time = time.time()
   elapse_time = end_time - start_time

@@ -76,11 +76,13 @@ setup(name="lsa",
                                    swig_opts=['-c++', '-nomodern', '-classic', '-nomodernargs'])],
     py_modules = ['lsa.compcore', 'lsa.lsalib', 'lsa.lsaio'],
     cmdclass = {'build': my_build},
-    data_files = [('',['INSTALL.txt','LICENSE.txt', ])],
+    data_files = [('',['LICENSE.txt', ])],
     entry_points = { 
         'console_scripts': [
             'lsa_compute = lsa.lsa_compute:main',
             'lsa_query = lsa.lsa_query:main',
+            'to_trend = lsa.to_trend:main',
+            'lsa_sim = lsa.lsa_sim:main',
         ]
     }
 )
