@@ -139,7 +139,7 @@ def main():
   if normMethod == 'none':
     zNormalize = lsalib.noneNormalize
   elif normMethod == 'percentile':
-    zNormalize = lsalib.percentileNormalize  # fallback to default
+    zNormalize = lsalib.noZeroNormalize  # fallback to default
   else:
     zNormalize = lsalib.noneNormalize
     varianceX = float(normMethod)
