@@ -689,7 +689,7 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
   ti = 0
   if pvalueMethod < 0:
     #P_table = theoPvalue(D=0, precision=.0001, x_decimal=3)   #let's produce 2 tail-ed p-value
-    P_table = theoPvalue(Rmax=timespots, D=delayLimit, precision=1./np.abs(pvalueMethod), x_decimal=my_decimal)
+    P_table = theoPvalue(Rmax=timespots, Dmax=delayLimit, precision=1./np.abs(pvalueMethod), x_decimal=my_decimal)
     #print P_table
   for i in xrange(0, firstFactorNum):
     Xz = np.ma.masked_invalid(firstData[i]) #need to convert to masked array with na's, not F-normalized
@@ -925,9 +925,18 @@ def test():
   print >>sys.stderr, applyAnalysis(clean_data, clean_data, True, 1, .95, 10, 10, simpleMedian, noZeroNormalize)
   print >>sys.stderr, "---applyAnalysis---"
   print >>sys.stderr, applyAnalysis(clean_data, clean_data, True, 1, .95, 10, 10, madMedian, noZeroNormalize)
-  print >>sys.stderr, "---theoPvalue--- d=3, xi=(0 to 100)*100, x=(xi/100)*x_var"
-  T_table = theoPvalue(Rmax=4, Dmax=3, precision=.0001, x_decimal=my_decimal)   #let's produce 2 tail-ed p-value
-  print >>sys.stderr, "\n".join([ "%s\t%s" % (str(v/float(10**my_decimal)), str(T_table[v])) for v in T_table.keys() ])
+  #print >>sys.stderr, "---theoPvalue--- d=3, xi=(0 to 100)*100, x=(xi/100)*x_var"
+  #D3_table = theoPvalue(Rmax=10, Dmax=3, precision=.00001, x_decimal=my_decimal)   #let's produce 2 tail-ed p-value
+  #D2_table = theoPvalue(Rmax=10, Dmax=2, precision=.00001, x_decimal=my_decimal)   #let's produce 2 tail-ed p-value
+  #D1_table = theoPvalue(Rmax=10, Dmax=1, precision=.00001, x_decimal=my_decimal)   #let's produce 2 tail-ed p-value
+  #D0_table = theoPvalue(Rmax=10, Dmax=0, precision=.00001, x_decimal=my_decimal)   #let's produce 2 tail-ed p-value
+  #numpy.arange(2,5.1,0.2) x=R/sqrt(N)
+  #for r in np.arange(0, R, 0.01):
+  #print readPvalue(D1_table, R, N, x_sd=1, M=1, alpha=1, beta=1, x_decimal=3):
+  #print >>open("D0.txt",'w'), "\n".join([ "%s\t%s" % (str(v/float(10**my_decimal)), str(T_table[v])) for v in T_table.keys() ])
+  #print >>open("D1.txt",'w'), "\n".join([ "%s\t%s" % (str(v/float(10**my_decimal)), str(T_table[v])) for v in T_table.keys() ])
+  #print >>open("D2.txt",'w'), "\n".join([ "%s\t%s" % (str(v/float(10**my_decimal)), str(T_table[v])) for v in T_table.keys() ])
+  #print >>open("D3.txt",'w'), "\n".join([ "%s\t%s" % (str(v/float(10**my_decimal)), str(T_table[v])) for v in T_table.keys() ])
   #print >>sys.stderr, P=readPvalue(T_table, .1876, 140, x_var=1, x_decimal=my_decimal) # read two-tailed  
   #print >>sys.stderr, "theoP=", P
 

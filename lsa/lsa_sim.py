@@ -64,6 +64,8 @@ def main():
                               help="if specified must be a number, will generate trend series, with the specified threshold")
   parser.add_argument("-A", "--approxVar", dest="approxVar", default=1, type=float,
                               help="numeric>0, default=1, variance of partial sum variable")
+  parser.add_argument("-P", "--permPrecision", dest="permPrecision", default=1, type=float,
+                              help="numeric>0, default=1, inverse of number of permutations")
 
   arg_namespace = parser.parse_args()
 
@@ -73,8 +75,8 @@ def main():
   lengthSeries = vars(arg_namespace)['lengthSeries']
   resultFile = vars(arg_namespace)['resultFile']
   approxVar = vars(arg_namespace)['approxVar']
+  perm_precision = vars(arg_namespace)['permPrecision']
   theo_precision = 0.0001
-  perm_precision = 1
   if not vars(arg_namespace)['trendSeries']:
     trendSeries = False
     x_var = approxVar
