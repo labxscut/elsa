@@ -241,11 +241,11 @@ def theoPvalue(Rmax=Rmax_min, Dmax=0, precision=.0001, x_decimal=3):   #let's pr
     #print xi, x, Kcut, P, P/2;
 
     #print "xi=", xi, "Kut=", Kcut, "k=", k
-    if P_two_tail <= precision:
-      P_table[xi] = precision
-      break
-    else:
-      P_table[xi] = P_two_tail #return two tailed probability
+    #if P_two_tail <= precision and Kcut != :
+    #  P_table[xi] = precision
+    #  continue
+    #else:
+    P_table[xi] = P_two_tail #return two tailed probability
 
   return P_table
 	
