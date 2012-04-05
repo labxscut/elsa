@@ -78,7 +78,7 @@ def main():
                           SD: standard deviation weighted averaging                           \n \
                           Med: simple Median                                                  \n \
                           MAD: median absolute deviation weighted median;" )
-  parser.add_argument("-f", "--fillMethod", dest="fillMethod", default='none', 
+  parser.add_argument("-f", "--fillMethod", dest="fillMethod", default='linear', 
                         choices=['none', 'zero', 'linear', 'quadratic', 'cubic', 'slinear', 'nearest'],
                     	help= "specify the method to fill missing, default: none,               \n \
                           choices: none, zero, linear, quadratic, cubic, slinear, nearest  \n \
