@@ -568,11 +568,29 @@ def percentileNormalize(tseries):
   """
   ranks = tied_rank(tseries)
   #print "ranks=", ranks
-  nt = np.ma.masked_invalid(sp.stats.distributions.norm.ppf( ranks/(len(ranks)+1) ))
+  nt = np.ma.masked_invalid(sp.stats.distributions.norm.ppf( ranks/(len(ranks)-np.sum(ranks.mask)+1) ))
   #print "nt=", nt
   #nt = np.nan_to_num(nt)              #filling zeros to nan, shall be no na's from here on
   nt = nt.filled(fill_value=0)         #filling zeros to nan, shall be no na's from here on
   return nt
+
+def percentileZNormalize(tseries):
+  """ score normalizing
+
+    Args:
+      tseries(np.array): 1-d time series
+    
+    Returns:
+      score normalized time series
+  """
+  ranks = tied_rank(tseries)
+  #print "ranks=", ranks
+  nt = np.ma.masked_invalid(sp.stats.distributions.norm.ppf( ranks/(len(ranks)-np.sum(ranks.mask)+1) ))
+  zt = (nt - np.ma.mean(nt, axis=0))/np.ma.std(nt)
+  #print "nt=", nt
+  #nt = np.nan_to_num(nt)              #filling zeros to nan, shall be no na's from here on
+  zt = zt.filled(fill_value=0)         #filling zeros to nan, shall be no na's from here on
+  return zt
 
 def noZeroNormalize(tseries):
   """ score normalizing
@@ -584,16 +602,26 @@ def noZeroNormalize(tseries):
       score normalized time series
   """
   #print "with zero tseries=", tseries, tseries.mask
+  #print "t=", tseries
   nt = np.ma.masked_equal(tseries, 0)
+  #print "nt=", nt, nt.mask
   if type(nt.mask) == np.bool_:       #fix broken ma.mean, mask=False instead of [False, ...] for all mask
     nt.mask = [nt.mask] * nt.shape[0]
   #print "none zero tseries=", nt, nt.mask
   ranks = tied_rank(nt)
-  nt = np.ma.masked_invalid(sp.stats.distributions.norm.ppf( ranks/(len(ranks)+1) ))
-  #print "nt=", nt
+  #print ranks, ranks.mask, len(ranks)-np.sum(ranks.mask), ranks/(np.sum(ranks.mask)+1) 
+  nt = np.ma.masked_invalid(sp.stats.distributions.norm.ppf( ranks/(len(ranks)-np.sum(ranks.mask)+1) ))
+  #print np.ma.mean(nt, axis=0), np.ma.std(nt, axis=0)
+  #print (nt - np.ma.mean(nt, axis=0))*(1/np.ma.std(nt, axis=0))
+  try:
+    zt = (nt - np.ma.mean(nt, axis=0))*(1/np.ma.std(nt, axis=0))
+  except FloatingPointError:
+    zt = nt - np.ma.mean(nt, axis=0)
   #nt = np.nan_to_num(nt)              #filling zeros to nan, shall be no na's from here on
-  nt = nt.filled(fill_value=0)         #filling zeros to nan, shall be no na's from here on
-  return nt
+  #print "nt=", nt
+  zt = zt.filled(fill_value=0)         #filling zeros to nan, shall be no na's from here on
+  #print "zt=", zt
+  return zt
 
 def noneNormalize(tseries):
   """ no normalizaing
@@ -885,10 +913,6 @@ def test():
   X=np.array( [1, 2, 3, np.nan, 0, 0], dtype='float')
   Xz=np.ma.masked_invalid(X)
   print >>sys.stderr, Xz, "->", noZeroNormalize(Xz)
-  #print >>sys.stderr, masked_data[0][0], "->", noZeroNormalize(masked_data[0][0])
-  #print >>sys.stderr, masked_data[0][1], "->", noZeroNormalize(masked_data[0][1])
-  #print >>sys.stderr, masked_data[1][0], "->", noZeroNormalize(masked_data[1][0])
-  #print >>sys.stderr, masked_data[1][1], "->", noZeroNormalize(masked_data[1][1])
   print >>sys.stderr, "---storeyQvalue---"
   pvalues = np.array([0.01, 0.2, 0.03, 0.4, 0.05, np.nan, 0.03, 0.4, 0.03, 0.3], dtype='float')
   print >>sys.stderr, "pvalues:", pvalues 
@@ -897,6 +921,9 @@ def test():
   print >>sys.stderr, "pvalues:", pvalues 
   print >>sys.stderr, "qvalues:", storeyQvalue(pvalues)
   print >>sys.stderr, "---singleLSA---"
+  print >>sys.stderr, "masked_data[0]:", masked_data[0]
+  sa0 = simpleAverage(masked_data[0])
+  print >>sys.stderr, "simpleAverage of masked_data[0]:", sa0, sa0.mask
   print >>sys.stderr, "input data:", noZeroNormalize(simpleAverage(masked_data[0]))
   print >>sys.stderr, "masked_data[1]:", masked_data[1]
   sa1 = simpleAverage(masked_data[1])
