@@ -139,10 +139,12 @@ def main():
   if normMethod == 'none':
     zNormalize = lsalib.noneNormalize
   elif normMethod == 'percentile':
-    zNormalize = lsalib.noZeroNormalize  # fallback to default
-  else:
-    zNormalize = lsalib.noneNormalize
+    zNormalize = lsalib.noZeroNormalize  
+  elif normMethod != None:
+    zNormalize = lsalib.noZeroNormalize
     varianceX = float(normMethod)
+  else:
+    zNormalize = lsalib.noZeroNormalize # fallback to default
   
   print "\t".join(['delayLimit','fillMethod','pvalueMethod','dataFile','resultFile','repNum','spotNum','bootNum','transFunc','normMethod','xVariance'])
   print "\t".join(['%s']*11) % (delayLimit,fillMethod,pvalueMethod,dataFile.name,resultFile.name,repNum,spotNum,bootNum,transFunc,normMethod,str(varianceX))
@@ -153,26 +155,30 @@ def main():
   #datafile handling
   onDiag = False
   try:
-    firstData=np.genfromtxt( dataFile, comments='#', delimiter='\t', missing_values=['na',''], filling_values=np.nan, usecols=range(1,spotNum*repNum+1) )
+    firstData=np.genfromtxt( dataFile, comments='#', delimiter='\t', missing_values=['na','','NA'], \
+        filling_values=np.nan, usecols=range(1,spotNum*repNum+1) )
     dataFile.seek(0)  #rewind
     firstFactorLabels=list(np.genfromtxt( dataFile, comments='#', delimiter='\t', usecols=xrange(0,1), dtype='string' ))
     if not extraFile:
       onDiag = True
       #print >>sys.stderr, "reading raw data from dataFile..."
       dataFile.seek(0)  #rewind
-      secondData=np.genfromtxt( dataFile, comments='#', delimiter='\t', missing_values=['na',''], filling_values=np.nan, usecols=range(1,spotNum*repNum+1) )
+      secondData=np.genfromtxt( dataFile, comments='#', delimiter='\t', missing_values=['na','','NA'], \
+          filling_values=np.nan, usecols=range(1,spotNum*repNum+1) )
       dataFile.seek(0)  #rewind
       secondFactorLabels=list(np.genfromtxt( dataFile, comments='#', delimiter='\t', usecols=xrange(0,1), dtype='string' ))
     else:
       extraData=lsaio.tryIO(extraFile,'w')
-      secondData=np.genfromtxt( extraData, comments='#', delimiter='\t', missing_values=['na',''], filling_values=np.nan, usecols=range(1,spotNum*repNum+1) )
+      secondData=np.genfromtxt( extraData, comments='#', delimiter='\t', missing_values=['na','','NA'], \
+          filling_values=np.nan, usecols=range(1,spotNum*repNum+1) )
       dataFile.seek(0)  #rewind
       secondFactorLabels=list(np.genfromtxt( extraData, comments='#', delimiter='\t', usecols=xrange(0,1), dtype='string' ))
   except:
     print >>sys.stderr, "unexpected error:", sys.exc_info()[0]
     print >>sys.stderr, "error reading dataFile, please check the input format, spotNum and repNum \n \
-                         input shall be a tab delimited txt file with '#' lines as comments and first column as factor label. \n \
-                         After that, it shall have spotNum * repNum numeric cells for repNum-replicated spotNum-spotted series data. "
+                         input shall be a tab delimited txt file with first line starts with '#' as column names and first column as factor labeles. \n \
+                         it allows other rows start with '#' to be comment lines \n \
+                         An in total, it shall have spotNum * repNum numeric cells for repNum-replicated spotNum-timepoint series data. "
     exit(0)
 
   ###print rawData, factorLabels
