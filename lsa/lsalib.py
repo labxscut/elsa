@@ -76,7 +76,7 @@ except ImportError:
 #P_table = dict()
 kcut_min=100
 Rmax_min=10
-my_decimal = 3    # preset x step size for P_table
+my_decimal = 2    # preset x step size for P_table
 pipi = np.pi**2 # pi^2
 pipi_inv = 1/pipi
 
@@ -114,6 +114,7 @@ def singleLSA(series1, series2, delayLimit, fTransform, zNormalize, keepTrace=Tr
   #  print zNormalize, zNormalize(fTransform(series1)), zNormalize(fTransform(series1)).mask, zNormalize(fTransform(series2)), zNormalize(fTransform(series2)).mask
   #  quit()
   lsar=compcore.DP_lsa(lsad, keepTrace)
+  del lsad
   return lsar
 	
 def sample_wr(population, k):
@@ -206,7 +207,7 @@ def readPvalue(P_table, R, N, x_sd=1, M=1, alpha=1, beta=1, x_decimal=3):
   else:
     return 0.
 
-def theoPvalue(Rmax=Rmax_min, Dmax=0, precision=.0001, x_decimal=3):   #let's produce 2 tail-ed p-value
+def theoPvalue(Rmax, Dmax=0, precision=.001, x_decimal=2):   #let's produce 2 tail-ed p-value
   # the produced P_table is for P(X>=x) when X=(R(D)/sqrt(n)) and indexed by xi=x*(10^x_decimal) 
   # so, x=xi/(10^x_decimal)
   # no read for recaculating P_table when read proper scaled x' = R*M/(alpha*beta*sqrt(N)*sd) * 10^(x_decimal)
@@ -586,7 +587,10 @@ def percentileZNormalize(tseries):
   ranks = tied_rank(tseries)
   #print "ranks=", ranks
   nt = np.ma.masked_invalid(sp.stats.distributions.norm.ppf( ranks/(len(ranks)-np.sum(ranks.mask)+1) ))
-  zt = (nt - np.ma.mean(nt, axis=0))/np.ma.std(nt)
+  try:
+    zt = (nt - np.ma.mean(nt, axis=0))/np.ma.std(nt)
+  except FloatingPointError:
+    zt = nt - np.ma.mean(nt, axis=0)
   #print "nt=", nt
   #nt = np.nan_to_num(nt)              #filling zeros to nan, shall be no na's from here on
   zt = zt.filled(fill_value=0)         #filling zeros to nan, shall be no na's from here on
@@ -665,7 +669,8 @@ def fillMissing(tseries, method): #teseries is 2d matrix unmasked
         yy[i] = tseries[i] #keep nans
     return yy
     
-def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, bootNum=1000, pvalueMethod=1000, fTransform=simpleAverage, zNormalize=noZeroNormalize,varianceX=1):
+def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, bootNum=1000, pvalueMethod=1000, \
+    fTransform=simpleAverage, zNormalize=noZeroNormalize, varianceX=1, resultFile=None):
   """ calculate pairwise LS scores and p-values
 
     	Args:
@@ -687,6 +692,10 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
         	P-value, Pearson' Correlation, P-value of PCC, Q-value ]
         	
   """	
+
+  col_labels= ['X','Y','LS','lowCI','upCI','Xs','Ys','Len','Delay','P','PCC','Ppcc','SPCC','Pspcc','SCC','Pscc','SSCC','Psscc',
+            'Q','Qpcc','Qspcc','Qscc','Qsscc']
+  print >>resultFile,  "\t".join(col_labels)
 
   firstFactorNum = firstData.shape[0]
   firstRepNum = firstData.shape[1]
@@ -837,6 +846,7 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
       ssccpvalues[ti] = P_SSCC
       lsaTable[ti] = [i, j, Smax, Sl, Su, Xs, Ys, Al, Xs-Ys, lsaP, PCC, P_PCC, SPCC, P_SPCC, SCC, P_SCC, SSCC, P_SSCC]
       ti += 1
+      del LSA_result
       #print "finalizing..."
 
   #print lsaTable
@@ -864,7 +874,9 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
     lsaTable[k].append( ssccqvalues[k] )
 
   #print lsaTable
-  return lsaTable
+  for row in lsaTable:
+    print >>resultFile, "\t".join(['%s']*len(col_labels)) % \
+      tuple([firstFactorLabels[row[0]], secondFactorLabels[row[1]] ] + ["%.4f" % np.round(v, decimals=4) if isinstance(v, float) else v for v in row[2:]])
 
 def test():
   """ self test script

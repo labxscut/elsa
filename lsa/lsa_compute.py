@@ -91,12 +91,13 @@ def main():
                           quadratic: fill up with quadratic spline;             \n \
                           cubic: fill up with cubic spline;                \n \
                           nearest: fill up with nearest neighbor") 
-  parser.add_argument("-n", "--normMethod", dest="normMethod", default='percentile', #choices=['percentile', 'none'],
+  parser.add_argument("-n", "--normMethod", dest="normMethod", default='pnz', choices=['percentile', 'pnz', 'none'],
                       help= "specify the method to normalize data, default: percentile,       \n \
                           choices: percentile, none                                        \n \
                           NOTE:                                                         \n \
-                          percentile: percentile normalization                                    \n \
-                          none or a number: no normalization, but with user specified variance for theoP, default=1 ")
+                          percentile: percentile normalization, including zeros                                    \n \
+                          pnz: percentile normalization, excluding zeros                                    \n \
+                          none or a float number for variance: no normalization and calculate Ptheo with user specified variance, default=1 ")
   
   arg_namespace = parser.parse_args()
 
@@ -139,7 +140,9 @@ def main():
   if normMethod == 'none':
     zNormalize = lsalib.noneNormalize
   elif normMethod == 'percentile':
-    zNormalize = lsalib.noZeroNormalize  
+    zNormalize = lsalib.percentileNormalize
+  elif normMethod == 'pnz':
+    zNormalize = noZeroNormalize  
   elif normMethod != None:
     zNormalize = lsalib.noZeroNormalize
     varianceX = float(normMethod)
@@ -202,18 +205,18 @@ def main():
   #        P-value, Pearson' Correlation, P-value of PCC, Q-value ]
   #print >>sys.stderr, "data size factorNum, repNum, spotNum = %s, %s, %s" % (cleanData.shape[0], cleanData.shape[1], cleanData.shape[2])
   #print >>sys.stderr, "calculating ..."
-  lsaTable=lsalib.applyAnalysis(cleanData[0], cleanData[1], onDiag=onDiag, \
-      delayLimit=delayLimit,bootNum=bootNum,pvalueMethod=pvalueMethod,fTransform=fTransform,zNormalize=zNormalize,varianceX=varianceX)
-  print >>sys.stderr, "writing results ..."
-  col_labels= ['X','Y','LS','lowCI','upCI','Xs','Ys','Len','Delay','P','PCC','Ppcc','SPCC','Pspcc','SCC','Pscc','SSCC','Psscc',
-      'Q','Qpcc','Qspcc','Qscc','Qsscc']
-  print >>resultFile,  "\t".join(col_labels)
+  lsalib.applyAnalysis(cleanData[0], cleanData[1], onDiag=onDiag, delayLimit=delayLimit, bootNum=bootNum,\
+      pvalueMethod=pvalueMethod, fTransform=fTransform, zNormalize=zNormalize, varianceX=varianceX, resultFile=resultFile)
+  #print >>sys.stderr, "writing results ..."
+  #col_labels= ['X','Y','LS','lowCI','upCI','Xs','Ys','Len','Delay','P','PCC','Ppcc','SPCC','Pspcc','SCC','Pscc','SSCC','Psscc',
+  #    'Q','Qpcc','Qspcc','Qscc','Qsscc']
+  #print >>resultFile,  "\t".join(col_labels)
 
   #print lsaTable
-  for row in lsaTable:
+  #for row in lsaTable:
     #print [factorLabels[row[0]], factorLabels[row[1]]] + ["%.4f" % v if isinstance(v, float) else v for v in row[2:13]]
-    print >>resultFile, "\t".join(['%s']*len(col_labels)) % \
-      tuple([firstFactorLabels[row[0]], secondFactorLabels[row[1]] ] + ["%.4f" % np.round(v, decimals=4) if isinstance(v, float) else v for v in row[2:]])
+  #  print >>resultFile, "\t".join(['%s']*len(col_labels)) % \
+  #    tuple([firstFactorLabels[row[0]], secondFactorLabels[row[1]] ] + ["%.4f" % np.round(v, decimals=4) if isinstance(v, float) else v for v in row[2:]])
 
   print >>sys.stderr, "finishing up..."
   resultFile.close()

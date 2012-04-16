@@ -1,7 +1,7 @@
 %module compcore
 %include "std_vector.i"
 %{
-#include "compcore.h"
+#include "compcore.hpp"
 %}
 namespace std{
     %template(VectorDouble) vector<double>;
@@ -9,7 +9,27 @@ namespace std{
     %template(MatrixDouble) vector<vector<double> >;
     %template(MatrixInt) vector<vector<int> >;
 };
-%include "compcore.h"  
+//%include "compcore.hpp"  
+
+class LSA_Data {
+public:
+  int max_shift;
+  VectorDouble X;
+  VectorDouble Y;
+  LSA_Data();
+  ~LSA_Data();
+  LSA_Data(int shift, VectorDouble, VectorDouble);
+  void assign(int, VectorDouble, VectorDouble);
+};
+
+class LSA_Result {
+public:
+  double score;
+  MatrixInt trace;
+  LSA_Result();
+  ~LSA_Result();
+};
+
 
 /* %constant is like #define */
 //%constant LSA_Result (*LSA_test)(const LSA_Data&, bool) = DP_lsa; // call LSA_test

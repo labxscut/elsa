@@ -74,7 +74,7 @@ setup(name="lsa",
     install_requires=['numpy >= 1.0','scipy >= 0.6','python >= 2.7 '],
     provides=['lsa'],
     ext_modules = [Extension('lsa._compcore', sources = ['lsa/compcore.i', 'lsa/compcore.cpp'],
-                                   depends=['lsa/compcore.h'],
+                                   depends=['lsa/compcore.hpp'],
                                    swig_opts=['-c++', '-nomodern', '-classic', '-nomodernargs'])],
     py_modules = ['lsa.compcore', 'lsa.lsalib', 'lsa.lsaio'],
     cmdclass = {'build': my_build},
@@ -85,6 +85,7 @@ setup(name="lsa",
             'lsa_query = lsa.lsa_query:main',
             'to_trend = lsa.to_trend:main',
             'lsa_sim = lsa.lsa_sim:main',
+            'check_data = lsa.check_data:main',
         ]
     }
 )

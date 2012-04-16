@@ -284,13 +284,13 @@ class LSA_Data:
     __swig_getmethods__["X"] = _compcore.LSA_Data_X_get
     __swig_setmethods__["Y"] = _compcore.LSA_Data_Y_set
     __swig_getmethods__["Y"] = _compcore.LSA_Data_Y_get
+    __swig_destroy__ = _compcore.delete_LSA_Data
+    __del__ = lambda self : None;
     def __init__(self, *args): 
         this = _compcore.new_LSA_Data(*args)
         try: self.this.append(this)
         except: self.this = this
     def assign(self, *args): return _compcore.LSA_Data_assign(self, *args)
-    __swig_destroy__ = _compcore.delete_LSA_Data
-    __del__ = lambda self : None;
 LSA_Data_swigregister = _compcore.LSA_Data_swigregister
 LSA_Data_swigregister(LSA_Data)
 
@@ -313,10 +313,6 @@ class LSA_Result:
 LSA_Result_swigregister = _compcore.LSA_Result_swigregister
 LSA_Result_swigregister(LSA_Result)
 
-
-def DP_lsa(*args):
-  return _compcore.DP_lsa(*args)
-DP_lsa = _compcore.DP_lsa
 # This file is compatible with both classic and new-style classes.
 
 

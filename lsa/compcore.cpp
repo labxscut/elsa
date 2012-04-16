@@ -1,4 +1,4 @@
-#include "compcore.h"
+#include "compcore.hpp"
 
 //// LSA section
 void LSA_Data::assign(int shift, VectorDouble x, VectorDouble y){

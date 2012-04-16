@@ -28,13 +28,16 @@ def main():
       except AssertionError:
         print "Format error:", index, "-th row has",len(cells),"cells instead of expected number:", colNum+1
         quit(0)
-      print
       for i in xrange(1, colNum+1):
         try:
           float(cells[i])
         except:
-          assert cells[i] in ['na','NA','']
+          try:
+            assert cells[i] in ['na','NA','']
+          except AssertionError:
+            print
       index += 1
+  
 
 if __name__=="__main__":
   main()
