@@ -24,7 +24,6 @@ public:
   VectorDouble X;
   VectorDouble Y;
   LSA_Data(){ VectorDouble X; VectorDouble Y; max_shift=std::numeric_limits<int>::infinity(); };
-  //~LSA_Data();
   LSA_Data(int shift, VectorDouble x, VectorDouble y): max_shift(shift),X(x),Y(y){ };
   void assign(int, VectorDouble, VectorDouble);
 };
@@ -41,7 +40,6 @@ LSA_Result DP_lsa( const LSA_Data&, bool );
 
 
 //// LLA and LA data types
-/*
 class LLA_Data {
 public:
   int max_shift;
@@ -50,7 +48,20 @@ public:
   VectorDouble Z;
   LLA_Data(){ VectorDouble X; VectorDouble Y; VectorDouble Z; max_shift=std::numeric_limits<int>::infinity(); };
   LLA_Data(int shift, VectorDouble x, VectorDouble y, VectorDouble z): max_shift(shift),X(x),Y(y),Z(z){ };
-  inline int random_shuffle();
+  //inline int random_shuffle();
+};
+
+
+class LLA_Result {
+public:
+  double score;
+  MatrixInt trace;
+};
+
+/*
+class LA_Result {
+public:
+  double score;
 };
 
 int LLA_Data::random_shuffle(){
@@ -62,19 +73,7 @@ int LLA_Data::random_shuffle(){
   //cout<<"Z="<<Z[0]<<","<<Z[1]<<","<<Z[2]<<","<<Z[3]<<endl;
   return 0;
 };
-
-class LLA_Result {
-public:
-  double score;
-  MatrixInt trace;
-};
-
-class LA_Result {
-public:
-  double score;
-};
 */
-
 
 //// Permutation test template
 /*

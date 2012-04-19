@@ -65,7 +65,6 @@ LSA_Result DP_lsa( const LSA_Data& data, bool keep_trace ){  //python does not s
 
 
 //definitions of functions
-/*
 LLA_Result DP_lla( const LLA_Data& data ){
   LLA_Result lla_result;
   int max_p[3]={0};
@@ -117,18 +116,17 @@ LLA_Result DP_lla( const LLA_Data& data ){
   return lla_result;
 }
 
-LA_Result ST_la( const LLA_Data& la_data ) {
-  LA_Result la_result;
-  double score=0;
-  for( unsigned int i=0; i<la_data.X.size(); i++ ){
-    score=score+la_data.X[i]*la_data.Y[i]*la_data.Z[i];
-  }
-  la_result.score=score;
-  return la_result;
-}
-*/
-
 /*
+LLA_Result ST_lla( const LLA_Data& lla_data ) {
+  LLA_Result lla_result;
+  double score=0;
+  for( unsigned int i=0; i<lla_data.X.size(); i++ ){
+    score=score+lla_data.X[i]*lla_data.Y[i]*lla_data.Z[i];
+  }
+  lla_result.score=score;
+  return lla_result;
+}
+
 LSA_Result DP_rep_lsa( const LSA_Rep_Data& data ){
   LSA_Result lsa_result;
   int max_p[2]={0}; int porn=0;
