@@ -272,6 +272,10 @@ class MatrixInt:
 MatrixInt_swigregister = _compcore.MatrixInt_swigregister
 MatrixInt_swigregister(MatrixInt)
 
+
+def test():
+  return _compcore.test()
+test = _compcore.test
 class LSA_Data:
     __swig_setmethods__ = {}
     __setattr__ = lambda self, name, value: _swig_setattr(self, LSA_Data, name, value)
@@ -313,6 +317,10 @@ class LSA_Result:
 LSA_Result_swigregister = _compcore.LSA_Result_swigregister
 LSA_Result_swigregister(LSA_Result)
 
+
+def DP_lsa(*args):
+  return _compcore.DP_lsa(*args)
+DP_lsa = _compcore.DP_lsa
 # This file is compatible with both classic and new-style classes.
 
 

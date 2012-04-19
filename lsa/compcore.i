@@ -9,8 +9,9 @@ namespace std{
     %template(MatrixDouble) vector<vector<double> >;
     %template(MatrixInt) vector<vector<int> >;
 };
-//%include "compcore.hpp"  
+%include "compcore.hpp"  
 
+/*
 class LSA_Data {
 public:
   int max_shift;
@@ -29,6 +30,7 @@ public:
   LSA_Result();
   ~LSA_Result();
 };
+*/
 
 
 /* %constant is like #define */

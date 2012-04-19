@@ -1,19 +1,16 @@
 #include "compcore.hpp"
 
 //// LSA section
+int test(){
+  cout<<"tested";
+  return 0;
+}
+
 void LSA_Data::assign(int shift, VectorDouble x, VectorDouble y){
   max_shift = shift;
   X.assign(x.begin(),x.end());
   Y.assign(y.begin(),y.end());
 }
-
-/*
-void LSA_Data::assign(int shift, VectorDouble x, VectorDouble y, VectorDouble z){
-  max_shift = shift;
-  X.assign(x.begin(),x.end());
-  Y.assign(y.begin(),y.end());
-}
-*/
 
 LSA_Result DP_lsa( const LSA_Data& data, bool keep_trace ){  //python does not support default value
   LSA_Result lsa_result;
@@ -68,6 +65,7 @@ LSA_Result DP_lsa( const LSA_Data& data, bool keep_trace ){  //python does not s
 
 
 //definitions of functions
+/*
 LLA_Result DP_lla( const LLA_Data& data ){
   LLA_Result lla_result;
   int max_p[3]={0};
@@ -128,6 +126,7 @@ LA_Result ST_la( const LLA_Data& la_data ) {
   la_result.score=score;
   return la_result;
 }
+*/
 
 /*
 LSA_Result DP_rep_lsa( const LSA_Rep_Data& data ){
@@ -217,6 +216,3 @@ template <class DataType, class ResultType>
       return pt_return;
 }
 */
-
-
-

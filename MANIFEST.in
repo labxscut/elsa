@@ -4,7 +4,7 @@ include README.txt
 include setup.py
 include lsa/__init__.py
 include lsa/compcore.cpp
-include lsa/compcore.h
+include lsa/compcore.hpp
 include lsa/compcore_wrap.cpp
 include lsa/compcore.py
 include lsa/lsaio.py

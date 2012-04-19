@@ -670,7 +670,7 @@ def fillMissing(tseries, method): #teseries is 2d matrix unmasked
     return yy
     
 def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, bootNum=1000, pvalueMethod=1000, \
-    fTransform=simpleAverage, zNormalize=noZeroNormalize, varianceX=1, resultFile=None):
+    fTransform=simpleAverage, zNormalize=noZeroNormalize, varianceX=1, resultFile=None, firstFactorLabels=None, secondFactorLabels=None):
   """ calculate pairwise LS scores and p-values
 
     	Args:
