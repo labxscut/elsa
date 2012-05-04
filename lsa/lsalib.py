@@ -787,30 +787,40 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
       #P_PCC = P_PCC/2   # one tailed p-value
       #(DPCC, P_DPCC) = sp.stats.pearsonr(np.ma.average(Xz[:,Xs-1:Xs+Al],
       #print Xs, Ys, Al, Ys-Xs
+
       if Xs <= Ys:
         #print Xz[:,:Al].shape
         #print Yz[:,(Ys-Xs):(Ys-Xs)+Al].shape
-        try:
-          (SPCC, P_SPCC) = sp.stats.pearsonr(np.ma.mean(Xz[:,:Al], axis=0), np.ma.mean(Yz[:,(Ys-Xs):(Ys-Xs+Al)], axis=0)) # corr for shifted-cut seq
-          (SSCC, P_SSCC) = sp.stats.spearmanr(np.ma.mean(Xz[:,:Al], axis=0), np.ma.mean(Yz[:,(Ys-Xs):(Ys-Xs+Al)], axis=0)) # corr for shifted-cut seq
-        except FloatingPointError:
-          (SPCC, P_SPCC) = (np.nan, np.nan)
-          (SSCC, P_SSCC) = (np.nan, np.nan)
-          #print np.ma.mean(Xz[:,:Al], axis=0), np.ma.mean(Xz[:,:Al], axis=0).mask, \
-          #  np.ma.mean(Yz[:,(Ys-Xs):(Ys-Xs+Al)], axis=0), np.ma.mean(Yz[:,(Ys-Xs):(Ys-Xs+Al)], axis=0).mask
-          #quit()
+        X_seg = Xz[:,:(Xz.shape[1]-(Ys-Xs))]
+        Y_seg = Yz[:,(Ys-Xs):Yz.shape[1]]
       else:
-        #print Xz[:,(Xs-Ys):(Xs-Ys)+Al].shape
-        #print Yz[:,:Al].shape
-        try:
-          (SPCC, P_SPCC) = sp.stats.pearsonr(ma_average(Xz[:,(Xs-Ys):(Xs-Ys+Al)], axis=0), ma_average(Yz[:,:Al], axis=0)) # corr for shifted-cut seq
-          (SSCC, P_SSCC) = sp.stats.pearsonr(ma_average(Xz[:,(Xs-Ys):(Xs-Ys+Al)], axis=0), ma_average(Yz[:,:Al], axis=0)) # corr for shifted-cut seq
-        except FloatingPointError:
-          (SPCC, P_SPCC) = (np.nan, np.nan)
-          (SSCC, P_SSCC) = (np.nan, np.nan)
-      
+        X_seg = Xz[:,(Xs-Ys):Xz.shape[1]]
+        Y_seg = Yz[:,:(Yz.shape[1]-(Xs-Ys))]
+      #print "Al=", Al, "X shape", Xz.shape, "Y shape", Yz.shape
+      #print "Xs=", Xs, X_seg.shape
+      #print "Ys=", Ys, Y_seg.shape
+      #if Xs != Ys:
+      #  quit()
+
+      try:
+        (SPCC, P_SPCC) = sp.stats.pearsonr(np.ma.mean(X_seg, axis=0), np.ma.mean(Y_seg, axis=0)) 
+        # corr for shifted-cut seq
+        (SSCC, P_SSCC) = sp.stats.spearmanr(np.ma.mean(X_seg, axis=0), np.ma.mean(Y_seg, axis=0)) 
+        # corr for shifted-cut seq
+        if np.isnan(SSCC) or np.isnan(SPCC): 
+          print "Al=", Al, "X shape", Xz.shape, "Y shape", Yz.shape
+          print "Xs=", Xs, X_seg.shape
+          print "Ys=", Ys, Y_seg.shape
+          quit()
+      except FloatingPointError:
+        (SPCC, P_SPCC) = (np.nan, np.nan)
+        (SSCC, P_SSCC) = (np.nan, np.nan)
+        #print np.ma.mean(Xz[:,:Al], axis=0), np.ma.mean(Xz[:,:Al], axis=0).mask, \
+        #  np.ma.mean(Yz[:,(Ys-Xs):(Ys-Xs+Al)], axis=0), np.ma.mean(Yz[:,(Ys-Xs):(Ys-Xs+Al)], axis=0).mask
+        #quit()
+
       #This Part Must Follow Static Calculation Part
-      #Otherwise Yz may be changed
+      #Otherwise Yz may be changed, now it is copied
       #np.ma.array(copy=True) to copy, otherwise is only reference
       if pvalueMethod >= 0:
         Xp = np.ma.array(Xz,copy=True)
