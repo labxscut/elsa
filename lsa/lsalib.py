@@ -807,11 +807,11 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
         # corr for shifted-cut seq
         (SSCC, P_SSCC) = sp.stats.spearmanr(np.ma.mean(X_seg, axis=0), np.ma.mean(Y_seg, axis=0)) 
         # corr for shifted-cut seq
-        if np.isnan(SSCC) or np.isnan(SPCC): 
-          print "Al=", Al, "X shape", Xz.shape, "Y shape", Yz.shape
-          print "Xs=", Xs, X_seg.shape
-          print "Ys=", Ys, Y_seg.shape
-          quit()
+        #if np.isnan(SSCC) or np.isnan(SPCC): 
+        #  print "Al=", Al, "X shape", Xz.shape, "Y shape", Yz.shape
+        #  print "Xs=", Xs, X_seg.shape
+        #  print "Ys=", Ys, Y_seg.shape
+        #  quit()
       except FloatingPointError:
         (SPCC, P_SPCC) = (np.nan, np.nan)
         (SSCC, P_SSCC) = (np.nan, np.nan)
