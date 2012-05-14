@@ -201,7 +201,7 @@ def readPvalue(P_table, R, N, x_sd=1, M=1, alpha=1, beta=1, x_decimal=3):
   # x' = R*M/(alpha*beta*sqrt(N)*sd) * 10^(x_decimal)
   # has to ceil the x value to avoid round to 0, which is not amenable to calculation
   #print "x=", int(np.around(S*np.sqrt(timespots)*(10**x_decimal)))
-  xi = int(np.around(R*M/(alpha*beta*np.sqrt(N))*(10**x_decimal)))    #
+  xi = int(np.around(R*M/np.sqrt(alpha*beta*N)*(10**x_decimal)))    #
   if xi in P_table:
     return P_table[xi]
   else:
