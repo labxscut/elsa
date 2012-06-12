@@ -711,7 +711,7 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
     assert firstFactorNum == secondFactorNum
     pairwiseNum = firstFactorNum*(firstFactorNum-1)/2
   else:
-    pairwiseNum = firstFactorNum*scecondFactorNum
+    pairwiseNum = firstFactorNum*secondFactorNum
   lsaTable = [None]*pairwiseNum
   pvalues = np.zeros(pairwiseNum, dtype='float')
   pccpvalues = np.zeros(pairwiseNum, dtype='float')

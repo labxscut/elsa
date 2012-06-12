@@ -51,7 +51,7 @@ def main():
                         m is number of variables, r is number of replicates, s it number of time spots; \n \
                         first row: #header  s1r1 s1r2 s2r1 s2r2; second row: x  ?.?? ?.?? ?.?? ?.??; for a 1 by (2*2) data")
   parser.add_argument("resultFile", metavar="resultFile", type=argparse.FileType('w'), help="the output result file")
-  parser.add_argument("-e", "--extraFile", dest="extraFile", default="",
+  parser.add_argument("-e", "--extraFile", dest="extraFile", default=None, type=argparse.FileType('r'),
                         help="specify an extra datafile, otherwise the first datafile will be used \n \
                             and only lower triangle entries of pairwise matrix will be computed")
   parser.add_argument("-d", "--delayLimit", dest="delayLimit", default=3, type=int, 
@@ -149,8 +149,8 @@ def main():
   else:
     zNormalize = lsalib.noZeroNormalize # fallback to default
   
-  print "\t".join(['delayLimit','fillMethod','pvalueMethod','dataFile','resultFile','repNum','spotNum','bootNum','transFunc','normMethod','xVariance'])
-  print "\t".join(['%s']*11) % (delayLimit,fillMethod,pvalueMethod,dataFile.name,resultFile.name,repNum,spotNum,bootNum,transFunc,normMethod,str(varianceX))
+  print "\t".join(['delayLimit','fillMethod','pvalueMethod','dataFile','extraFile','resultFile','repNum','spotNum','bootNum','transFunc','normMethod','xVariance'])
+  print "\t".join(['%s']*12) % (delayLimit,fillMethod,pvalueMethod,dataFile.name,extraFile.name,resultFile.name,repNum,spotNum,bootNum,transFunc,normMethod,str(varianceX))
   
   #start timing main
   start_time = time.time()
@@ -171,11 +171,12 @@ def main():
       dataFile.seek(0)  #rewind
       secondFactorLabels=list(np.genfromtxt( dataFile, comments='#', delimiter='\t', usecols=xrange(0,1), dtype='string' ))
     else:
-      extraData=lsaio.tryIO(extraFile,'w')
-      secondData=np.genfromtxt( extraData, comments='#', delimiter='\t', missing_values=['na','','NA'], \
+      #dataFile.close()  #incase feeding the same file twice
+      extraFile.seek(0)
+      secondData=np.genfromtxt( extraFile, comments='#', delimiter='\t', missing_values=['na','','NA'], \
           filling_values=np.nan, usecols=range(1,spotNum*repNum+1) )
-      dataFile.seek(0)  #rewind
-      secondFactorLabels=list(np.genfromtxt( extraData, comments='#', delimiter='\t', usecols=xrange(0,1), dtype='string' ))
+      extraFile.seek(0)  #rewind
+      secondFactorLabels=list(np.genfromtxt( extraFile, comments='#', delimiter='\t', usecols=xrange(0,1), dtype='string' ))
   except:
     print >>sys.stderr, "unexpected error:", sys.exc_info()[0]
     print >>sys.stderr, "error reading dataFile, please check the input format, spotNum and repNum \n \
