@@ -49,6 +49,8 @@ import numpy as np
 import scipy as sp
 import scipy.interpolate
 import scipy.stats
+import statlib
+import statlib.stats
 
 #import lower level resource
 try:
@@ -86,6 +88,13 @@ pipi_inv = 1/pipi
 #	[ f1, f2, L-score, L_low, L_up, X_start, Y_start, length, P/N, P-value, PCC,  PCC P-val,  Qvalue  ]
 #	[ 1,  2,  3,       4,     5,    6,       7,       8,      9,   10,      11,   12,         13      ]
 ############################### 
+
+def calc_spearmanr(Xz, Yz, sfunc=scipy.stats.spearmanr):
+  mask = np.logical_or(Xz.mask, Yz.mask)
+  Xz.mask = mask
+  Yz.mask = mask
+  (SCC, P_SCC) = sfunc(Xz.compressed(), Yz.compressed()) # two tailed p-value
+  return (SCC, P_SCC)
         
 def singleLSA(series1, series2, delayLimit, fTransform, zNormalize, keepTrace=True):
   """	do local simularity alignment 
@@ -302,7 +311,7 @@ def storeyQvalue(pvalues, lam=np.arange(0,Q_lam_max,Q_lam_step), method='smoothe
   
   #assume pvalues is an array with possible nans
   #get a list of non nan pvalues, do the same procedure, putback to original list
-  mpvalues = np.ma.masked_invalid(pvalues)
+  mpvalues = np.ma.masked_invalid(pvalues,copy=True)
   rpvalues = mpvalues[~mpvalues.mask]
   p_num = len(pvalues)
   rp_num = len(rpvalues)
@@ -530,7 +539,7 @@ def tied_rank(values):
     #mV = sV
   for idx in nans:
     sV = np.insert(sV, idx, np.nan)   #insert nan to original place, need return masked? yes
-  sV = np.ma.masked_invalid(sV)
+  sV = np.ma.masked_invalid(sV,copy=True)
   #print "sV=", sV
 
   return sV 
@@ -569,7 +578,7 @@ def percentileNormalize(tseries):
   """
   ranks = tied_rank(tseries)
   #print "ranks=", ranks
-  nt = np.ma.masked_invalid(sp.stats.distributions.norm.ppf( ranks/(len(ranks)-np.sum(ranks.mask)+1) ))
+  nt = np.ma.masked_invalid(sp.stats.distributions.norm.ppf( ranks/(len(ranks)-np.sum(ranks.mask)+1) ),copy=True)
   #print "nt=", nt
   #nt = np.nan_to_num(nt)              #filling zeros to nan, shall be no na's from here on
   nt = nt.filled(fill_value=0)         #filling zeros to nan, shall be no na's from here on
@@ -586,7 +595,7 @@ def percentileZNormalize(tseries):
   """
   ranks = tied_rank(tseries)
   #print "ranks=", ranks
-  nt = np.ma.masked_invalid(sp.stats.distributions.norm.ppf( ranks/(len(ranks)-np.sum(ranks.mask)+1) ))
+  nt = np.ma.masked_invalid(sp.stats.distributions.norm.ppf( ranks/(len(ranks)-np.sum(ranks.mask)+1) ),copy=True)
   try:
     zt = (nt - np.ma.mean(nt, axis=0))/np.ma.std(nt)
   except FloatingPointError:
@@ -614,7 +623,7 @@ def noZeroNormalize(tseries):
   #print "none zero tseries=", nt, nt.mask
   ranks = tied_rank(nt)
   #print ranks, ranks.mask, len(ranks)-np.sum(ranks.mask), ranks/(np.sum(ranks.mask)+1) 
-  nt = np.ma.masked_invalid(sp.stats.distributions.norm.ppf( ranks/(len(ranks)-np.sum(ranks.mask)+1) ))
+  nt = np.ma.masked_invalid(sp.stats.distributions.norm.ppf( ranks/(len(ranks)-np.sum(ranks.mask)+1) ),copy=True)
   #print np.ma.mean(nt, axis=0), np.ma.std(nt, axis=0)
   #print (nt - np.ma.mean(nt, axis=0))*(1/np.ma.std(nt, axis=0))
   try:
@@ -729,11 +738,11 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
     P_table = theoPvalue(Rmax=timespots, Dmax=delayLimit, precision=1./np.abs(pvalueMethod), x_decimal=my_decimal)
     #print P_table
   for i in xrange(0, firstFactorNum):
-    Xz = np.ma.masked_invalid(firstData[i]) #need to convert to masked array with na's, not F-normalized
+    Xz = np.ma.masked_invalid(firstData[i], copy=True) #need to convert to masked array with na's, not F-normalized
     for j in xrange(0, secondFactorNum):
       if onDiag and i>=j:
         continue   #only care lower triangle entries, ignore i=j entries
-      Yz = np.ma.masked_invalid(secondData[j])    # need to convert to masked array with na's, not F-normalized
+      Yz = np.ma.masked_invalid(secondData[j], copy=True)    # need to convert to masked array with na's, not F-normalized
       #if i == 36 or j == 36:
         #print "i=",i,"data=",firstData[i]
         #print "j=",j,"data=",secondData[j]
@@ -761,7 +770,8 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
       Al = len(LSA_result.trace)
       if Al == 0: #handel align impossibility, usually too many nas'
         (PCC, P_PCC) = sp.stats.pearsonr(ma_average(Xz, axis=0), ma_average(Yz, axis=0)) # two tailed p-value
-        (SCC, P_SCC) = sp.stats.spearmanr(ma_average(Xz, axis=0), ma_average(Yz, axis=0)) # two tailed p-value
+        #(SCC, P_SCC) = calc_spearmanr(ma_average(Xz, axis=0), ma_average(Yz, axis=0), statlib.stats.lspearmanr)
+        (SCC, P_SCC) = calc_spearmanr(ma_average(Xz, axis=0), ma_average(Yz, axis=0), scipy.stats.spearmanr) 
         pvalues[ti] = np.nan
         pccpvalues[ti] = P_PCC
         spccpvalues[ti] = np.nan
@@ -783,7 +793,9 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
       #print np.mean(Xz, axis=0), np.mean(Yz, axis=0)
 
       (PCC, P_PCC) = sp.stats.pearsonr(ma_average(Xz, axis=0), ma_average(Yz, axis=0)) # two tailed p-value
-      (SCC, P_SCC) = sp.stats.spearmanr(ma_average(Xz, axis=0), ma_average(Yz, axis=0)) # two tailed p-value
+      #(SCC, P_SCC) = calc_spearmanr(ma_average(Xz, axis=0), ma_average(Yz, axis=0), statlib.stats.lspearmanr) # two tailed p-value
+      (SCC, P_SCC) = calc_spearmanr(ma_average(Xz, axis=0), ma_average(Yz, axis=0), scipy.stats.spearmanr) 
+      #(SCC, P_SCC) = calc_spearmanr(ma_average(Xz, axis=0), ma_average(Yz, axis=0), scipy.stats.spearmanr) # two tailed p-value
       #P_PCC = P_PCC/2   # one tailed p-value
       #(DPCC, P_DPCC) = sp.stats.pearsonr(np.ma.average(Xz[:,Xs-1:Xs+Al],
       #print Xs, Ys, Al, Ys-Xs
@@ -803,9 +815,10 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
       #  quit()
 
       try:
-        (SPCC, P_SPCC) = sp.stats.pearsonr(np.ma.mean(X_seg, axis=0), np.ma.mean(Y_seg, axis=0)) 
+        (SPCC, P_SPCC) = sp.stats.pearsonr(ma_average(X_seg, axis=0), ma_average(Y_seg, axis=0)) 
         # corr for shifted-cut seq
-        (SSCC, P_SSCC) = sp.stats.spearmanr(np.ma.mean(X_seg, axis=0), np.ma.mean(Y_seg, axis=0)) 
+        #(SSCC, P_SSCC) = calc_spearmanr(ma_average(X_seg, axis=0), ma_average(Y_seg, axis=0), statlib.stats.lspearmanr) 
+        (SSCC, P_SSCC) = calc_spearmanr(ma_average(X_seg, axis=0), ma_average(Y_seg, axis=0), scipy.stats.spearmanr) 
         # corr for shifted-cut seq
         #if np.isnan(SSCC) or np.isnan(SPCC): 
         #  print "Al=", Al, "X shape", Xz.shape, "Y shape", Yz.shape
