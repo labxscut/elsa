@@ -115,6 +115,10 @@ def main():
   transFunc = vars(arg_namespace)['transFunc']
   bootNum = vars(arg_namespace)['bootNum']
   spotNum = vars(arg_namespace)['spotNum']
+  try:
+    extraFile_name = extraFile.name 
+  except AttributeError:
+    extraFile_name = ''
 
   #assign transform function
   if transFunc == 'SD':
@@ -150,7 +154,7 @@ def main():
     zNormalize = lsalib.noZeroNormalize # fallback to default
   
   print "\t".join(['delayLimit','fillMethod','pvalueMethod','dataFile','extraFile','resultFile','repNum','spotNum','bootNum','transFunc','normMethod','xVariance'])
-  print "\t".join(['%s']*12) % (delayLimit,fillMethod,pvalueMethod,dataFile.name,extraFile.name,resultFile.name,repNum,spotNum,bootNum,transFunc,normMethod,str(varianceX))
+  print "\t".join(['%s']*12) % (delayLimit,fillMethod,pvalueMethod,dataFile.name,extraFile_name,resultFile.name,repNum,spotNum,bootNum,transFunc,normMethod,str(varianceX))
   
   #start timing main
   start_time = time.time()
