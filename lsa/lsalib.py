@@ -76,6 +76,7 @@ except ImportError:
 
 #global variable, stores calculated p-values.
 #P_table = dict()
+disp_decimal=8
 kcut_min=100
 Rmax_min=10
 my_decimal = 2    # preset x step size for P_table
@@ -899,7 +900,7 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
   #print lsaTable
   for row in lsaTable:
     print >>resultFile, "\t".join(['%s']*len(col_labels)) % \
-      tuple([firstFactorLabels[row[0]], secondFactorLabels[row[1]] ] + ["%.4f" % np.round(v, decimals=4) if isinstance(v, float) else v for v in row[2:]])
+      tuple([firstFactorLabels[row[0]], secondFactorLabels[row[1]] ] + ["%f" % np.round(v, decimals=disp_decimal) if isinstance(v, float) else v for v in row[2:]])
 
 def test():
   """ self test script
