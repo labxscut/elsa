@@ -30,13 +30,25 @@
 #THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #public libs
-import argparse, sys, os, csv, re
+import argparse, sys, os, csv, re, rpy2
+import numpy as np
 try:
   # installed 
   from lsa import lsaio
 except ImportError:
   # debug
   import lsaio
+
+import rpy2.rlike.container as rlc
+import rpy2.robjects as ro
+from rpy2.robjects.numpy2ri import numpy2ri
+ro.conversion.py2ri = numpy2ri
+r = ro.r
+
+print '''setwd("%s")''' % os.environ.get('PWD')
+r('''setwd("%s")''' % os.environ.get('PWD'))
+#r('''library(graphics)''')
+#r('''library(gplots)''')
 
 def main():
 
@@ -46,22 +58,12 @@ def main():
   parser.add_argument("rawFile", metavar= "rawFile", type=argparse.FileType('rU'), help="the raw lsa file")
   parser.add_argument("entryFile", metavar= "entryFile", type=argparse.FileType('w'), help="the query result file")
 
-  parser.add_argument("-p", "--pValue", dest="pValue", default=0.05, type=float,
-                      help="specify the highest pValue threshold for querying, default: 0.05") 
-  parser.add_argument("-q", "--qValue", dest="qValue", default=0.05, type=float,
-                      help="specify the highest qValue threshold for querying, default: 0.05") 
-  parser.add_argument("-c", "--PCC", dest="PCC", default=1., type=float,
-                      help="specify the highest Pearson Correlation Coefficient for querying, default: 1.0")
-  #parser.add_argument("-pc", "--pPCC", dest="pPCC", default=0.00, type=float,
-  #                    help="specify the lowest Pearson Correlation Coefficient p-value for querying, default: 0")
-  #parser.add_argument("-qc", "--qPCC", dest="qPCC", default=0.00, type=float,
-  #                    help="specify the lowest Pearson Correlation Coefficient q-value for querying, default: 0")
-  parser.add_argument("-d", "--delayLimit", dest="delayLimit", default=3, type=int,
-                      help="specify the longest delay threshhold for querying, default: 3")
-  #parser.add_argument("-e", "--delayLeast", dest="delayLeast", default=0, type=int,
-  #                    help="specify the least delay threshhold for querying, default: 0")
-  parser.add_argument("-l", "--listFactors", dest="listFactors", default="",
-                      help="query only the factors of interest in the list separated by comma: f1,f2,f3")
+  parser.add_argument("-q", "--queryLine", dest="queryLine", default=None,
+                      help="specify the highest pValue threshold for querying, default: None \n \
+                        formatting a query: \n \
+                        '[!]lsa$Key1[>,<,>=,<=,==,!=]V1[|,&][!]lsa$Key2[>,<,>=,<=,==,!=]V2[|,&]...' \n \
+                        and any groupings using '(' and ')' e.g. \n \
+                        '(!lsa$P>0.01)&(lsa$Q<0.01)'") 
   parser.add_argument("-x", "--xgmmlFile", dest="xgmmlFile", default="",
                       help="if specified, will also produce a XGMML format file for cytoscape")
   parser.add_argument("-s", "--sifFile", dest="sifFile", default="",
@@ -75,76 +77,49 @@ def main():
   
   rawFile = vars(arg_namespace)['rawFile']
   entryFile = vars(arg_namespace)['entryFile']
-  pValue = vars(arg_namespace)['pValue']
-  qValue = vars(arg_namespace)['qValue']
-  PCC = vars(arg_namespace)['PCC']
-  #pPCC = vars(arg_namespace)['pPCC']
-  #qPCC = vars(arg_namespace)['qPCC']
-  delayLimit = vars(arg_namespace)['delayLimit']
-  #delayLeast = vars(arg_namespace)['delayLeast']
+  queryLine = vars(arg_namespace)['queryLine']
+  print queryLine
   xgmmlFile = vars(arg_namespace)['xgmmlFile']
   sifFile = vars(arg_namespace)['sifFile']
-  listFactors = vars(arg_namespace)['listFactors']
   analysisTitle = os.path.basename(rawFile.name)
+  rawFile.close()
+  entryFile.close()
 
-  #print >>sys.stderr, "delayLimit=" + repr(delayLimit)
-  #print >>sys.stderr, "threshold pValue=" + repr(pValue)
-  #print >>sys.stderr, "threshold pCorr=" + repr(pCorr)
+  print >>sys.stderr, "reading the lsatable..."
+  r('''lsa <- read.delim("%s")''' % rawFile.name)
 
-  #print >>sys.stderr, "testing lsaFile and outputFile..."
+  try:
+    print >>sys.stderr, "querying the lsatable..."
+    r('''lsa_select <- lsa[%s,]''' % queryLine)
+  except ValueError:
+    print >>sys.stderr, "error query formatting, try again"
+    quit()
+  try:
+    print >>sys.stderr, "writing up result file..."
+    r('''write.table( lsa_select, file="%s", quote=FALSE, row.names=FALSE, sep='\t' )''' % entryFile.name)
+  except ValueError:
+    print >>sys.stderr, "no entry selected, try again"
+    quit()
 
-  # rawTable is a list-of-list, where the i-th list is:
-  # [ f1, f2, L-score, L_low, L_up, X_start, Y_start, length, Delay, P-value, PCC,  PCC P-val,  Qvalue, Qpcc  ]
-  # [ 1,  2,  3,       4,     5,    6,       7,       8,      9,     10,      11,   12,         13    , 14  ]
-
-  rawTable = lsaio.readTable(rawFile, '\t')
-
-  print >>sys.stderr, "querying the lsatable..."
-
-  #print "pValue, qValue, PCC, delayLimit, listFactors", pValue, qValue, PCC, delayLimit, listFactors
-  #print rawTable
-  queryTable=rawTable
-  queryTable=lsaio.lowPartTable(queryTable, 10, pValue)                        #P<=pValue
-  queryTable=lsaio.lowPartTable(queryTable, 13, qValue)                        #Q<=qValue
-  queryTable=lsaio.lowPartTable(queryTable, 11, PCC)                          #|PCC|<=PCC
-  queryTable=lsaio.upPartTable(queryTable,  11, -PCC)
-  #queryTable=lsaio.upPartTable(queryTable,  12, pPCC)                         #Ppcc<pPCC
-  #queryTable=lsaio.upPartTable(queryTable,  13, qPCC)                          #Qpcc<qPCC
-  queryTable=lsaio.lowPartTable(queryTable, 9, float(delayLimit))              #|d|<=D
-  queryTable=lsaio.upPartTable(queryTable,  9, -float(delayLimit))
-  #queryTable=lsaio.upPartTable(queryTable, 9, float(delayLeast))               #|d|>=E
-  #queryTable=lsaio.lowPartTable(queryTable,  9, -float(delayLeast))
-
-  #print >>sys.stderr, "removing trivial case where zero vectors perfectly correlated..." 
-
-  #if removeZeor == "yes": # remove zero vector trivial cases
-  #queryTable=lsaio.nonequalPartTable(queryTable, 3, 1.)
-
-  #if referFile != "":
-  #    print "labeling the result table..."
-  #    referTable=lsaio.tryIO(referFile, "r")
-  #    factorLabels=lsaio.readFirstCol(referTable)
-  #    lsaio.closeIO(referTable)
-  #    queryTable=lsaio.labelTable(queryTable, 1, factorLabels)
-  #    queryTable=lsaio.labelTable(queryTable, 2, factorLabels)
-
-  if listFactors != "":
-    print >>sys.stderr, "selecting entries involve interested factors..."
-    listFactors = listFactors.split(',')
-    queryTable=lsaio.selectFactors(queryTable, listFactors)
-
-  #print queryTable
-
-  print >>sys.stderr, "writing up result file..."
-  lsaio.writeTable(entryFile, queryTable, '\t')
+  
+  lsa_size=r('''dim(lsa_select)''')[0]
+  #rpy2 and R interfacing debug
+  #print r.lsa_select
+  #print r('''dim(lsa_select)''')[0]
+  #print r.lsa_select.rx(1, True)
+  #print tuple(r['colnames'](r.lsa_select))
+  #print tuple(r['as.character'](r.lsa_select.rx(3, True)))
+  #print tuple(r.lsa_select.rx(1, True)[2])[0]
+  #print r['''as.character'''](r.lsa_select.rx(1, True)[0])[0]
+  #print tuple(r.lsa_select.rx(1, True)[0])
 
   if xgmmlFile != "":
     print >>sys.stderr, "filtering result as a XGMML file for visualization such as cytoscape..."
-    print >>lsaio.tryIO(xgmmlFile,'w'), lsaio.toXgmml(queryTable, analysisTitle)
+    print >>lsaio.tryIO(xgmmlFile,'w'), lsaio.toXgmml(r.lsa_select, lsa_size, analysisTitle)
 
   if sifFile != "":
-    print >>sys.stderr, "filtering result as a XGMML file for visualization such as cytoscape..."
-    lsaio.writeTable(lsaio.tryIO(sifFile,'w'), lsaio.toSif(queryTable), '\t')
+    print >>sys.stderr, "filtering result as a SIF file for visualization such as cytoscape..."
+    lsaio.writeTable(lsaio.tryIO(sifFile,'w'), lsaio.toSif(r.lsa_select, lsa_size))
 
   print >>sys.stderr, "finishing up..."
   print >>sys.stderr, "Thank you for using lsa-query, byebye!"

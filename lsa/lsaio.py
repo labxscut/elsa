@@ -34,9 +34,15 @@
     interpreting the parameter to actual list index
 """
 
-import os, sys, csv
+import os, sys, csv, rpy2
 import xml.etree.ElementTree as etree
 import xml.dom.minidom
+
+import rpy2.rlike.container as rlc
+import rpy2.robjects as ro
+from rpy2.robjects.numpy2ri import numpy2ri
+ro.conversion.py2ri = numpy2ri
+r = ro.r
 
 def tryIO( file, mode ):
   """ Test the IO file before using it.
@@ -223,15 +229,17 @@ def selectFactors( table, list, skiprows=1 ):
   return newTable
 
 # filter of XGMML 
-def toXgmml( table, title, skiprows=1 ):
+def toXgmml( lsa_table, lsa_size, title, LS_idx=3, Delay_idx=9):
   """ filter lsa table into xgmml format
   table - input table
   """
   
   nodes = set()
-  for i in xrange(skiprows, len(table)):
-    nodes.add(table[i][0])
-    nodes.add(table[i][1])
+  for i in xrange(1, lsa_size+1):
+    node_x = r['''as.character''']((lsa_table.rx(i,True)[0]))[0]
+    node_y = r['''as.character''']((lsa_table.rx(i,True)[1]))[0]
+    nodes.add(node_x)
+    nodes.add(node_y)
 
   xgmml_element=etree.Element('graph')
   xgmml_element.set('xmlns:dc', "http://purl.org/dc/elements/1.1/")
@@ -255,29 +263,33 @@ def toXgmml( table, title, skiprows=1 ):
   #[ f1, f2, LS, lowCI, upCI, Xs, Ys, Len, Delay, P, PCC,  Ppcc,  Q, Qpcc ]
   #[ 1,  2,  3,      4,    5,  6,  7,   8,     9,10,  11,    12, 13, 14 ]
 
-  di = 8 #9-1
-  li = 2 #3-1
+  di = Delay_idx-1 #9-1
+  li = LS_idx-1 #3-1
 
-  for i in xrange(skiprows, len(table)):
+  for i in xrange(1, lsa_size+1):
+    node_x = r['''as.character''']((lsa_table.rx(i,True)[0]))[0]
+    node_y = r['''as.character''']((lsa_table.rx(i,True)[1]))[0]
     #c_code=''
     #d_code=''
-    if int(table[i][di]) > 0:
+    #print(tuple(lsa_table.rx(i,True)[di])[0])
+    if tuple(lsa_table.rx(i,True)[di])[0] > 0:
       d_code = 'dr'      #direction retard
-    elif int(table[i][di]) < 0:
+    elif tuple(lsa_table.rx(i,True)[di])[0] < 0:
       d_code = 'dl'      #direction lead
     else:
       d_code = 'u'
-    if float(table[i][li]) >= 0:
+    #print(lsa_table.rx(i,True)[li])
+    if tuple(lsa_table.rx(i,True)[li])[0] >= 0:
       c_code = 'p'
     else:
       c_code = 'n'
     interaction = c_code+d_code
     #print table[i][di], table[i][li], interaction
-    edge_label = '_'.join( [table[i][0], interaction, table[i][1]] )
+    edge_label = '_'.join( [node_x, interaction, node_y] )
     edge_element = etree.SubElement(xgmml_element, 'edge')
     edge_element.set('label', edge_label )
-    edge_element.set('source', table[i][0] )
-    edge_element.set('target', table[i][1] )
+    edge_element.set('source', node_x )
+    edge_element.set('target', node_y )
     interaction_element = etree.SubElement(edge_element, 'att')
     interaction_element.set('type', 'string')
     interaction_element.set('name', 'interaction')
@@ -285,7 +297,7 @@ def toXgmml( table, title, skiprows=1 ):
     LS_element = etree.SubElement(edge_element, 'att')
     LS_element.set('type', 'real')
     LS_element.set('name', 'LS')
-    LS_element.set('value', table[i][2])
+    LS_element.set('value', "%.4f" % tuple(lsa_table.rx(i,True)[2])[0])
     #P_element = etree.SubElement(edge_element, 'att')
     #P_element.set('type', 'real')
     #P_element.set('name', 'P')
@@ -300,40 +312,41 @@ def toXgmml( table, title, skiprows=1 ):
 
 
 # filter for SIF format table
-def toSif( table, LS_idx=3, Delay_idx=9, skiprows=1):
+def toSif( lsa_table, lsa_size, LS_idx=3, Delay_idx=9):
   """ filter the lsa table for sif format which can be accepted by Cytoscape
   table - input table
   skiprows - number of rows to skip
   """
+  lsa_cols = list(r['colnames'](r.lsa_select))
   sifTable = []
   li = LS_idx-1
   di = Delay_idx-1
   #(li, di) = (LS_idx-1, Delay_idx-1)
-  idx = 0
-  for row in table:
-    if idx < skiprows:
-      idx = idx +1
-      sifTable.append( [row[0], "interaction"] + row[1:] )
+  for i in xrange(0,lsa_size+1): 
+    if i < 1:
+      sifTable.append( ["X", "interaction", "Y"] + lsa_cols[2:]  )
       #print row[li], row[di]
       continue
     else:
+      node_x = r['''as.character''']((lsa_table.rx(i,True)[0]))[0]
+      node_y = r['''as.character''']((lsa_table.rx(i,True)[1]))[0]
       relation = "u"
-      if int(row[di]) == 0: # non delayed, undirected
-        if float(row[li]) > 0:
+      if tuple(lsa_table.rx(i,True)[di])[0] == 0: # non delayed, undirected
+        if tuple(lsa_table.rx(i,True)[li])[0] > 0:
           relation = "pu"
-        elif float(row[li]) < 0:
+        elif tuple(lsa_table.rx(i,True)[li])[0] < 0:
           relation = "nu"
-      elif int(row[di]) < 0: # X lead Y  
-        if float(row[li]) > 0:
+      elif tuple(lsa_table.rx(i,True)[di])[0] < 0: # X lead Y  
+        if tuple(lsa_table.rx(i,True)[li])[0] > 0:
           relation = "pdl"
-        elif float(row[li]) < 0:
+        elif tuple(lsa_table.rx(i,True)[li])[0] < 0:
           relation = "ndl"
       else: # X retard Y  
-        if float(row[li]) > 0:
+        if tuple(lsa_table.rx(i,True)[li])[0] > 0:
           relation = "pdr"
-        elif float(row[li]) < 0:
+        elif tuple(lsa_table.rx(i,True)[li])[0] < 0:
           relation = "ndr"
-      sifTable.append( [row[0], relation] + row[1:] )
+      sifTable.append( [node_x, relation, node_y] + list(r['as.character'](r.lsa_select.rx(i, True)))[2:] )
   return sifTable
 
 if __name__ == "__main__":

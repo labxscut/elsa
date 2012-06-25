@@ -704,7 +704,7 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
   """	
 
   col_labels= ['X','Y','LS','lowCI','upCI','Xs','Ys','Len','Delay','P','PCC','Ppcc','SPCC','Pspcc','SCC','Pscc','SSCC','Psscc',
-            'Q','Qpcc','Qspcc','Qscc','Qsscc']
+            'Q','Qpcc','Qspcc','Qscc','Qsscc','Xi','Yi']
   print >>resultFile,  "\t".join(col_labels)
 
   firstFactorNum = firstData.shape[0]
@@ -900,7 +900,123 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
   #print lsaTable
   for row in lsaTable:
     print >>resultFile, "\t".join(['%s']*len(col_labels)) % \
-      tuple([firstFactorLabels[row[0]], secondFactorLabels[row[1]] ] + ["%f" % np.round(v, decimals=disp_decimal) if isinstance(v, float) else v for v in row[2:]])
+      tuple( [firstFactorLabels[row[0]], secondFactorLabels[row[1]]]  
+          + ["%f" % np.round(v, decimals=disp_decimal) if isinstance(v, float) else v for v in row[2:]]
+          + [row[0]+1, row[1]+1] )
+
+def applyLA(inputData, scoutVars, bootCI=.95, bootNum=1000, pvalueMethod=1000, \
+    fTransform=simpleAverage, zNormalize=noZeroNormalize, resultFile=None):
+  """ calculate pairwise LS scores and p-values
+
+    	Args:
+    		firstData(np.array): 	numpy data array with correct format factor_num x timespot_num x replicte_num, possibly nans
+    		secondData(np.array): 	numpy data array with correct format factor_num x timespot_num x replicte_num, possibly nans
+                noDiag(bool):           no results for diagnol comparisions
+    		delayLimit(int): 	maximum time unit of delayed response allowed
+     		bootCI(float): 		bootstrap confidence interval size, 0 to 1
+    		bootNum(int): 		bootstrap number
+    		pvalueMethod(int): 	pvalue estimation method and precision
+    		ftransform(func): 	summarizing function for replicated data
+    		znormalize(func): 	normalizing function for ftransformed data
+    		
+    	Returns:
+    		A LSA table.
+    		each row in the table is a list in following format:
+    		[ Seq X's Idx, Seq Y's Idx, LS Score, CI_low, CI_high, X's Start Position, 
+        	Y's Start Position, Alignment Length, X delay to Y,
+        	P-value, Pearson' Correlation, P-value of PCC, Q-value ]
+        	
+  """	
+
+  col_labels= ['X','Y','Z','LA','lowCI','upCI','P','Q','Xi','Yi','Zi']
+  print >>resultFile,  "\t".join(col_labels)
+
+  inputFactorNum = inputData.shape[0]
+  inputRepNum = inputData.shape[1]
+  inputSpotNum = inputData.shape[2]
+  scoutNum = len(scoutVars)
+  #for now let's assume same rep number
+  #for now let's assume same length
+  laTable = [None]*inputFactorNum*scoutNum
+  pvalues = np.zeros(inputFactorNum*scoutNum, dtype='float')
+  #print factorNum, repNum, spotNum, lsaTable, pvalues
+
+  timespots = inputSpotNum #same length already assumed
+  replicates = inputRepNum
+  ti = 0
+  for i in xrange(0, scoutNum):
+    Xi = scoutVars[i-1][0] - 1
+    Yi = scoutVars[i-1][1] - 1
+    Xo = np.ma.masked_invalid(inputData[Xi], copy=True) #need to convert to masked array with na's, not F-normalized
+    Yo = np.ma.masked_invalid(inputData[Yi], copy=True) #need to convert to masked array with na's, not F-normalized
+    for j in xrange(0, inputFactorNum):
+      Zi = j
+      if Xi == Zi or Yi == Zi:
+        continue   #ignore redundant entries
+      Zo = np.ma.masked_invalid(inputData[Zi], copy=True)    # need to convert to masked array with na's, not F-normalized
+      if np.all(Yz.mask) or np.all(Xz.mask):  # not any unmasked value in Xz or Yz, all nan in input, continue
+        #lsaTable[ti] = [i, j, Smax,   Sl,     Su,     Xs,Ys,Al,Xs-Ys, lsaP,   PCC,    P_PCC,  SPCC,   P_SPCC, SCC,    P_SCC,  SSCC,   P_SSCC]
+        continue
+      LA_result = singleLA(Xo, Yo, Zo, fTransform, zNormalize)                          # do LA computation
+      #except NotImplementedError:
+      #  print "Xz=", Xz
+      #  print "Yz=", Yz
+      #  quit()
+          
+      LA_score = LA_result.score                                                               # get Smax
+
+      #This Part Must Follow Static Calculation Part
+      #Otherwise Yz may be changed, now it is copied
+      #np.ma.array(copy=True) to copy, otherwise is only reference
+      if pvalueMethod >= 0 or pvalueMethod < 0:
+        Xp = np.ma.array(Xo,copy=True)
+        Yp = np.ma.array(Yo,copy=True)
+        Zp = np.ma.array(Zo,copy=True)
+        laP = permuPvalue(Xp, Yp, Zp, pvalueMethod, np.abs(LA_score), fTransform, zNormalize)          # do Permutation Test
+      else: #reserved 
+        print "should not be receahed"
+      pvalues[ti] = laP
+      #print "bootstrap computing..."
+      if bootNum > 0: #do BS
+        Xb = np.ma.array(Xo,copy=True)
+        Yb = np.ma.array(Yo,copy=True)
+        Zb = np.ma.array(Zo,copy=True)
+        (LA_score, Sl, Su) = bootstrapCI(Xb, Yb, Zb, LA_score, bootCI, bootNum, fTransform, zNormalize)           # do Bootstrap CI
+      else: #skip BS
+        (LA_score, Sl, Su) = (LA_score, LA_score, LA_score)
+
+      #uncomment to verify Xz, Yz unchanged by bootstrap and permutation
+      #print 'i=',i,"Data=",firstData[i],"Xz=",Xz,"mask=",Xz.mask, "mask_invalid=", np.ma.masked_invalid(firstData[i])
+      #print 'j=',j,"Data=",secondData[j],"Yz=",Yz,"mask=",Yz.mask, "mask_invalid=", np.ma.masked_invalid(secondData[j])
+      #print ma_average(Xz, axis=0), "mask=", ma_average(Xz, axis=0).mask
+      #print ma_average(Yz, axis=0), "mask=", ma_average(Yz, axis=0).mask
+      #print sp.stats.pearsonr(ma_average(Xz, axis=0), ma_average(Yz, axis=0))
+      #quit()
+
+      # need +epsilon to avoid all zeros
+      laTable[ti] = [Xi, Yi, Zi, LA_score, Sl, Su, laP]
+      ti += 1
+      del LSA_result
+      #print "finalizing..."
+
+  #print lsaTable
+  #print "qvalues ..."
+  #pvalues = np.ma.masked_invalid(pvalues)
+  #pccpvalues = np.ma.masked_invalid(pccpvalues)
+  #print "pvalues", pvalues, np.isnan(np.sum(pvalues))
+  #print "pccpvalues", pccpvalues, np.isnan(np.sum(pccpvalues))
+  #print "lsaP"
+  laTable = laTalbe[:ti]
+  qvalues = storeyQvalue( pvalues )
+  for k in xrange(0, len(qvalues)):
+    laTable[k].append( qvalues[k] )
+    laTable[k] += [Xi, Yi, Zi]
+
+  #print lsaTable
+  for row in lsaTable:
+    print >>resultFile, "\t".join(['%s']*len(col_labels)) % \
+      tuple( [factorLabels[row[0], factorLabels[row[1], factorLabels[row[2]], 
+          + ["%f" % np.round(v, decimals=disp_decimal) if isinstance(v, float) else v for v in row[2:]]
 
 def test():
   """ self test script

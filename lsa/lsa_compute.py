@@ -44,22 +44,24 @@ except ImportError:
 def main():  
 
   # define arguments: delayLimit, fillMethod, pvalueMethod
-  parser = argparse.ArgumentParser(description="New LSA Commandline Tool")
+  parser = argparse.ArgumentParser(description="New Liquid Association Commandline Tool")
 
   parser.add_argument("dataFile", metavar="dataFile", type=argparse.FileType('r'), help="the input data file,\n \
                         m by (r * s)tab delimited text; top left cell start with '#' to mark this is the header line; \n \
                         m is number of variables, r is number of replicates, s it number of time spots; \n \
                         first row: #header  s1r1 s1r2 s2r1 s2r2; second row: x  ?.?? ?.?? ?.?? ?.??; for a 1 by (2*2) data")
+  parser.add_argument("scoutFile", dest="scoutFile", type=argparse.FileType('r'),
+                        help="the input datafile specify the scouting pairs, \n \
+                            it can be any tab delimited file (e.g. .lsa) with (xi, yi) pair indecies for scouting pairs")
   parser.add_argument("resultFile", metavar="resultFile", type=argparse.FileType('w'), help="the output result file")
-  parser.add_argument("-e", "--extraFile", dest="extraFile", default=None, type=argparse.FileType('r'),
-                        help="specify an extra datafile, otherwise the first datafile will be used \n \
-                            and only lower triangle entries of pairwise matrix will be computed")
-  parser.add_argument("-d", "--delayLimit", dest="delayLimit", default=3, type=int, 
-                    	help="specify the maximum delay possible, default: 3,\n choices: 0 to 6")
+  parser.add_argument("-x", "--xiCol", dest="xiCol", default=1, type=int, 
+                    	help="specify the x-th column to store Xi indecies")
+  parser.add_argument("-y", "--yiCol", dest="yiCol", default=2, type=int, 
+                    	help="specify the y-th column to store Yi indecies")
   parser.add_argument("-p", "--pvalueMethod", dest="pvalueMethod", default=1000, type=int,
                     	help="specify the method=sgn(pvalueMethod) and precision=1/abs(pvalueMethod) for p-value estimation, \n \
                             default: pvalueMethod=1000, i.e. precision=0.001 and mode=permutation \n \
-                            mode +: permutation approximaton; -: theoretical approximation. ")
+                            mode +: permutation approximaton; -: unused, fall back to permutation")
   parser.add_argument("-b", "--bootNum", dest="bootNum", default=0, type=int, choices=[0, 100, 200, 500, 1000, 2000],
                     	help="specify the number of bootstraps for 95%% confidence interval estimation, default: 100,\n \
                           choices: 0, 100, 200, 500, 1000, 2000. \n \
@@ -71,7 +73,7 @@ def main():
                     	help="specify the number of time spots, default: 4,                     \n \
                           must be provided and valid. ")
   parser.add_argument("-t", "--transFunc", dest="transFunc", default='simple', choices=['simple', 'SD', 'Med', 'MAD'],
-                      help="specify the method to summarize replicates data, default: simple, \n \
+                        help="specify the method to summarize replicates data, default: simple, \n \
                           choices: simple, SD, Med, MAD                                       \n \
                           NOTE:                                                               \n \
                           simple: simple averaging                                            \n \
