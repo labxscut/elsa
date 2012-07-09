@@ -116,6 +116,15 @@ LLA_Result DP_lla( const LLA_Data& data ){
   return lla_result;
 }
 
+float calc_LA(VectorDouble X, VectorDouble Y, VectorDouble Z){
+  //assert X.size() = Y.size() = Z.size() 
+  float sum=0;
+  for(int i=0; i<X.size(); i++){
+    sum += X[i]*Y[i]*Z[i];
+  }
+  return sum/X.size();
+}
+
 /*
 LLA_Result ST_lla( const LLA_Data& lla_data ) {
   LLA_Result lla_result;

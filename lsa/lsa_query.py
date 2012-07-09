@@ -45,7 +45,7 @@ from rpy2.robjects.numpy2ri import numpy2ri
 ro.conversion.py2ri = numpy2ri
 r = ro.r
 
-print '''setwd("%s")''' % os.environ.get('PWD')
+#print '''setwd("%s")''' % os.environ.get('PWD')
 r('''setwd("%s")''' % os.environ.get('PWD'))
 #r('''library(graphics)''')
 #r('''library(gplots)''')
@@ -78,7 +78,7 @@ def main():
   rawFile = vars(arg_namespace)['rawFile']
   entryFile = vars(arg_namespace)['entryFile']
   queryLine = vars(arg_namespace)['queryLine']
-  print queryLine
+  print "q=", queryLine
   xgmmlFile = vars(arg_namespace)['xgmmlFile']
   sifFile = vars(arg_namespace)['sifFile']
   analysisTitle = os.path.basename(rawFile.name)

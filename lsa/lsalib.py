@@ -780,7 +780,11 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
         pvalues[ti] = np.nan
         pccpvalues[ti] = P_PCC
         spccpvalues[ti] = np.nan
-        sccpvalues[ti] = P_SCC
+        try:
+          sccpvalues[ti] = P_SCC
+        except ValueError:
+          #print "error at lsalib P_SCC", P_SCC  #sometimes produce [], why?
+          sccpvalues[ti] = np.nan
         ssccpvalues[ti] = np.nan
         #lsaTable[ti] = [i, j, Smax,   Sl,     Su,     Xs,Ys,Al,Xs-Ys, lsaP,   PCC, P_PCC,  SPCC,   P_SPCC, SCC, P_SCC,   SSCC, P_SSCC]
         lsaTable[ti] =  [i, j, np.nan, np.nan, np.nan, 0, 0, 0, 0,     np.nan, PCC, P_PCC,  np.nan, np.nan, SCC, P_SCC, np.nan, np.nan]
@@ -981,7 +985,7 @@ def applyLA(inputData, scoutVars, factorLabels, bootCI=.95, bootNum=1000, pvalue
           + ["%f" % np.round(v, decimals=disp_decimal) if isinstance(v, float) else v for v in row[3:]] )
 
 def singleLA(series1, series2, series3, fTransform, zNormalize):
-  return calc_LA(zNormalize(fTransform(series1)),zNormalize(fTransform(series2)),zNormalize(fTransform(series3)))
+  return compcore.calc_LA(zNormalize(fTransform(series1)),zNormalize(fTransform(series2)),zNormalize(fTransform(series3)))
 
 def calc_LA(series1, series2, series3):
   n1 = len(series1)
@@ -1000,7 +1004,7 @@ def LAbootstrapCI(series1, series2, series3, LA_score, bootCI, bootNum, fTransfo
     Xb = np.ma.array([ sample_wr(series1[:,j], series1.shape[0]) for j in xrange(0,series1.shape[1]) ]).T
     Yb = np.ma.array([ sample_wr(series2[:,j], series2.shape[0]) for j in xrange(0,series2.shape[1]) ]).T
     Zb = np.ma.array([ sample_wr(series3[:,j], series3.shape[0]) for j in xrange(0,series3.shape[1]) ]).T
-    BS_set[i] = calc_LA(Xb, Yb, Zb)
+    BS_set[i] = compcore.calc_LA(Xb, Yb, Zb)
   BS_set.sort()                                 #from smallest to largest
   BS_mean = np.mean(BS_set)
   return ( BS_mean, BS_set[np.floor(bootNum*a1)-1], BS_set[np.ceil(bootNum*a2)-1] )
@@ -1012,7 +1016,7 @@ def LApermuPvalue(series1, series2, series3, pvalueMethod, LA_score, fTransform,
   Z = np.ma.array(series3)                                               #use = only assigns reference, must use a constructor
   for i in xrange(0, pvalueMethod):
     np.random.shuffle(Z.T)
-    PP_set[i] = calc_LA(X, Y, zNormalize(fTransform(Z)))
+    PP_set[i] = compcore.calc_LA(X, Y, zNormalize(fTransform(Z)))
   if LA_score >= 0:
     P_two_tail = np.sum(np.abs(PP_set) >= LA_score)/np.float(pvalueMethod)
   else:

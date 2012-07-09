@@ -60,8 +60,8 @@ def main():
                     	help="specify the y-th column to store Yi indecies")
   parser.add_argument("-p", "--pvalueMethod", dest="pvalueMethod", default=1000, type=int,
                     	help="specify the method=sgn(pvalueMethod) and precision=1/abs(pvalueMethod) for p-value estimation, \n \
-                            default: pvalueMethod=1000, i.e. precision=0.001 and mode=permutation \n \
-                            mode +: permutation approximaton; -: unused, fall back to permutation")
+                          default: pvalueMethod=1000, i.e. precision=0.001 and mode=permutation \n \
+                          mode +: permutation approximaton; -: unused, fall back to permutation")
   parser.add_argument("-b", "--bootNum", dest="bootNum", default=0, type=int, choices=[0, 100, 200, 500, 1000, 2000],
                     	help="specify the number of bootstraps for 95%% confidence interval estimation, default: 100,\n \
                           choices: 0, 100, 200, 500, 1000, 2000. \n \

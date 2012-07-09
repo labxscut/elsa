@@ -8,13 +8,15 @@
 
 using namespace std;
 
-int test();
-
 //Customized types
 typedef vector<double> VectorDouble;
 typedef vector<VectorDouble> MatrixDouble;
 typedef vector<int> VectorInt;
 typedef vector<VectorInt> MatrixInt;
+
+//easy functions
+int test();
+float calc_LA(VectorDouble, VectorDouble, VectorDouble);
 
 //// LSA section
 
