@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#lsa-compute -- computation script for LSA package to perform lsa table calculation 
+#la_compute -- computation script for Liquid Association calculation 
 
 #License: BSD
 
@@ -161,8 +161,16 @@ def main():
     inputData=np.genfromtxt( dataFile, comments='#', delimiter='\t', missing_values=['na','','NA'], \
         filling_values=np.nan, usecols=range(1,spotNum*repNum+1) )
     dataFile.seek(0)  #rewind
-    factorLabels=list(np.genfromtxt( dataFile, comments='#', delimiter='\t', usecols=xrange(0,1), dtype='string' ))
+    factorLabels=np.genfromtxt( dataFile, comments='#', delimiter='\t', usecols=xrange(0,1), dtype='string' )
+    if factorLabels.shape != ():
+      factorLabels=list(factorLabels)
+    else: #in case of single row
+      factorLabels=[str(factorLabels)]
+      inputData.shape=(1,inputData.shape[0])
   except:
+    dataFile.seek(0)
+    print >>sys.stderr, [str(np.genfromtxt( dataFile, comments='#', delimiter='\t', usecols=xrange(0,1), dtype='string' ))]
+    print >>sys.stderr, spotNum*repNum+1
     print >>sys.stderr, "unexpected error:", sys.exc_info()[0]
     print >>sys.stderr, "error reading dataFile, please check the input format, spotNum and repNum \n \
                          input shall be a tab delimited txt file with first line starts with '#' as column names and first column as factor labeles. \n \
@@ -170,8 +178,9 @@ def main():
                          An in total, it shall have spotNum * repNum numeric cells for repNum-replicated spotNum-timepoint series data. "
     exit(0)
 
+  print inputData.shape
   factorNum = inputData.shape[0]
-  tempData=np.zeros( ( factorNum, repNum, spotNum), dtype='float' ) # (num_rows-1) x (num_cols/repNum) x (repNum)
+  tempData=np.zeros( (factorNum, repNum, spotNum), dtype='float' ) # (num_rows-1) x (num_cols/repNum) x (repNum)
   for i in xrange(0, factorNum):
     for j in xrange(0, repNum):
       tempData[i,j] = inputData[i][np.arange(j,spotNum*repNum,repNum)]

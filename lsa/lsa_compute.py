@@ -91,9 +91,9 @@ def main():
                           quadratic: fill up with quadratic spline;             \n \
                           cubic: fill up with cubic spline;                \n \
                           nearest: fill up with nearest neighbor") 
-  parser.add_argument("-n", "--normMethod", dest="normMethod", default='pnz', #choices=['percentile', 'pnz', 'none'],
+  parser.add_argument("-n", "--normMethod", dest="normMethod", default='pnz', #choices=['percentile', 'percentileZ', 'pnz', 'none'],
                       help= "specify the method to normalize data, default: percentile,       \n \
-                          choices: percentile, none, pnz                                        \n \
+                          choices: percentile, none, pnz, percentileZ                         \n \
                           NOTE:                                                         \n \
                           percentile: percentile normalization, including zeros                                    \n \
                           pnz: percentile normalization, excluding zeros                                    \n \
@@ -102,7 +102,7 @@ def main():
   arg_namespace = parser.parse_args()
 
   #get arguments
-  print >>sys.stderr, "lsa-compute - copyright Li Charlie Xia, lxia@usc.edu"
+  print >>sys.stderr, "lsa-compute ($Revision$) - copyright Li Charlie Xia, lxia@usc.edu"
   
   delayLimit = vars(arg_namespace)['delayLimit']
   fillMethod = vars(arg_namespace)['fillMethod']
@@ -145,6 +145,8 @@ def main():
     zNormalize = lsalib.noneNormalize
   elif normMethod == 'percentile':
     zNormalize = lsalib.percentileNormalize
+  elif normMethod == 'percentileZ':
+    zNormalize = lsalib.percentileZNormalize
   elif normMethod == 'pnz':
     zNormalize = lsalib.noZeroNormalize  
   elif normMethod != None:
@@ -231,4 +233,5 @@ def main():
   #print >>sys.stderr, "Thank you for using lsa-compute, byebye"
 
 if __name__=="__main__":
+  #print >>sys.stderr, lsaver.rev
   main()

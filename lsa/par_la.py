@@ -29,7 +29,7 @@
 #THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #public libs
-import sys, csv, re, os, time, argparse, string, tempfile
+import sys, csv, re, os, time, argparse, string, tempfile, subprocess
 #numeric libs
 import numpy as np
 import scipy as sp
@@ -79,7 +79,8 @@ except ImportError:
 #input arguments:
 #multiInput, multiOutput, singleCmd
 
-ws=os.path.join( [os.environ.get("HOME"),'tmp','multi'] )
+ws=os.path.join(os.environ.get("HOME"),'tmp','multi')
+print "tmpDir=",ws
 
 def get_content(file):
   i=0
@@ -93,76 +94,109 @@ def get_content(file):
       content.append(line)
   return (header, content)
 
-def gen_singles(multiInput):
+def gen_singles(multiInput, multiOutput):
   header, content=get_content(multiInput)
   multiname=multiInput.name
   i=1
   singles=[]
   results=[]
+  ends=[]
   for line in content:
-    tmp=open(multiname+".%d" % i, "w")
-    print >>tmp, header
-    print >>tmp, line
+    singlename=multiname+".%d" % i
+    tmp=open(os.path.join(ws, singlename), "w")
+    print >>tmp, header.rstrip('\n')
+    print >>tmp, line.rstrip('\n')
     tmp.close()
     singles.append(tmp.name) 
     results.append(tmp.name+".tmp") 
-  return singles, results
+    ends.append(tmp.name+".end")
+    i+=1
+  return singles, results, ends
 
 PBS_PREAMBLE = """#!/bin/bash
 #PBS -N %s 
 #PBS -S /bin/bash 
 #PBS -j oe
-##PBS -k oe
 #PBS -o %s
 #PBS -l walltime=299:00:00
 #PBS -l nodes=1:ppn=1,mem=%d000mb,vmem=%d000mb,pmem=%d000mb"""
+vmem=2
+print "vmem=", str(vmem)+"000mb"
 
-def gen_pbs(singleFile, singleCmd):
+def gen_pbs(singleFile, singleCmd, workDir, singleEnd):
   singleResult=singleFile+".tmp"
   singlePBS=open(singleFile+".pbs", "w")
-  print >>singlePBS, PBS_PREAMBLE % (singleFile, singleFile, 1, 1, 1)
+  print >>singlePBS, PBS_PREAMBLE % (os.path.basename(singleFile), os.path.basename(singleFile)+".log", vmem, vmem, vmem)
+  print >>singlePBS, "cd %s" % workDir
   print >>singlePBS, singleCmd % (singleFile, singleResult)
+  print >>singlePBS, "touch %s" % singleEnd
   singlePBS.close()
   return singlePBS.name
 
 def gen_output(multiOutput, resultFiles):
-  header = None
-  content = []
-  for file in resultFiles):
-    header, tmp_content = get_content(resultFile)
-    content += tmp_content
-  print >>multiOutput, "\n".join([header]+content)
+  i=0
+  for resultFile in resultFiles:
+    header, content = get_content(resultFile)
+    if i==0:
+      print >>multiOutput, "".join([header]+content)
+      i+=1
+    else:
+      print >>multiOutput, "".join(content)
   return
 
 def ssa_pbs(singlePBS):
   try:
-    print "submit", singlePBS
-    #tmp=subprocess.Popen("ssa.py %s" % singlePBS, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
-  except OSError:
+    tmp=subprocess.Popen("ssa.py %s" % singlePBS, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+    print "submitted", singlePBS
+  except ValueError:
     quit()
-  return
+  return tmp[0]
 
 def main():  
 
   parser = argparse.ArgumentParser(description="Multiline Input Split and Combine Tool for LSA and LA")
 
   parser.add_argument("multiInput", metavar="multiInput", type=argparse.FileType('r'), help="the multiline input file")
-  parser.add_argument("multiOuput", metavar="multiOutput", type=argparse.FileType('r'), help="the multiline output file")
+  parser.add_argument("multiOutput", metavar="multiOutput", type=argparse.FileType('w'), help="the multiline output file")
   parser.add_argument("singleCmd", metavar="singleCmd", help="single line command line in quotes")
+  parser.add_argument("workDir", metavar="workDir", help="set current working directory")
 
 #  """la_compute ARISA.depCmax.txt ARISA.depCmax.S5_L75_Ptheo.lsaq ARISA.depCmax.S5_L75_Ptheo.la -s 114 -r 1 -p 1000"""
   arg_namespace=parser.parse_args()
   multiInput=vars(arg_namespace)['multiInput']
   multiOutput=vars(arg_namespace)['multiOutput']
   singleCmd=vars(arg_namespace)['singleCmd']
+  workDir=vars(arg_namespace)['workDir']
 
-  singleFiles,resultFiles=gen_singles(multiInput)
+  singleFiles,resultFiles,endFiles=gen_singles(multiInput,multiOutput)
+  for endFile in endFiles:
+    if os.path.exists(endFile):
+      os.remove(endFile)
+
+  inProgress=set()
+  endJob=set()
   while(len(singleFiles)!=0):
     singleFile=singleFiles.pop()
-    pbsFile=gen_pbs(singleFile)
+    endFile=endFiles.pop()
+    pbsFile=gen_pbs(singleFile, singleCmd, workDir, endFile)
+    inProgress.add(endFile)
     ssa_pbs(pbsFile)
 
-  gen_output(resultFiles)
+  while(len(endJob)!=len(inProgress)):
+    for job in inProgress:
+      time.sleep(10)
+      if os.path.exists(job):
+        header, content = get_content(open(job[:-4]+".tmp",'r'))
+        if len(endJob)==0:
+          print >>multiOutput, "".join([header]+content)
+        else:
+          print >>multiOutput, "".join(content)
+        os.remove(job)
+        endJob.add(job)
+        print "ended", job
+        print "remaining jobs", inProgress.difference(endJob), "total", len(inProgress.difference(endJob))
+
+  #gen_output(multiOutput, resultFiles)
 
 if __name__ == "__main__":
   main()

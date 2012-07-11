@@ -214,8 +214,13 @@ def readPvalue(P_table, R, N, x_sd=1, M=1, alpha=1, beta=1, x_decimal=3):
   # R=observed range, N=timepoints, x_sd=std.dev of single series, M=replicates, alpha=1-portion of zero in X, beta=1-portion of zero in Y
   # x' = R*M/(alpha*beta*sqrt(N)*sd) * 10^(x_decimal)
   # has to ceil the x value to avoid round to 0, which is not amenable to calculation
-  #print "x=", int(np.around(S*np.sqrt(timespots)*(10**x_decimal)))
-  xi = int(np.around(R*M/np.sqrt(alpha*beta*N)*(10**x_decimal)))    #
+  try:
+    xi = int(np.around(R*M/np.sqrt(alpha*beta*N)*(10**x_decimal)))    #
+  except OverflowError:
+    #print alpha, beta
+    #print "x=", np.around(R*M/np.sqrt(alpha*beta*N)*(10**x_decimal))
+    #quit()
+    return np.nan
   if xi in P_table:
     return P_table[xi]
   else:
@@ -536,7 +541,7 @@ def tied_rank(values):
   #print "sorted unique values=", suvs
   #print "cumulative number=", v_cum
   #print [ v_cum[values[i]] for i in xrange(0, len(values)) ]
-  sV = np.array( [ v_cum[V[i]] for i in xrange(0, len(V)) ], dtype='float' ) #sorted V
+  sV = np.array( [ (2*v_cum[V[i]]-v_num[V[i]]+1)/2 for i in xrange(0, len(V)) ], dtype='float' ) #sorted V, break tie by average
   #print "sV=", sV
   #print "nans=", nans
   
@@ -599,7 +604,9 @@ def percentileZNormalize(tseries):
       score normalized time series
   """
   ranks = tied_rank(tseries)
+  #print "tseries=", tseries
   #print "ranks=", ranks
+  #print "ranks.mask", ranks.mask
   nt = np.ma.masked_invalid(sp.stats.distributions.norm.ppf( ranks/(len(ranks)-np.sum(ranks.mask)+1) ),copy=True)
   try:
     zt = (nt - np.ma.mean(nt, axis=0))/np.ma.std(nt)
@@ -765,6 +772,10 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
         continue
       #print "lsa computing..."
       #try:
+      #print "Xf%d="%i, Xz
+      #print "Xz%d="%i, zNormalize(fTransform(Xz))
+      #print "Xf%d="%j, Yz
+      #print "Xz%d="%j, zNormalize(fTransform(Yz))
       LSA_result = singleLSA(Xz, Yz, delayLimit, fTransform, zNormalize, True)                          # do LSA computation
       #except NotImplementedError:
       #  print "Xz=", Xz
@@ -851,9 +862,12 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
       else:
         #x = np.abs(Smax)*np.sqrt(timespots) # x=Rn/sqrt(n)=Smax*sqrt(n)
         #alpha=1-{#(nan+zeros)/timespots}
-        Xz_alpha = 1 - (np.sum(Xz.mask)+np.sum(Xz==0))/float(timespots)
-        Yz_beta = 1 - (np.sum(Yz.mask)+np.sum(Yz==0))/float(timespots)
-        lsaP = readPvalue(P_table, R=np.abs(Smax)*timespots, N=timespots, x_sd=stdX, M=replicates, alpha=Xz_alpha, beta=Yz_beta, x_decimal=my_decimal)
+        Xz_alpha = 1 - np.sum(zNormalize(fTransform(Xz))==0)/float(timespots)
+        Yz_beta = 1 - np.sum(zNormalize(fTransform(Yz))==0)/float(timespots)
+        if Xz_alpha==0 or Yz_beta==0:
+          lsaP = np.nan
+        else:
+          lsaP = readPvalue(P_table, R=np.abs(Smax)*timespots, N=timespots, x_sd=stdX, M=replicates, alpha=Xz_alpha, beta=Yz_beta, x_decimal=my_decimal)
       pvalues[ti] = lsaP
       #print "bootstrap computing..."
       if bootNum > 0: #do BS
