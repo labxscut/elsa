@@ -56,10 +56,14 @@ def main():
                             and only lower triangle entries of pairwise matrix will be computed")
   parser.add_argument("-d", "--delayLimit", dest="delayLimit", default=3, type=int, 
                     	help="specify the maximum delay possible, default: 3,\n choices: 0 to 6")
-  parser.add_argument("-p", "--pvalueMethod", dest="pvalueMethod", default=1000, type=int,
-                    	help="specify the method=sgn(pvalueMethod) and precision=1/abs(pvalueMethod) for p-value estimation, \n \
-                            default: pvalueMethod=1000, i.e. precision=0.001 and mode=permutation \n \
-                            mode +: permutation approximaton; -: theoretical approximation. ")
+  parser.add_argument("-m", "--minOccur", dest="minOccur", default=50, type=int, 
+                    	help="specify the minimum occurence percentile of all times, default: 50,\n")
+  parser.add_argument("-p", "--pvalueMethod", dest="pvalueMethod", default="perm", choices=["perm", "theo", "mix"],
+                    	help="specify the method for p-value estimation, \n \
+                            default: pvalueMethod=perm, i.e. use  permutation \n \
+                            theo: theoretical approximaton; mix: use theoretical approximation for pre-screening if promising (<0.05) then use permutation. ")
+  parser.add_argument("-x", "--precision", dest="precision", default=1000, type=int,
+                    	help="permutation/precision, specify the permutation number or precision=1/permutation for p-value estimation. ")
   parser.add_argument("-b", "--bootNum", dest="bootNum", default=0, type=int, choices=[0, 100, 200, 500, 1000, 2000],
                     	help="specify the number of bootstraps for 95%% confidence interval estimation, default: 100,\n \
                           choices: 0, 100, 200, 500, 1000, 2000. \n \
@@ -108,6 +112,8 @@ def main():
   fillMethod = vars(arg_namespace)['fillMethod']
   normMethod = vars(arg_namespace)['normMethod']
   pvalueMethod = vars(arg_namespace)['pvalueMethod']
+  precision = vars(arg_namespace)['precision']
+  minOccur = vars(arg_namespace)['minOccur']
   dataFile = vars(arg_namespace)['dataFile']				#dataFile
   extraFile = vars(arg_namespace)['extraFile']				#extraFile
   resultFile = vars(arg_namespace)['resultFile']			#resultFile
@@ -155,8 +161,8 @@ def main():
   else:
     zNormalize = lsalib.noZeroNormalize # fallback to default
   
-  print "\t".join(['delayLimit','fillMethod','pvalueMethod','dataFile','extraFile','resultFile','repNum','spotNum','bootNum','transFunc','normMethod','xVariance'])
-  print "\t".join(['%s']*12) % (delayLimit,fillMethod,pvalueMethod,dataFile.name,extraFile_name,resultFile.name,repNum,spotNum,bootNum,transFunc,normMethod,str(varianceX))
+  print "\t".join(['delayLimit','minOccur','fillMethod','pvalueMethod','precision','dataFile','extraFile','resultFile','repNum','spotNum','bootNum','transFunc','normMethod','xVariance'])
+  print "\t".join(['%s']*14) % (delayLimit,minOccur,fillMethod,pvalueMethod,precision,dataFile.name,extraFile_name,resultFile.name,repNum,spotNum,bootNum,transFunc,normMethod,str(varianceX))
   
   #start timing main
   start_time = time.time()
@@ -212,8 +218,8 @@ def main():
   #        P-value, Pearson' Correlation, P-value of PCC, Q-value ]
   #print >>sys.stderr, "data size factorNum, repNum, spotNum = %s, %s, %s" % (cleanData.shape[0], cleanData.shape[1], cleanData.shape[2])
   #print >>sys.stderr, "calculating ..."
-  lsalib.applyAnalysis(cleanData[0], cleanData[1], onDiag=onDiag, delayLimit=delayLimit, bootNum=bootNum,\
-      pvalueMethod=pvalueMethod, fTransform=fTransform, zNormalize=zNormalize, varianceX=varianceX, resultFile=resultFile,\
+  lsalib.applyAnalysis(cleanData[0], cleanData[1], onDiag=onDiag, delayLimit=delayLimit, bootNum=bootNum, minOccur=minOccur/100.,\
+      pvalueMethod=pvalueMethod, precision=precision, fTransform=fTransform, zNormalize=zNormalize, varianceX=varianceX, resultFile=resultFile,\
       firstFactorLabels=firstFactorLabels, secondFactorLabels=secondFactorLabels)
   #print >>sys.stderr, "writing results ..."
   #col_labels= ['X','Y','LS','lowCI','upCI','Xs','Ys','Len','Delay','P','PCC','Ppcc','SPCC','Pspcc','SCC','Pscc','SSCC','Psscc',

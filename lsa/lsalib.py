@@ -43,14 +43,22 @@
 #Considering using R for simple numerics, rpy or use swig+R?
 
 #import public resources
-import csv, sys, random
+import csv, sys, os, random
 import numpy as np
 #import numpy.ma as np.ma
 import scipy as sp
 import scipy.interpolate
 import scipy.stats
-import statlib
-import statlib.stats
+#R through Rpy
+import rpy2.rlike.container as rlc
+import rpy2.robjects as ro
+from rpy2.robjects.numpy2ri import numpy2ri
+ro.conversion.py2ri = numpy2ri
+r = ro.r
+
+#print '''setwd("%s")''' % os.environ.get('PWD')
+r('''setwd("%s")''' % os.environ.get('PWD'))
+r('''options(warn=-1)''') 
 
 #import lower level resource
 try:
@@ -84,6 +92,7 @@ pipi = np.pi**2 # pi^2
 pipi_inv = 1/pipi
 Q_lam_step = 0.05
 Q_lam_max = 0.95
+P_promising = 0.05
 
 ###############################
 # applyAnalsys
@@ -92,12 +101,54 @@ Q_lam_max = 0.95
 #	[ 1,  2,  3,       4,     5,    6,       7,       8,      9,   10,      11,   12,         13      ]
 ############################### 
 
-def calc_spearmanr(Xz, Yz, sfunc=scipy.stats.spearmanr):
+def rpy_spearmanr(Xz, Yz):
+  sr=r('''cor.test''')(Xz,Yz,method='spearman')
+  return (sr[3][0],sr[2][0])
+
+def calc_spearmanr(Xz, Yz, sfunc=rpy_spearmanr):
   mask = np.logical_or(Xz.mask, Yz.mask)
   Xz.mask = mask
   Yz.mask = mask
   (SCC, P_SCC) = sfunc(Xz.compressed(), Yz.compressed()) # two tailed p-value
   return (SCC, P_SCC)
+
+def calc_pearsonr(Xz, Yz, pfunc=scipy.stats.pearsonr):
+  mask = np.logical_or(Xz.mask, Yz.mask)
+  Xz.mask = mask
+  Yz.mask = mask
+  (PCC, P_PCC) = pfunc(Xz.compressed(), Yz.compressed()) # two tailed p-value
+  return (PCC, P_PCC)
+
+def calc_shift_corr(Xz, Yz, D, corfunc=calc_pearsonr): 
+  d_max=0
+  r_max=0
+  p_max=1
+  #print "Xz=", Xz
+  #print "Yz=", Yz
+  for d in range(-D, D+1):
+    # i = Xs-Ys
+    #print "d=", d
+    if d < 0:
+      X_seg = Xz[:(len(Xz)+d)]
+      Y_seg = Yz[-d:len(Yz)]
+    elif d == 0:
+      X_seg = Xz
+      Y_seg = Yz
+    else:
+      X_seg = Xz[d:len(Xz)]
+      Y_seg = Yz[:len(Yz)-d]
+    #print "Xz=", X_seg.shape
+    #print "Yz=", Y_seg.shape
+    assert len(X_seg) == len(Y_seg)
+    mask = np.logical_or(X_seg.mask, Y_seg.mask)
+    X_seg.mask = mask
+    Y_seg.mask = mask
+    cor = corfunc(X_seg, Y_seg)
+    if np.abs(cor[0]) >= np.abs(r_max):
+      r_max = cor[0] 
+      d_max = d
+      p_max = cor[1]
+  return (r_max, p_max, d_max)
         
 def singleLSA(series1, series2, delayLimit, fTransform, zNormalize, keepTrace=True):
   """	do local simularity alignment 
@@ -128,8 +179,6 @@ def singleLSA(series1, series2, delayLimit, fTransform, zNormalize, keepTrace=Tr
   lsar=compcore.DP_lsa(lsad, keepTrace)
   del lsad
   return lsar
-
-
 	
 def sample_wr(population, k):
   """ Chooses k random elements (with replacement) from a population
@@ -158,7 +207,9 @@ def ma_median(ts, axis=0):
   return ns
 
 def ma_average(ts, axis=0):
+  #print "before ma_average", ts.shape
   ns = np.ma.mean(ts, axis=0)
+  #print "after ma_average", ns.shape
   if type(ns.mask) == np.bool_:       #fix broken ma.mean, mask=False instead of [False, ...] for all mask
     ns.mask = [ns.mask] * ns.shape[axis]
   return ns
@@ -302,8 +353,8 @@ def permuPvalue(series1, series2, delayLimit, pvalueMethod, Smax, fTransform, zN
     P_two_tail = np.sum(-np.abs(PP_set) <= Smax)/np.float(pvalueMethod)
   return P_two_tail
 
-Q_lam_step = 0.05
-Q_lam_max = 0.95
+#Q_lam_step = 0.05
+#Q_lam_max = 0.95
 
 def storeyQvalue(pvalues, lam=np.arange(0,Q_lam_max,Q_lam_step), method='smoother', robust=False, smooth_df=3):
   """ do Q-value calculation
@@ -690,7 +741,7 @@ def fillMissing(tseries, method): #teseries is 2d matrix unmasked
         yy[i] = tseries[i] #keep nans
     return yy
     
-def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, bootNum=1000, pvalueMethod=1000, \
+def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5, bootCI=.95, bootNum=1000, pvalueMethod=1000, precision=1000,\
     fTransform=simpleAverage, zNormalize=noZeroNormalize, varianceX=1, resultFile=None, firstFactorLabels=None, secondFactorLabels=None):
   """ calculate pairwise LS scores and p-values
 
@@ -714,7 +765,7 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
         	
   """	
 
-  col_labels= ['X','Y','LS','lowCI','upCI','Xs','Ys','Len','Delay','P','PCC','Ppcc','SPCC','Pspcc','SCC','Pscc','SSCC','Psscc',
+  col_labels= ['X','Y','LS','lowCI','upCI','Xs','Ys','Len','Delay','P','PCC','Ppcc','SPCC','Pspcc','Dspcc','SCC','Pscc','SSCC','Psscc','Dsscc',
             'Q','Qpcc','Qspcc','Qscc','Qsscc','Xi','Yi']
   print >>resultFile,  "\t".join(col_labels)
 
@@ -745,24 +796,33 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
   replicates = firstRepNum
   stdX = np.sqrt(varianceX) #make comparable with previous command line
   ti = 0
-  if pvalueMethod < 0:
+  if pvalueMethod in ['theo','mix']:
     #P_table = theoPvalue(D=0, precision=.0001, x_decimal=3)   #let's produce 2 tail-ed p-value
-    P_table = theoPvalue(Rmax=timespots, Dmax=delayLimit, precision=1./np.abs(pvalueMethod), x_decimal=my_decimal)
+    P_table = theoPvalue(Rmax=timespots, Dmax=delayLimit, precision=1./precision, x_decimal=my_decimal)
     #print P_table
   for i in xrange(0, firstFactorNum):
     Xz = np.ma.masked_invalid(firstData[i], copy=True) #need to convert to masked array with na's, not F-normalized
+    Xz_minOccur = np.sum(np.logical_or(np.isnan(ma_average(Xz)), ma_average(Xz)==0))/float(timespots) < minOccur
+    if Xz.shape[1] == None: #For 1-d array, convert to 2-d
+      Xz.shape = (1, Xz.shape[0])
     for j in xrange(0, secondFactorNum):
       if onDiag and i>=j:
         continue   #only care lower triangle entries, ignore i=j entries
       Yz = np.ma.masked_invalid(secondData[j], copy=True)    # need to convert to masked array with na's, not F-normalized
+      Yz_minOccur = np.sum(np.logical_or(np.isnan(ma_average(Yz)), ma_average(Yz)==0))/float(timespots) < minOccur
+      if Yz.shape[1] == None: #For 1-d array, convert to 2-d
+        Yz.shape = (1, Yz.shape[0])
       #if i == 36 or j == 36:
         #print "i=",i,"data=",firstData[i]
         #print "j=",j,"data=",secondData[j]
         #print Xz, Yz
         #print np.all(Yz.mask), np.all(Xz.mask), np.all(Yz.mask) or np.all(Xz.mask)
-      if np.all(Yz.mask) or np.all(Xz.mask):  # not any unmasked value in Xz or Yz, all nan in input, continue
-        #lsaTable[ti] = [i, j, Smax,   Sl,     Su,     Xs,Ys,Al,Xs-Ys, lsaP,   PCC,    P_PCC,  SPCC,   P_SPCC, SCC,    P_SCC,  SSCC,   P_SSCC]
-        lsaTable[ti] =  [i, j, np.nan, np.nan, np.nan, 0, 0, 0, 0,     np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan]
+
+      #control minZeroPercent or allNA here
+      
+      if np.all(Yz.mask) or np.all(Xz.mask) or Xz_minOccur or Yz_minOccur:  # not any unmasked value in Xz or Yz, all nan in input, warn code -1
+      #lsaTable[ti] = [i, j, Smax,   Sl,     Su,     Xs,Ys,Al,Xs-Ys, lsaP,   PCC,    P_PCC,  SPCC,   P_SPCC, D_SPCC, SCC,    P_SCC,  SSCC,   P_SSCC, D_SSCC]
+        lsaTable[ti] =[i, j, np.nan, np.nan, np.nan, -1, -1, -1, -1, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan]
         pvalues[ti] = np.nan
         pccpvalues[ti] = np.nan
         spccpvalues[ti] = np.nan
@@ -784,23 +844,42 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
           
       Smax = LSA_result.score                                                               # get Smax
       Al = len(LSA_result.trace)
+      (PCC, P_PCC) = calc_pearsonr(ma_average(Xz, axis=0), ma_average(Yz, axis=0)) # two tailed p-value
+      (SCC, P_SCC) = calc_spearmanr(ma_average(Xz, axis=0), ma_average(Yz, axis=0))
+      
+      try:
+        (SPCC, P_SPCC, D_SPCC) = calc_shift_corr(ma_average(Xz, axis=0), ma_average(Yz, axis=0), delayLimit, calc_pearsonr) 
+        # corr for shifted-cut seq
+        (SSCC, P_SSCC, D_SSCC) = calc_shift_corr(ma_average(Xz, axis=0), ma_average(Yz, axis=0), delayLimit, calc_spearmanr) 
+        # corr for shifted-cut seq
+        #if np.isnan(SSCC) or np.isnan(SPCC): 
+        #  print "Al=", Al, "X shape", Xz.shape, "Y shape", Yz.shape
+        #  print "Xs=", Xs, X_seg.shape
+        #  print "Ys=", Ys, Y_seg.shape
+        #  quit()
+      except FloatingPointError:
+        (SPCC, P_SPCC, D_SPCC) = (np.nan, np.nan, np.nan)
+        (SSCC, P_SSCC, D_SSCC) = (np.nan, np.nan, np.nan)
+        #print np.ma.mean(Xz[:,:Al], axis=0), np.ma.mean(Xz[:,:Al], axis=0).mask, \
+        #  np.ma.mean(Yz[:,(Ys-Xs):(Ys-Xs+Al)], axis=0), np.ma.mean(Yz[:,(Ys-Xs):(Ys-Xs+Al)], axis=0).mask
+        #quit()
+      pccpvalues[ti] = P_PCC
+      spccpvalues[ti] = P_SPCC
+      try:
+        sccpvalues[ti] = P_SCC
+      except ValueError:
+        #print "error at lsalib P_SCC", P_SCC  #sometimes produce [], why?
+        sccpvalues[ti] = np.nan
+      ssccpvalues[ti] = P_SSCC
+
       if Al == 0: #handel align impossibility, usually too many nas'
-        (PCC, P_PCC) = sp.stats.pearsonr(ma_average(Xz, axis=0), ma_average(Yz, axis=0)) # two tailed p-value
         #(SCC, P_SCC) = calc_spearmanr(ma_average(Xz, axis=0), ma_average(Yz, axis=0), statlib.stats.lspearmanr)
-        (SCC, P_SCC) = calc_spearmanr(ma_average(Xz, axis=0), ma_average(Yz, axis=0), scipy.stats.spearmanr) 
         pvalues[ti] = np.nan
-        pccpvalues[ti] = P_PCC
-        spccpvalues[ti] = np.nan
-        try:
-          sccpvalues[ti] = P_SCC
-        except ValueError:
-          #print "error at lsalib P_SCC", P_SCC  #sometimes produce [], why?
-          sccpvalues[ti] = np.nan
-        ssccpvalues[ti] = np.nan
-        #lsaTable[ti] = [i, j, Smax,   Sl,     Su,     Xs,Ys,Al,Xs-Ys, lsaP,   PCC, P_PCC,  SPCC,   P_SPCC, SCC, P_SCC,   SSCC, P_SSCC]
-        lsaTable[ti] =  [i, j, np.nan, np.nan, np.nan, 0, 0, 0, 0,     np.nan, PCC, P_PCC,  np.nan, np.nan, SCC, P_SCC, np.nan, np.nan]
+        #lsaTable[ti] = [i, j, Smax,   Sl,     Su,     Xs,Ys,Al,Xs-Ys, lsaP,   PCC, P_PCC,  SPCC,   P_SPCC, D_SPCC, SCC, P_SCC,  SSCC, P_SSCC, D_SSCC]
+        lsaTable[ti] =  [i, j, np.nan, np.nan, np.nan, 0, 0, 0, 0,     np.nan, PCC, P_PCC,  SPCC, P_SPCC, D_SPCC, SCC, P_SCC, SSCC, P_SSCC, D_SSCC]
         ti += 1
         continue
+
       (Xs, Ys, Al) = (LSA_result.trace[Al-1][0], LSA_result.trace[Al-1][1], len(LSA_result.trace))
       #try:
       #  (Xs, Ys, Al) = (LSA_result.trace[Al-1][0], LSA_result.trace[Al-1][1], len(LSA_result.trace))
@@ -812,54 +891,25 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
       #print "PPC..." 
       #print np.mean(Xz, axis=0), np.mean(Yz, axis=0)
 
-      (PCC, P_PCC) = sp.stats.pearsonr(ma_average(Xz, axis=0), ma_average(Yz, axis=0)) # two tailed p-value
-      #(SCC, P_SCC) = calc_spearmanr(ma_average(Xz, axis=0), ma_average(Yz, axis=0), statlib.stats.lspearmanr) # two tailed p-value
-      (SCC, P_SCC) = calc_spearmanr(ma_average(Xz, axis=0), ma_average(Yz, axis=0), scipy.stats.spearmanr) 
-      #(SCC, P_SCC) = calc_spearmanr(ma_average(Xz, axis=0), ma_average(Yz, axis=0), scipy.stats.spearmanr) # two tailed p-value
-      #P_PCC = P_PCC/2   # one tailed p-value
-      #(DPCC, P_DPCC) = sp.stats.pearsonr(np.ma.average(Xz[:,Xs-1:Xs+Al],
-      #print Xs, Ys, Al, Ys-Xs
-
-      if Xs <= Ys:
+      #if Xs <= Ys:
         #print Xz[:,:Al].shape
         #print Yz[:,(Ys-Xs):(Ys-Xs)+Al].shape
-        X_seg = Xz[:,:(Xz.shape[1]-(Ys-Xs))]
-        Y_seg = Yz[:,(Ys-Xs):Yz.shape[1]]
-      else:
-        X_seg = Xz[:,(Xs-Ys):Xz.shape[1]]
-        Y_seg = Yz[:,:(Yz.shape[1]-(Xs-Ys))]
+      #  X_seg = Xz[:,:(Xz.shape[1]-(Ys-Xs))]
+      #  Y_seg = Yz[:,(Ys-Xs):Yz.shape[1]]
+      #else:
+      #  X_seg = Xz[:,(Xs-Ys):Xz.shape[1]]
+      #  Y_seg = Yz[:,:(Yz.shape[1]-(Xs-Ys))]
       #print "Al=", Al, "X shape", Xz.shape, "Y shape", Yz.shape
       #print "Xs=", Xs, X_seg.shape
       #print "Ys=", Ys, Y_seg.shape
       #if Xs != Ys:
       #  quit()
 
-      try:
-        (SPCC, P_SPCC) = sp.stats.pearsonr(ma_average(X_seg, axis=0), ma_average(Y_seg, axis=0)) 
-        # corr for shifted-cut seq
-        #(SSCC, P_SSCC) = calc_spearmanr(ma_average(X_seg, axis=0), ma_average(Y_seg, axis=0), statlib.stats.lspearmanr) 
-        (SSCC, P_SSCC) = calc_spearmanr(ma_average(X_seg, axis=0), ma_average(Y_seg, axis=0), scipy.stats.spearmanr) 
-        # corr for shifted-cut seq
-        #if np.isnan(SSCC) or np.isnan(SPCC): 
-        #  print "Al=", Al, "X shape", Xz.shape, "Y shape", Yz.shape
-        #  print "Xs=", Xs, X_seg.shape
-        #  print "Ys=", Ys, Y_seg.shape
-        #  quit()
-      except FloatingPointError:
-        (SPCC, P_SPCC) = (np.nan, np.nan)
-        (SSCC, P_SSCC) = (np.nan, np.nan)
-        #print np.ma.mean(Xz[:,:Al], axis=0), np.ma.mean(Xz[:,:Al], axis=0).mask, \
-        #  np.ma.mean(Yz[:,(Ys-Xs):(Ys-Xs+Al)], axis=0), np.ma.mean(Yz[:,(Ys-Xs):(Ys-Xs+Al)], axis=0).mask
-        #quit()
 
       #This Part Must Follow Static Calculation Part
       #Otherwise Yz may be changed, now it is copied
       #np.ma.array(copy=True) to copy, otherwise is only reference
-      if pvalueMethod >= 0:
-        Xp = np.ma.array(Xz,copy=True)
-        Yp = np.ma.array(Yz,copy=True)
-        lsaP = permuPvalue(Xp, Yp, delayLimit, pvalueMethod, np.abs(Smax), fTransform, zNormalize)          # do Permutation Test
-      else:
+      if pvalueMethod in ['theo', 'mix']:
         #x = np.abs(Smax)*np.sqrt(timespots) # x=Rn/sqrt(n)=Smax*sqrt(n)
         #alpha=1-{#(nan+zeros)/timespots}
         Xz_alpha = 1 - np.sum(zNormalize(fTransform(Xz))==0)/float(timespots)
@@ -868,6 +918,12 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
           lsaP = np.nan
         else:
           lsaP = readPvalue(P_table, R=np.abs(Smax)*timespots, N=timespots, x_sd=stdX, M=replicates, alpha=Xz_alpha, beta=Yz_beta, x_decimal=my_decimal)
+
+      if (pvalueMethod in ['mix'] and lsaP<=P_promising) or (pvalueMethod in ['perm']):
+        Xp = np.ma.array(Xz,copy=True)
+        Yp = np.ma.array(Yz,copy=True)
+        lsaP = permuPvalue(Xp, Yp, delayLimit, pvalueMethod, np.abs(Smax), fTransform, zNormalize)          # do Permutation Test
+
       pvalues[ti] = lsaP
       #print "bootstrap computing..."
       if bootNum > 0: #do BS
@@ -886,11 +942,7 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, bootCI=.95, 
       #quit()
 
       # need +epsilon to avoid all zeros
-      pccpvalues[ti] = P_PCC
-      sccpvalues[ti] = P_SCC
-      spccpvalues[ti] = P_SPCC
-      ssccpvalues[ti] = P_SSCC
-      lsaTable[ti] = [i, j, Smax, Sl, Su, Xs, Ys, Al, Xs-Ys, lsaP, PCC, P_PCC, SPCC, P_SPCC, SCC, P_SCC, SSCC, P_SSCC]
+      lsaTable[ti] = [i, j, Smax, Sl, Su, Xs, Ys, Al, Xs-Ys, lsaP, PCC, P_PCC, SPCC, P_SPCC, D_SPCC, SCC, P_SCC, SSCC, P_SSCC, D_SSCC]
       ti += 1
       del LSA_result
       #print "finalizing..."
