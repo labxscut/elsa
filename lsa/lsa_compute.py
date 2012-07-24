@@ -101,6 +101,7 @@ def main():
                           NOTE:                                                         \n \
                           percentile: percentile normalization, including zeros                                    \n \
                           pnz: percentile normalization, excluding zeros                                    \n \
+                          percentileZ: percentile normalization + Z-normalization                                   \n \
                           none or a float number for variance: no normalization and calculate Ptheo with user specified variance, default=1 ")
   
   arg_namespace = parser.parse_args()

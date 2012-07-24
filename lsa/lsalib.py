@@ -979,7 +979,7 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
           + [row[0]+1, row[1]+1] )
 
 ### Liquid Association Section ###
-def applyLA(inputData, scoutVars, factorLabels, bootCI=.95, bootNum=1000, pvalueMethod=1000, \
+def applyLA(inputData, scoutVars, factorLabels, bootCI=.95, bootNum=1000, minOccur=.50, pvalueMethod=1000,\
     fTransform=simpleAverage, zNormalize=noZeroNormalize, resultFile=None):
 
   col_labels = ['X','Y','Z','LA','lowCI','upCI','P','Q','Xi','Yi','Zi']
@@ -1011,6 +1011,11 @@ def applyLA(inputData, scoutVars, factorLabels, bootCI=.95, bootNum=1000, pvalue
         continue   #ignore redundant entries
       cp[Xi,Yi,Zi]=True
       Zo = np.ma.masked_invalid(inputData[Zi], copy=True)    # need to convert to masked array with na's, not F-normalized
+      Xo_minOccur = np.sum(np.logical_or(np.isnan(ma_average(Xo)), ma_average(Xo)==0))/float(timespots) < minOccur
+      Yo_minOccur = np.sum(np.logical_or(np.isnan(ma_average(Yo)), ma_average(Yo)==0))/float(timespots) < minOccur
+      Zo_minOccur = np.sum(np.logical_or(np.isnan(ma_average(Yo)), ma_average(Yo)==0))/float(timespots) < minOccur
+      if Xo_minOccur or Yo_minOccur or Zo_minOccur:
+        continue
       if np.all(Xo.mask) or np.all(Yo.mask) or np.all(Zo.mask):  # not any unmasked value in Xz or Yz, all nan in input, continue
         continue
       LA_score = singleLA(Xo, Yo, Zo, fTransform, zNormalize)                          # do LA computation

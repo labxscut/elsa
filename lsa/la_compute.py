@@ -54,14 +54,16 @@ def main():
                         help="the input datafile specify the scouting pairs, \n \
                             it can be any tab delimited file (e.g. .lsa) with (xi, yi) pair indecies for scouting pairs")
   parser.add_argument("resultFile", metavar="resultFile", type=argparse.FileType('w'), help="the output result file")
-  parser.add_argument("-x", "--xiCol", dest="xiCol", default=24, type=int, 
+  parser.add_argument("-x", "--xiCol", dest="xiCol", default=26, type=int, 
                     	help="specify the x-th column to store Xi indecies")
-  parser.add_argument("-y", "--yiCol", dest="yiCol", default=25, type=int, 
+  parser.add_argument("-y", "--yiCol", dest="yiCol", default=27, type=int, 
                     	help="specify the y-th column to store Yi indecies")
   parser.add_argument("-p", "--pvalueMethod", dest="pvalueMethod", default=1000, type=int,
                     	help="specify the method=sgn(pvalueMethod) and precision=1/abs(pvalueMethod) for p-value estimation, \n \
                           default: pvalueMethod=1000, i.e. precision=0.001 and mode=permutation \n \
                           mode +: permutation approximaton; -: unused, fall back to permutation")
+  parser.add_argument("-m", "--minOccur", dest="minOccur", default=50, type=int,
+                              help="specify the minimum occurence percentile of all times, default: 50,\n")
   parser.add_argument("-b", "--bootNum", dest="bootNum", default=0, type=int, choices=[0, 100, 200, 500, 1000, 2000],
                     	help="specify the number of bootstraps for 95%% confidence interval estimation, default: 100,\n \
                           choices: 0, 100, 200, 500, 1000, 2000. \n \
@@ -93,12 +95,13 @@ def main():
                           quadratic: fill up with quadratic spline;             \n \
                           cubic: fill up with cubic spline;                \n \
                           nearest: fill up with nearest neighbor") 
-  parser.add_argument("-n", "--normMethod", dest="normMethod", default='pnz', #choices=['percentile', 'pnz', 'none'],
-                      help= "specify the method to normalize data, default: percentile,       \n \
-                          choices: percentile, none, pnz                                        \n \
+  parser.add_argument("-n", "--normMethod", dest="normMethod", default='pnz', #choices=['percentile', 'percentileZ', 'pnz', 'none'],
+                        help= "specify the method to normalize data, default: percentile,       \n \
+                          choices: percentile, none, pnz, percentileZ                         \n \
                           NOTE:                                                         \n \
                           percentile: percentile normalization, including zeros                                    \n \
                           pnz: percentile normalization, excluding zeros                                    \n \
+                          percentileZ: percentile normalization + Z-normalization                                   \n \
                           none or a float number for variance: no normalization and calculate Ptheo with user specified variance, default=1 ")
   
   arg_namespace = parser.parse_args()
@@ -111,6 +114,7 @@ def main():
   resultFile = vars(arg_namespace)['resultFile']			#resultFile
   xiCol = vars(arg_namespace)['xiCol']
   yiCol = vars(arg_namespace)['yiCol']
+  minOccur = vars(arg_namespace)['minOccur']
   pvalueMethod = vars(arg_namespace)['pvalueMethod']
   bootNum = vars(arg_namespace)['bootNum']
   repNum = vars(arg_namespace)['repNum']
@@ -148,10 +152,10 @@ def main():
   else:
     zNormalize = lsalib.noZeroNormalize # fallback to default
   
-  pars = ['fillMethod','pvalueMethod','dataFile','scoutFile','resultFile','repNum','spotNum','bootNum','transFunc','normMethod']
+  pars = ['fillMethod','minOccur', 'pvalueMethod','dataFile','scoutFile','resultFile','repNum','spotNum','bootNum','transFunc','normMethod']
   print "\t".join(pars)
   print "\t".join(['%s']*len(pars)) \
-      % (fillMethod,pvalueMethod,dataFile.name,scoutFile.name,resultFile.name,repNum,spotNum,bootNum,transFunc,normMethod)
+      % (fillMethod,minOccur,pvalueMethod,dataFile.name,scoutFile.name,resultFile.name,repNum,spotNum,bootNum,transFunc,normMethod)
   
   #start timing main
   start_time = time.time()
@@ -200,7 +204,7 @@ def main():
   #print scoutVars
   #print factorLabels
 
-  lsalib.applyLA(tempData, scoutVars, factorLabels, bootNum=bootNum,\
+  lsalib.applyLA(tempData, scoutVars, factorLabels, bootNum=bootNum, minOccur=minOccur/100.,\
       pvalueMethod=pvalueMethod, fTransform=fTransform, zNormalize=zNormalize, resultFile=resultFile)
 
   print >>sys.stderr, "finishing up..."

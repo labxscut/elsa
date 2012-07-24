@@ -160,6 +160,7 @@ def main():
   parser.add_argument("multiOutput", metavar="multiOutput", type=argparse.FileType('w'), help="the multiline output file")
   parser.add_argument("singleCmd", metavar="singleCmd", help="single line command line in quotes")
   parser.add_argument("workDir", metavar="workDir", help="set current working directory")
+  parser.add_argument("-d", "--dryRun", dest="dryRun", default="", help="generate pbs only")
 
 #  """la_compute ARISA.depCmax.txt ARISA.depCmax.S5_L75_Ptheo.lsaq ARISA.depCmax.S5_L75_Ptheo.la -s 114 -r 1 -p 1000"""
   arg_namespace=parser.parse_args()
@@ -167,6 +168,7 @@ def main():
   multiOutput=vars(arg_namespace)['multiOutput']
   singleCmd=vars(arg_namespace)['singleCmd']
   workDir=vars(arg_namespace)['workDir']
+  dryRun=vars(arg_namespace)['dryRun']
 
   singleFiles,resultFiles,endFiles=gen_singles(multiInput,multiOutput)
   for endFile in endFiles:
@@ -180,7 +182,11 @@ def main():
     endFile=endFiles.pop()
     pbsFile=gen_pbs(singleFile, singleCmd, workDir, endFile)
     inProgress.add(endFile)
-    ssa_pbs(pbsFile)
+    if dryRun=='':
+      ssa_pbs(pbsFile)
+  if dryRun!='':
+    print >>sys.stderr, "finish dryRun"
+    quit()
 
   while(len(endJob)!=len(inProgress)):
     for job in inProgress:
@@ -193,8 +199,8 @@ def main():
           print >>multiOutput, "".join(content)
         os.remove(job)
         endJob.add(job)
-        print "ended", job
-        print "remaining jobs", inProgress.difference(endJob), "total", len(inProgress.difference(endJob))
+        print >>sys.stderr, "ended", job
+        print >>sys.stderr, "remaining jobs", inProgress.difference(endJob), "total", len(inProgress.difference(endJob))
 
   #gen_output(multiOutput, resultFiles)
 
