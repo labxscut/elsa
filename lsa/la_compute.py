@@ -107,7 +107,7 @@ def main():
   arg_namespace = parser.parse_args()
 
   #get arguments
-  print >>sys.stderr, "lsa-compute - copyright Li Charlie Xia, lxia@usc.edu"
+  print >>sys.stderr, "la_compute ($Revision$) - copyright Li Charlie Xia, lxia@usc.edu"
   
   dataFile = vars(arg_namespace)['dataFile']				#dataFile
   scoutFile = vars(arg_namespace)['scoutFile']				#extraFile

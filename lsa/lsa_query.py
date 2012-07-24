@@ -71,8 +71,7 @@ def main():
   arg_namespace = parser.parse_args()
 
   #get the arguments
-  print >>sys.stderr, "lsa-query"
-  print >>sys.stderr, "copyright Li Xia, lxia@usc.edu"
+  print >>sys.stderr, "lsa_query ($Revision$) - copyright Li Charlie Xia, lxia@usc.edu"
   print >>sys.stderr, "learning arguments..."
   
   rawFile = vars(arg_namespace)['rawFile']
