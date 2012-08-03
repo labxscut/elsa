@@ -220,7 +220,7 @@ def main():
   #print >>sys.stderr, "data size factorNum, repNum, spotNum = %s, %s, %s" % (cleanData.shape[0], cleanData.shape[1], cleanData.shape[2])
   #print >>sys.stderr, "calculating ..."
   lsalib.applyAnalysis(cleanData[0], cleanData[1], onDiag=onDiag, delayLimit=delayLimit, bootNum=bootNum, minOccur=minOccur/100.,\
-      pvalueMethod=pvalueMethod, precision=precision, fTransform=fTransform, zNormalize=zNormalize, varianceX=varianceX, resultFile=resultFile,\
+      pvalueMethod=pvalueMethod, precisionP=precision, fTransform=fTransform, zNormalize=zNormalize, varianceX=varianceX, resultFile=resultFile,\
       firstFactorLabels=firstFactorLabels, secondFactorLabels=secondFactorLabels)
   #print >>sys.stderr, "writing results ..."
   #col_labels= ['X','Y','LS','lowCI','upCI','Xs','Ys','Len','Delay','P','PCC','Ppcc','SPCC','Pspcc','SCC','Pscc','SSCC','Psscc',

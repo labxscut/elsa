@@ -92,7 +92,6 @@ pipi = np.pi**2 # pi^2
 pipi_inv = 1/pipi
 Q_lam_step = 0.05
 Q_lam_max = 0.95
-P_promising = 0.05
 
 ###############################
 # applyAnalsys
@@ -320,7 +319,7 @@ def theoPvalue(Rmax, Dmax=0, precision=.001, x_decimal=2):   #let's produce 2 ta
 
   return P_table
 	
-def permuPvalue(series1, series2, delayLimit, pvalueMethod, Smax, fTransform, zNormalize):
+def permuPvalue(series1, series2, delayLimit, precisionP, Smax, fTransform, zNormalize):
   """ do permutation Test
 
     Args:
@@ -338,19 +337,19 @@ def permuPvalue(series1, series2, delayLimit, pvalueMethod, Smax, fTransform, zN
 	
   ###print "-------permutation------"
   lsad = compcore.LSA_Data()
-  PP_set = np.zeros(pvalueMethod, dtype='float')
+  PP_set = np.zeros(precisionP, dtype='float')
   Xz = zNormalize(fTransform(series1))
   Y = np.ma.array(series2)                                               #use = only assigns reference, must use a constructor
-  for i in xrange(0, pvalueMethod):
+  for i in xrange(0, precisionP):
     np.random.shuffle(Y.T)
     lsad.assign( delayLimit, Xz, zNormalize(fTransform(Y)) )
     PP_set[i] = compcore.DP_lsa(lsad, False).score
   #PP_set[pvalueMethod]=Smax                                               #the original test shall not be considerred
   #print "PP_set", PP_set, PP_set >= Smax, np.sum(PP_set>=Smax), np.float(pvalueMethod)
   if Smax >= 0:
-    P_two_tail = np.sum(np.abs(PP_set) >= Smax)/np.float(pvalueMethod)
+    P_two_tail = np.sum(np.abs(PP_set) >= Smax)/np.float(precisionP)
   else:
-    P_two_tail = np.sum(-np.abs(PP_set) <= Smax)/np.float(pvalueMethod)
+    P_two_tail = np.sum(-np.abs(PP_set) <= Smax)/np.float(precisionP)
   return P_two_tail
 
 #Q_lam_step = 0.05
@@ -741,7 +740,7 @@ def fillMissing(tseries, method): #teseries is 2d matrix unmasked
         yy[i] = tseries[i] #keep nans
     return yy
     
-def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5, bootCI=.95, bootNum=1000, pvalueMethod=1000, precision=1000,\
+def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5, bootCI=.95, bootNum=1000, pvalueMethod=1000, precisionP=1000,\
     fTransform=simpleAverage, zNormalize=noZeroNormalize, varianceX=1, resultFile=None, firstFactorLabels=None, secondFactorLabels=None):
   """ calculate pairwise LS scores and p-values
 
@@ -798,7 +797,7 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
   ti = 0
   if pvalueMethod in ['theo','mix']:
     #P_table = theoPvalue(D=0, precision=.0001, x_decimal=3)   #let's produce 2 tail-ed p-value
-    P_table = theoPvalue(Rmax=timespots, Dmax=delayLimit, precision=1./precision, x_decimal=my_decimal)
+    P_table = theoPvalue(Rmax=timespots, Dmax=delayLimit, precision=1./precisionP, x_decimal=my_decimal)
     #print P_table
   for i in xrange(0, firstFactorNum):
     Xz = np.ma.masked_invalid(firstData[i], copy=True) #need to convert to masked array with na's, not F-normalized
@@ -909,6 +908,7 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
       #This Part Must Follow Static Calculation Part
       #Otherwise Yz may be changed, now it is copied
       #np.ma.array(copy=True) to copy, otherwise is only reference
+      promisingP = 0.05 #this is according to convention of P-value
       if pvalueMethod in ['theo', 'mix']:
         #x = np.abs(Smax)*np.sqrt(timespots) # x=Rn/sqrt(n)=Smax*sqrt(n)
         #alpha=1-{#(nan+zeros)/timespots}
@@ -919,10 +919,10 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
         else:
           lsaP = readPvalue(P_table, R=np.abs(Smax)*timespots, N=timespots, x_sd=stdX, M=replicates, alpha=Xz_alpha, beta=Yz_beta, x_decimal=my_decimal)
 
-      if (pvalueMethod in ['mix'] and lsaP<=P_promising) or (pvalueMethod in ['perm']):
+      if (pvalueMethod in ['mix'] and lsaP<=promisingP) or (pvalueMethod in ['perm']):
         Xp = np.ma.array(Xz,copy=True)
         Yp = np.ma.array(Yz,copy=True)
-        lsaP = permuPvalue(Xp, Yp, delayLimit, pvalueMethod, np.abs(Smax), fTransform, zNormalize)          # do Permutation Test
+        lsaP = permuPvalue(Xp, Yp, delayLimit, precisionP, np.abs(Smax), fTransform, zNormalize)          # do Permutation Test
 
       pvalues[ti] = lsaP
       #print "bootstrap computing..."
