@@ -1,3 +1,4 @@
 TODO:
   [0] Learn how to use hg command
+      Learn how to use vi editor     
   [1] Smarter Tab delimited file handling
