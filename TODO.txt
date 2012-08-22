@@ -1,2 +1,3 @@
 TODO:
+  [0] Learn how to use hg command
   [1] Smarter Tab delimited file handling
