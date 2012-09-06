@@ -96,13 +96,14 @@ def main():
                           cubic: fill up with cubic spline;                \n \
                           nearest: fill up with nearest neighbor") 
   parser.add_argument("-n", "--normMethod", dest="normMethod", default='pnz', #choices=['percentile', 'percentileZ', 'pnz', 'none'],
-                      help= "specify the method to normalize data, default: percentile,       \n \
-                          choices: percentile, none, pnz, percentileZ                         \n \
+                      help= "must specify the method to normalize data, default: percentileZ,       \n \
+                          choices: percentile, none, pnz, percentileZ or a float                         \n \
                           NOTE:                                                         \n \
                           percentile: percentile normalization, including zeros                                    \n \
                           pnz: percentile normalization, excluding zeros                                    \n \
                           percentileZ: percentile normalization + Z-normalization                                   \n \
-                          none or a float number for variance: no normalization and calculate Ptheo with user specified variance, default=1 ")
+                          a float: no normalization and calculate \n \
+                          Ptheo using specified float variance")
   
   arg_namespace = parser.parse_args()
 
@@ -160,7 +161,7 @@ def main():
     zNormalize = lsalib.noZeroNormalize
     varianceX = float(normMethod)
   else:
-    zNormalize = lsalib.noZeroNormalize # fallback to default
+    zNormalize = lsalib.percentileZNormalize # fallback to default
   
   print "\t".join(['delayLimit','minOccur','fillMethod','pvalueMethod','precision','dataFile','extraFile','resultFile','repNum','spotNum','bootNum','transFunc','normMethod','xVariance'])
   print "\t".join(['%s']*14) % (delayLimit,minOccur,fillMethod,pvalueMethod,precision,dataFile.name,extraFile_name,resultFile.name,repNum,spotNum,bootNum,transFunc,normMethod,str(varianceX))

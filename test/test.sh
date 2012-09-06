@@ -24,9 +24,14 @@ lsa_compute ../test/JAC0503.txt ../test/JAC0503.lsa -r 1 -s 127 -d 3 -p -100000 
 #lsa_query ../debug/debug2.lsa ../debug/debug2.lsa.entry -x ../debug2.lsa.xgmml
 
 lsa_compute ../test/ARISA20.csv ../test/ARISA20.lsa -r 1 -s 127 -d 3 -p theo -x 1000 -f none -n percentile -e ../test/ARISA20.csv
-lsa_query ARISA20.lsa ARISA20.sig.lsa -q '(!lsa$P>0.01)&(lsa$Q<0.01)' -x ARISA20.sig.xgmml -s ARISA20.sig.sif
-la_compute ARISA20.csv ARISA20.sig.lsa ARISA20.sig.la -s 127
+lsa_query ARISA20.lsa ARISA20.sig.lsaq -q '(!lsa$P>0.01)&(lsa$Q<0.01)' -x ARISA20.sig.xgmml -s ARISA20.sig.sif
+la_compute ARISA20.csv ARISA20.sig.lsaq ARISA20.sig.la -s 127
+la_query ARISA20.sig.lsaq ARISA20.sig.la ARISA20.sig.laq -q '(!la$P>0.01)&(la$Q<0.01)' -x ARISA20.sig.xgmml
 
 #LSA test na, appearantly PCC of a zero vector is not defined, so shown nan in output
 lsa_compute ../test/testna.txt ../test/testna.lsa -r 2 -s 4 -d 0 
 la_compute testna.txt testna.lsa testna.la -s 4 -r 2
+
+#
+lsa_compute 090412_sv.txt 090412_sv.lsa -s 40 -r 1 -d 3 -f linear -p perm -x 2000 -m 0 -n percentile
+lsa_compute 090412_z.txt 090412_z.lsa -s 40 -r 1 -d 3 -f linear -p perm -x 2000 -m 0 -n percentile

@@ -726,7 +726,7 @@ def fillMissing(tseries, method): #teseries is 2d matrix unmasked
     return tseries                #return with nans
   else:
     y = tseries[np.logical_not(np.isnan(tseries))]
-    x = np.array(range(0, len(tseries)))[np.logical_not(np.isnan(tseries))]
+    x = np.array(range(0, len(tseries)), dtype='float')[np.logical_not(np.isnan(tseries))]
     try:
       spline_fit = sp.interpolate.interp1d( x, y, method )
     except:
@@ -734,14 +734,19 @@ def fillMissing(tseries, method): #teseries is 2d matrix unmasked
       return tseries              #return with nans
     yy = np.zeros( len(tseries), dtype='float' )
     for i in range(0, len(tseries)):
-      try:
-        yy[i] = spline_fit(i)
-      except ValueError:
-        yy[i] = tseries[i] #keep nans
+      if not np.isnan(tseries[i]):
+        yy[i] = tseries[i]
+      else:
+        try:
+          yy[i] = spline_fit(i)
+        except ValueError:
+          yy[i] = tseries[i] #keep nans
+
     return yy
     
-def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5, bootCI=.95, bootNum=1000, pvalueMethod=1000, precisionP=1000,\
-    fTransform=simpleAverage, zNormalize=noZeroNormalize, varianceX=1, resultFile=None, firstFactorLabels=None, secondFactorLabels=None):
+def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5, bootCI=.95, bootNum=0, pvalueMethod='perm', precisionP=1000,\
+    fTransform=simpleAverage, zNormalize=noZeroNormalize, varianceX=1, resultFile=open("tmp.lsa","w"), \
+    firstFactorLabels=None, secondFactorLabels=None):
   """ calculate pairwise LS scores and p-values
 
     	Args:
@@ -774,6 +779,10 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
   secondFactorNum = secondData.shape[0]
   secondRepNum = secondData.shape[1]
   secondSpotNum = secondData.shape[2]
+  if not firstFactorLabels:
+    firstFactorLabels= [str(v) for v in range(1, firstFactorNum+1)]
+  if not secondFactorLabels:
+    secondFactorLabels= [str(v) for v in range(1, secondFactorNum+1)]
   #for now let's assume same rep number
   #for now let's assume same length
   assert secondSpotNum == firstSpotNum 
@@ -970,7 +979,7 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
     lsaTable[k].append( spccqvalues[k] )
     lsaTable[k].append( sccqvalues[k] )
     lsaTable[k].append( ssccqvalues[k] )
-
+    
   #print lsaTable
   for row in lsaTable:
     print >>resultFile, "\t".join(['%s']*len(col_labels)) % \
