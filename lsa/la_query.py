@@ -83,7 +83,8 @@ def main():
   xgmmlFile = vars(arg_namespace)['xgmmlFile']
   sifFile = vars(arg_namespace)['sifFile']
   analysisTitle = os.path.basename(rawFile2.name)
-  rawFile.close()
+  rawFile1.close()
+  rawFile2.ciose()
   entryFile.close()
 
   print >>sys.stderr, "reading the lsatable..."
