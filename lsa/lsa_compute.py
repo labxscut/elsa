@@ -63,7 +63,8 @@ def main():
                             default: pvalueMethod=perm, i.e. use  permutation \n \
                             theo: theoretical approximaton; mix: use theoretical approximation for pre-screening if promising (<0.05) then use permutation. ")
   parser.add_argument("-x", "--precision", dest="precision", default=1000, type=int,
-                    	help="permutation/precision, specify the permutation number or precision=1/permutation for p-value estimation. ")
+                    	help="permutation/precision, specify the permutation number or precision=1/permutation for p-value estimation. \n \
+                        must be integer >0")
   parser.add_argument("-b", "--bootNum", dest="bootNum", default=0, type=int, choices=[0, 100, 200, 500, 1000, 2000],
                     	help="specify the number of bootstraps for 95%% confidence interval estimation, default: 100,\n \
                           choices: 0, 100, 200, 500, 1000, 2000. \n \
@@ -162,6 +163,8 @@ def main():
     varianceX = float(normMethod)
   else:
     zNormalize = lsalib.percentileZNormalize # fallback to default
+
+  assert precision>0, "precision %s is not positive integer" % str(precision) 
   
   print "\t".join(['delayLimit','minOccur','fillMethod','pvalueMethod','precision','dataFile','extraFile','resultFile','repNum','spotNum','bootNum','transFunc','normMethod','xVariance'])
   print "\t".join(['%s']*14) % (delayLimit,minOccur,fillMethod,pvalueMethod,precision,dataFile.name,extraFile_name,resultFile.name,repNum,spotNum,bootNum,transFunc,normMethod,str(varianceX))
