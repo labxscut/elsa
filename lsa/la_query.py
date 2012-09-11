@@ -82,12 +82,12 @@ def main():
   print "q=", queryLine
   xgmmlFile = vars(arg_namespace)['xgmmlFile']
   sifFile = vars(arg_namespace)['sifFile']
-  analysisTitle = os.path.basename(rawFile1.name&rawFile2.name)
+  analysisTitle = os.path.basename(rawFile2.name)
   rawFile.close()
   entryFile.close()
 
   print >>sys.stderr, "reading the lsatable..."
-  r('''la <- read.delim("%s"&"%s")''' % rawFile1.name,rawFile2.name)
+  r('''la <- read.delim(("%s")&("%s"))''' % (rawFile1.name,rawFile2.name))
 
   try:
     print >>sys.stderr, "querying the lsatable..."
