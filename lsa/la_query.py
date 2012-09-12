@@ -88,7 +88,8 @@ def main():
   entryFile.close()
 
   print >>sys.stderr, "reading the lsatable..."
-  r('''la <- read.delim(("%s")&("%s"))''' % (rawFile1.name,rawFile2.name))
+  r('''lsaq <- read.delim("%s")''' % (rawFile1.name))
+  r('''la <- read.delim("%s")''' % (rawFile2.name))
 
   try:
     print >>sys.stderr, "querying the lsatable..."
@@ -105,6 +106,7 @@ def main():
 
   
   la_size=r('''dim(la_select)''')[0]
+  lsaq_size=r('''dim(lsaq)''')[0]
   #rpy2 and R interfacing debug
   #print r.lsa_select
   #print r('''dim(lsa_select)''')[0]
@@ -117,11 +119,11 @@ def main():
 
   if xgmmlFile != "":
     print >>sys.stderr, "filtering result as a XGMML file for visualization such as cytoscape..."
-    print >>lsaio.tryIO(xgmmlFile,'w'), lsaio.toXgmml(r.la_select, la_size, analysisTitle)
+    print >>lsaio.tryIO(xgmmlFile,'w'), lsaio.LA_Xgmml(r.la_select, la_size, r.lsaq, lsaq_size, analysisTitle)
 
-  if sifFile != "":
-    print >>sys.stderr, "filtering result as a SIF file for visualization such as cytoscape..."
-    lsaio.writeTable(lsaio.tryIO(sifFile,'w'), lsaio.toSif(r.la_select, la_size))
+  #if sifFile != "":
+  #  print >>sys.stderr, "filtering result as a SIF file for visualization such as cytoscape..."
+  #  lsaio.writeTable(lsaio.tryIO(sifFile,'w'), lsaio.toSif(r.la_select, la_size))
 
   print >>sys.stderr, "finishing up..."
   print >>sys.stderr, "Thank you for using lsa-query, byebye!"
