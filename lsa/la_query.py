@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-#lsa-query.py -- script to perform query task for LSA package
+#la-query.py -- script to perform query task for LSA package
 
 #License: BSD
 
@@ -53,17 +53,18 @@ r('''setwd("%s")''' % os.environ.get('PWD'))
 def main():
 
   # define arguments: delayLimit, fillMethod, permuNum
-  parser = argparse.ArgumentParser(description="Auxillary tool to new LSA package for querying lsa results")
+  parser = argparse.ArgumentParser(description="Auxillary tool to new LSA package for querying la results")
 
-  parser.add_argument("rawFile", metavar= "rawFile", type=argparse.FileType('rU'), help="the raw lsa file")
+  parser.add_argument("rawFile1", metavar= "rawFile1", type=argparse.FileType('rU'), help="the raw lsaq file")
+  parser.add_argument("rawFile2", metavar= "rawFile2", type=argparse.Filetype('rU'), help="the raw la file")
   parser.add_argument("entryFile", metavar= "entryFile", type=argparse.FileType('w'), help="the query result file")
 
   parser.add_argument("-q", "--queryLine", dest="queryLine", default=None,
                       help="specify the highest pValue threshold for querying, default: None \n \
                         formatting a query: \n \
-                        '[!]lsa$Key1[>,<,>=,<=,==,!=]V1[|,&][!]lsa$Key2[>,<,>=,<=,==,!=]V2[|,&]...' \n \
+                        '[!]la$Key1[>,<,>=,<=,==,!=]V1[|,&][!]la$Key2[>,<,>=,<=,==,!=]V2[|,&]...' \n \
                         and any groupings using '(' and ')' e.g. \n \
-                        '(!lsa$P>0.01)&(lsa$Q<0.01)'") 
+                        '(!la$P>0.01)&(la$Q<0.01)'") 
   parser.add_argument("-x", "--xgmmlFile", dest="xgmmlFile", default="",
                       help="if specified, will also produce a XGMML format file for cytoscape")
   parser.add_argument("-s", "--sifFile", dest="sifFile", default="",
@@ -71,37 +72,41 @@ def main():
   arg_namespace = parser.parse_args()
 
   #get the arguments
-  print >>sys.stderr, "lsa_query ($Revision$) - copyright Li Charlie Xia, lxia@usc.edu"
+  print >>sys.stderr, "la_query ($Revision$) - copyright Li Charlie Xia, lxia@usc.edu"
   print >>sys.stderr, "learning arguments..."
   
-  rawFile = vars(arg_namespace)['rawFile']
+  rawFile1 = vars(arg_namespace)['rawFile1']
+  rawFile2 = vars(arg_namespace)['rawFile2']
   entryFile = vars(arg_namespace)['entryFile']
   queryLine = vars(arg_namespace)['queryLine']
   print "q=", queryLine
   xgmmlFile = vars(arg_namespace)['xgmmlFile']
   sifFile = vars(arg_namespace)['sifFile']
-  analysisTitle = os.path.basename(rawFile.name)
-  rawFile.close()
+  analysisTitle = os.path.basename(rawFile2.name)
+  rawFile1.close()
+  rawFile2.ciose()
   entryFile.close()
 
   print >>sys.stderr, "reading the lsatable..."
-  r('''lsa <- read.delim("%s")''' % rawFile.name)
+  r('''lsaq <- read.delim("%s")''' % (rawFile1.name))
+  r('''la <- read.delim("%s")''' % (rawFile2.name))
 
   try:
     print >>sys.stderr, "querying the lsatable..."
-    r('''lsa_select <- lsa[%s,]''' % queryLine)
+    r('''la_select <- la[%s,]''' % queryLine)
   except ValueError:
     print >>sys.stderr, "error query formatting, try again"
     quit()
   try:
     print >>sys.stderr, "writing up result file..."
-    r('''write.table( lsa_select, file="%s", quote=FALSE, row.names=FALSE, sep='\t' )''' % entryFile.name)
+    r('''write.table( la_select, file="%s", quote=FALSE, row.names=FALSE, sep='\t' )''' % entryFile.name)
   except ValueError:
     print >>sys.stderr, "no entry selected, try again"
     quit()
 
   
-  lsa_size=r('''dim(lsa_select)''')[0]
+  la_size=r('''dim(la_select)''')[0]
+  lsaq_size=r('''dim(lsaq)''')[0]
   #rpy2 and R interfacing debug
   #print r.lsa_select
   #print r('''dim(lsa_select)''')[0]
@@ -114,11 +119,11 @@ def main():
 
   if xgmmlFile != "":
     print >>sys.stderr, "filtering result as a XGMML file for visualization such as cytoscape..."
-    print >>lsaio.tryIO(xgmmlFile,'w'), lsaio.toXgmml(r.lsa_select, lsa_size, analysisTitle)
+    print >>lsaio.tryIO(xgmmlFile,'w'), lsaio.LA_Xgmml(r.la_select, la_size, r.lsaq, lsaq_size, analysisTitle)
 
-  if sifFile != "":
-    print >>sys.stderr, "filtering result as a SIF file for visualization such as cytoscape..."
-    lsaio.writeTable(lsaio.tryIO(sifFile,'w'), lsaio.toSif(r.lsa_select, lsa_size))
+  #if sifFile != "":
+  #  print >>sys.stderr, "filtering result as a SIF file for visualization such as cytoscape..."
+  #  lsaio.writeTable(lsaio.tryIO(sifFile,'w'), lsaio.toSif(r.la_select, la_size))
 
   print >>sys.stderr, "finishing up..."
   print >>sys.stderr, "Thank you for using lsa-query, byebye!"
