@@ -118,7 +118,7 @@ def main():
 
   if xgmmlFile != "":
     print >>sys.stderr, "filtering result as a XGMML file for visualization such as cytoscape..."
-    print >>lsaio.tryIO(xgmmlFile,'w'), lsaio.LA_Xgmml(r.la_select, la_size, r.lsaq, lsaq_size, analysisTitle)
+    print >>lsaio.tryIO(xgmmlFile,'w'), lsaio.LAXgmml(r.la_select, la_size, r.lsaq, lsaq_size, analysisTitle)
 
   #if sifFile != "":
   #  print >>sys.stderr, "filtering result as a SIF file for visualization such as cytoscape..."
