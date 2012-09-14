@@ -85,7 +85,7 @@ def main():
   sifFile = vars(arg_namespace)['sifFile']
   analysisTitle = os.path.basename(rawFile2.name)
   rawFile1.close()
-  rawFile2.ciose()
+  rawFile2.close()
   entryFile.close()
 
   print >>sys.stderr, "reading the lsatable..."
