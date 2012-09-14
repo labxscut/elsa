@@ -10,6 +10,20 @@ from rpy2.robjects.numpy2ri import numpy2ri
 ro.conversion.py2ri = numpy2ri
 r = ro.r
 
+def tryIO( file, mode ):
+  """ Test the IO file before using it.
+  file - string including path and filname.
+  mode - input or output mode, "r" or "w", or others support by
+          python open() function.
+  """
+  try:
+    handle = open( file, mode )
+  except IOError:
+    print "Error: can't open " + file +" file for " + mode
+    sys.exit(2)
+  return handle
+
+
 def LA_Xgmml(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=3, Delay_idx=9):
 
   nodes = set()
@@ -51,8 +65,8 @@ def LA_Xgmml(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=3
   li = LS_idx-1 #3-1
 
   for i in xrange(1, lsaq_size+1):
-    node_x = r['''as.character''']((lsa_table.rx(i,True)[0]))[0]
-    node_y = r['''as.character''']((lsa_table.rx(i,True)[1]))[0]
+    node_x = r['''as.character''']((lsaq_table.rx(i,True)[0]))[0]
+    node_y = r['''as.character''']((lsaq_table.rx(i,True)[1]))[0]
     same = 0
     if tuple(lsaq_table.rx(i,True)[di])[0] > 0:
          d_code = 'dr'      #direction reta
@@ -168,4 +182,7 @@ def LA_Xgmml(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=3
         LS_element.set('value', "%.4f" % tuple(lsaq_table.rx(i,True)[2])[0])
   xgmml_string = etree.tostring(xgmml_element, encoding='utf-8')
   return xml.dom.minidom.parseString(xgmml_string).toprettyxml('  ')
-)
+if __name__=="__main__":
+  main()
+  exit(0)
+

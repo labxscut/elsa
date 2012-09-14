@@ -10,6 +10,7 @@ lsa/compcore.py
 lsa/compcore_wrap.cpp
 lsa/la_compute.py
 lsa/la_query.py
+lsa/laio.py
 lsa/lla_compute.py
 lsa/lsa_compute.py
 lsa/lsa_infer.py
