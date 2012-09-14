@@ -82,7 +82,7 @@ setup(name="lsa",
     #ext_modules = [Extension('lsa._compcore', sources = ['lsa/compcore.i', 'lsa/compcore.cpp'],
     #                               depends=['lsa/compcore.h'],
     #                               swig_opts=['-c++', '-nomodern', '-classic', '-nomodernargs'])],
-    py_modules = ['lsa.compcore', 'lsa.lsalib', 'lsa.lsaio'],
+    py_modules = ['lsa.compcore', 'lsa.lsalib', 'lsa.lsaio', 'lsa.laio'],
     cmdclass = {'build': my_build},
     data_files = [('',['README.txt','LICENSE.txt', ])],
     entry_points = { 
