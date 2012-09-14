@@ -35,11 +35,11 @@ import numpy as np
 try:
   # installed 
   from lsa import lsaio
-  from lsa import la_io
+  from lsa import laio
 except ImportError:
   # debug
   import lsaio
-  import la_io
+  import laio
 import rpy2.rlike.container as rlc
 import rpy2.robjects as ro
 from rpy2.robjects.numpy2ri import numpy2ri
@@ -120,7 +120,7 @@ def main():
 
   if xgmmlFile != "":
     print >>sys.stderr, "filtering result as a XGMML file for visualization such as cytoscape..."
-    print >>lsaio.tryIO(xgmmlFile,'w'), la_io.LA_Xgmml(r.la_select, la_size, r.lsaq, lsaq_size, analysisTitle)
+    print >>lsaio.tryIO(xgmmlFile,'w'), laio.LA_Xgmml(r.la_select, la_size, r.lsaq, lsaq_size, analysisTitle)
 
   #if sifFile != "":
   #  print >>sys.stderr, "filtering result as a SIF file for visualization such as cytoscape..."
