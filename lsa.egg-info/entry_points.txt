@@ -1,8 +1,0 @@
-[console_scripts]
-lsa_compute = lsa.lsa_compute:main
-lsa_query = lsa.lsa_query:main
-par_la = lsa.par_la:main
-lsa_sim = lsa.lsa_sim:main
-la_compute = lsa.la_compute:main
-to_trend = lsa.to_trend:main
-
