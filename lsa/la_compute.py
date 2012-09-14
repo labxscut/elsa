@@ -182,7 +182,7 @@ def main():
                          An in total, it shall have spotNum * repNum numeric cells for repNum-replicated spotNum-timepoint series data. "
     exit(0)
 
-  print inputData.shape
+  #print inputData.shape
   factorNum = inputData.shape[0]
   tempData=np.zeros( (factorNum, repNum, spotNum), dtype='float' ) # (num_rows-1) x (num_cols/repNum) x (repNum)
   for i in xrange(0, factorNum):
