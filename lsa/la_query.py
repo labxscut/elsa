@@ -38,7 +38,9 @@ try:
 except ImportError:
   # debug
   import lsaio
+try:  
   from lsa import laio
+except ImportError:  
   import laio
 import rpy2.rlike.container as rlc
 import rpy2.robjects as ro
