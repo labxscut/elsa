@@ -3,6 +3,7 @@ import xml.etree.ElementTree as etree
 import xml.dom.minidom
 
 
+
 import rpy2.rlike.container as rlc
 import rpy2.robjects as ro
 from rpy2.robjects.numpy2ri import numpy2ri
@@ -64,8 +65,8 @@ def LA_Xgmml(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=3
   li = LS_idx-1 #3-1
 
   for i in xrange(1, lsaq_size+1):
-    node_x = r['''as.character''']((lsaq_table.rx(i,True)[0]))[0]
-    node_y = r['''as.character''']((lsaq_table.rx(i,True)[1]))[0]
+    node_x = r['''as.character''']((lsa_table.rx(i,True)[0]))[0]
+    node_y = r['''as.character''']((lsa_table.rx(i,True)[1]))[0]
     same = 0
     if tuple(lsaq_table.rx(i,True)[di])[0] > 0:
          d_code = 'dr'      #direction reta
