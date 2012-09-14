@@ -310,7 +310,7 @@ def toXgmml( lsa_table, lsa_size, title, LS_idx=3, Delay_idx=9):
   xgmml_string = etree.tostring(xgmml_element, encoding='utf-8')
   return xml.dom.minidom.parseString(xgmml_string).toprettyxml('  ')
 
-def LAXgmml(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=3, Delay_idx=9):
+def laxgmml(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=3, Delay_idx=9):
 
   nodes = set()
   for i in xrange(1, lsaq_size+1):  
