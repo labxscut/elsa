@@ -35,10 +35,10 @@ import numpy as np
 try:
   # installed 
   from lsa import lsaio
-  from lsa import laio
 except ImportError:
   # debug
   import lsaio
+  from lsa import laio
   import laio
 import rpy2.rlike.container as rlc
 import rpy2.robjects as ro
