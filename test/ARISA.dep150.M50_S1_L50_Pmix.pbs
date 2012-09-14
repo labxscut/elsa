@@ -1,0 +1,15 @@
+#!/bin/bash
+#PBS -N ARISA.dep150.M50_S1_L50_Pmix.pbs 
+#PBS -S /bin/bash 
+#PBS -j oe
+#PBS -o ARISA.dep150.M50_S1_L50_Pmix.pbs.log
+#PBS -l walltime=299:00:00
+#PBS -l nodes=1:ppn=1,mem=2000mb,vmem=2000mb,pmem=2000mb
+cd /home/rcf-47/lxia/work/swigwork/lsa-tip/test/SPOT_Jul23
+echo " lsa_compute ARISA.dep150.txt ARISA.dep150.M50_S1_L50_Pmix.lsa -r 1 -d 0 -s 114 -p mix -f linear -n pnz -m 50 -x 1000 "
+lsa_compute ARISA.dep150.txt ARISA.dep150.M50_S1_L50_Pmix.lsa -r 1 -d 0 -s 114 -p mix -f linear -n pnz -m 50 -x 1000
+echo " lsa_query ARISA.dep150.M50_S1_L50_Pmix.lsa ARISA.dep150.M50_S1_L50_Pmix.lsaq -q '(!lsa$P>0.001)&(lsa$Q<=0.05)&(lsa$Len>44)&(lsa$Len<114)&(lsa$Xi<289)&(lsa$Yi<289)' "
+lsa_query ARISA.dep150.M50_S1_L50_Pmix.lsa ARISA.dep150.M50_S1_L50_Pmix.lsaq -q '(!lsa$P>0.001)&(lsa$Q<=0.05)&(lsa$Len>44)&(lsa$Len<114)&(lsa$Xi<289)&(lsa$Yi<289)'
+echo " par_la ARISA.dep150.M50_S1_L50_Pmix.lsaq ARISA.dep150.M50_S1_L50_Pmix.la 'la_compute ARISA.dep150.txt %s %s -s 114 -r 1 -p 1000 -m 50 -f linear' /home/rcf-47/lxia/work/swigwork/lsa-tip/test/SPOT_Jul23 "
+par_la ARISA.dep150.M50_S1_L50_Pmix.lsaq ARISA.dep150.M50_S1_L50_Pmix.la 'la_compute ARISA.dep150.txt %s %s -s 114 -r 1 -p 1000 -m 50 -f linear' /home/rcf-47/lxia/work/swigwork/lsa-tip/test/SPOT_Jul23
+cd $OLDPWD

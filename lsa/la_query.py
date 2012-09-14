@@ -34,11 +34,10 @@ import argparse, sys, os, csv, re, rpy2
 import numpy as np
 try:
   # installed 
-  from lsa import lsaio
+  from lsa import laio
 except ImportError:
   # debug
-  import lsaio
-
+  import laio
 import rpy2.rlike.container as rlc
 import rpy2.robjects as ro
 from rpy2.robjects.numpy2ri import numpy2ri
@@ -56,7 +55,7 @@ def main():
   parser = argparse.ArgumentParser(description="Auxillary tool to new LSA package for querying la results")
 
   parser.add_argument("rawFile1", metavar= "rawFile1", type=argparse.FileType('rU'), help="the raw lsaq file")
-  parser.add_argument("rawFile2", metavar= "rawFile2", type=argparse.Filetype('rU'), help="the raw la file")
+  parser.add_argument("rawFile2", metavar= "rawFile2", type=argparse.FileType('rU'), help="the raw la file")
   parser.add_argument("entryFile", metavar= "entryFile", type=argparse.FileType('w'), help="the query result file")
 
   parser.add_argument("-q", "--queryLine", dest="queryLine", default=None,
@@ -84,7 +83,7 @@ def main():
   sifFile = vars(arg_namespace)['sifFile']
   analysisTitle = os.path.basename(rawFile2.name)
   rawFile1.close()
-  rawFile2.ciose()
+  rawFile2.close()
   entryFile.close()
 
   print >>sys.stderr, "reading the lsatable..."
@@ -119,7 +118,7 @@ def main():
 
   if xgmmlFile != "":
     print >>sys.stderr, "filtering result as a XGMML file for visualization such as cytoscape..."
-    print >>lsaio.tryIO(xgmmlFile,'w'), lsaio.LA_Xgmml(r.la_select, la_size, r.lsaq, lsaq_size, analysisTitle)
+    print >>laio.tryIO(xgmmlFile,'w'), laio.LA_Xgmml(r.la_select, la_size, r.lsaq, lsaq_size, analysisTitle)
 
   #if sifFile != "":
   #  print >>sys.stderr, "filtering result as a SIF file for visualization such as cytoscape..."

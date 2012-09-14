@@ -1,0 +1,14 @@
+Metadata-Version: 1.1
+Name: lsa
+Version: 1.0.0
+Summary: Local Simularity Analysis Package.
+Home-page: http://meta.usc.edu/softs/lsa
+Author: Li Charlie Xia
+Author-email: lxia@usc.edu
+License: BSD
+Description: This python module provide tools for aligning and analyzing the time shift
+        dependent pairwise correlation between two sequence of evenly spaced 
+        observation data. Permutation test is used to estimate the P-value. 
+        The results can be summarized and easily queried for desired analysis.
+Platform: Linux
+Provides: lsa

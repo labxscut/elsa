@@ -1,0 +1,29 @@
+delay case:
+if A lead B and association is positive, label A_pdl_B, draw as A->B
+if A lead B and association is negative, label A_ndl_B, draw as A.>B
+if B lead A and association is positive, label A_pdr_B, draw as A<-B
+if B lead A and association is negative, label A_ndr_B, draw as A<.B
+non-delay case:
+if A non-delay B, but association is positive, label A_pu_B, draw as A-B
+if A non-delay B, but association is negative, label A_nu_B, draw as A.B
+
+note m_A_B as M
+if A->B:
+	if LA(A,B,C) > 0:
+		draw A-M->B, C-M
+		label A_pu_M, M_pdl_B, C_pu_M	
+	if LA(A,B,C) < 0:
+		A-M->B, C.M
+		label A_pu_M, M_pdl_B, C_nu_M	
+non-delay case:
+if A non-delay B, but association is positive, label A_pu_B, draw as A-B
+if A non-delay B, but association is negative, label A_nu_B, draw as A.B
+
+note m_A_B as M
+if A->B:
+	if LA(A,B,C) > 0:
+		draw A-M->B, C-M
+		label A_pu_M, M_pdl_B, C_pu_M	
+	if LA(A,B,C) < 0:
+		A-M->B, C.M
+		label A_pu_M, M_pdl_B, C_nu_M	
