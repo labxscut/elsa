@@ -81,30 +81,31 @@ def LA_Xgmml(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=3
          c_code = 'n'
     interaction = c_code+d_code
 
+    if interaction == 'pdl':
+         interaction1 = 'pu'
+         interaction2 = 'pdl'
+    elif interaction == 'ndl':
+         interaction1 = 'nu'
+         interaction2 = 'ndl'
+    elif interaction == 'pdr':
+         interaction1 = 'pdr'
+         interaction2 = 'pu'
+    elif interaction == 'ndr':
+         interaction1 = 'ndr'
+         interaction2 = 'nu'
+    elif interaction == 'pu':
+         interaction1 = 'pu'
+         interaction2 = 'pu'
+    else:
+         interaction1 = 'nu'
+         interaction2 = 'nu'
+
     for a in xrange(1, la_size+1):
       node_v = r['''as.character''']((la_table.rx(a,True)[0]))[0]
       node_e = r['''as.character''']((la_table.rx(a,True)[1]))[0]
       node_z = r['''as.character''']((la_table.rx(a,True)[2]))[0]
       if ((node_x==node_v)&(node_y==node_e)):
         same += 1
-        if interaction == 'pdl':
-           interaction1 = 'pu'
-           interaction2 = 'pdl'
-        if interaction == 'ndl':
-           interaction1 = 'nu'
-           interaction2 = 'ndl'
-        if interaction == 'pdr':
-           interaction1 = 'pdr'
-           interaction2 = 'pu'
-        if interaction == 'ndr':
-           interaction1 = 'ndr'
-           interaction2 = 'nu'
-        if interaction == 'pu':
-           interaction1 = 'pu'
-           interaction2 = 'pu'
-        if interaction == 'nu':
-           interaction1 = 'nu'
-           interaction2 = 'nu'
         if tuple(la_table.rx(a,True)[lai])[0] >= 0:
            interaction3 = 'pu'
         else:
