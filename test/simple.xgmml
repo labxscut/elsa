@@ -19,20 +19,17 @@
     <att name="interaction" type="string" value="pu"/>
     <att name="LS" type="real" value="0.6145"/>
   </edge>
+  <edge label="5_ARISA_570.1_nu_m_5_ARISA_402.4_5_ARISA_419.5" source="5_ARISA_570.1" target="m_5_ARISA_402.4_5_ARISA_419.5">
+    <att name="interaction" type="string" value="nu"/>
+    <att name="LA" type="real" value="-0.2537"/>
+  </edge>
   <edge label="5_ARISA_402.4_pu_m_5_ARISA_402.4_5_ARISA_419.5" source="5_ARISA_402.4" target="m_5_ARISA_402.4_5_ARISA_419.5">
     <att name="interaction" type="string" value="pu"/>
     <att name="LS" type="real" value="0.3651"/>
-    <att name="LA" type="real" value="-0.2537"/>
   </edge>
   <edge label="m_5_ARISA_402.4_5_ARISA_419.5_pu_5_ARISA_419.5" source="m_5_ARISA_402.4_5_ARISA_419.5" target="5_ARISA_419.5">
     <att name="interaction" type="string" value="pu"/>
     <att name="LS" type="real" value="0.3651"/>
-    <att name="LA" type="real" value="-0.2537"/>
-  </edge>
-  <edge label="5_ARISA_570.1_nu_m_5_ARISA_402.4_5_ARISA_419.5" source="5_ARISA_570.1" target="m_5_ARISA_402.4_5_ARISA_419.5">
-    <att name="interaction" type="string" value="nu"/>
-    <att name="LS" type="real" value="0.3651"/>
-    <att name="LA" type="real" value="-0.2537"/>
   </edge>
   <edge label="5_ARISA_402.4_pu_5_ARISA_471.9" source="5_ARISA_402.4" target="5_ARISA_471.9">
     <att name="interaction" type="string" value="pu"/>
