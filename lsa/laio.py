@@ -23,6 +23,29 @@ def tryIO( file, mode ):
   return handle
 
 
+def LA_Xgmml2(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=3, Delay_idx=9):
+  lsaq_nodes=set()
+  lsaq_edges=dict()
+  #construct lsaq_nodes
+  #construct lsaq_edges
+  #dict={key1:value1, k2:v2, k3:v3,....}
+  #dict.remove(ki)
+  #dict[kj]=vj
+  for i in xrange(1, lsaq_size+1):  
+    lsaq_edges[(node_x, node_y)]=(i, None)
+    
+  laq_nodes=lsaq_nodes
+  laq_edges=
+  
+  for i in xrnge
+    edge = laq_edges.remove((node_x, 
+    laq_edges[(node_x, node_m)] = (-1, {'LA':la_score, 'interaction':interaction_type1})  
+    laq_edges[(node_y, node_m)] = (-1, {'LA':la_score, 'interaction':interaction_type1})  
+    laq_edges[(node_z, node_m)] = (-1, {'LA':la_score, 'interaction':interaction_type1})  
+    
+  #create graph from laq_
+
+
 def LA_Xgmml(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=3, Delay_idx=9):
 
   nodes = set()

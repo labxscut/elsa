@@ -94,6 +94,7 @@ setup(name="lsa",
             'to_trend = lsa.to_trend:main',
             'lsa_sim = lsa.lsa_sim:main',
             'par_la = lsa.par_la:main',
+	    'check_data = lsa.check_data:main',
         ]
     },
 )
