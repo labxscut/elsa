@@ -845,7 +845,7 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
       Yz_badOccur = np.sum(np.logical_not(np.isnan(ma_average(Yz)), ma_average(Yz)==0))/float(timespots) < minOccur
       #print i+1, np.sum(np.logical_not(np.isnan(ma_average(Xz)), ma_average(Xz)==0))/float(timespots), Xz_badOccur, \
       #	    j+1, np.sum(np.logical_not(np.isnan(ma_average(Yz)), ma_average(Yz)==0))/float(timespots), Yz_badOccur
-      if Yz_badOccur:
+      #if Yz_badOccur:
 	#print ma_average(Yz), ma_average(Yz).mask, quit()
       if Yz.shape[1] == None: #For 1-d array, convert to 2-d
         Yz.shape = (1, Yz.shape[0])
