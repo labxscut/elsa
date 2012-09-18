@@ -59,6 +59,7 @@ r = ro.r
 #print '''setwd("%s")''' % os.environ.get('PWD')
 r('''setwd("%s")''' % os.environ.get('PWD'))
 r('''options(warn=-1)''') 
+r('''library(qvalue)''')
 
 #import lower level resource
 try:
@@ -90,7 +91,7 @@ Rmax_min=10
 my_decimal = 2    # preset x step size for P_table
 pipi = np.pi**2 # pi^2
 pipi_inv = 1/pipi
-Q_lam_step = 0.05
+Q_lam_step = 0.0001
 Q_lam_max = 0.95
 
 ###############################
@@ -354,6 +355,30 @@ def permuPvalue(series1, series2, delayLimit, precisionP, Smax, fTransform, zNor
 
 #Q_lam_step = 0.05
 #Q_lam_max = 0.95
+#qvalue(p=NULL, lambda=seq(0,0.90,0.05), pi0.method="smoother", fdr.level=NULL, robust=FALSE, gui=FALSE, 
+#       smooth.df=3, smooth.log.pi0=FALSE)
+def R_Qvalue(pvalues, lam=np.arange(0,Q_lam_max,Q_lam_step), method='smoother', robust=False, smooth_df=3):
+  pvalues_not_nan = np.logical_not(np.isnan(pvalues))
+  pvalues_input = pvalues[pvalues_not_nan] 
+  try:
+    #print "pvalues=", pvalues
+    #print "pvalues_input=", pvalues_input
+    qvalues=r['''qvalue'''](p=pvalues_input, **{'lambda':lam, 'pi0.method':method, 'robust':robust, 'smooth.df':3})
+    qvalues_return = [np.nan]*len(pvalues)
+    #print "qvalues=", qvalues
+    #print len(qvalues)
+    #print qvalues[2] -- this is $qvalues
+    j = 0
+    for i in xrange(0, len(pvalues)):
+      if not np.isnan(pvalues[i]):
+        qvalues_return[i]=qvalues[2][j]
+        j = j+1
+  except IndexError:
+    #print >>sys.stderr, "caution: q-value estimation error"
+    print >>sys.stderr, "unusable pvalues:", pvalues_input
+    qvalues_return=[np.nan]*len(pvalues)
+  #print "qvalues_return=", qvalues_return
+  return qvalues_return
 
 def storeyQvalue(pvalues, lam=np.arange(0,Q_lam_max,Q_lam_step), method='smoother', robust=False, smooth_df=3):
   """ do Q-value calculation
@@ -963,15 +988,20 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
   #print "pvalues", pvalues, np.isnan(np.sum(pvalues))
   #print "pccpvalues", pccpvalues, np.isnan(np.sum(pccpvalues))
   #print "lsaP"
-  qvalues = storeyQvalue( pvalues )
+  #qvalues = storeyQvalue( pvalues )
+  qvalues = R_Qvalue( pvalues )
   #print "pccP"
-  pccqvalues = storeyQvalue( pccpvalues )
+  #pccqvalues = storeyQvalue( pccpvalues )
+  pccqvalues = R_Qvalue( pccpvalues )
   #print "sccP"
-  sccqvalues = storeyQvalue( sccpvalues )
+  #sccqvalues = storeyQvalue( sccpvalues )
+  sccqvalues = R_Qvalue( sccpvalues )
   #print "spccP"
-  spccqvalues = storeyQvalue( spccpvalues )
+  #spccqvalues = storeyQvalue( spccpvalues )
+  spccqvalues = R_Qvalue( spccpvalues )
   #print "ssccP"
-  ssccqvalues = storeyQvalue( ssccpvalues )
+  #ssccqvalues = storeyQvalue( ssccpvalues )
+  ssccqvalues = R_Qvalue( ssccpvalues )
 
   for k in xrange(0, len(qvalues)):
     lsaTable[k].append( qvalues[k] )
@@ -1054,7 +1084,8 @@ def applyLA(inputData, scoutVars, factorLabels, bootCI=.95, bootNum=1000, minOcc
 
   pvalues = pvalues[:ti]
   laTable = laTable[:ti]
-  qvalues = storeyQvalue( pvalues )
+  #qvalues = storeyQvalue( pvalues )
+  qvalues = R_Qvalue( pvalues )
   for k in xrange(0, len(qvalues)):
     laTable[k] = laTable[k] + [ qvalues[k], laTable[k][0]+1, laTable[k][1]+1, laTable[k][2]+1 ]
 
