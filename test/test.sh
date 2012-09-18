@@ -10,6 +10,7 @@ lsa_compute ../test/testrep.txt ../test/testrep.MAD.lsa -r 5 -s 20 -d 3 -n none 
 lsa_compute ../test/PreLSAspl3na.txt ../test/PreLSAspl3na.lsa -r 1 -s 43 -d 1 -p 100
 #Some real olddata
 lsa_compute ../test/olddata.txt ../test/olddata.lsa -r 1 -s 35 -d 3
+lsa_compute ../test/olddata.txt ../test/olddata.1.lsa -r 1 -s 35 -d 3 -f linear -p perm -x 100 -m 0 -n percentile &
 #
 lsa_compute ../test/ShortJAC.csv ../test/ShortJAC.lsa -r 1 -s 127 -d 3 -p -100
 #

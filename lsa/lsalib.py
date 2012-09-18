@@ -91,7 +91,7 @@ Rmax_min=10
 my_decimal = 2    # preset x step size for P_table
 pipi = np.pi**2 # pi^2
 pipi_inv = 1/pipi
-Q_lam_step = 0.0001
+Q_lam_step = 0.00001
 Q_lam_max = 0.95
 
 ###############################
@@ -371,11 +371,11 @@ def R_Qvalue(pvalues, lam=np.arange(0,Q_lam_max,Q_lam_step), method='smoother', 
     j = 0
     for i in xrange(0, len(pvalues)):
       if not np.isnan(pvalues[i]):
-        qvalues_return[i]=qvalues[2][j]
+        qvalues_return[i]=qvalues[2][j]   #second item is calculated qvalues
         j = j+1
   except IndexError:
     #print >>sys.stderr, "caution: q-value estimation error"
-    print >>sys.stderr, "unusable pvalues:", pvalues_input
+    print >>sys.stderr, "from R: unusable pvalues -> ", pvalues_input
     qvalues_return=[np.nan]*len(pvalues)
   #print "qvalues_return=", qvalues_return
   return qvalues_return
@@ -835,14 +835,18 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
     #print P_table
   for i in xrange(0, firstFactorNum):
     Xz = np.ma.masked_invalid(firstData[i], copy=True) #need to convert to masked array with na's, not F-normalized
-    Xz_minOccur = np.sum(np.logical_or(np.isnan(ma_average(Xz)), ma_average(Xz)==0))/float(timespots) < minOccur
+    Xz_badOccur = np.sum(np.logical_not(np.isnan(ma_average(Xz)), ma_average(Xz)==0))/float(timespots) < minOccur
     if Xz.shape[1] == None: #For 1-d array, convert to 2-d
       Xz.shape = (1, Xz.shape[0])
     for j in xrange(0, secondFactorNum):
       if onDiag and i>=j:
         continue   #only care lower triangle entries, ignore i=j entries
       Yz = np.ma.masked_invalid(secondData[j], copy=True)    # need to convert to masked array with na's, not F-normalized
-      Yz_minOccur = np.sum(np.logical_or(np.isnan(ma_average(Yz)), ma_average(Yz)==0))/float(timespots) < minOccur
+      Yz_badOccur = np.sum(np.logical_not(np.isnan(ma_average(Yz)), ma_average(Yz)==0))/float(timespots) < minOccur
+      #print i+1, np.sum(np.logical_not(np.isnan(ma_average(Xz)), ma_average(Xz)==0))/float(timespots), Xz_badOccur, \
+      #	    j+1, np.sum(np.logical_not(np.isnan(ma_average(Yz)), ma_average(Yz)==0))/float(timespots), Yz_badOccur
+      if Yz_badOccur:
+	#print ma_average(Yz), ma_average(Yz).mask, quit()
       if Yz.shape[1] == None: #For 1-d array, convert to 2-d
         Yz.shape = (1, Yz.shape[0])
       #if i == 36 or j == 36:
@@ -853,7 +857,7 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
 
       #control minZeroPercent or allNA here
       
-      if np.all(Yz.mask) or np.all(Xz.mask) or Xz_minOccur or Yz_minOccur:  # not any unmasked value in Xz or Yz, all nan in input, warn code -1
+      if np.all(Yz.mask) or np.all(Xz.mask) or Xz_badOccur or Yz_badOccur:  # not any unmasked value in Xz or Yz, all nan in input, warn code -1
       #lsaTable[ti] = [i, j, Smax,   Sl,     Su,     Xs,Ys,Al,Xs-Ys, lsaP,   PCC,    P_PCC,  SPCC,   P_SPCC, D_SPCC, SCC,    P_SCC,  SSCC,   P_SSCC, D_SSCC]
         lsaTable[ti] =[i, j, np.nan, np.nan, np.nan, -1, -1, -1, -1, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan]
         pvalues[ti] = np.nan
@@ -989,18 +993,23 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
   #print "pccpvalues", pccpvalues, np.isnan(np.sum(pccpvalues))
   #print "lsaP"
   #qvalues = storeyQvalue( pvalues )
+  print >>sys.stderr, "LS Qvalues..."
   qvalues = R_Qvalue( pvalues )
   #print "pccP"
   #pccqvalues = storeyQvalue( pccpvalues )
+  print >>sys.stderr, "PCC Qvalues..."
   pccqvalues = R_Qvalue( pccpvalues )
   #print "sccP"
   #sccqvalues = storeyQvalue( sccpvalues )
+  print >>sys.stderr, "SCC Qvalues..."
   sccqvalues = R_Qvalue( sccpvalues )
   #print "spccP"
   #spccqvalues = storeyQvalue( spccpvalues )
+  print >>sys.stderr, "SPCC Qvalues..."
   spccqvalues = R_Qvalue( spccpvalues )
   #print "ssccP"
   #ssccqvalues = storeyQvalue( ssccpvalues )
+  print >>sys.stderr, "SSCC Qvalues..."
   ssccqvalues = R_Qvalue( ssccpvalues )
 
   for k in xrange(0, len(qvalues)):
@@ -1054,7 +1063,7 @@ def applyLA(inputData, scoutVars, factorLabels, bootCI=.95, bootNum=1000, minOcc
       Yo_minOccur = np.sum(np.logical_or(np.isnan(ma_average(Yo)), ma_average(Yo)==0))/float(timespots) < minOccur
       Zo_minOccur = np.sum(np.logical_or(np.isnan(ma_average(Yo)), ma_average(Yo)==0))/float(timespots) < minOccur
       if Xo_minOccur or Yo_minOccur or Zo_minOccur:
-        continue
+        continue						 # minOccur not satisfied for one of the factors
       if np.all(Xo.mask) or np.all(Yo.mask) or np.all(Zo.mask):  # not any unmasked value in Xz or Yz, all nan in input, continue
         continue
       LA_score = singleLA(Xo, Yo, Zo, fTransform, zNormalize)                          # do LA computation
