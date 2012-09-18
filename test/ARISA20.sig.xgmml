@@ -1,43 +1,16 @@
 <?xml version="1.0" ?>
 <graph directed="1" label="LSA Network" xmlns="http://www.cs.rpi.edu/XGMML" xmlns:cy="http://www.cytoscape.org" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink">
-  <node id="5_ARISA_484.1" label="5_ARISA_484.1" name="5_ARISA_484.1">
-    <att name="factorName" type="string" value="5_ARISA_484.1"/>
-  </node>
-  <node id="5_ARISA_594.1" label="5_ARISA_594.1" name="5_ARISA_594.1">
-    <att name="factorName" type="string" value="5_ARISA_594.1"/>
-  </node>
   <node id="5_ARISA_435.5" label="5_ARISA_435.5" name="5_ARISA_435.5">
     <att name="factorName" type="string" value="5_ARISA_435.5"/>
-  </node>
-  <node id="5_ARISA_620.5" label="5_ARISA_620.5" name="5_ARISA_620.5">
-    <att name="factorName" type="string" value="5_ARISA_620.5"/>
-  </node>
-  <node id="5_ARISA_570.1" label="5_ARISA_570.1" name="5_ARISA_570.1">
-    <att name="factorName" type="string" value="5_ARISA_570.1"/>
-  </node>
-  <node id="5_ARISA_490" label="5_ARISA_490" name="5_ARISA_490">
-    <att name="factorName" type="string" value="5_ARISA_490"/>
-  </node>
-  <node id="5_ARISA_561.8" label="5_ARISA_561.8" name="5_ARISA_561.8">
-    <att name="factorName" type="string" value="5_ARISA_561.8"/>
   </node>
   <node id="5_ARISA_478.8" label="5_ARISA_478.8" name="5_ARISA_478.8">
     <att name="factorName" type="string" value="5_ARISA_478.8"/>
   </node>
-  <node id="5_ARISA_618.3" label="5_ARISA_618.3" name="5_ARISA_618.3">
-    <att name="factorName" type="string" value="5_ARISA_618.3"/>
-  </node>
-  <node id="5_ARISA_419.5" label="5_ARISA_419.5" name="5_ARISA_419.5">
-    <att name="factorName" type="string" value="5_ARISA_419.5"/>
-  </node>
   <node id="5_ARISA_573.6" label="5_ARISA_573.6" name="5_ARISA_573.6">
     <att name="factorName" type="string" value="5_ARISA_573.6"/>
   </node>
-  <node id="5_ARISA_421.5" label="5_ARISA_421.5" name="5_ARISA_421.5">
-    <att name="factorName" type="string" value="5_ARISA_421.5"/>
-  </node>
-  <node id="5_ARISA_609.4" label="5_ARISA_609.4" name="5_ARISA_609.4">
-    <att name="factorName" type="string" value="5_ARISA_609.4"/>
+  <node id="5_ARISA_618.3" label="5_ARISA_618.3" name="5_ARISA_618.3">
+    <att name="factorName" type="string" value="5_ARISA_618.3"/>
   </node>
   <node id="5_ARISA_531.5" label="5_ARISA_531.5" name="5_ARISA_531.5">
     <att name="factorName" type="string" value="5_ARISA_531.5"/>
@@ -45,8 +18,29 @@
   <node id="5_ARISA_402.4" label="5_ARISA_402.4" name="5_ARISA_402.4">
     <att name="factorName" type="string" value="5_ARISA_402.4"/>
   </node>
+  <node id="5_ARISA_570.1" label="5_ARISA_570.1" name="5_ARISA_570.1">
+    <att name="factorName" type="string" value="5_ARISA_570.1"/>
+  </node>
+  <node id="5_ARISA_484.1" label="5_ARISA_484.1" name="5_ARISA_484.1">
+    <att name="factorName" type="string" value="5_ARISA_484.1"/>
+  </node>
+  <node id="5_ARISA_419.5" label="5_ARISA_419.5" name="5_ARISA_419.5">
+    <att name="factorName" type="string" value="5_ARISA_419.5"/>
+  </node>
+  <node id="5_ARISA_421.5" label="5_ARISA_421.5" name="5_ARISA_421.5">
+    <att name="factorName" type="string" value="5_ARISA_421.5"/>
+  </node>
+  <node id="5_ARISA_561.8" label="5_ARISA_561.8" name="5_ARISA_561.8">
+    <att name="factorName" type="string" value="5_ARISA_561.8"/>
+  </node>
+  <node id="5_ARISA_609.4" label="5_ARISA_609.4" name="5_ARISA_609.4">
+    <att name="factorName" type="string" value="5_ARISA_609.4"/>
+  </node>
   <node id="5_ARISA_519" label="5_ARISA_519" name="5_ARISA_519">
     <att name="factorName" type="string" value="5_ARISA_519"/>
+  </node>
+  <node id="m_5_ARISA_570.1_5_ARISA_573.6" label="m_5_ARISA_570.1_5_ARISA_573.6" name="m_5_ARISA_570.1_5_ARISA_573.6">
+    <att name="factorName" type="string" value="m_5_ARISA_570.1_5_ARISA_573.6"/>
   </node>
   <node id="5_ARISA_471.9" label="5_ARISA_471.9" name="5_ARISA_471.9">
     <att name="factorName" type="string" value="5_ARISA_471.9"/>
@@ -54,16 +48,48 @@
   <node id="5_ARISA_424.4" label="5_ARISA_424.4" name="5_ARISA_424.4">
     <att name="factorName" type="string" value="5_ARISA_424.4"/>
   </node>
+  <node id="m_5_ARISA_402.4_5_ARISA_419.5" label="m_5_ARISA_402.4_5_ARISA_419.5" name="m_5_ARISA_402.4_5_ARISA_419.5">
+    <att name="factorName" type="string" value="m_5_ARISA_402.4_5_ARISA_419.5"/>
+  </node>
   <node id="5_ARISA_538.9" label="5_ARISA_538.9" name="5_ARISA_538.9">
     <att name="factorName" type="string" value="5_ARISA_538.9"/>
+  </node>
+  <node id="5_ARISA_594.1" label="5_ARISA_594.1" name="5_ARISA_594.1">
+    <att name="factorName" type="string" value="5_ARISA_594.1"/>
+  </node>
+  <node id="m_5_ARISA_421.5_5_ARISA_594.1" label="m_5_ARISA_421.5_5_ARISA_594.1" name="m_5_ARISA_421.5_5_ARISA_594.1">
+    <att name="factorName" type="string" value="m_5_ARISA_421.5_5_ARISA_594.1"/>
+  </node>
+  <node id="5_ARISA_490" label="5_ARISA_490" name="5_ARISA_490">
+    <att name="factorName" type="string" value="5_ARISA_490"/>
+  </node>
+  <node id="m_5_ARISA_538.9_5_ARISA_570.1" label="m_5_ARISA_538.9_5_ARISA_570.1" name="m_5_ARISA_538.9_5_ARISA_570.1">
+    <att name="factorName" type="string" value="m_5_ARISA_538.9_5_ARISA_570.1"/>
+  </node>
+  <node id="5_ARISA_620.5" label="5_ARISA_620.5" name="5_ARISA_620.5">
+    <att name="factorName" type="string" value="5_ARISA_620.5"/>
+  </node>
+  <node id="m_5_ARISA_478.8_5_ARISA_561.8" label="m_5_ARISA_478.8_5_ARISA_561.8" name="m_5_ARISA_478.8_5_ARISA_561.8">
+    <att name="factorName" type="string" value="m_5_ARISA_478.8_5_ARISA_561.8"/>
   </node>
   <edge label="5_ARISA_402.4_pu_5_ARISA_402.4" source="5_ARISA_402.4" target="5_ARISA_402.4">
     <att name="interaction" type="string" value="pu"/>
     <att name="LS" type="real" value="0.6145"/>
   </edge>
-  <edge label="5_ARISA_402.4_pu_5_ARISA_419.5" source="5_ARISA_402.4" target="5_ARISA_419.5">
+  <edge label="5_ARISA_402.4_pu_m_5_ARISA_402.4_5_ARISA_419.5" source="5_ARISA_402.4" target="m_5_ARISA_402.4_5_ARISA_419.5">
     <att name="interaction" type="string" value="pu"/>
     <att name="LS" type="real" value="0.3651"/>
+    <att name="LA" type="real" value="-0.2537"/>
+  </edge>
+  <edge label="m_5_ARISA_402.4_5_ARISA_419.5_pu_5_ARISA_419.5" source="m_5_ARISA_402.4_5_ARISA_419.5" target="5_ARISA_419.5">
+    <att name="interaction" type="string" value="pu"/>
+    <att name="LS" type="real" value="0.3651"/>
+    <att name="LA" type="real" value="-0.2537"/>
+  </edge>
+  <edge label="5_ARISA_570.1_nu_m_5_ARISA_402.4_5_ARISA_419.5" source="5_ARISA_570.1" target="m_5_ARISA_402.4_5_ARISA_419.5">
+    <att name="interaction" type="string" value="nu"/>
+    <att name="LS" type="real" value="0.3651"/>
+    <att name="LA" type="real" value="-0.2537"/>
   </edge>
   <edge label="5_ARISA_402.4_pu_5_ARISA_471.9" source="5_ARISA_402.4" target="5_ARISA_471.9">
     <att name="interaction" type="string" value="pu"/>
@@ -85,9 +111,20 @@
     <att name="interaction" type="string" value="pu"/>
     <att name="LS" type="real" value="0.3771"/>
   </edge>
-  <edge label="5_ARISA_421.5_nu_5_ARISA_594.1" source="5_ARISA_421.5" target="5_ARISA_594.1">
+  <edge label="5_ARISA_421.5_nu_m_5_ARISA_421.5_5_ARISA_594.1" source="5_ARISA_421.5" target="m_5_ARISA_421.5_5_ARISA_594.1">
     <att name="interaction" type="string" value="nu"/>
     <att name="LS" type="real" value="-0.3625"/>
+    <att name="LA" type="real" value="0.2445"/>
+  </edge>
+  <edge label="m_5_ARISA_421.5_5_ARISA_594.1_nu_5_ARISA_594.1" source="m_5_ARISA_421.5_5_ARISA_594.1" target="5_ARISA_594.1">
+    <att name="interaction" type="string" value="nu"/>
+    <att name="LS" type="real" value="-0.3625"/>
+    <att name="LA" type="real" value="0.2445"/>
+  </edge>
+  <edge label="5_ARISA_570.1_pu_m_5_ARISA_421.5_5_ARISA_594.1" source="5_ARISA_570.1" target="m_5_ARISA_421.5_5_ARISA_594.1">
+    <att name="interaction" type="string" value="pu"/>
+    <att name="LS" type="real" value="-0.3625"/>
+    <att name="LA" type="real" value="0.2445"/>
   </edge>
   <edge label="5_ARISA_424.4_pu_5_ARISA_421.5" source="5_ARISA_424.4" target="5_ARISA_421.5">
     <att name="interaction" type="string" value="pu"/>
@@ -125,9 +162,20 @@
     <att name="interaction" type="string" value="pu"/>
     <att name="LS" type="real" value="0.6741"/>
   </edge>
-  <edge label="5_ARISA_478.8_pu_5_ARISA_561.8" source="5_ARISA_478.8" target="5_ARISA_561.8">
+  <edge label="5_ARISA_478.8_pu_m_5_ARISA_478.8_5_ARISA_561.8" source="5_ARISA_478.8" target="m_5_ARISA_478.8_5_ARISA_561.8">
     <att name="interaction" type="string" value="pu"/>
     <att name="LS" type="real" value="0.3320"/>
+    <att name="LA" type="real" value="0.2091"/>
+  </edge>
+  <edge label="m_5_ARISA_478.8_5_ARISA_561.8_pu_5_ARISA_561.8" source="m_5_ARISA_478.8_5_ARISA_561.8" target="5_ARISA_561.8">
+    <att name="interaction" type="string" value="pu"/>
+    <att name="LS" type="real" value="0.3320"/>
+    <att name="LA" type="real" value="0.2091"/>
+  </edge>
+  <edge label="5_ARISA_594.1_pu_m_5_ARISA_478.8_5_ARISA_561.8" source="5_ARISA_594.1" target="m_5_ARISA_478.8_5_ARISA_561.8">
+    <att name="interaction" type="string" value="pu"/>
+    <att name="LS" type="real" value="0.3320"/>
+    <att name="LA" type="real" value="0.2091"/>
   </edge>
   <edge label="5_ARISA_484.1_pu_5_ARISA_484.1" source="5_ARISA_484.1" target="5_ARISA_484.1">
     <att name="interaction" type="string" value="pu"/>
@@ -157,9 +205,20 @@
     <att name="interaction" type="string" value="pu"/>
     <att name="LS" type="real" value="0.7575"/>
   </edge>
-  <edge label="5_ARISA_538.9_pu_5_ARISA_570.1" source="5_ARISA_538.9" target="5_ARISA_570.1">
+  <edge label="5_ARISA_538.9_pu_m_5_ARISA_538.9_5_ARISA_570.1" source="5_ARISA_538.9" target="m_5_ARISA_538.9_5_ARISA_570.1">
     <att name="interaction" type="string" value="pu"/>
     <att name="LS" type="real" value="0.3143"/>
+    <att name="LA" type="real" value="-0.2450"/>
+  </edge>
+  <edge label="m_5_ARISA_538.9_5_ARISA_570.1_pu_5_ARISA_570.1" source="m_5_ARISA_538.9_5_ARISA_570.1" target="5_ARISA_570.1">
+    <att name="interaction" type="string" value="pu"/>
+    <att name="LS" type="real" value="0.3143"/>
+    <att name="LA" type="real" value="-0.2450"/>
+  </edge>
+  <edge label="5_ARISA_435.5_nu_m_5_ARISA_538.9_5_ARISA_570.1" source="5_ARISA_435.5" target="m_5_ARISA_538.9_5_ARISA_570.1">
+    <att name="interaction" type="string" value="nu"/>
+    <att name="LS" type="real" value="0.3143"/>
+    <att name="LA" type="real" value="-0.2450"/>
   </edge>
   <edge label="5_ARISA_561.8_pu_5_ARISA_478.8" source="5_ARISA_561.8" target="5_ARISA_478.8">
     <att name="interaction" type="string" value="pu"/>
@@ -181,9 +240,20 @@
     <att name="interaction" type="string" value="pu"/>
     <att name="LS" type="real" value="0.7498"/>
   </edge>
-  <edge label="5_ARISA_570.1_pu_5_ARISA_573.6" source="5_ARISA_570.1" target="5_ARISA_573.6">
+  <edge label="5_ARISA_570.1_pu_m_5_ARISA_570.1_5_ARISA_573.6" source="5_ARISA_570.1" target="m_5_ARISA_570.1_5_ARISA_573.6">
     <att name="interaction" type="string" value="pu"/>
     <att name="LS" type="real" value="0.4659"/>
+    <att name="LA" type="real" value="-0.2596"/>
+  </edge>
+  <edge label="m_5_ARISA_570.1_5_ARISA_573.6_pu_5_ARISA_573.6" source="m_5_ARISA_570.1_5_ARISA_573.6" target="5_ARISA_573.6">
+    <att name="interaction" type="string" value="pu"/>
+    <att name="LS" type="real" value="0.4659"/>
+    <att name="LA" type="real" value="-0.2596"/>
+  </edge>
+  <edge label="5_ARISA_435.5_nu_m_5_ARISA_570.1_5_ARISA_573.6" source="5_ARISA_435.5" target="m_5_ARISA_570.1_5_ARISA_573.6">
+    <att name="interaction" type="string" value="nu"/>
+    <att name="LS" type="real" value="0.4659"/>
+    <att name="LA" type="real" value="-0.2596"/>
   </edge>
   <edge label="5_ARISA_573.6_pu_5_ARISA_561.8" source="5_ARISA_573.6" target="5_ARISA_561.8">
     <att name="interaction" type="string" value="pu"/>

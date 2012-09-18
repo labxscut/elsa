@@ -29,6 +29,7 @@ def LA_Xgmml(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=3
   for i in xrange(1, lsaq_size+1):  
     node_x = r['''as.character''']((lsaq_table.rx(i,True)[0]))[0]
     node_y = r['''as.character''']((lsaq_table.rx(i,True)[1]))[0]
+    node_m_x_y = '_'.join( ['m', node_x, node_y] )
     nodes.add(node_x)
     nodes.add(node_y)
     for a in xrange(1, la_size+1):
@@ -36,7 +37,6 @@ def LA_Xgmml(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=3
       node_e = r['''as.character''']((la_table.rx(a,True)[1]))[0]
       node_z = r['''as.character''']((la_table.rx(a,True)[2]))[0]
       if ((node_x==node_v)&(node_y==node_e)):
-         node_m_x_y = '_'.join( ['m', node_x, node_y] )
          nodes.add(node_m_x_y) 
          nodes.add(node_z)
  
@@ -66,6 +66,7 @@ def LA_Xgmml(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=3
   for i in xrange(1, lsaq_size+1):
     node_x = r['''as.character''']((lsaq_table.rx(i,True)[0]))[0]
     node_y = r['''as.character''']((lsaq_table.rx(i,True)[1]))[0]
+    node_m_x_y = '_'.join( ['m', node_x, node_y] )
     same = 0
     if tuple(lsaq_table.rx(i,True)[di])[0] > 0:
          d_code = 'dr'      #direction reta
@@ -80,36 +81,52 @@ def LA_Xgmml(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=3
          c_code = 'n'
     interaction = c_code+d_code
 
+    if interaction == 'pdl':
+         interaction1 = 'pu'
+         interaction2 = 'pdl'
+    elif interaction == 'ndl':
+         interaction1 = 'nu'
+         interaction2 = 'ndl'
+    elif interaction == 'pdr':
+         interaction1 = 'pdr'
+         interaction2 = 'pu'
+    elif interaction == 'ndr':
+         interaction1 = 'ndr'
+         interaction2 = 'nu'
+    elif interaction == 'pu':
+         interaction1 = 'pu'
+         interaction2 = 'pu'
+    else:
+         interaction1 = 'nu'
+         interaction2 = 'nu'
+
     for a in xrange(1, la_size+1):
       node_v = r['''as.character''']((la_table.rx(a,True)[0]))[0]
       node_e = r['''as.character''']((la_table.rx(a,True)[1]))[0]
       node_z = r['''as.character''']((la_table.rx(a,True)[2]))[0]
       if ((node_x==node_v)&(node_y==node_e)):
-        node_m_x_y = '_'.join( ['m', node_x, node_y] )
         same += 1
-        if interaction == 'pdl':
-           interaction1 = 'pu'
-           interaction2 = 'pdl'
-        if interaction == 'ndl':
-           interaction1 = 'nu'
-           interaction2 = 'ndl'
-        if interaction == 'pdr':
-           interaction1 = 'pdr'
-           interaction2 = 'pu'
-        if interaction == 'ndr':
-           interaction1 = 'ndr'
-           interaction2 = 'nu'
-        if interaction == 'pu':
-           interaction1 = 'pu'
-           interaction2 = 'pu'
-        if interaction == 'nu':
-           interaction1 = 'nu'
-           interaction2 = 'nu'
         if tuple(la_table.rx(a,True)[lai])[0] >= 0:
            interaction3 = 'pu'
         else:
            interaction3 = 'nu'
 
+        edge_label = '_'.join( [node_z, interaction3, node_m_x_y] )
+        edge_element = etree.SubElement(xgmml_element, 'edge')
+        edge_element.set('label', edge_label )
+        edge_element.set('source', node_z )
+        edge_element.set('target', node_m_x_y )
+        interaction_element = etree.SubElement(edge_element, 'att')
+        interaction_element.set('type', 'string')
+        interaction_element.set('name', 'interaction')
+        interaction_element.set('value', interaction3)
+        LA_element = etree.SubElement(edge_element, 'att')
+        LA_element.set('type', 'real')       
+        LA_element.set('name', 'LA')
+        LA_element.set('value', "%.4f" % tuple(la_table.rx(a,True)[3])[0])
+
+
+    if same > 0:
         edge_label = '_'.join( [node_x, interaction1, node_m_x_y] )
         edge_element = etree.SubElement(xgmml_element, 'edge')
         edge_element.set('label', edge_label )
@@ -123,11 +140,7 @@ def LA_Xgmml(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=3
         LS_element.set('type', 'real')
         LS_element.set('name', 'LS')
         LS_element.set('value', "%.4f" % tuple(lsaq_table.rx(i,True)[2])[0])
-        LA_element = etree.SubElement(edge_element, 'att')
-        LA_element.set('type', 'real')
-        LA_element.set('name', 'LA')
-        LA_element.set('value', "%.4f" % tuple(la_table.rx(a,True)[3])[0])
-
+           
         edge_label = '_'.join( [node_m_x_y, interaction2, node_y] )
         edge_element = etree.SubElement(xgmml_element, 'edge')
         edge_element.set('label', edge_label )
@@ -141,31 +154,9 @@ def LA_Xgmml(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=3
         LS_element.set('type', 'real')
         LS_element.set('name', 'LS')
         LS_element.set('value', "%.4f" % tuple(lsaq_table.rx(i,True)[2])[0])
-        LA_element = etree.SubElement(edge_element, 'att')
-        LA_element.set('type', 'real')
-        LA_element.set('name', 'LA')
-        LA_element.set('value', "%.4f" % tuple(la_table.rx(a,True)[3])[0])
+    
 
-
-        edge_label = '_'.join( [node_z, interaction3, node_m_x_y] )
-        edge_element = etree.SubElement(xgmml_element, 'edge')
-        edge_element.set('label', edge_label )
-        edge_element.set('source', node_z )
-        edge_element.set('target', node_m_x_y )
-        interaction_element = etree.SubElement(edge_element, 'att')
-        interaction_element.set('type', 'string')
-        interaction_element.set('name', 'interaction')
-        interaction_element.set('value', interaction3)
-        LS_element = etree.SubElement(edge_element, 'att')
-        LS_element.set('type', 'real')
-        LS_element.set('name', 'LS')
-        LS_element.set('value', "%.4f" % tuple(lsaq_table.rx(i,True)[2])[0])
-        LA_element = etree.SubElement(edge_element, 'att')
-        LA_element.set('type', 'real')
-        LA_element.set('name', 'LA')
-        LA_element.set('value', "%.4f" % tuple(la_table.rx(a,True)[3])[0])
-
-    if same == 0:
+    else:
         edge_label = '_'.join( [node_x, interaction, node_y] )
         edge_element = etree.SubElement(xgmml_element, 'edge')
         edge_element.set('label', edge_label )
@@ -184,4 +175,3 @@ def LA_Xgmml(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=3
 if __name__=="__main__":
   main()
   exit(0)
-
