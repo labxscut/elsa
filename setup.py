@@ -46,6 +46,9 @@ os.environ['CC'] = 'g++'  #temporary measure to trick distutils use g++, need up
 #lines = open("VERSION.txt", 'rU').readlines()
 #version_desc = ','.join([lines[1].strip(), lines[0].strip()])
 
+os.system("hg id > VERSION.txt")
+os.system("hg kwshrink && hg kwexpand")
+
 if os.path.exists('MANIFEST'): os.remove('MANIFEST')
 
 #compcore_module = Extension('lsa/_compcore', sources=['lsa/compcore_wrap.cpp', 'lsa/compcore.cpp'] , )
