@@ -106,10 +106,8 @@ def main():
                           a float: no normalization and calculate \n \
                           Ptheo using specified float variance")
   
-  arg_namespace = parser.parse_args()
-
-  #get arguments
   print >>sys.stderr, "lsa_compute ($Revision$) - copyright Li Charlie Xia, lxia@usc.edu"
+  arg_namespace = parser.parse_args()
   
   delayLimit = vars(arg_namespace)['delayLimit']
   fillMethod = vars(arg_namespace)['fillMethod']
