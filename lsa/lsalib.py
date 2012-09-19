@@ -771,7 +771,7 @@ def fillMissing(tseries, method): #teseries is 2d matrix unmasked
     
 def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5, bootCI=.95, bootNum=0, pvalueMethod='perm', precisionP=1000,\
     fTransform=simpleAverage, zNormalize=noZeroNormalize, varianceX=1, resultFile=open("tmp.lsa","w"), \
-    firstFactorLabels=None, secondFactorLabels=None):
+    firstFactorLabels=None, secondFactorLabels=None, qvalueMethod='R'):
   """ calculate pairwise LS scores and p-values
 
     	Args:
@@ -829,6 +829,12 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
   replicates = firstRepNum
   stdX = np.sqrt(varianceX) #make comparable with previous command line
   ti = 0
+  
+  if qvalueMethod in ['scipy']:
+    qvalue_func = storeyQvalue
+  else:
+    qvalue_func = R_Qvalue 
+
   if pvalueMethod in ['theo','mix']:
     #P_table = theoPvalue(D=0, precision=.0001, x_decimal=3)   #let's produce 2 tail-ed p-value
     P_table = theoPvalue(Rmax=timespots, Dmax=delayLimit, precision=1./precisionP, x_decimal=my_decimal)
@@ -994,23 +1000,23 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
   #print "lsaP"
   #qvalues = storeyQvalue( pvalues )
   print >>sys.stderr, "LS Qvalues..."
-  qvalues = R_Qvalue( pvalues )
+  qvalues = qvalue_func( pvalues )
   #print "pccP"
   #pccqvalues = storeyQvalue( pccpvalues )
   print >>sys.stderr, "PCC Qvalues..."
-  pccqvalues = R_Qvalue( pccpvalues )
+  pccqvalues = qvalue_func( pccpvalues )
   #print "sccP"
   #sccqvalues = storeyQvalue( sccpvalues )
   print >>sys.stderr, "SCC Qvalues..."
-  sccqvalues = R_Qvalue( sccpvalues )
+  sccqvalues = qvalue_func( sccpvalues )
   #print "spccP"
   #spccqvalues = storeyQvalue( spccpvalues )
   print >>sys.stderr, "SPCC Qvalues..."
-  spccqvalues = R_Qvalue( spccpvalues )
+  spccqvalues = qvalue_func( spccpvalues )
   #print "ssccP"
   #ssccqvalues = storeyQvalue( ssccpvalues )
   print >>sys.stderr, "SSCC Qvalues..."
-  ssccqvalues = R_Qvalue( ssccpvalues )
+  ssccqvalues = qvalue_func( ssccpvalues )
 
   for k in xrange(0, len(qvalues)):
     lsaTable[k].append( qvalues[k] )
@@ -1094,7 +1100,7 @@ def applyLA(inputData, scoutVars, factorLabels, bootCI=.95, bootNum=1000, minOcc
   pvalues = pvalues[:ti]
   laTable = laTable[:ti]
   #qvalues = storeyQvalue( pvalues )
-  qvalues = R_Qvalue( pvalues )
+  qvalues = qvalue_func( pvalues )
   for k in xrange(0, len(qvalues)):
     laTable[k] = laTable[k] + [ qvalues[k], laTable[k][0]+1, laTable[k][1]+1, laTable[k][2]+1 ]
 

@@ -40,11 +40,14 @@ except ImportError:
   #install import
   from lsa import lsalib
   #np.seterr(all='raise')
+import lsa
 
 def main():  
+  # let's display something about VERSION first, need to put VERSION.txt there
+  version_desc = "lsa_compute (%s) - copyright Li Charlie Xia, lxia@usc.edu" % lsa.__version__
 
   # define arguments: delayLimit, fillMethod, pvalueMethod
-  parser = argparse.ArgumentParser(description="New LSA Commandline Tool")
+  parser = argparse.ArgumentParser(description=version_desc)
 
   parser.add_argument("dataFile", metavar="dataFile", type=argparse.FileType('r'), help="the input data file,\n \
                         m by (r * s)tab delimited text; top left cell start with '#' to mark this is the header line; \n \
@@ -96,22 +99,27 @@ def main():
                           quadratic: fill up with quadratic spline;             \n \
                           cubic: fill up with cubic spline;                \n \
                           nearest: fill up with nearest neighbor") 
-  parser.add_argument("-n", "--normMethod", dest="normMethod", default='pnz', #choices=['percentile', 'percentileZ', 'pnz', 'none'],
+  parser.add_argument("-n", "--normMethod", dest="normMethod", default='percentileZ', #choices=['percentile', 'percentileZ', 'pnz', 'none'],
                       help= "must specify the method to normalize data, default: percentileZ,       \n \
                           choices: percentile, none, pnz, percentileZ or a float                         \n \
                           NOTE:                                                         \n \
-                          percentile: percentile normalization, including zeros                                    \n \
-                          pnz: percentile normalization, excluding zeros                                    \n \
-                          percentileZ: percentile normalization + Z-normalization                                   \n \
-                          a float: no normalization and calculate \n \
-                          Ptheo using specified float variance")
+                          percentile: percentile normalization, including zeros (only with perm)   \n \
+                          pnz: percentile normalization, excluding zeros (only with perm) \n  \
+                          percentileZ: percentile normalization + Z-normalization \n \
+                            (with perm, mix and theo, and must use this for theo and mix) \n \
+                          a float: no normalization and calculate Ptheo using specified float variance  \n \
+                          (only for advanced use in local shape analysis with mix and theo)")
+  parser.add_argument("-q", "--qvalueMethod", dest="qvalueMethod", default='scipy', choices=['R', 'scipy'],
+                      help= "specify the qvalue calculation method, \n \
+                          scipy: use scipy and storeyQvalue function \n \
+                          R: use R's qvalue package, require X connection")
   
-  print >>sys.stderr, "lsa_compute ($Revision$) - copyright Li Charlie Xia, lxia@usc.edu"
   arg_namespace = parser.parse_args()
   
   delayLimit = vars(arg_namespace)['delayLimit']
   fillMethod = vars(arg_namespace)['fillMethod']
   normMethod = vars(arg_namespace)['normMethod']
+  qvalueMethod = vars(arg_namespace)['qvalueMethod']
   pvalueMethod = vars(arg_namespace)['pvalueMethod']
   precision = vars(arg_namespace)['precision']
   minOccur = vars(arg_namespace)['minOccur']
@@ -224,7 +232,7 @@ def main():
   #print >>sys.stderr, "calculating ..."
   lsalib.applyAnalysis(cleanData[0], cleanData[1], onDiag=onDiag, delayLimit=delayLimit, bootNum=bootNum, minOccur=minOccur/100.,\
       pvalueMethod=pvalueMethod, precisionP=precision, fTransform=fTransform, zNormalize=zNormalize, varianceX=varianceX, resultFile=resultFile,\
-      firstFactorLabels=firstFactorLabels, secondFactorLabels=secondFactorLabels)
+      firstFactorLabels=firstFactorLabels, secondFactorLabels=secondFactorLabels, qvalueMethod=qvalueMethod)
   #print >>sys.stderr, "writing results ..."
   #col_labels= ['X','Y','LS','lowCI','upCI','Xs','Ys','Len','Delay','P','PCC','Ppcc','SPCC','Pspcc','SCC','Pscc','SSCC','Psscc',
   #    'Q','Qpcc','Qspcc','Qscc','Qsscc']

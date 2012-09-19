@@ -34,6 +34,7 @@ dependent pairwise correlation between two sequence of evenly spaced
 observation data. Permutation test is used to estimate the P-value. 
 The results can be summarized and easily queried for desired analysis.
 """
+
 from setuptools import setup, find_packages
 from distutils.core import Extension
 from distutils.command import build
@@ -42,6 +43,8 @@ import os, sys
 doclines=__doc__.splitlines()
 
 os.environ['CC'] = 'g++'  #temporary measure to trick distutils use g++, need update to distutils2
+#lines = open("VERSION.txt", 'rU').readlines()
+#version_desc = ','.join([lines[1].strip(), lines[0].strip()])
 
 if os.path.exists('MANIFEST'): os.remove('MANIFEST')
 
@@ -84,7 +87,7 @@ setup(name="lsa",
     #                               swig_opts=['-c++', '-nomodern', '-classic', '-nomodernargs'])],
     py_modules = ['lsa.compcore', 'lsa.lsalib', 'lsa.lsaio', 'lsa.laio'],
     cmdclass = {'build': my_build},
-    data_files = [('',['README.txt','LICENSE.txt', ])],
+    data_files = [('',['README.txt','LICENSE.txt','VERSION.txt'])],
     entry_points = { 
         'console_scripts': [
             'lsa_compute = lsa.lsa_compute:main',

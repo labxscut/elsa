@@ -45,4 +45,8 @@
     contact: lxia@usc.edu
 """
 
+__version__ = "$Revision$"
+__date__ = "$Date$"
+# $Source$
+
 __import__('pkg_resources').declare_namespace(__name__)
