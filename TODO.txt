@@ -3,3 +3,4 @@ TODO:
       wwwwwww
       Learn how to use vi editor     
   [1] Smarter Tab delimited file handling
+  [2] Learn resolve conflicts in mercurial
