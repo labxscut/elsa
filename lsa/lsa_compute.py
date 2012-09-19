@@ -44,10 +44,15 @@ import lsa
 
 def main():  
   # let's display something about VERSION first, need to put VERSION.txt there
-  version_desc = "lsa_compute (%s) - copyright Li Charlie Xia, lxia@usc.edu" % lsa.__version__
+  version_desc = "lsa_compute (rev: %s) - copyright Li Charlie Xia, lxia@usc.edu" \
+      % open(os.path.join(os.path.dirname(os.path.dirname(lsa.__file__)), 'VERSION.txt')).read().strip()
+  #lsa.__version__
+  print >>sys.stderr, version_desc
+  #print >>sys.stderr, "lsa package revision and tag:", 
+  #print >>sys.stderr, "for package version, see VERSION.txt in your lsa package installation path"
 
   # define arguments: delayLimit, fillMethod, pvalueMethod
-  parser = argparse.ArgumentParser(description=version_desc)
+  parser = argparse.ArgumentParser()
 
   parser.add_argument("dataFile", metavar="dataFile", type=argparse.FileType('r'), help="the input data file,\n \
                         m by (r * s)tab delimited text; top left cell start with '#' to mark this is the header line; \n \
