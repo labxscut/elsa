@@ -38,6 +38,8 @@ try:
 except ImportError:
   # debug
   import laio
+import lsa
+
 import rpy2.rlike.container as rlc
 import rpy2.robjects as ro
 from rpy2.robjects.numpy2ri import numpy2ri
@@ -50,6 +52,11 @@ r('''setwd("%s")''' % os.environ.get('PWD'))
 #r('''library(gplots)''')
 
 def main():
+
+  __script__ = "la_query"
+  version_desc = "%s (rev: %s) - copyright Li Charlie Xia, lxia@usc.edu" \
+            % (__script__, open(os.path.join(os.path.dirname(os.path.dirname(lsa.__file__)), 'VERSION.txt')).read().strip())
+  print >>sys.stderr, version_desc
 
   # define arguments: delayLimit, fillMethod, permuNum
   parser = argparse.ArgumentParser(description="Auxillary tool to new LSA package for querying la results")

@@ -43,11 +43,17 @@ except ImportError:
 import lsa
 
 def main():  
+
   # let's display something about VERSION first, need to put VERSION.txt there
-  version_desc = "lsa_compute (rev: %s) - copyright Li Charlie Xia, lxia@usc.edu" \
-      % open(os.path.join(os.path.dirname(os.path.dirname(lsa.__file__)), 'VERSION.txt')).read().strip()
-  #lsa.__version__
+  __script__ = "lsa_compute"
+  version_desc = "%s (rev: %s) - copyright Li Charlie Xia, lxia@usc.edu" \
+    % (__script__, open(os.path.join(os.path.dirname(os.path.dirname(lsa.__file__)), 'VERSION.txt')).read().strip())
   print >>sys.stderr, version_desc
+
+  #version_desc = "lsa_compute (rev: %s) - copyright Li Charlie Xia, lxia@usc.edu" \
+  #    % open(os.path.join(os.path.dirname(os.path.dirname(lsa.__file__)), 'VERSION.txt')).read().strip()
+  #lsa.__version__
+  #print >>sys.stderr, version_desc
   #print >>sys.stderr, "lsa package revision and tag:", 
   #print >>sys.stderr, "for package version, see VERSION.txt in your lsa package installation path"
 

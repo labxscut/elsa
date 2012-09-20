@@ -59,7 +59,6 @@ r = ro.r
 #print '''setwd("%s")''' % os.environ.get('PWD')
 r('''setwd("%s")''' % os.environ.get('PWD'))
 r('''options(warn=-1)''') 
-r('''library(qvalue)''')
 
 #import lower level resource
 try:
@@ -91,7 +90,7 @@ Rmax_min=10
 my_decimal = 2    # preset x step size for P_table
 pipi = np.pi**2 # pi^2
 pipi_inv = 1/pipi
-Q_lam_step = 0.00001
+Q_lam_step = 0.05
 Q_lam_max = 0.95
 
 ###############################
@@ -358,9 +357,10 @@ def permuPvalue(series1, series2, delayLimit, precisionP, Smax, fTransform, zNor
 #qvalue(p=NULL, lambda=seq(0,0.90,0.05), pi0.method="smoother", fdr.level=NULL, robust=FALSE, gui=FALSE, 
 #       smooth.df=3, smooth.log.pi0=FALSE)
 def R_Qvalue(pvalues, lam=np.arange(0,Q_lam_max,Q_lam_step), method='smoother', robust=False, smooth_df=3):
-  pvalues_not_nan = np.logical_not(np.isnan(pvalues))
-  pvalues_input = pvalues[pvalues_not_nan] 
   try:
+    pvalues_not_nan = np.logical_not(np.isnan(pvalues))
+    pvalues_input = pvalues[pvalues_not_nan] 
+    r('''library(qvalue)''')
     #print "pvalues=", pvalues
     #print "pvalues_input=", pvalues_input
     qvalues=r['''qvalue'''](p=pvalues_input, **{'lambda':lam, 'pi0.method':method, 'robust':robust, 'smooth.df':3})
@@ -373,7 +373,7 @@ def R_Qvalue(pvalues, lam=np.arange(0,Q_lam_max,Q_lam_step), method='smoother', 
       if not np.isnan(pvalues[i]):
         qvalues_return[i]=qvalues[2][j]   #second item is calculated qvalues
         j = j+1
-  except IndexError:
+  finally:
     #print >>sys.stderr, "caution: q-value estimation error"
     print >>sys.stderr, "from R: unusable pvalues -> ", pvalues_input
     qvalues_return=[np.nan]*len(pvalues)
@@ -394,96 +394,99 @@ def storeyQvalue(pvalues, lam=np.arange(0,Q_lam_max,Q_lam_step), method='smoothe
       qvalues(np.array): a set of qvalues
   """
   
-  #assume pvalues is an array with possible nans
-  #get a list of non nan pvalues, do the same procedure, putback to original list
-  mpvalues = np.ma.masked_invalid(pvalues,copy=True)
-  rpvalues = mpvalues[~mpvalues.mask]
-  p_num = len(pvalues)
-  rp_num = len(rpvalues)
-  #rp_nnz = len(np.nonzero(rpvalues))
-  #print "p_num=", p_num, "rp_num=", rp_num
+  try:
+    #assume pvalues is an array with possible nans
+    #get a list of non nan pvalues, do the same procedure, putback to original list
+    mpvalues = np.ma.masked_invalid(pvalues,copy=True)
+    rpvalues = mpvalues[~mpvalues.mask]
+    p_num = len(pvalues)
+    rp_num = len(rpvalues)
+    #rp_nnz = len(np.nonzero(rpvalues))
+    #print "p_num=", p_num, "rp_num=", rp_num
 
-  if rp_num <= 1:
-    #print >>sys.stderr, "WARN: not enough number of pvalues for q-value evaluation! nan will be filled!"
-    return np.array( [np.nan] * p_num, dtype='float')
+    if rp_num <= 1:
+      #print >>sys.stderr, "WARN: not enough number of pvalues for q-value evaluation! nan will be filled!"
+      return np.array( [np.nan] * p_num, dtype='float')
 
-  rp_max = np.max(rpvalues)
-  rp_lam = lam[lam<rp_max]
+    rp_max = np.max(rpvalues)
+    rp_lam = lam[lam<rp_max]
 
-  if len(rp_lam) <= 1:
-    return np.array( [np.nan if np.isnan(pvalues[i]) else 0 for i in xrange(0,p_num)],  dtype='float')
+    if len(rp_lam) <= 1:
+      return np.array( [np.nan if np.isnan(pvalues[i]) else 0 for i in xrange(0,p_num)],  dtype='float')
 
-  #print "rpvalues=", rpvalues, rp_num, rp_lam
+    #print "rpvalues=", rpvalues, rp_num, rp_lam
 
-  pi_set = np.zeros(len(rp_lam), dtype='float')
-  for i in xrange(0, len(rp_lam)): 
-    pi_set[i] = np.mean(rpvalues>=rp_lam[i])/(1-rp_lam[i])
+    pi_set = np.zeros(len(rp_lam), dtype='float')
+    for i in xrange(0, len(rp_lam)): 
+      pi_set[i] = np.mean(rpvalues>=rp_lam[i])/(1-rp_lam[i])
 
-  #print "p=",pvalues
-  #print len(pi_set), rp_max, len(rp_lam) #rp_nnz
+    #print "p=",pvalues
+    #print len(pi_set), rp_max, len(rp_lam) #rp_nnz
 
-  #print "pi_set=", pi_set
-  if method=='smoother':
-    spline_fit = sp.interpolate.interp1d(rp_lam, pi_set, kind=smooth_df)
-    pi_0 = spline_fit(np.max(rp_lam))
+    #print "pi_set=", pi_set
+    if method=='smoother':
+      spline_fit = sp.interpolate.interp1d(rp_lam, pi_set, kind=smooth_df)
+      pi_0 = spline_fit(np.max(rp_lam))
+      #print "pi_0=", pi_0
+      pi_0 = np.max( [np.min( [np.min(pi_0), 1]), 0] ) #0<=pi_0<=1
+      #print "pi_0=", pi_0
+      if pi_0 == 0:
+        #print >>sys.stderr, "WARN: smoother method not working, fall back to bootstrap"
+        #print pi_set, rp_max, rp_lam, pi_0
+        method='bootstrap'
+    #print "pi_set=", pi_set
     #print "pi_0=", pi_0
-    pi_0 = np.max( [np.min( [np.min(pi_0), 1]), 0] ) #0<=pi_0<=1
-    #print "pi_0=", pi_0
-    if pi_0 == 0:
-      #print >>sys.stderr, "WARN: smoother method not working, fall back to bootstrap"
-      #print pi_set, rp_max, rp_lam, pi_0
-      method='bootstrap'
-  #print "pi_set=", pi_set
-  #print "pi_0=", pi_0
 
-  if method=='bootstrap':                            #bootstrap
-    pi_min = np.min(pi_set)
-    mse = np.zeros((100, len(rp_lam)), dtype='float')
-    pi_set_boot = np.zeros((100, len(rp_lam)), dtype='float')
-    for j in xrange(0, 100):
-      p_boot = sample_wr(rpvalues, rp_num)
-      for i in xrange(0, len(rp_lam)):
-        pi_set_boot[j][i] = np.mean(p_boot>=rp_lam[i])/(1-rp_lam[i]) 
-      mse[j] = (pi_set_boot[j]-pi_min)**2
-    min_mse_j = np.argmin(mse)
-    pi_0 = np.min(pi_set_boot[min_mse_j])
-    #print "pi_0=", pi_0
-    pi_0 = np.max([np.min( [np.min(pi_0), 1]), ]) #0<=pi_0<=1
-    #print "pi_0=", pi_0
-    if pi_0 == 0:
-      #print >>sys.stderr, "WARN: bootstrap method not working, cannot estimate qvalues"
-      pi_0 = Q_lam_step #non-fixable peculiar case, show some reasonable results, refer to Tibshirani et al.
-      #return np.array( [np.nan] * p_num, dtype='float' )
+    if method=='bootstrap':                            #bootstrap
+      pi_min = np.min(pi_set)
+      mse = np.zeros((100, len(rp_lam)), dtype='float')
+      pi_set_boot = np.zeros((100, len(rp_lam)), dtype='float')
+      for j in xrange(0, 100):
+        p_boot = sample_wr(rpvalues, rp_num)
+        for i in xrange(0, len(rp_lam)):
+          pi_set_boot[j][i] = np.mean(p_boot>=rp_lam[i])/(1-rp_lam[i]) 
+        mse[j] = (pi_set_boot[j]-pi_min)**2
+      min_mse_j = np.argmin(mse)
+      pi_0 = np.min(pi_set_boot[min_mse_j])
+      #print "pi_0=", pi_0
+      pi_0 = np.max([np.min( [np.min(pi_0), 1]), ]) #0<=pi_0<=1
+      #print "pi_0=", pi_0
+      if pi_0 == 0:
+        #print >>sys.stderr, "WARN: bootstrap method not working, cannot estimate qvalues"
+        pi_0 = Q_lam_step #non-fixable peculiar case, show some reasonable results, refer to Tibshirani et al.
+        #return np.array( [np.nan] * p_num, dtype='float' )
 
-  #print "pi_0=", pi_0
-  rp_argsort = np.argsort(rpvalues)                     #np.nan will be sorted as maximum (the largest rank)
-  #print "argsort of rps=", rpvalues[rp_argsort]
-  rp_ranks = tied_rank(rpvalues)
-  #print "tied rank of rps=", rp_ranks
-  #print "pi_0, p_ranks, pvalues, len(pvalues)", pi_0, p_ranks, pvalues, len(pvalues)
-  if robust:
-    rqvalues = pi_0*rp_num*rpvalues*(1/(rp_ranks*(1-np.power((1-rpvalues),rp_num))))
-  else:
-    rqvalues = pi_0*rp_num*rpvalues*(1/rp_ranks) 
-  #print "rqs=", rqvalues
-  rqvalues[rp_argsort[rp_num-1]] = np.min( [rqvalues[rp_argsort[rp_num-1]], 1] ) # argsort in asscending order
-  for i in reversed(range(0,rp_num-1)): #don't know why it is so complicated here, why not just use qvalues; to enssure desencing order!!!
-    rqvalues[rp_argsort[i]] = np.min( [rqvalues[rp_argsort[i]], rqvalues[rp_argsort[i+1]], 1] )
+    #print "pi_0=", pi_0
+    rp_argsort = np.argsort(rpvalues)                     #np.nan will be sorted as maximum (the largest rank)
+    #print "argsort of rps=", rpvalues[rp_argsort]
+    rp_ranks = tied_rank(rpvalues)
+    #print "tied rank of rps=", rp_ranks
+    #print "pi_0, p_ranks, pvalues, len(pvalues)", pi_0, p_ranks, pvalues, len(pvalues)
+    if robust:
+      rqvalues = pi_0*rp_num*rpvalues*(1/(rp_ranks*(1-np.power((1-rpvalues),rp_num))))
+    else:
+      rqvalues = pi_0*rp_num*rpvalues*(1/rp_ranks) 
+    #print "rqs=", rqvalues
+    rqvalues[rp_argsort[rp_num-1]] = np.min( [rqvalues[rp_argsort[rp_num-1]], 1] ) # argsort in asscending order
+    for i in reversed(range(0,rp_num-1)): #don't know why it is so complicated here, why not just use qvalues; to enssure desencing order!!!
+      rqvalues[rp_argsort[i]] = np.min( [rqvalues[rp_argsort[i]], rqvalues[rp_argsort[i+1]], 1] )
 
-  qvalues=np.array([np.nan]*p_num)
-  j=0
-  for i in range(0, p_num):
-    if not mpvalues.mask[i]:
-      qvalues[i]=rqvalues[j]
-      j += 1
+    qvalues=np.array([np.nan]*p_num)
+    j=0
+    for i in range(0, p_num):
+      if not mpvalues.mask[i]:
+        qvalues[i]=rqvalues[j]
+        j += 1
  
-  #if np.all(np.isnan(qvalues)):
-  #print method
-  #print "q=",qvalues
-  #print "rp_sort",rp_argsort
-  #print "rp_rank",rp_ranks
+    #if np.all(np.isnan(qvalues)):
+    #print method
+    #print "q=",qvalues
+    #print "rp_sort",rp_argsort
+    #print "rp_rank",rp_ranks
+    #print "qs=", qvalues
+  finally:
+    qvalues=np.array( [np.nan] * p_num, dtype='float')
 
-  #print "qs=", qvalues
   return qvalues
 
 def simpleAverage(tseries):

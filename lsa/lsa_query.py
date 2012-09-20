@@ -38,6 +38,7 @@ try:
 except ImportError:
   # debug
   import lsaio
+import lsa
 
 import rpy2.rlike.container as rlc
 import rpy2.robjects as ro
@@ -52,6 +53,11 @@ r('''setwd("%s")''' % os.environ.get('PWD'))
 
 def main():
 
+  __script__ = "lsa_query"
+  version_desc = "%s (rev: %s) - copyright Li Charlie Xia, lxia@usc.edu" \
+            % (__script__, open(os.path.join(os.path.dirname(os.path.dirname(lsa.__file__)), 'VERSION.txt')).read().strip())
+  print >>sys.stderr, version_desc
+  
   # define arguments: delayLimit, fillMethod, permuNum
   parser = argparse.ArgumentParser(description="Auxillary tool to new LSA package for querying lsa results")
 

@@ -40,8 +40,14 @@ except ImportError:
   #install import
   from lsa import lsalib
   #np.seterr(all='raise')
+import lsa
 
 def main():  
+
+  __script__ = "la_compute"
+  version_desc = "%s (rev: %s) - copyright Li Charlie Xia, lxia@usc.edu" \
+            % (__script__, open(os.path.join(os.path.dirname(os.path.dirname(lsa.__file__)), 'VERSION.txt')).read().strip())
+  print >>sys.stderr, version_desc
 
   # define arguments: delayLimit, fillMethod, pvalueMethod
   parser = argparse.ArgumentParser(description="New Liquid Association Commandline Tool")
