@@ -101,12 +101,12 @@ def LA_Xgmml2(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=
          interaction_type1 = 'nu'
          interaction_type2 = 'nu'
       LA_score = tuple(la_table.rx(i,True)[3])[0]
-
-      laq_edges[(node_x, node_m_x_y)] = (-1, {'LA':LA_score, 'interaction':interaction_type1, 'source':node_x, 'target':node_m_x_y}) 
-      laq_edges[(node_y, node_m_x_y)] = (-1, {'LA':LA_score, 'interaction':interaction_type2, 'source':node_y, 'target':node_m_x_y})
-      laq_edges[(node_z, node_m_x_y)] = (-1, {'LA':LA_score, 'interaction':interaction_type3, 'source':node_z, 'target':node_m_x_y}) 
-      del laq_edges[(node_x,node_y)] 
-      
+      LS_score = laq_edges[(node_x,node_y)][1]['LS'] 
+      interaction = laq_edges[(node_x,node_y)][1]['interaction']
+      laq_edges[(node_x, node_m_x_y)] = (-1, {'L_name':'LS', 'L':LS_score, 'interaction':interaction_type1, 'source':node_x, 'target':node_m_x_y})
+      laq_edges[(node_y, node_m_x_y)] = (-1, {'L_name':'LS', 'L':LS_score, 'interaction':interaction_type2, 'source':node_y, 'target':node_m_x_y})
+      laq_edges[(node_z, node_m_x_y)] = (-1, {'L_name':'LA', 'L':LA_score, 'interaction':interaction_type3, 'source':node_z, 'target':node_m_x_y}) 
+      laq_edges[(node_x, node_y)]=(0, {'LS':LS_score, 'interaction':interaction, 'source':node_x, 'target':node_y})
   xgmml_element=etree.Element('graph')
   xgmml_element.set('xmlns:dc', "http://purl.org/dc/elements/1.1/")
   xgmml_element.set('xmlns:xlink', "http://www.w3.org/1999/xlink")
@@ -127,8 +127,8 @@ def LA_Xgmml2(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=
     factorName_element.set('value', node)
 
   for edge in laq_edges:     
-     if  laq_edges[edge][0] < 0:   
-        edge_label = '_'.join( [laq_edges[edge][1]['source'], interaction, laq_edges[edge][1]['target']] )
+     if  laq_edges[edge][0] < 0: 
+        edge_label = '_'.join( [laq_edges[edge][1]['source'],laq_edges[edge][1]['interaction'], laq_edges[edge][1]['target']] )
         edge_element = etree.SubElement(xgmml_element, 'edge')
         edge_element.set('label', edge_label )
         edge_element.set('source', laq_edges[edge][1]['source'])
@@ -137,12 +137,12 @@ def LA_Xgmml2(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=
         interaction_element.set('type', 'string')
         interaction_element.set('name', 'interaction')
         interaction_element.set('value', laq_edges[edge][1]['interaction'])
-        LA_element = etree.SubElement(edge_element, 'att')
-        LA_element.set('type', 'real')       
-        LA_element.set('name', 'LA')
-        LA_element.set('value', "%.4f" % laq_edges[edge][1]['LA'])
-     else:
-        edge_label = '_'.join( [laq_edges[edge][1]['source'], interaction, laq_edges[edge][1]['target']] )
+        L_element = etree.SubElement(edge_element, 'att')
+        L_element.set('type', 'real')       
+        L_element.set('name', laq_edges[edge][1]['L_name'])
+        L_element.set('value', "%.4f" % laq_edges[edge][1]['L'])
+     elif laq_edges[edge][0] > 0:
+        edge_label = '_'.join( [laq_edges[edge][1]['source'], laq_edges[edge][1]['interaction'], laq_edges[edge][1]['target']] )
         edge_element = etree.SubElement(xgmml_element, 'edge')
         edge_element.set('label', edge_label )
         edge_element.set('source', laq_edges[edge][1]['source'])
@@ -155,6 +155,8 @@ def LA_Xgmml2(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=
         LS_element.set('type', 'real')       
         LS_element.set('name', 'LS')
         LS_element.set('value', "%.4f" % laq_edges[edge][1]['LS'])
+     else:
+        pass     
   xgmml_string = etree.tostring(xgmml_element, encoding='utf-8')
   return xml.dom.minidom.parseString(xgmml_string).toprettyxml('  ')
 
