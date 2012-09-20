@@ -373,7 +373,7 @@ def R_Qvalue(pvalues, lam=np.arange(0,Q_lam_max,Q_lam_step), method='smoother', 
       if not np.isnan(pvalues[i]):
         qvalues_return[i]=qvalues[2][j]   #second item is calculated qvalues
         j = j+1
-  finally:
+  except:
     #print >>sys.stderr, "caution: q-value estimation error"
     print >>sys.stderr, "from R: unusable pvalues -> ", pvalues_input
     qvalues_return=[np.nan]*len(pvalues)
@@ -484,7 +484,9 @@ def storeyQvalue(pvalues, lam=np.arange(0,Q_lam_max,Q_lam_step), method='smoothe
     #print "rp_sort",rp_argsort
     #print "rp_rank",rp_ranks
     #print "qs=", qvalues
-  finally:
+  except:
+    print >>sys.stderr, "caution: q-value estimation error"
+    print >>sys.stderr, "from scipy: unusable pvalues -> ", rpvalues
     qvalues=np.array( [np.nan] * p_num, dtype='float')
 
   return qvalues
