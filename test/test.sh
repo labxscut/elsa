@@ -24,7 +24,11 @@ lsa_compute ../test/JAC0503.txt ../test/JAC0503.lsa -r 1 -s 127 -d 3 -p -100000 
 #debug
 #lsa_query ../debug/debug2.lsa ../debug/debug2.lsa.entry -x ../debug2.lsa.xgmml
 
-lsa_compute ../test/ARISA20.csv ../test/ARISA20.lsa -r 1 -s 127 -d 3 -p theo -x 1000 -f none -n percentile -e ../test/ARISA20.csv -m 0
+lsa_compute ../test/ARISA20.csv ../test/ARISA20.theo.lsa -r 1 -s 127 -d 3 -p theo -x 1000 -f none -n percentile -e ../test/ARISA20.csv -m 0 #72.951840
+lsa_compute ../test/ARISA20.csv ../test/ARISA20.mix.lsa -r 1 -s 127 -d 3 -p mix -x 1000 -f none -n percentile -e ../test/ARISA20.csv -m 0
+lsa_compute ../test/ARISA20.csv ../test/ARISA20.perm.lsa -r 1 -s 127 -d 3 -p perm -x 1000 -f none -n percentile -e ../test/ARISA20.csv -m 0
+
+lsa_compute ../test/ARISA20.csv ../test/ARISA20.lsa -r 1 -s 127 -d 3 -p mix -x 1000 -f none -n percentile -e ../test/ARISA20.csv -m 0
 lsa_query ARISA20.lsa ARISA20.sig.lsaq -q '(!lsa$P>0.01)&(lsa$Q<0.01)' -x ARISA20.sig.xgmml -s ARISA20.sig.sif
 la_compute ARISA20.csv ARISA20.sig.lsaq ARISA20.sig.la -s 127
 la_query ARISA20.sig.lsaq ARISA20.sig.la ARISA20.sig.laq -q '(!la$P>0.01)&(la$Q<0.01)' -x ARISA20.sig.xgmml
