@@ -1,7 +1,7 @@
 import os, sys, csv, rpy2
 import xml.etree.ElementTree as etree
 import xml.dom.minidom
-
+import math
 
 import rpy2.rlike.container as rlc
 import rpy2.robjects as ro
@@ -100,7 +100,13 @@ def LA_Xgmml2(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=
       else:
          interaction_type1 = 'nu'
          interaction_type2 = 'nu'
-      LA_score = tuple(la_table.rx(i,True)[3])[0]
+      #if tuple(la_table.rx(i,True)[3])[0] is 'nan':
+      x = tuple(la_table.rx(i,True)[3])[0]
+      if isinstance(x, float) and math.isnan(x):
+         LA_score = -9999
+      else:
+         #LA_score = tuple(la_table.rx(i,True)[3])[0]
+         LA_score = x
       LS_score = laq_edges[(node_x,node_y)][1]['LS'] 
       interaction = laq_edges[(node_x,node_y)][1]['interaction']
       laq_edges[(node_x, node_m_x_y)] = (-1, {'L_name':'LS', 'L':LS_score, 'interaction':interaction_type1, 'source':node_x, 'target':node_m_x_y})
