@@ -101,9 +101,10 @@ def LA_Xgmml2(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=
          interaction_type1 = 'nu'
          interaction_type2 = 'nu'
       #if tuple(la_table.rx(i,True)[3])[0] is 'nan':
-      x = tuple(la_table.rx(i,True)[3])[0]
+      x = tuple(la_table.rx(i,True)[lai])[0]
       if isinstance(x, float) and math.isnan(x):
-         LA_score = -9999
+         #LA_score = -9999
+         continue
       else:
          #LA_score = tuple(la_table.rx(i,True)[3])[0]
          LA_score = x
