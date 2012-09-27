@@ -1038,121 +1038,121 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
           + [row[0]+1, row[1]+1] )
 
 ### Liquid Association Section ###
-def applyLA(inputData, scoutVars, factorLabels, bootCI=.95, bootNum=1000, minOccur=.50, pvalueMethod=1000,\
-    fTransform=simpleAverage, zNormalize=noZeroNormalize, resultFile=None):
-
-  col_labels = ['X','Y','Z','LA','lowCI','upCI','P','Q','Xi','Yi','Zi']
-  print >>resultFile,  "\t".join(col_labels)
-
-  #print(inputData.shape)
-  inputFactorNum = inputData.shape[0]
-  inputRepNum = inputData.shape[1]
-  inputSpotNum = inputData.shape[2]
-  scoutNum = len(scoutVars)
-  cp = np.array( [False]*inputFactorNum**3, dtype='bool' ) #consider bitvector
-  cp.shape = (inputFactorNum, inputFactorNum, inputFactorNum)
-  laTable = [None]*inputFactorNum*scoutNum
-  pvalues = np.zeros(inputFactorNum*scoutNum, dtype='float')
-  timespots = inputSpotNum #same length already assumed
-  replicates = inputRepNum
-  ti = 0
-  for i in xrange(0, scoutNum):
-    Xi = scoutVars[i][0] - 1
-    Yi = scoutVars[i][1] - 1
-    #print Xi, Yi
-    Xo = np.ma.masked_invalid(inputData[Xi], copy=True) #need to convert to masked array with na's, not F-normalized
-    Yo = np.ma.masked_invalid(inputData[Yi], copy=True) #need to convert to masked array with na's, not F-normalized
-    for j in xrange(0, inputFactorNum):
-      Zi = j
-      if Xi == Yi or Xi == Zi or Zi == Yi:
-        continue   #ignore invalid entries
-      if cp[Xi,Yi,Zi] or cp[Xi,Zi,Yi] or cp[Zi,Xi,Yi] or cp[Zi,Yi,Xi] or cp[Yi,Xi,Zi] or cp[Yi,Zi,Xi]:
-        continue   #ignore redundant entries
-      cp[Xi,Yi,Zi]=True
-      Zo = np.ma.masked_invalid(inputData[Zi], copy=True)    # need to convert to masked array with na's, not F-normalized
-      Xo_minOccur = np.sum(np.logical_or(np.isnan(ma_average(Xo)), ma_average(Xo)==0))/float(timespots) < minOccur
-      Yo_minOccur = np.sum(np.logical_or(np.isnan(ma_average(Yo)), ma_average(Yo)==0))/float(timespots) < minOccur
-      Zo_minOccur = np.sum(np.logical_or(np.isnan(ma_average(Yo)), ma_average(Yo)==0))/float(timespots) < minOccur
-      if Xo_minOccur or Yo_minOccur or Zo_minOccur:
-        continue						 # minOccur not satisfied for one of the factors
-      if np.all(Xo.mask) or np.all(Yo.mask) or np.all(Zo.mask):  # not any unmasked value in Xz or Yz, all nan in input, continue
-        continue
-      LA_score = singleLA(Xo, Yo, Zo, fTransform, zNormalize)                          # do LA computation
-
-      #This Part Must Follow Static Calculation Part
-      #Otherwise Yz may be changed, now it is copied
-      #np.ma.array(copy=True) to copy, otherwise is only reference
-      if pvalueMethod >= 0 or pvalueMethod < 0:
-        Xp = np.ma.array(Xo,copy=True)
-        Yp = np.ma.array(Yo,copy=True)
-        Zp = np.ma.array(Zo,copy=True)
-        laP = LApermuPvalue(Xp, Yp, Zp, pvalueMethod, np.abs(LA_score), fTransform, zNormalize)          # do Permutation Test
-      else: #reserved 
-        print "this should not be receahed"
-      pvalues[ti] = laP
-      #print "bootstrap computing..."
-      if bootNum > 0: #do BS
-        Xb = np.ma.array(Xo,copy=True)
-        Yb = np.ma.array(Yo,copy=True)
-        Zb = np.ma.array(Zo,copy=True)
-        (LA_score, Sl, Su) = LAbootstrapCI(Xb, Yb, Zb, LA_score, bootCI, bootNum, fTransform, zNormalize)        # do Bootstrap CI
-      else: #skip BS
-        (LA_score, Sl, Su) = (LA_score, LA_score, LA_score)
-
-      laTable[ti] = [Xi, Yi, Zi, LA_score, Sl, Su, laP]
-      ti += 1
-
-  pvalues = pvalues[:ti]
-  laTable = laTable[:ti]
-  #qvalues = storeyQvalue( pvalues )
-  qvalues = qvalue_func( pvalues )
-  for k in xrange(0, len(qvalues)):
-    laTable[k] = laTable[k] + [ qvalues[k], laTable[k][0]+1, laTable[k][1]+1, laTable[k][2]+1 ]
-
-  #print laTable
-  for row in laTable:
-    print >>resultFile, "\t".join( ['%s']*len(col_labels) ) % \
-      tuple( [factorLabels[row[0]], factorLabels[row[1]], factorLabels[row[2]]] \
-          + ["%f" % np.round(v, decimals=disp_decimal) if isinstance(v, float) else v for v in row[3:]] )
-
-def singleLA(series1, series2, series3, fTransform, zNormalize):
-  return compcore.calc_LA(zNormalize(fTransform(series1)),zNormalize(fTransform(series2)),zNormalize(fTransform(series3)))
-
-def calc_LA(series1, series2, series3):
-  n1 = len(series1)
-  n2 = len(series2)
-  n3 = len(series3)
-  assert n1==n2 and n2 == n3
-  return np.sum(series1*series2*series3)/n1
-
-def LAbootstrapCI(series1, series2, series3, LA_score, bootCI, bootNum, fTransform, zNormalize, debug=0):
-  ### no feasible, skipping bootstraping
-  if series1.shape[0] == 1:
-    return (LA_score, LA_score, LA_score)
-
-  BS_set = np.zeros(bootNum, dtype='float')
-  for i in range(0, bootNum):
-    Xb = np.ma.array([ sample_wr(series1[:,j], series1.shape[0]) for j in xrange(0,series1.shape[1]) ]).T
-    Yb = np.ma.array([ sample_wr(series2[:,j], series2.shape[0]) for j in xrange(0,series2.shape[1]) ]).T
-    Zb = np.ma.array([ sample_wr(series3[:,j], series3.shape[0]) for j in xrange(0,series3.shape[1]) ]).T
-    BS_set[i] = compcore.calc_LA(Xb, Yb, Zb)
-  BS_set.sort()                                 #from smallest to largest
-  BS_mean = np.mean(BS_set)
-  return ( BS_mean, BS_set[np.floor(bootNum*a1)-1], BS_set[np.ceil(bootNum*a2)-1] )
-
-def LApermuPvalue(series1, series2, series3, pvalueMethod, LA_score, fTransform, zNormalize):
-  PP_set = np.zeros(pvalueMethod, dtype='float')
-  X = zNormalize(fTransform(series1))
-  Y = zNormalize(fTransform(series2))
-  Z = np.ma.array(series3)                                               #use = only assigns reference, must use a constructor
-  for i in xrange(0, pvalueMethod):
-    np.random.shuffle(Z.T)
-    PP_set[i] = compcore.calc_LA(X, Y, zNormalize(fTransform(Z)))
-  if LA_score >= 0:
-    P_two_tail = np.sum(np.abs(PP_set) >= LA_score)/np.float(pvalueMethod)
-  else:
-    P_two_tail = np.sum(-np.abs(PP_set) <= LA_score)/np.float(pvalueMethod)
-  return P_two_tail
+#def applyLA(inputData, scoutVars, factorLabels, bootCI=.95, bootNum=1000, minOccur=.50, pvalueMethod=1000,\
+#    fTransform=simpleAverage, zNormalize=noZeroNormalize, resultFile=None):
+#
+#  col_labels = ['X','Y','Z','LA','lowCI','upCI','P','Q','Xi','Yi','Zi']
+#  print >>resultFile,  "\t".join(col_labels)
+#
+#  #print(inputData.shape)
+#  inputFactorNum = inputData.shape[0]
+#  inputRepNum = inputData.shape[1]
+#  inputSpotNum = inputData.shape[2]
+#  scoutNum = len(scoutVars)
+#  cp = np.array( [False]*inputFactorNum**3, dtype='bool' ) #consider bitvector
+#  cp.shape = (inputFactorNum, inputFactorNum, inputFactorNum)
+#  laTable = [None]*inputFactorNum*scoutNum
+#  pvalues = np.zeros(inputFactorNum*scoutNum, dtype='float')
+#  timespots = inputSpotNum #same length already assumed
+#  replicates = inputRepNum
+#  ti = 0
+#  for i in xrange(0, scoutNum):
+#    Xi = scoutVars[i][0] - 1
+#    Yi = scoutVars[i][1] - 1
+#    #print Xi, Yi
+#    Xo = np.ma.masked_invalid(inputData[Xi], copy=True) #need to convert to masked array with na's, not F-normalized
+#    Yo = np.ma.masked_invalid(inputData[Yi], copy=True) #need to convert to masked array with na's, not F-normalized
+#    for j in xrange(0, inputFactorNum):
+#      Zi = j
+#      if Xi == Yi or Xi == Zi or Zi == Yi:
+#        continue   #ignore invalid entries
+#      if cp[Xi,Yi,Zi] or cp[Xi,Zi,Yi] or cp[Zi,Xi,Yi] or cp[Zi,Yi,Xi] or cp[Yi,Xi,Zi] or cp[Yi,Zi,Xi]:
+#        continue   #ignore redundant entries
+#      cp[Xi,Yi,Zi]=True
+#      Zo = np.ma.masked_invalid(inputData[Zi], copy=True)    # need to convert to masked array with na's, not F-normalized
+#      Xo_minOccur = np.sum(np.logical_or(np.isnan(ma_average(Xo)), ma_average(Xo)==0))/float(timespots) < minOccur
+#      Yo_minOccur = np.sum(np.logical_or(np.isnan(ma_average(Yo)), ma_average(Yo)==0))/float(timespots) < minOccur
+#      Zo_minOccur = np.sum(np.logical_or(np.isnan(ma_average(Yo)), ma_average(Yo)==0))/float(timespots) < minOccur
+#      if Xo_minOccur or Yo_minOccur or Zo_minOccur:
+#        continue						 # minOccur not satisfied for one of the factors
+#      if np.all(Xo.mask) or np.all(Yo.mask) or np.all(Zo.mask):  # not any unmasked value in Xz or Yz, all nan in input, continue
+#        continue
+#      LA_score = singleLA(Xo, Yo, Zo, fTransform, zNormalize)                          # do LA computation
+#
+#      #This Part Must Follow Static Calculation Part
+#      #Otherwise Yz may be changed, now it is copied
+#      #np.ma.array(copy=True) to copy, otherwise is only reference
+#      if pvalueMethod >= 0 or pvalueMethod < 0:
+#        Xp = np.ma.array(Xo,copy=True)
+#        Yp = np.ma.array(Yo,copy=True)
+#        Zp = np.ma.array(Zo,copy=True)
+#        laP = LApermuPvalue(Xp, Yp, Zp, pvalueMethod, np.abs(LA_score), fTransform, zNormalize)          # do Permutation Test
+#      else: #reserved 
+#        print "this should not be receahed now"
+#      pvalues[ti] = laP
+#      #print "bootstrap computing..."
+#      if bootNum > 0: #do BS
+#        Xb = np.ma.array(Xo,copy=True)
+#        Yb = np.ma.array(Yo,copy=True)
+#        Zb = np.ma.array(Zo,copy=True)
+#        (LA_score, Sl, Su) = LAbootstrapCI(Xb, Yb, Zb, LA_score, bootCI, bootNum, fTransform, zNormalize)        # do Bootstrap CI
+#      else: #skip BS
+#        (LA_score, Sl, Su) = (LA_score, LA_score, LA_score)
+#
+#      laTable[ti] = [Xi, Yi, Zi, LA_score, Sl, Su, laP]
+#      ti += 1
+#
+#  pvalues = pvalues[:ti]
+#  laTable = laTable[:ti]
+#  #qvalues = storeyQvalue( pvalues )
+#  qvalues = qvalue_func( pvalues )
+#  for k in xrange(0, len(qvalues)):
+#    laTable[k] = laTable[k] + [ qvalues[k], laTable[k][0]+1, laTable[k][1]+1, laTable[k][2]+1 ]
+#
+#  #print laTable
+#  for row in laTable:
+#    print >>resultFile, "\t".join( ['%s']*len(col_labels) ) % \
+#      tuple( [factorLabels[row[0]], factorLabels[row[1]], factorLabels[row[2]]] \
+#          + ["%f" % np.round(v, decimals=disp_decimal) if isinstance(v, float) else v for v in row[3:]] )
+#
+#def singleLA(series1, series2, series3, fTransform, zNormalize):
+#  return compcore.calc_LA(zNormalize(fTransform(series1)),zNormalize(fTransform(series2)),zNormalize(fTransform(series3)))
+#
+#def calc_LA(series1, series2, series3):
+#  n1 = len(series1)
+#  n2 = len(series2)
+#  n3 = len(series3)
+#  assert n1==n2 and n2 == n3
+#  return np.sum(series1*series2*series3)/n1
+#
+#def LAbootstrapCI(series1, series2, series3, LA_score, bootCI, bootNum, fTransform, zNormalize, debug=0):
+#  ### no feasible, skipping bootstraping
+#  if series1.shape[0] == 1:
+#    return (LA_score, LA_score, LA_score)
+#
+#  BS_set = np.zeros(bootNum, dtype='float')
+#  for i in range(0, bootNum):
+#    Xb = np.ma.array([ sample_wr(series1[:,j], series1.shape[0]) for j in xrange(0,series1.shape[1]) ]).T
+#    Yb = np.ma.array([ sample_wr(series2[:,j], series2.shape[0]) for j in xrange(0,series2.shape[1]) ]).T
+#    Zb = np.ma.array([ sample_wr(series3[:,j], series3.shape[0]) for j in xrange(0,series3.shape[1]) ]).T
+#    BS_set[i] = compcore.calc_LA(Xb, Yb, Zb)
+#  BS_set.sort()                                 #from smallest to largest
+#  BS_mean = np.mean(BS_set)
+#  return ( BS_mean, BS_set[np.floor(bootNum*a1)-1], BS_set[np.ceil(bootNum*a2)-1] )
+#
+#def LApermuPvalue(series1, series2, series3, pvalueMethod, LA_score, fTransform, zNormalize):
+#  PP_set = np.zeros(pvalueMethod, dtype='float')
+#  X = zNormalize(fTransform(series1))
+#  Y = zNormalize(fTransform(series2))
+#  Z = np.ma.array(series3)                                               #use = only assigns reference, must use a constructor
+#  for i in xrange(0, pvalueMethod):
+#    np.random.shuffle(Z.T)
+#    PP_set[i] = compcore.calc_LA(X, Y, zNormalize(fTransform(Z)))
+#  if LA_score >= 0:
+#    P_two_tail = np.sum(np.abs(PP_set) >= LA_score)/np.float(pvalueMethod)
+#  else:
+#    P_two_tail = np.sum(-np.abs(PP_set) <= LA_score)/np.float(pvalueMethod)
+#  return P_two_tail
 
 def test():
   """ self test script

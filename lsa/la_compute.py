@@ -35,12 +35,15 @@ import numpy as np
 import scipy as sp
 try:
   #debug import
+  import lalib
   import lsalib
+  import lsa
 except ImportError:
   #install import
+  from lsa import lalib
   from lsa import lsalib
+  import lsa
   #np.seterr(all='raise')
-import lsa
 
 def main():  
 
@@ -50,7 +53,7 @@ def main():
   print >>sys.stderr, version_desc
 
   # define arguments: delayLimit, fillMethod, pvalueMethod
-  parser = argparse.ArgumentParser(description="New Liquid Association Commandline Tool")
+  parser = argparse.ArgumentParser(description="New Liquid Association Analysis Tools")
 
   parser.add_argument("dataFile", metavar="dataFile", type=argparse.FileType('r'), help="the input data file,\n \
                         m by (r * s)tab delimited text; top left cell start with '#' to mark this is the header line; \n \
@@ -210,7 +213,7 @@ def main():
   #print scoutVars
   #print factorLabels
 
-  lsalib.applyLA(tempData, scoutVars, factorLabels, bootNum=bootNum, minOccur=minOccur/100.,\
+  lalib.applyLA(tempData, scoutVars, factorLabels, bootNum=bootNum, minOccur=minOccur/100.,\
       pvalueMethod=pvalueMethod, fTransform=fTransform, zNormalize=zNormalize, resultFile=resultFile)
 
   print >>sys.stderr, "finishing up..."
