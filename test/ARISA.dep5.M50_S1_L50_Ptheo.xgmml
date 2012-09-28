@@ -2,1698 +2,3393 @@
 <graph directed="1" label="LA Network" xmlns="http://www.cs.rpi.edu/XGMML" xmlns:cy="http://www.cytoscape.org" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink">
   <node id="ARISA_413.3" label="ARISA_413.3" name="ARISA_413.3">
     <att name="factorName" type="string" value="ARISA_413.3"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_413.3"/>
   </node>
   <node id="ARISA_755.2" label="ARISA_755.2" name="ARISA_755.2">
     <att name="factorName" type="string" value="ARISA_755.2"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_755.2"/>
   </node>
   <node id="ARISA_444" label="ARISA_444" name="ARISA_444">
     <att name="factorName" type="string" value="ARISA_444"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR86_444"/>
   </node>
   <node id="ARISA_442" label="ARISA_442" name="ARISA_442">
     <att name="factorName" type="string" value="ARISA_442"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_442"/>
   </node>
   <node id="ARISA_767.5" label="ARISA_767.5" name="ARISA_767.5">
     <att name="factorName" type="string" value="ARISA_767.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="OM182_767.5"/>
   </node>
   <node id="m_ARISA_765.7_ARISA_857.1" label="m_ARISA_765.7_ARISA_857.1" name="m_ARISA_765.7_ARISA_857.1">
     <att name="factorName" type="string" value="m_ARISA_765.7_ARISA_857.1"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_415.1" label="ARISA_415.1" name="ARISA_415.1">
     <att name="factorName" type="string" value="ARISA_415.1"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="OCS155_415.1"/>
   </node>
   <node id="ARISA_616.2" label="ARISA_616.2" name="ARISA_616.2">
     <att name="factorName" type="string" value="ARISA_616.2"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Owenwe_616.2"/>
   </node>
   <node id="Cmax_Depth" label="Cmax_Depth" name="Cmax_Depth">
     <att name="factorName" type="string" value="Cmax_Depth"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="Cmax_Depth"/>
   </node>
   <node id="m_ARISA_469.4_ARISA_776.1" label="m_ARISA_469.4_ARISA_776.1" name="m_ARISA_469.4_ARISA_776.1">
     <att name="factorName" type="string" value="m_ARISA_469.4_ARISA_776.1"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_417.6" label="ARISA_417.6" name="ARISA_417.6">
     <att name="factorName" type="string" value="ARISA_417.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="OCS155_417.6"/>
   </node>
   <node id="ARISA_721.2" label="ARISA_721.2" name="ARISA_721.2">
     <att name="factorName" type="string" value="ARISA_721.2"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR11_721.2"/>
   </node>
   <node id="ARISA_614.9" label="ARISA_614.9" name="ARISA_614.9">
     <att name="factorName" type="string" value="ARISA_614.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_614.9"/>
   </node>
   <node id="m_ARISA_400.2_ARISA_407.7" label="m_ARISA_400.2_ARISA_407.7" name="m_ARISA_400.2_ARISA_407.7">
     <att name="factorName" type="string" value="m_ARISA_400.2_ARISA_407.7"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_860.4_ARISA_877.9" label="m_ARISA_860.4_ARISA_877.9" name="m_ARISA_860.4_ARISA_877.9">
     <att name="factorName" type="string" value="m_ARISA_860.4_ARISA_877.9"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_571.4_ARISA_859.8" label="m_ARISA_571.4_ARISA_859.8" name="m_ARISA_571.4_ARISA_859.8">
     <att name="factorName" type="string" value="m_ARISA_571.4_ARISA_859.8"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_880.7" label="ARISA_880.7" name="ARISA_880.7">
     <att name="factorName" type="string" value="ARISA_880.7"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Rhodob_880.7"/>
   </node>
   <node id="m_ARISA_1023.2_ARISA_1035.2" label="m_ARISA_1023.2_ARISA_1035.2" name="m_ARISA_1023.2_ARISA_1035.2">
     <att name="factorName" type="string" value="m_ARISA_1023.2_ARISA_1035.2"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_1070.6" label="ARISA_1070.6" name="ARISA_1070.6">
     <att name="factorName" type="string" value="ARISA_1070.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_1070.6"/>
   </node>
   <node id="m_ARISA_770.5_ARISA_863.9" label="m_ARISA_770.5_ARISA_863.9" name="m_ARISA_770.5_ARISA_863.9">
     <att name="factorName" type="string" value="m_ARISA_770.5_ARISA_863.9"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="isJune" label="isJune" name="isJune">
     <att name="factorName" type="string" value="isJune"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="isJune"/>
   </node>
   <node id="ARISA_469.4" label="ARISA_469.4" name="ARISA_469.4">
     <att name="factorName" type="string" value="ARISA_469.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR86_469.4"/>
   </node>
   <node id="Methane" label="Methane" name="Methane">
     <att name="factorName" type="string" value="Methane"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="Methane"/>
   </node>
   <node id="ARISA_763.9" label="ARISA_763.9" name="ARISA_763.9">
     <att name="factorName" type="string" value="ARISA_763.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_763.9"/>
   </node>
   <node id="ARISA_759.8" label="ARISA_759.8" name="ARISA_759.8">
     <att name="factorName" type="string" value="ARISA_759.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="ZD0417_759.8"/>
   </node>
   <node id="ARISA_1020.8" label="ARISA_1020.8" name="ARISA_1020.8">
     <att name="factorName" type="string" value="ARISA_1020.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Synech_1020.8"/>
   </node>
   <node id="ARISA_620.5" label="ARISA_620.5" name="ARISA_620.5">
     <att name="factorName" type="string" value="ARISA_620.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Cronob_620.5"/>
   </node>
   <node id="log_PO4" label="log_PO4" name="log_PO4">
     <att name="factorName" type="string" value="log_PO4"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="log_PO4"/>
   </node>
   <node id="isOctober" label="isOctober" name="isOctober">
     <att name="factorName" type="string" value="isOctober"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="isOctober"/>
   </node>
   <node id="m_ARISA_522.8_ARISA_871.5" label="m_ARISA_522.8_ARISA_871.5" name="m_ARISA_522.8_ARISA_871.5">
     <att name="factorName" type="string" value="m_ARISA_522.8_ARISA_871.5"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_749.6" label="ARISA_749.6" name="ARISA_749.6">
     <att name="factorName" type="string" value="ARISA_749.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="NS5_749.6"/>
   </node>
   <node id="ARISA_735.5" label="ARISA_735.5" name="ARISA_735.5">
     <att name="factorName" type="string" value="ARISA_735.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR11_735.5"/>
   </node>
   <node id="m_ARISA_414.2_ARISA_488" label="m_ARISA_414.2_ARISA_488" name="m_ARISA_414.2_ARISA_488">
     <att name="factorName" type="string" value="m_ARISA_414.2_ARISA_488"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_676.9" label="ARISA_676.9" name="ARISA_676.9">
     <att name="factorName" type="string" value="ARISA_676.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="AEGEAN_676.9"/>
   </node>
   <node id="ARISA_1181.7" label="ARISA_1181.7" name="ARISA_1181.7">
     <att name="factorName" type="string" value="ARISA_1181.7"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_1181.7"/>
   </node>
   <node id="ARISA_1181.1" label="ARISA_1181.1" name="ARISA_1181.1">
     <att name="factorName" type="string" value="ARISA_1181.1"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Roseob_1181.1"/>
   </node>
   <node id="ARISA_579.3" label="ARISA_579.3" name="ARISA_579.3">
     <att name="factorName" type="string" value="ARISA_579.3"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="NS4_579.3"/>
   </node>
   <node id="ARISA_392.9" label="ARISA_392.9" name="ARISA_392.9">
     <att name="factorName" type="string" value="ARISA_392.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_392.9"/>
   </node>
   <node id="ARISA_1191" label="ARISA_1191" name="ARISA_1191">
     <att name="factorName" type="string" value="ARISA_1191"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_1191"/>
   </node>
   <node id="m_ARISA_556.7_ARISA_639.8" label="m_ARISA_556.7_ARISA_639.8" name="m_ARISA_556.7_ARISA_639.8">
     <att name="factorName" type="string" value="m_ARISA_556.7_ARISA_639.8"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_782" label="ARISA_782" name="ARISA_782">
     <att name="factorName" type="string" value="ARISA_782"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_782"/>
   </node>
   <node id="ARISA_785" label="ARISA_785" name="ARISA_785">
     <att name="factorName" type="string" value="ARISA_785"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Formos_785"/>
   </node>
   <node id="ARISA_433.6" label="ARISA_433.6" name="ARISA_433.6">
     <att name="factorName" type="string" value="ARISA_433.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_433.6"/>
   </node>
   <node id="ARISA_1187.7" label="ARISA_1187.7" name="ARISA_1187.7">
     <att name="factorName" type="string" value="ARISA_1187.7"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_1187.7"/>
   </node>
   <node id="NO3" label="NO3" name="NO3">
     <att name="factorName" type="string" value="NO3"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="NO3"/>
   </node>
   <node id="ARISA_662" label="ARISA_662" name="ARISA_662">
     <att name="factorName" type="string" value="ARISA_662"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="AEGEAN_662"/>
   </node>
   <node id="m_ARISA_1037.7_ARISA_1127.2" label="m_ARISA_1037.7_ARISA_1127.2" name="m_ARISA_1037.7_ARISA_1127.2">
     <att name="factorName" type="string" value="m_ARISA_1037.7_ARISA_1127.2"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_431.4" label="ARISA_431.4" name="ARISA_431.4">
     <att name="factorName" type="string" value="ARISA_431.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_431.4"/>
   </node>
   <node id="ARISA_571.4" label="ARISA_571.4" name="ARISA_571.4">
     <att name="factorName" type="string" value="ARISA_571.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_571.4"/>
   </node>
   <node id="m_ARISA_614.9_ARISA_895.3" label="m_ARISA_614.9_ARISA_895.3" name="m_ARISA_614.9_ARISA_895.3">
     <att name="factorName" type="string" value="m_ARISA_614.9_ARISA_895.3"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_624.5" label="ARISA_624.5" name="ARISA_624.5">
     <att name="factorName" type="string" value="ARISA_624.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR406_624.5"/>
   </node>
   <node id="ARISA_650.2" label="ARISA_650.2" name="ARISA_650.2">
     <att name="factorName" type="string" value="ARISA_650.2"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="AEGEAN_650.2"/>
   </node>
   <node id="ARISA_988.5" label="ARISA_988.5" name="ARISA_988.5">
     <att name="factorName" type="string" value="ARISA_988.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_988.5"/>
   </node>
   <node id="ARISA_956.5" label="ARISA_956.5" name="ARISA_956.5">
     <att name="factorName" type="string" value="ARISA_956.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_956.5"/>
   </node>
   <node id="ARISA_1056.1" label="ARISA_1056.1" name="ARISA_1056.1">
     <att name="factorName" type="string" value="ARISA_1056.1"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Prochl_A.I_1056.1"/>
   </node>
   <node id="ARISA_439.2" label="ARISA_439.2" name="ARISA_439.2">
     <att name="factorName" type="string" value="ARISA_439.2"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_439.2"/>
   </node>
   <node id="ARISA_732.2" label="ARISA_732.2" name="ARISA_732.2">
     <att name="factorName" type="string" value="ARISA_732.2"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="NS9_732.2"/>
   </node>
   <node id="ARISA_577.6" label="ARISA_577.6" name="ARISA_577.6">
     <att name="factorName" type="string" value="ARISA_577.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Prochl_577.6"/>
   </node>
   <node id="ARISA_1185.8" label="ARISA_1185.8" name="ARISA_1185.8">
     <att name="factorName" type="string" value="ARISA_1185.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Roseob_1185.8"/>
   </node>
   <node id="ARISA_837.1" label="ARISA_837.1" name="ARISA_837.1">
     <att name="factorName" type="string" value="ARISA_837.1"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_837.1"/>
   </node>
   <node id="ARISA_600.6" label="ARISA_600.6" name="ARISA_600.6">
     <att name="factorName" type="string" value="ARISA_600.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="PAUC34_600.6"/>
   </node>
   <node id="m_ARISA_511.6_ARISA_1127.2" label="m_ARISA_511.6_ARISA_1127.2" name="m_ARISA_511.6_ARISA_1127.2">
     <att name="factorName" type="string" value="m_ARISA_511.6_ARISA_1127.2"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_781.3_ARISA_785" label="m_ARISA_781.3_ARISA_785" name="m_ARISA_781.3_ARISA_785">
     <att name="factorName" type="string" value="m_ARISA_781.3_ARISA_785"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_863.9_ARISA_1130.1" label="m_ARISA_863.9_ARISA_1130.1" name="m_ARISA_863.9_ARISA_1130.1">
     <att name="factorName" type="string" value="m_ARISA_863.9_ARISA_1130.1"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_473_ARISA_581.3" label="m_ARISA_473_ARISA_581.3" name="m_ARISA_473_ARISA_581.3">
     <att name="factorName" type="string" value="m_ARISA_473_ARISA_581.3"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_759.8_ARISA_943.3" label="m_ARISA_759.8_ARISA_943.3" name="m_ARISA_759.8_ARISA_943.3">
     <att name="factorName" type="string" value="m_ARISA_759.8_ARISA_943.3"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="PStar" label="PStar" name="PStar">
     <att name="factorName" type="string" value="PStar"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="PStar"/>
   </node>
   <node id="ARISA_729.4" label="ARISA_729.4" name="ARISA_729.4">
     <att name="factorName" type="string" value="ARISA_729.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="NS4_729.4"/>
   </node>
   <node id="ARISA_1195.5" label="ARISA_1195.5" name="ARISA_1195.5">
     <att name="factorName" type="string" value="ARISA_1195.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Shewan_1195.5"/>
   </node>
   <node id="ARISA_625.9" label="ARISA_625.9" name="ARISA_625.9">
     <att name="factorName" type="string" value="ARISA_625.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_625.9"/>
   </node>
   <node id="ARISA_808" label="ARISA_808" name="ARISA_808">
     <att name="factorName" type="string" value="ARISA_808"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_808"/>
   </node>
   <node id="ARISA_563.6" label="ARISA_563.6" name="ARISA_563.6">
     <att name="factorName" type="string" value="ARISA_563.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Owenwe_563.6"/>
   </node>
   <node id="ARISA_575.6" label="ARISA_575.6" name="ARISA_575.6">
     <att name="factorName" type="string" value="ARISA_575.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Sva099_575.6"/>
   </node>
   <node id="ShannonH" label="ShannonH" name="ShannonH">
     <att name="factorName" type="string" value="ShannonH"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="ShannonH"/>
   </node>
   <node id="Bact" label="Bact" name="Bact">
     <att name="factorName" type="string" value="Bact"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="Bact"/>
   </node>
   <node id="m_ARISA_659_ARISA_877.9" label="m_ARISA_659_ARISA_877.9" name="m_ARISA_659_ARISA_877.9">
     <att name="factorName" type="string" value="m_ARISA_659_ARISA_877.9"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_545.8_ARISA_683.9" label="m_ARISA_545.8_ARISA_683.9" name="m_ARISA_545.8_ARISA_683.9">
     <att name="factorName" type="string" value="m_ARISA_545.8_ARISA_683.9"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_674.2" label="ARISA_674.2" name="ARISA_674.2">
     <att name="factorName" type="string" value="ARISA_674.2"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR11_674.2"/>
   </node>
   <node id="VBR" label="VBR" name="VBR">
     <att name="factorName" type="string" value="VBR"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="VBR"/>
   </node>
   <node id="ARISA_618.3" label="ARISA_618.3" name="ARISA_618.3">
     <att name="factorName" type="string" value="ARISA_618.3"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR86_618.3"/>
   </node>
   <node id="ARISA_559.4" label="ARISA_559.4" name="ARISA_559.4">
     <att name="factorName" type="string" value="ARISA_559.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_559.4"/>
   </node>
   <node id="ARISA_779.2" label="ARISA_779.2" name="ARISA_779.2">
     <att name="factorName" type="string" value="ARISA_779.2"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Marino_779.2"/>
   </node>
   <node id="ARISA_1199.7" label="ARISA_1199.7" name="ARISA_1199.7">
     <att name="factorName" type="string" value="ARISA_1199.7"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_1199.7"/>
   </node>
   <node id="m_ARISA_697_ARISA_802.9" label="m_ARISA_697_ARISA_802.9" name="m_ARISA_697_ARISA_802.9">
     <att name="factorName" type="string" value="m_ARISA_697_ARISA_802.9"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_556.7_ARISA_895.3" label="m_ARISA_556.7_ARISA_895.3" name="m_ARISA_556.7_ARISA_895.3">
     <att name="factorName" type="string" value="m_ARISA_556.7_ARISA_895.3"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="SSHD_Sat" label="SSHD_Sat" name="SSHD_Sat">
     <att name="factorName" type="string" value="SSHD_Sat"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="SSHD_Sat"/>
   </node>
   <node id="ARISA_567.5" label="ARISA_567.5" name="ARISA_567.5">
     <att name="factorName" type="string" value="ARISA_567.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Chloro_567.5"/>
   </node>
   <node id="ARISA_1030.5" label="ARISA_1030.5" name="ARISA_1030.5">
     <att name="factorName" type="string" value="ARISA_1030.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Prochl_A.I_1030.5"/>
   </node>
   <node id="Old_PO4" label="Old_PO4" name="Old_PO4">
     <att name="factorName" type="string" value="Old_PO4"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="Old_PO4"/>
   </node>
   <node id="ARISA_773.1" label="ARISA_773.1" name="ARISA_773.1">
     <att name="factorName" type="string" value="ARISA_773.1"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Formos_773.1"/>
   </node>
   <node id="isJanuary" label="isJanuary" name="isJanuary">
     <att name="factorName" type="string" value="isJanuary"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="isJanuary"/>
   </node>
   <node id="ARISA_666.4" label="ARISA_666.4" name="ARISA_666.4">
     <att name="factorName" type="string" value="ARISA_666.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR11_666.4"/>
   </node>
   <node id="ARISA_741.8" label="ARISA_741.8" name="ARISA_741.8">
     <att name="factorName" type="string" value="ARISA_741.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="NS2b_741.8"/>
   </node>
   <node id="ARISA_511.6" label="ARISA_511.6" name="ARISA_511.6">
     <att name="factorName" type="string" value="ARISA_511.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_511.6"/>
   </node>
   <node id="m_ARISA_564.5_ARISA_973.5" label="m_ARISA_564.5_ARISA_973.5" name="m_ARISA_564.5_ARISA_973.5">
     <att name="factorName" type="string" value="m_ARISA_564.5_ARISA_973.5"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_547.8" label="ARISA_547.8" name="ARISA_547.8">
     <att name="factorName" type="string" value="ARISA_547.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_547.8"/>
   </node>
   <node id="ARISA_432" label="ARISA_432" name="ARISA_432">
     <att name="factorName" type="string" value="ARISA_432"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_432"/>
   </node>
   <node id="ARISA_1017.8" label="ARISA_1017.8" name="ARISA_1017.8">
     <att name="factorName" type="string" value="ARISA_1017.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Defluv_1017.8"/>
   </node>
   <node id="ARISA_791.4" label="ARISA_791.4" name="ARISA_791.4">
     <att name="factorName" type="string" value="ARISA_791.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Sedimi_791.4"/>
   </node>
   <node id="m_ARISA_542.8_ARISA_1014.9" label="m_ARISA_542.8_ARISA_1014.9" name="m_ARISA_542.8_ARISA_1014.9">
     <att name="factorName" type="string" value="m_ARISA_542.8_ARISA_1014.9"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_895.3_ARISA_973.5" label="m_ARISA_895.3_ARISA_973.5" name="m_ARISA_895.3_ARISA_973.5">
     <att name="factorName" type="string" value="m_ARISA_895.3_ARISA_973.5"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_644.9" label="ARISA_644.9" name="ARISA_644.9">
     <att name="factorName" type="string" value="ARISA_644.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Shewan_644.9"/>
   </node>
   <node id="ARISA_545.8" label="ARISA_545.8" name="ARISA_545.8">
     <att name="factorName" type="string" value="ARISA_545.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="OTU_545.8"/>
   </node>
   <node id="m_ARISA_639.8_ARISA_924.9" label="m_ARISA_639.8_ARISA_924.9" name="m_ARISA_639.8_ARISA_924.9">
     <att name="factorName" type="string" value="m_ARISA_639.8_ARISA_924.9"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="Old_NO3" label="Old_NO3" name="Old_NO3">
     <att name="factorName" type="string" value="Old_NO3"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="Old_NO3"/>
   </node>
   <node id="ARISA_1011.5" label="ARISA_1011.5" name="ARISA_1011.5">
     <att name="factorName" type="string" value="ARISA_1011.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Sphing_1011.5"/>
   </node>
   <node id="ARISA_543.8" label="ARISA_543.8" name="ARISA_543.8">
     <att name="factorName" type="string" value="ARISA_543.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_543.8"/>
   </node>
   <node id="m_ARISA_502.9_ARISA_611" label="m_ARISA_502.9_ARISA_611" name="m_ARISA_502.9_ARISA_611">
     <att name="factorName" type="string" value="m_ARISA_502.9_ARISA_611"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_559" label="ARISA_559" name="ARISA_559">
     <att name="factorName" type="string" value="ARISA_559"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_559"/>
   </node>
   <node id="ARISA_765.7" label="ARISA_765.7" name="ARISA_765.7">
     <att name="factorName" type="string" value="ARISA_765.7"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR116_765.7"/>
   </node>
   <node id="ARISA_670.5" label="ARISA_670.5" name="ARISA_670.5">
     <att name="factorName" type="string" value="ARISA_670.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR11_670.5"/>
   </node>
   <node id="ARISA_646.9" label="ARISA_646.9" name="ARISA_646.9">
     <att name="factorName" type="string" value="ARISA_646.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Fluvii_646.9"/>
   </node>
   <node id="ARISA_507.4" label="ARISA_507.4" name="ARISA_507.4">
     <att name="factorName" type="string" value="ARISA_507.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_507.4"/>
   </node>
   <node id="m_ARISA_624.5_ARISA_808" label="m_ARISA_624.5_ARISA_808" name="m_ARISA_624.5_ARISA_808">
     <att name="factorName" type="string" value="m_ARISA_624.5_ARISA_808"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_781.3" label="ARISA_781.3" name="ARISA_781.3">
     <att name="factorName" type="string" value="ARISA_781.3"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_781.3"/>
   </node>
   <node id="m_ARISA_414.2_ARISA_1056.1" label="m_ARISA_414.2_ARISA_1056.1" name="m_ARISA_414.2_ARISA_1056.1">
     <att name="factorName" type="string" value="m_ARISA_414.2_ARISA_1056.1"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_515.9" label="ARISA_515.9" name="ARISA_515.9">
     <att name="factorName" type="string" value="ARISA_515.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_515.9"/>
   </node>
   <node id="m_ARISA_445.8_ARISA_547.8" label="m_ARISA_445.8_ARISA_547.8" name="m_ARISA_445.8_ARISA_547.8">
     <att name="factorName" type="string" value="m_ARISA_445.8_ARISA_547.8"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_795.9" label="ARISA_795.9" name="ARISA_795.9">
     <att name="factorName" type="string" value="ARISA_795.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="OCS116_795.9"/>
   </node>
   <node id="ARISA_541.5" label="ARISA_541.5" name="ARISA_541.5">
     <att name="factorName" type="string" value="ARISA_541.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Cyanob_541.5"/>
   </node>
   <node id="is2008" label="is2008" name="is2008">
     <att name="factorName" type="string" value="is2008"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="is2008"/>
   </node>
   <node id="is2009" label="is2009" name="is2009">
     <att name="factorName" type="string" value="is2009"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="is2009"/>
   </node>
   <node id="m_ARISA_526.8_ARISA_527.6" label="m_ARISA_526.8_ARISA_527.6" name="m_ARISA_526.8_ARISA_527.6">
     <att name="factorName" type="string" value="m_ARISA_526.8_ARISA_527.6"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_654.9" label="ARISA_654.9" name="ARISA_654.9">
     <att name="factorName" type="string" value="ARISA_654.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Owenwe_654.9"/>
   </node>
   <node id="m_ARISA_515.9_ARISA_577.6" label="m_ARISA_515.9_ARISA_577.6" name="m_ARISA_515.9_ARISA_577.6">
     <att name="factorName" type="string" value="m_ARISA_515.9_ARISA_577.6"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="is2000" label="is2000" name="is2000">
     <att name="factorName" type="string" value="is2000"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="is2000"/>
   </node>
   <node id="is2001" label="is2001" name="is2001">
     <att name="factorName" type="string" value="is2001"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="is2001"/>
   </node>
   <node id="m_ARISA_763.9_ARISA_795" label="m_ARISA_763.9_ARISA_795" name="m_ARISA_763.9_ARISA_795">
     <att name="factorName" type="string" value="m_ARISA_763.9_ARISA_795"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="is2003" label="is2003" name="is2003">
     <att name="factorName" type="string" value="is2003"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="is2003"/>
   </node>
   <node id="log_TurnoverThy" label="log_TurnoverThy" name="log_TurnoverThy">
     <att name="factorName" type="string" value="log_TurnoverThy"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="log_TurnoverThy"/>
   </node>
   <node id="is2005" label="is2005" name="is2005">
     <att name="factorName" type="string" value="is2005"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="is2005"/>
   </node>
   <node id="is2006" label="is2006" name="is2006">
     <att name="factorName" type="string" value="is2006"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="is2006"/>
   </node>
   <node id="is2007" label="is2007" name="is2007">
     <att name="factorName" type="string" value="is2007"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="is2007"/>
   </node>
   <node id="CHL-A" label="CHL-A" name="CHL-A">
     <att name="factorName" type="string" value="CHL-A"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="CHL-A"/>
   </node>
   <node id="m_ARISA_543.8_ARISA_567.5" label="m_ARISA_543.8_ARISA_567.5" name="m_ARISA_543.8_ARISA_567.5">
     <att name="factorName" type="string" value="m_ARISA_543.8_ARISA_567.5"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_613.3_ARISA_1014.9" label="m_ARISA_613.3_ARISA_1014.9" name="m_ARISA_613.3_ARISA_1014.9">
     <att name="factorName" type="string" value="m_ARISA_613.3_ARISA_1014.9"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_808_ARISA_1130.1" label="m_ARISA_808_ARISA_1130.1" name="m_ARISA_808_ARISA_1130.1">
     <att name="factorName" type="string" value="m_ARISA_808_ARISA_1130.1"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_614.9_ARISA_742.6" label="m_ARISA_614.9_ARISA_742.6" name="m_ARISA_614.9_ARISA_742.6">
     <att name="factorName" type="string" value="m_ARISA_614.9_ARISA_742.6"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_732.2_ARISA_773.1" label="m_ARISA_732.2_ARISA_773.1" name="m_ARISA_732.2_ARISA_773.1">
     <att name="factorName" type="string" value="m_ARISA_732.2_ARISA_773.1"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_482.2" label="ARISA_482.2" name="ARISA_482.2">
     <att name="factorName" type="string" value="ARISA_482.2"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_482.2"/>
   </node>
   <node id="ARISA_787.7" label="ARISA_787.7" name="ARISA_787.7">
     <att name="factorName" type="string" value="ARISA_787.7"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Thioth_787.7"/>
   </node>
   <node id="ARISA_611" label="ARISA_611" name="ARISA_611">
     <att name="factorName" type="string" value="ARISA_611"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_611"/>
   </node>
   <node id="ARISA_505.7" label="ARISA_505.7" name="ARISA_505.7">
     <att name="factorName" type="string" value="ARISA_505.7"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Bacter_505.7"/>
   </node>
   <node id="ARISA_493.6" label="ARISA_493.6" name="ARISA_493.6">
     <att name="factorName" type="string" value="ARISA_493.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_493.6"/>
   </node>
   <node id="m_ARISA_524.8_ARISA_852.1" label="m_ARISA_524.8_ARISA_852.1" name="m_ARISA_524.8_ARISA_852.1">
     <att name="factorName" type="string" value="m_ARISA_524.8_ARISA_852.1"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_998.8" label="ARISA_998.8" name="ARISA_998.8">
     <att name="factorName" type="string" value="ARISA_998.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Shewan_998.8"/>
   </node>
   <node id="m_ARISA_405.6_ARISA_406.7" label="m_ARISA_405.6_ARISA_406.7" name="m_ARISA_405.6_ARISA_406.7">
     <att name="factorName" type="string" value="m_ARISA_405.6_ARISA_406.7"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_915.5" label="ARISA_915.5" name="ARISA_915.5">
     <att name="factorName" type="string" value="ARISA_915.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_915.5"/>
   </node>
   <node id="ARISA_529.5" label="ARISA_529.5" name="ARISA_529.5">
     <att name="factorName" type="string" value="ARISA_529.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="NS9_529.5"/>
   </node>
   <node id="ARISA_486.6" label="ARISA_486.6" name="ARISA_486.6">
     <att name="factorName" type="string" value="ARISA_486.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_486.6"/>
   </node>
   <node id="m_ARISA_413.3_ARISA_556.7" label="m_ARISA_413.3_ARISA_556.7" name="m_ARISA_413.3_ARISA_556.7">
     <att name="factorName" type="string" value="m_ARISA_413.3_ARISA_556.7"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_592.1_ARISA_694.1" label="m_ARISA_592.1_ARISA_694.1" name="m_ARISA_592.1_ARISA_694.1">
     <att name="factorName" type="string" value="m_ARISA_592.1_ARISA_694.1"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_557.8" label="ARISA_557.8" name="ARISA_557.8">
     <att name="factorName" type="string" value="ARISA_557.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR86_557.8"/>
   </node>
   <node id="isSeptember" label="isSeptember" name="isSeptember">
     <att name="factorName" type="string" value="isSeptember"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="isSeptember"/>
   </node>
   <node id="ARISA_484.9" label="ARISA_484.9" name="ARISA_484.9">
     <att name="factorName" type="string" value="ARISA_484.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_484.9"/>
   </node>
   <node id="ARISA_561.8" label="ARISA_561.8" name="ARISA_561.8">
     <att name="factorName" type="string" value="ARISA_561.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Chloro_chloroplast_561.8"/>
   </node>
   <node id="ARISA_484.1" label="ARISA_484.1" name="ARISA_484.1">
     <att name="factorName" type="string" value="ARISA_484.1"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR86_484.1"/>
   </node>
   <node id="m_ARISA_469.4_ARISA_511" label="m_ARISA_469.4_ARISA_511" name="m_ARISA_469.4_ARISA_511">
     <att name="factorName" type="string" value="m_ARISA_469.4_ARISA_511"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_933.7" label="ARISA_933.7" name="ARISA_933.7">
     <att name="factorName" type="string" value="ARISA_933.7"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Prochl_933.7"/>
   </node>
   <node id="ARISA_602.5" label="ARISA_602.5" name="ARISA_602.5">
     <att name="factorName" type="string" value="ARISA_602.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Shewan_602.5"/>
   </node>
   <node id="m_ARISA_511_ARISA_993.6" label="m_ARISA_511_ARISA_993.6" name="m_ARISA_511_ARISA_993.6">
     <att name="factorName" type="string" value="m_ARISA_511_ARISA_993.6"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_526.8_ARISA_595.8" label="m_ARISA_526.8_ARISA_595.8" name="m_ARISA_526.8_ARISA_595.8">
     <att name="factorName" type="string" value="m_ARISA_526.8_ARISA_595.8"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_471.9" label="ARISA_471.9" name="ARISA_471.9">
     <att name="factorName" type="string" value="ARISA_471.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR86_471.9"/>
   </node>
   <node id="Prim_Prod" label="Prim_Prod" name="Prim_Prod">
     <att name="factorName" type="string" value="Prim_Prod"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="Prim_Prod"/>
   </node>
   <node id="ARISA_473" label="ARISA_473" name="ARISA_473">
     <att name="factorName" type="string" value="ARISA_473"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR86_473"/>
   </node>
   <node id="ARISA_1130.1" label="ARISA_1130.1" name="ARISA_1130.1">
     <att name="factorName" type="string" value="ARISA_1130.1"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Prochl_B_1130.1"/>
   </node>
   <node id="ARISA_662.8" label="ARISA_662.8" name="ARISA_662.8">
     <att name="factorName" type="string" value="ARISA_662.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_662.8"/>
   </node>
   <node id="ARISA_682.4" label="ARISA_682.4" name="ARISA_682.4">
     <att name="factorName" type="string" value="ARISA_682.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR11_682.4"/>
   </node>
   <node id="m_ARISA_407.7_ARISA_416.4" label="m_ARISA_407.7_ARISA_416.4" name="m_ARISA_407.7_ARISA_416.4">
     <att name="factorName" type="string" value="m_ARISA_407.7_ARISA_416.4"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_802.9_ARISA_808" label="m_ARISA_802.9_ARISA_808" name="m_ARISA_802.9_ARISA_808">
     <att name="factorName" type="string" value="m_ARISA_802.9_ARISA_808"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_549.8" label="ARISA_549.8" name="ARISA_549.8">
     <att name="factorName" type="string" value="ARISA_549.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="NS9_549.8"/>
   </node>
   <node id="m_ARISA_1035.2_ARISA_1185.8" label="m_ARISA_1035.2_ARISA_1185.8" name="m_ARISA_1035.2_ARISA_1185.8">
     <att name="factorName" type="string" value="m_ARISA_1035.2_ARISA_1185.8"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_897.8" label="ARISA_897.8" name="ARISA_897.8">
     <att name="factorName" type="string" value="ARISA_897.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Rhodob_897.8"/>
   </node>
   <node id="ARISA_594.1" label="ARISA_594.1" name="ARISA_594.1">
     <att name="factorName" type="string" value="ARISA_594.1"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Owenwe_594.1"/>
   </node>
   <node id="m_ARISA_592.1_ARISA_1030.5" label="m_ARISA_592.1_ARISA_1030.5" name="m_ARISA_592.1_ARISA_1030.5">
     <att name="factorName" type="string" value="m_ARISA_592.1_ARISA_1030.5"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_802.9_ARISA_863.9" label="m_ARISA_802.9_ARISA_863.9" name="m_ARISA_802.9_ARISA_863.9">
     <att name="factorName" type="string" value="m_ARISA_802.9_ARISA_863.9"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_891.9" label="ARISA_891.9" name="ARISA_891.9">
     <att name="factorName" type="string" value="ARISA_891.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="OCS155_891.9"/>
   </node>
   <node id="day.length.change.per.month" label="day.length.change.per.month" name="day.length.change.per.month">
     <att name="factorName" type="string" value="day.length.change.per.month"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="day.length.change.per.month"/>
   </node>
   <node id="isMarch" label="isMarch" name="isMarch">
     <att name="factorName" type="string" value="isMarch"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="isMarch"/>
   </node>
   <node id="ARISA_1095.8" label="ARISA_1095.8" name="ARISA_1095.8">
     <att name="factorName" type="string" value="ARISA_1095.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_1095.8"/>
   </node>
   <node id="ARISA_973.5" label="ARISA_973.5" name="ARISA_973.5">
     <att name="factorName" type="string" value="ARISA_973.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Rhodob_973.5"/>
   </node>
   <node id="m_ARISA_418.5_ARISA_607.4" label="m_ARISA_418.5_ARISA_607.4" name="m_ARISA_418.5_ARISA_607.4">
     <att name="factorName" type="string" value="m_ARISA_418.5_ARISA_607.4"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_642.6" label="ARISA_642.6" name="ARISA_642.6">
     <att name="factorName" type="string" value="ARISA_642.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Fluvii_642.6"/>
   </node>
   <node id="ARISA_937.8" label="ARISA_937.8" name="ARISA_937.8">
     <att name="factorName" type="string" value="ARISA_937.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Pseudo_937.8"/>
   </node>
   <node id="ARISA_856.6" label="ARISA_856.6" name="ARISA_856.6">
     <att name="factorName" type="string" value="ARISA_856.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Flavob_856.6"/>
   </node>
   <node id="m_ARISA_433.6_ARISA_527.6" label="m_ARISA_433.6_ARISA_527.6" name="m_ARISA_433.6_ARISA_527.6">
     <att name="factorName" type="string" value="m_ARISA_433.6_ARISA_527.6"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_686.9" label="ARISA_686.9" name="ARISA_686.9">
     <att name="factorName" type="string" value="ARISA_686.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR11_686.9"/>
   </node>
   <node id="m_ARISA_481.8_ARISA_522.8" label="m_ARISA_481.8_ARISA_522.8" name="m_ARISA_481.8_ARISA_522.8">
     <att name="factorName" type="string" value="m_ARISA_481.8_ARISA_522.8"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_602.5_ARISA_624.5" label="m_ARISA_602.5_ARISA_624.5" name="m_ARISA_602.5_ARISA_624.5">
     <att name="factorName" type="string" value="m_ARISA_602.5_ARISA_624.5"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="log_Thy" label="log_Thy" name="log_Thy">
     <att name="factorName" type="string" value="log_Thy"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="log_Thy"/>
   </node>
   <node id="m_ARISA_403.8_ARISA_891.9" label="m_ARISA_403.8_ARISA_891.9" name="m_ARISA_403.8_ARISA_891.9">
     <att name="factorName" type="string" value="m_ARISA_403.8_ARISA_891.9"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_887.8" label="ARISA_887.8" name="ARISA_887.8">
     <att name="factorName" type="string" value="ARISA_887.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="OM75_887.8"/>
   </node>
   <node id="ARISA_531.5" label="ARISA_531.5" name="ARISA_531.5">
     <att name="factorName" type="string" value="ARISA_531.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR86_531.5"/>
   </node>
   <node id="ARISA_519.6" label="ARISA_519.6" name="ARISA_519.6">
     <att name="factorName" type="string" value="ARISA_519.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_519.6"/>
   </node>
   <node id="ARISA_692.2" label="ARISA_692.2" name="ARISA_692.2">
     <att name="factorName" type="string" value="ARISA_692.2"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR11_692.2"/>
   </node>
   <node id="ARISA_604.4" label="ARISA_604.4" name="ARISA_604.4">
     <att name="factorName" type="string" value="ARISA_604.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_604.4"/>
   </node>
   <node id="m_ARISA_524.8_ARISA_871.5" label="m_ARISA_524.8_ARISA_871.5" name="m_ARISA_524.8_ARISA_871.5">
     <att name="factorName" type="string" value="m_ARISA_524.8_ARISA_871.5"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="is2004" label="is2004" name="is2004">
     <att name="factorName" type="string" value="is2004"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="is2004"/>
   </node>
   <node id="m_ARISA_482.2_ARISA_943.3" label="m_ARISA_482.2_ARISA_943.3" name="m_ARISA_482.2_ARISA_943.3">
     <att name="factorName" type="string" value="m_ARISA_482.2_ARISA_943.3"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_417_ARISA_577.6" label="m_ARISA_417_ARISA_577.6" name="m_ARISA_417_ARISA_577.6">
     <att name="factorName" type="string" value="m_ARISA_417_ARISA_577.6"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_418.5" label="ARISA_418.5" name="ARISA_418.5">
     <att name="factorName" type="string" value="ARISA_418.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="OCS155_418.5"/>
   </node>
   <node id="m_ARISA_556.7_ARISA_592.1" label="m_ARISA_556.7_ARISA_592.1" name="m_ARISA_556.7_ARISA_592.1">
     <att name="factorName" type="string" value="m_ARISA_556.7_ARISA_592.1"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_852.1" label="ARISA_852.1" name="ARISA_852.1">
     <att name="factorName" type="string" value="ARISA_852.1"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="OCS116_852.1"/>
   </node>
   <node id="m_ARISA_795_ARISA_868.8" label="m_ARISA_795_ARISA_868.8" name="m_ARISA_795_ARISA_868.8">
     <att name="factorName" type="string" value="m_ARISA_795_ARISA_868.8"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_698.2" label="ARISA_698.2" name="ARISA_698.2">
     <att name="factorName" type="string" value="ARISA_698.2"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Shewan_698.2"/>
   </node>
   <node id="m_ARISA_577.6_ARISA_611" label="m_ARISA_577.6_ARISA_611" name="m_ARISA_577.6_ARISA_611">
     <att name="factorName" type="string" value="m_ARISA_577.6_ARISA_611"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_1025" label="ARISA_1025" name="ARISA_1025">
     <att name="factorName" type="string" value="ARISA_1025"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Shewan_1025"/>
   </node>
   <node id="ARISA_521.6" label="ARISA_521.6" name="ARISA_521.6">
     <att name="factorName" type="string" value="ARISA_521.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR406_521.6"/>
   </node>
   <node id="m_ARISA_732.2_ARISA_735.5" label="m_ARISA_732.2_ARISA_735.5" name="m_ARISA_732.2_ARISA_735.5">
     <att name="factorName" type="string" value="m_ARISA_732.2_ARISA_735.5"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_957.7" label="ARISA_957.7" name="ARISA_957.7">
     <att name="factorName" type="string" value="ARISA_957.7"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_957.7"/>
   </node>
   <node id="ARISA_509.9" label="ARISA_509.9" name="ARISA_509.9">
     <att name="factorName" type="string" value="ARISA_509.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_509.9"/>
   </node>
   <node id="ARISA_659" label="ARISA_659" name="ARISA_659">
     <att name="factorName" type="string" value="ARISA_659"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR116_659"/>
   </node>
   <node id="ARISA_700.7" label="ARISA_700.7" name="ARISA_700.7">
     <att name="factorName" type="string" value="ARISA_700.7"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR86_700.7"/>
   </node>
   <node id="ARISA_795" label="ARISA_795" name="ARISA_795">
     <att name="factorName" type="string" value="ARISA_795"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Prochl_795"/>
   </node>
   <node id="m_ARISA_683.9_ARISA_704.7" label="m_ARISA_683.9_ARISA_704.7" name="m_ARISA_683.9_ARISA_704.7">
     <att name="factorName" type="string" value="m_ARISA_683.9_ARISA_704.7"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_816.5" label="ARISA_816.5" name="ARISA_816.5">
     <att name="factorName" type="string" value="ARISA_816.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Prochl_816.5"/>
   </node>
   <node id="ARISA_895.3" label="ARISA_895.3" name="ARISA_895.3">
     <att name="factorName" type="string" value="ARISA_895.3"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_895.3"/>
   </node>
   <node id="ARISA_1100.8" label="ARISA_1100.8" name="ARISA_1100.8">
     <att name="factorName" type="string" value="ARISA_1100.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Prochl_1100.8"/>
   </node>
   <node id="m_ARISA_511_ARISA_804.9" label="m_ARISA_511_ARISA_804.9" name="m_ARISA_511_ARISA_804.9">
     <att name="factorName" type="string" value="m_ARISA_511_ARISA_804.9"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_436.3_ARISA_442" label="m_ARISA_436.3_ARISA_442" name="m_ARISA_436.3_ARISA_442">
     <att name="factorName" type="string" value="m_ARISA_436.3_ARISA_442"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_432.8_ARISA_667.6" label="m_ARISA_432.8_ARISA_667.6" name="m_ARISA_432.8_ARISA_667.6">
     <att name="factorName" type="string" value="m_ARISA_432.8_ARISA_667.6"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_430.1_ARISA_547.8" label="m_ARISA_430.1_ARISA_547.8" name="m_ARISA_430.1_ARISA_547.8">
     <att name="factorName" type="string" value="m_ARISA_430.1_ARISA_547.8"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_592.1_ARISA_781.3" label="m_ARISA_592.1_ARISA_781.3" name="m_ARISA_592.1_ARISA_781.3">
     <att name="factorName" type="string" value="m_ARISA_592.1_ARISA_781.3"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_704.7" label="ARISA_704.7" name="ARISA_704.7">
     <att name="factorName" type="string" value="ARISA_704.7"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_704.7"/>
   </node>
   <node id="ARISA_907.8" label="ARISA_907.8" name="ARISA_907.8">
     <att name="factorName" type="string" value="ARISA_907.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Prochl_LL(IV)_907.8"/>
   </node>
   <node id="ARISA_854.8" label="ARISA_854.8" name="ARISA_854.8">
     <att name="factorName" type="string" value="ARISA_854.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_854.8"/>
   </node>
   <node id="isAugust" label="isAugust" name="isAugust">
     <att name="factorName" type="string" value="isAugust"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="isAugust"/>
   </node>
   <node id="m_ARISA_770.5_ARISA_1023.2" label="m_ARISA_770.5_ARISA_1023.2" name="m_ARISA_770.5_ARISA_1023.2">
     <att name="factorName" type="string" value="m_ARISA_770.5_ARISA_1023.2"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_943.3" label="ARISA_943.3" name="ARISA_943.3">
     <att name="factorName" type="string" value="ARISA_943.3"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="NS9_943.3"/>
   </node>
   <node id="m_ARISA_556.7_ARISA_837.1" label="m_ARISA_556.7_ARISA_837.1" name="m_ARISA_556.7_ARISA_837.1">
     <att name="factorName" type="string" value="m_ARISA_556.7_ARISA_837.1"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_868.8" label="ARISA_868.8" name="ARISA_868.8">
     <att name="factorName" type="string" value="ARISA_868.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Shewan_868.8"/>
   </node>
   <node id="ARISA_435.5" label="ARISA_435.5" name="ARISA_435.5">
     <att name="factorName" type="string" value="ARISA_435.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="OCS155_435.5"/>
   </node>
   <node id="ARISA_860.9" label="ARISA_860.9" name="ARISA_860.9">
     <att name="factorName" type="string" value="ARISA_860.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_860.9"/>
   </node>
   <node id="ARISA_860.4" label="ARISA_860.4" name="ARISA_860.4">
     <att name="factorName" type="string" value="ARISA_860.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_860.4"/>
   </node>
   <node id="m_ARISA_694.1_ARISA_781.3" label="m_ARISA_694.1_ARISA_781.3" name="m_ARISA_694.1_ARISA_781.3">
     <att name="factorName" type="string" value="m_ARISA_694.1_ARISA_781.3"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_568.1_ARISA_706.4" label="m_ARISA_568.1_ARISA_706.4" name="m_ARISA_568.1_ARISA_706.4">
     <att name="factorName" type="string" value="m_ARISA_568.1_ARISA_706.4"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_706.4" label="ARISA_706.4" name="ARISA_706.4">
     <att name="factorName" type="string" value="ARISA_706.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Microb_706.4"/>
   </node>
   <node id="ARISA_527.6" label="ARISA_527.6" name="ARISA_527.6">
     <att name="factorName" type="string" value="ARISA_527.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_527.6"/>
   </node>
   <node id="m_ARISA_406.7_ARISA_407.7" label="m_ARISA_406.7_ARISA_407.7" name="m_ARISA_406.7_ARISA_407.7">
     <att name="factorName" type="string" value="m_ARISA_406.7_ARISA_407.7"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_874.7" label="ARISA_874.7" name="ARISA_874.7">
     <att name="factorName" type="string" value="ARISA_874.7"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_874.7"/>
   </node>
   <node id="m_ARISA_404.8_ARISA_502.9" label="m_ARISA_404.8_ARISA_502.9" name="m_ARISA_404.8_ARISA_502.9">
     <att name="factorName" type="string" value="m_ARISA_404.8_ARISA_502.9"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="TurnoverThy" label="TurnoverThy" name="TurnoverThy">
     <att name="factorName" type="string" value="TurnoverThy"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="TurnoverThy"/>
   </node>
   <node id="m_ARISA_877.9_ARISA_1023.2" label="m_ARISA_877.9_ARISA_1023.2" name="m_ARISA_877.9_ARISA_1023.2">
     <att name="factorName" type="string" value="m_ARISA_877.9_ARISA_1023.2"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_726.4" label="ARISA_726.4" name="ARISA_726.4">
     <att name="factorName" type="string" value="ARISA_726.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="NS2b_726.4"/>
   </node>
   <node id="m_ARISA_484.9_ARISA_833.8" label="m_ARISA_484.9_ARISA_833.8" name="m_ARISA_484.9_ARISA_833.8">
     <att name="factorName" type="string" value="m_ARISA_484.9_ARISA_833.8"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_412.7" label="ARISA_412.7" name="ARISA_412.7">
     <att name="factorName" type="string" value="ARISA_412.7"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="OCS155_412.7"/>
   </node>
   <node id="ARISA_724.3" label="ARISA_724.3" name="ARISA_724.3">
     <att name="factorName" type="string" value="ARISA_724.3"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="NS2b_724.3"/>
   </node>
   <node id="ARISA_591.6" label="ARISA_591.6" name="ARISA_591.6">
     <att name="factorName" type="string" value="ARISA_591.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_591.6"/>
   </node>
   <node id="m_ARISA_408.8_ARISA_414.2" label="m_ARISA_408.8_ARISA_414.2" name="m_ARISA_408.8_ARISA_414.2">
     <att name="factorName" type="string" value="m_ARISA_408.8_ARISA_414.2"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="isMay" label="isMay" name="isMay">
     <att name="factorName" type="string" value="isMay"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="isMay"/>
   </node>
   <node id="m_ARISA_577.6_ARISA_607.4" label="m_ARISA_577.6_ARISA_607.4" name="m_ARISA_577.6_ARISA_607.4">
     <att name="factorName" type="string" value="m_ARISA_577.6_ARISA_607.4"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_399.1" label="ARISA_399.1" name="ARISA_399.1">
     <att name="factorName" type="string" value="ARISA_399.1"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR86_399.1"/>
   </node>
   <node id="m_ARISA_412.7_ARISA_865.9" label="m_ARISA_412.7_ARISA_865.9" name="m_ARISA_412.7_ARISA_865.9">
     <att name="factorName" type="string" value="m_ARISA_412.7_ARISA_865.9"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_613.3_ARISA_614.9" label="m_ARISA_613.3_ARISA_614.9" name="m_ARISA_613.3_ARISA_614.9">
     <att name="factorName" type="string" value="m_ARISA_613.3_ARISA_614.9"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_581.3_ARISA_582.1" label="m_ARISA_581.3_ARISA_582.1" name="m_ARISA_581.3_ARISA_582.1">
     <att name="factorName" type="string" value="m_ARISA_581.3_ARISA_582.1"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_408.8" label="ARISA_408.8" name="ARISA_408.8">
     <att name="factorName" type="string" value="ARISA_408.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_408.8"/>
   </node>
   <node id="Richness100" label="Richness100" name="Richness100">
     <att name="factorName" type="string" value="Richness100"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="Richness100"/>
   </node>
   <node id="ARISA_423.3" label="ARISA_423.3" name="ARISA_423.3">
     <att name="factorName" type="string" value="ARISA_423.3"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="OCS155_423.3"/>
   </node>
   <node id="ARISA_969.6" label="ARISA_969.6" name="ARISA_969.6">
     <att name="factorName" type="string" value="ARISA_969.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="NS5_969.6"/>
   </node>
   <node id="ARISA_584" label="ARISA_584" name="ARISA_584">
     <att name="factorName" type="string" value="ARISA_584"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR11_584"/>
   </node>
   <node id="m_ARISA_667.6_ARISA_773.1" label="m_ARISA_667.6_ARISA_773.1" name="m_ARISA_667.6_ARISA_773.1">
     <att name="factorName" type="string" value="m_ARISA_667.6_ARISA_773.1"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_581.3" label="ARISA_581.3" name="ARISA_581.3">
     <att name="factorName" type="string" value="ARISA_581.3"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_581.3"/>
   </node>
   <node id="ARISA_414.2" label="ARISA_414.2" name="ARISA_414.2">
     <att name="factorName" type="string" value="ARISA_414.2"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="OCS155_414.2"/>
   </node>
   <node id="ARISA_712.4" label="ARISA_712.4" name="ARISA_712.4">
     <att name="factorName" type="string" value="ARISA_712.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR11_712.4"/>
   </node>
   <node id="ARISA_450.2" label="ARISA_450.2" name="ARISA_450.2">
     <att name="factorName" type="string" value="ARISA_450.2"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="NS2b_450.2"/>
   </node>
   <node id="ARISA_416.4" label="ARISA_416.4" name="ARISA_416.4">
     <att name="factorName" type="string" value="ARISA_416.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_416.4"/>
   </node>
   <node id="ARISA_804.9" label="ARISA_804.9" name="ARISA_804.9">
     <att name="factorName" type="string" value="ARISA_804.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_804.9"/>
   </node>
   <node id="m_ARISA_571.4_ARISA_616.2" label="m_ARISA_571.4_ARISA_616.2" name="m_ARISA_571.4_ARISA_616.2">
     <att name="factorName" type="string" value="m_ARISA_571.4_ARISA_616.2"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_716.8" label="ARISA_716.8" name="ARISA_716.8">
     <att name="factorName" type="string" value="ARISA_716.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR11_716.8"/>
   </node>
   <node id="ARISA_802.9" label="ARISA_802.9" name="ARISA_802.9">
     <att name="factorName" type="string" value="ARISA_802.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Mariba_802.9"/>
   </node>
   <node id="m_ARISA_800.9_ARISA_1040" label="m_ARISA_800.9_ARISA_1040" name="m_ARISA_800.9_ARISA_1040">
     <att name="factorName" type="string" value="m_ARISA_800.9_ARISA_1040"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_951.6" label="ARISA_951.6" name="ARISA_951.6">
     <att name="factorName" type="string" value="ARISA_951.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Rhodob_951.6"/>
   </node>
   <node id="Thy" label="Thy" name="Thy">
     <att name="factorName" type="string" value="Thy"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="Thy"/>
   </node>
   <node id="ARISA_589.7" label="ARISA_589.7" name="ARISA_589.7">
     <att name="factorName" type="string" value="ARISA_589.7"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Chloro_chloroplast_589.7"/>
   </node>
   <node id="ARISA_436.3" label="ARISA_436.3" name="ARISA_436.3">
     <att name="factorName" type="string" value="ARISA_436.3"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_436.3"/>
   </node>
   <node id="m_ARISA_416.4_ARISA_791.4" label="m_ARISA_416.4_ARISA_791.4" name="m_ARISA_416.4_ARISA_791.4">
     <att name="factorName" type="string" value="m_ARISA_416.4_ARISA_791.4"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_422.3" label="ARISA_422.3" name="ARISA_422.3">
     <att name="factorName" type="string" value="ARISA_422.3"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_422.3"/>
   </node>
   <node id="ARISA_452.1" label="ARISA_452.1" name="ARISA_452.1">
     <att name="factorName" type="string" value="ARISA_452.1"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_452.1"/>
   </node>
   <node id="isJuly" label="isJuly" name="isJuly">
     <att name="factorName" type="string" value="isJuly"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="isJuly"/>
   </node>
   <node id="ARISA_595.8" label="ARISA_595.8" name="ARISA_595.8">
     <att name="factorName" type="string" value="ARISA_595.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR406_595.8"/>
   </node>
   <node id="Depth" label="Depth" name="Depth">
     <att name="factorName" type="string" value="Depth"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="Depth"/>
   </node>
   <node id="ARISA_519" label="ARISA_519" name="ARISA_519">
     <att name="factorName" type="string" value="ARISA_519"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR324_519"/>
   </node>
   <node id="ARISA_848.9" label="ARISA_848.9" name="ARISA_848.9">
     <att name="factorName" type="string" value="ARISA_848.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="ZD0405_848.9"/>
   </node>
   <node id="ARISA_517" label="ARISA_517" name="ARISA_517">
     <att name="factorName" type="string" value="ARISA_517"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_517"/>
   </node>
   <node id="ARISA_424.4" label="ARISA_424.4" name="ARISA_424.4">
     <att name="factorName" type="string" value="ARISA_424.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="OCS155_424.4"/>
   </node>
   <node id="ARISA_511" label="ARISA_511" name="ARISA_511">
     <att name="factorName" type="string" value="ARISA_511"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_511"/>
   </node>
   <node id="ARISA_434.5" label="ARISA_434.5" name="ARISA_434.5">
     <att name="factorName" type="string" value="ARISA_434.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="OCS155_434.5"/>
   </node>
   <node id="ARISA_597.9" label="ARISA_597.9" name="ARISA_597.9">
     <att name="factorName" type="string" value="ARISA_597.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR116_597.9"/>
   </node>
   <node id="ARISA_800.9" label="ARISA_800.9" name="ARISA_800.9">
     <att name="factorName" type="string" value="ARISA_800.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Mariba_800.9"/>
   </node>
   <node id="is2011" label="is2011" name="is2011">
     <att name="factorName" type="string" value="is2011"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="is2011"/>
   </node>
   <node id="m_ARISA_795_ARISA_798.7" label="m_ARISA_795_ARISA_798.7" name="m_ARISA_795_ARISA_798.7">
     <att name="factorName" type="string" value="m_ARISA_795_ARISA_798.7"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_624.5_ARISA_721.2" label="m_ARISA_624.5_ARISA_721.2" name="m_ARISA_624.5_ARISA_721.2">
     <att name="factorName" type="string" value="m_ARISA_624.5_ARISA_721.2"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_476.8" label="ARISA_476.8" name="ARISA_476.8">
     <att name="factorName" type="string" value="ARISA_476.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_476.8"/>
   </node>
   <node id="ARISA_627.8" label="ARISA_627.8" name="ARISA_627.8">
     <att name="factorName" type="string" value="ARISA_627.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR406_627.8"/>
   </node>
   <node id="m_ARISA_404.8_ARISA_406.7" label="m_ARISA_404.8_ARISA_406.7" name="m_ARISA_404.8_ARISA_406.7">
     <att name="factorName" type="string" value="m_ARISA_404.8_ARISA_406.7"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_635.4_ARISA_712.4" label="m_ARISA_635.4_ARISA_712.4" name="m_ARISA_635.4_ARISA_712.4">
     <att name="factorName" type="string" value="m_ARISA_635.4_ARISA_712.4"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_474.9" label="ARISA_474.9" name="ARISA_474.9">
     <att name="factorName" type="string" value="ARISA_474.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_474.9"/>
   </node>
   <node id="isFebruary" label="isFebruary" name="isFebruary">
     <att name="factorName" type="string" value="isFebruary"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="isFebruary"/>
   </node>
   <node id="ARISA_478.8" label="ARISA_478.8" name="ARISA_478.8">
     <att name="factorName" type="string" value="ARISA_478.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Bacter_478.8"/>
   </node>
   <node id="ARISA_639.8" label="ARISA_639.8" name="ARISA_639.8">
     <att name="factorName" type="string" value="ARISA_639.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="NS9_639.8"/>
   </node>
   <node id="m_ARISA_429.3_ARISA_788.5" label="m_ARISA_429.3_ARISA_788.5" name="m_ARISA_429.3_ARISA_788.5">
     <att name="factorName" type="string" value="m_ARISA_429.3_ARISA_788.5"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_402.4" label="ARISA_402.4" name="ARISA_402.4">
     <att name="factorName" type="string" value="ARISA_402.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR86_402.4"/>
   </node>
   <node id="ARISA_738.8" label="ARISA_738.8" name="ARISA_738.8">
     <att name="factorName" type="string" value="ARISA_738.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="NS2b_738.8"/>
   </node>
   <node id="ARISA_432.8" label="ARISA_432.8" name="ARISA_432.8">
     <att name="factorName" type="string" value="ARISA_432.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_432.8"/>
   </node>
   <node id="ARISA_430.1" label="ARISA_430.1" name="ARISA_430.1">
     <att name="factorName" type="string" value="ARISA_430.1"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_430.1"/>
   </node>
   <node id="m_ARISA_493.6_ARISA_552.8" label="m_ARISA_493.6_ARISA_552.8" name="m_ARISA_493.6_ARISA_552.8">
     <att name="factorName" type="string" value="m_ARISA_493.6_ARISA_552.8"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_828.8" label="ARISA_828.8" name="ARISA_828.8">
     <att name="factorName" type="string" value="ARISA_828.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Prochl_HL(I)_828.8"/>
   </node>
   <node id="m_ARISA_791.4_ARISA_1191" label="m_ARISA_791.4_ARISA_1191" name="m_ARISA_791.4_ARISA_1191">
     <att name="factorName" type="string" value="m_ARISA_791.4_ARISA_1191"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_448.7" label="ARISA_448.7" name="ARISA_448.7">
     <att name="factorName" type="string" value="ARISA_448.7"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Vibrio_448.7"/>
   </node>
   <node id="ARISA_420.5" label="ARISA_420.5" name="ARISA_420.5">
     <att name="factorName" type="string" value="ARISA_420.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="OCS155_420.5"/>
   </node>
   <node id="log_TurnoverLeu" label="log_TurnoverLeu" name="log_TurnoverLeu">
     <att name="factorName" type="string" value="log_TurnoverLeu"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="log_TurnoverLeu"/>
   </node>
   <node id="ARISA_635.4" label="ARISA_635.4" name="ARISA_635.4">
     <att name="factorName" type="string" value="ARISA_635.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_635.4"/>
   </node>
   <node id="ARISA_438.2" label="ARISA_438.2" name="ARISA_438.2">
     <att name="factorName" type="string" value="ARISA_438.2"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_438.2"/>
   </node>
   <node id="ARISA_744.7" label="ARISA_744.7" name="ARISA_744.7">
     <att name="factorName" type="string" value="ARISA_744.7"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR116_744.7"/>
   </node>
   <node id="ARISA_1192.4" label="ARISA_1192.4" name="ARISA_1192.4">
     <att name="factorName" type="string" value="ARISA_1192.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_1192.4"/>
   </node>
   <node id="ARISA_400.2" label="ARISA_400.2" name="ARISA_400.2">
     <att name="factorName" type="string" value="ARISA_400.2"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR116_400.2"/>
   </node>
   <node id="m_ARISA_776.1_ARISA_863.9" label="m_ARISA_776.1_ARISA_863.9" name="m_ARISA_776.1_ARISA_863.9">
     <att name="factorName" type="string" value="m_ARISA_776.1_ARISA_863.9"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_770.5" label="ARISA_770.5" name="ARISA_770.5">
     <att name="factorName" type="string" value="ARISA_770.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Formos_770.5"/>
   </node>
   <node id="ARISA_603.5" label="ARISA_603.5" name="ARISA_603.5">
     <att name="factorName" type="string" value="ARISA_603.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_603.5"/>
   </node>
   <node id="ARISA_609.4" label="ARISA_609.4" name="ARISA_609.4">
     <att name="factorName" type="string" value="ARISA_609.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_609.4"/>
   </node>
   <node id="ARISA_406.7" label="ARISA_406.7" name="ARISA_406.7">
     <att name="factorName" type="string" value="ARISA_406.7"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_406.7"/>
   </node>
   <node id="m_ARISA_642.6_ARISA_1192.4" label="m_ARISA_642.6_ARISA_1192.4" name="m_ARISA_642.6_ARISA_1192.4">
     <att name="factorName" type="string" value="m_ARISA_642.6_ARISA_1192.4"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="st.shift" label="st.shift" name="st.shift">
     <att name="factorName" type="string" value="st.shift"/>
+    <att name="nodetype" type="string" value=" "/>
+    <att name="Domain" type="string" value=" "/>
+    <att name="6Letter" type="string" value=" "/>
   </node>
   <node id="m_ARISA_602.5_ARISA_852.1" label="m_ARISA_602.5_ARISA_852.1" name="m_ARISA_602.5_ARISA_852.1">
     <att name="factorName" type="string" value="m_ARISA_602.5_ARISA_852.1"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_637.9" label="ARISA_637.9" name="ARISA_637.9">
     <att name="factorName" type="string" value="ARISA_637.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_637.9"/>
   </node>
   <node id="ARISA_788.5" label="ARISA_788.5" name="ARISA_788.5">
     <att name="factorName" type="string" value="ARISA_788.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_788.5"/>
   </node>
   <node id="ARISA_637.2" label="ARISA_637.2" name="ARISA_637.2">
     <att name="factorName" type="string" value="ARISA_637.2"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Microb_637.2"/>
   </node>
   <node id="ARISA_404.8" label="ARISA_404.8" name="ARISA_404.8">
     <att name="factorName" type="string" value="ARISA_404.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_404.8"/>
   </node>
   <node id="bc.shift" label="bc.shift" name="bc.shift">
     <att name="factorName" type="string" value="bc.shift"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="bc.shift"/>
   </node>
   <node id="m_ARISA_582.1_ARISA_1037.7" label="m_ARISA_582.1_ARISA_1037.7" name="m_ARISA_582.1_ARISA_1037.7">
     <att name="factorName" type="string" value="m_ARISA_582.1_ARISA_1037.7"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="DayI" label="DayI" name="DayI">
     <att name="factorName" type="string" value="DayI"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="DayI"/>
   </node>
   <node id="ARISA_564.5" label="ARISA_564.5" name="ARISA_564.5">
     <att name="factorName" type="string" value="ARISA_564.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_564.5"/>
   </node>
   <node id="m_ARISA_418.5_ARISA_420.5" label="m_ARISA_418.5_ARISA_420.5" name="m_ARISA_418.5_ARISA_420.5">
     <att name="factorName" type="string" value="m_ARISA_418.5_ARISA_420.5"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_1061.5" label="ARISA_1061.5" name="ARISA_1061.5">
     <att name="factorName" type="string" value="ARISA_1061.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Prochl_B_1061.5"/>
   </node>
   <node id="m_ARISA_404.8_ARISA_554.9" label="m_ARISA_404.8_ARISA_554.9" name="m_ARISA_404.8_ARISA_554.9">
     <att name="factorName" type="string" value="m_ARISA_404.8_ARISA_554.9"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_602.5_ARISA_871.5" label="m_ARISA_602.5_ARISA_871.5" name="m_ARISA_602.5_ARISA_871.5">
     <att name="factorName" type="string" value="m_ARISA_602.5_ARISA_871.5"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_511_ARISA_937.8" label="m_ARISA_511_ARISA_937.8" name="m_ARISA_511_ARISA_937.8">
     <att name="factorName" type="string" value="m_ARISA_511_ARISA_937.8"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_624.5_ARISA_742.6" label="m_ARISA_624.5_ARISA_742.6" name="m_ARISA_624.5_ARISA_742.6">
     <att name="factorName" type="string" value="m_ARISA_624.5_ARISA_742.6"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_429.3_ARISA_430.1" label="m_ARISA_429.3_ARISA_430.1" name="m_ARISA_429.3_ARISA_430.1">
     <att name="factorName" type="string" value="m_ARISA_429.3_ARISA_430.1"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_429.3_ARISA_547.8" label="m_ARISA_429.3_ARISA_547.8" name="m_ARISA_429.3_ARISA_547.8">
     <att name="factorName" type="string" value="m_ARISA_429.3_ARISA_547.8"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_549.8_ARISA_571.4" label="m_ARISA_549.8_ARISA_571.4" name="m_ARISA_549.8_ARISA_571.4">
     <att name="factorName" type="string" value="m_ARISA_549.8_ARISA_571.4"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_902.5_ARISA_924.9" label="m_ARISA_902.5_ARISA_924.9" name="m_ARISA_902.5_ARISA_924.9">
     <att name="factorName" type="string" value="m_ARISA_902.5_ARISA_924.9"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_1043.1" label="ARISA_1043.1" name="ARISA_1043.1">
     <att name="factorName" type="string" value="ARISA_1043.1"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Synech_A.IV_1043.1"/>
   </node>
   <node id="ARISA_460.7" label="ARISA_460.7" name="ARISA_460.7">
     <att name="factorName" type="string" value="ARISA_460.7"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_460.7"/>
   </node>
   <node id="ARISA_566.5" label="ARISA_566.5" name="ARISA_566.5">
     <att name="factorName" type="string" value="ARISA_566.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Chloro_566.5"/>
   </node>
   <node id="ARISA_1053.2" label="ARISA_1053.2" name="ARISA_1053.2">
     <att name="factorName" type="string" value="ARISA_1053.2"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Prochl_A.V_1053.2"/>
   </node>
   <node id="m_ARISA_473_ARISA_817.6" label="m_ARISA_473_ARISA_817.6" name="m_ARISA_473_ARISA_817.6">
     <att name="factorName" type="string" value="m_ARISA_473_ARISA_817.6"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_568.1" label="ARISA_568.1" name="ARISA_568.1">
     <att name="factorName" type="string" value="ARISA_568.1"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_568.1"/>
   </node>
   <node id="ARISA_446.5" label="ARISA_446.5" name="ARISA_446.5">
     <att name="factorName" type="string" value="ARISA_446.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_446.5"/>
   </node>
   <node id="ARISA_613.3" label="ARISA_613.3" name="ARISA_613.3">
     <att name="factorName" type="string" value="ARISA_613.3"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="NS7_613.3"/>
   </node>
   <node id="ARISA_776.1" label="ARISA_776.1" name="ARISA_776.1">
     <att name="factorName" type="string" value="ARISA_776.1"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Marino_776.1"/>
   </node>
   <node id="m_ARISA_554.9_ARISA_765.7" label="m_ARISA_554.9_ARISA_765.7" name="m_ARISA_554.9_ARISA_765.7">
     <att name="factorName" type="string" value="m_ARISA_554.9_ARISA_765.7"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_787.7_ARISA_802.9" label="m_ARISA_787.7_ARISA_802.9" name="m_ARISA_787.7_ARISA_802.9">
     <att name="factorName" type="string" value="m_ARISA_787.7_ARISA_802.9"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_554.9_ARISA_577.6" label="m_ARISA_554.9_ARISA_577.6" name="m_ARISA_554.9_ARISA_577.6">
     <att name="factorName" type="string" value="m_ARISA_554.9_ARISA_577.6"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="SiO3" label="SiO3" name="SiO3">
     <att name="factorName" type="string" value="SiO3"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="SiO3"/>
   </node>
   <node id="ARISA_657.6" label="ARISA_657.6" name="ARISA_657.6">
     <att name="factorName" type="string" value="ARISA_657.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR116_657.6"/>
   </node>
   <node id="ARISA_742.6" label="ARISA_742.6" name="ARISA_742.6">
     <att name="factorName" type="string" value="ARISA_742.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_742.6"/>
   </node>
   <node id="ARISA_417" label="ARISA_417" name="ARISA_417">
     <att name="factorName" type="string" value="ARISA_417"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="OCS155_417"/>
   </node>
   <node id="day.length" label="day.length" name="day.length">
     <att name="factorName" type="string" value="day.length"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="day.length"/>
   </node>
   <node id="dsCA1" label="dsCA1" name="dsCA1">
     <att name="factorName" type="string" value="dsCA1"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="dsCA1"/>
   </node>
   <node id="isNovember" label="isNovember" name="isNovember">
     <att name="factorName" type="string" value="isNovember"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="isNovember"/>
   </node>
   <node id="m_ARISA_403.1_ARISA_1123.6" label="m_ARISA_403.1_ARISA_1123.6" name="m_ARISA_403.1_ARISA_1123.6">
     <att name="factorName" type="string" value="m_ARISA_403.1_ARISA_1123.6"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_758.3" label="ARISA_758.3" name="ARISA_758.3">
     <att name="factorName" type="string" value="ARISA_758.3"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_758.3"/>
   </node>
   <node id="Richness10000" label="Richness10000" name="Richness10000">
     <att name="factorName" type="string" value="Richness10000"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="Richness10000"/>
   </node>
   <node id="ARISA_718.4" label="ARISA_718.4" name="ARISA_718.4">
     <att name="factorName" type="string" value="ARISA_718.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR11_718.4"/>
   </node>
   <node id="m_ARISA_820.5_ARISA_897.8" label="m_ARISA_820.5_ARISA_897.8" name="m_ARISA_820.5_ARISA_897.8">
     <att name="factorName" type="string" value="m_ARISA_820.5_ARISA_897.8"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_647.7" label="ARISA_647.7" name="ARISA_647.7">
     <att name="factorName" type="string" value="ARISA_647.7"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_647.7"/>
   </node>
   <node id="ARISA_542.8" label="ARISA_542.8" name="ARISA_542.8">
     <att name="factorName" type="string" value="ARISA_542.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_542.8"/>
   </node>
   <node id="ARISA_1023.2" label="ARISA_1023.2" name="ARISA_1023.2">
     <att name="factorName" type="string" value="ARISA_1023.2"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR324_1023.2"/>
   </node>
   <node id="m_ARISA_808_ARISA_1191" label="m_ARISA_808_ARISA_1191" name="m_ARISA_808_ARISA_1191">
     <att name="factorName" type="string" value="m_ARISA_808_ARISA_1191"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_502.9_ARISA_897.8" label="m_ARISA_502.9_ARISA_897.8" name="m_ARISA_502.9_ARISA_897.8">
     <att name="factorName" type="string" value="m_ARISA_502.9_ARISA_897.8"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_522.8_ARISA_602.5" label="m_ARISA_522.8_ARISA_602.5" name="m_ARISA_522.8_ARISA_602.5">
     <att name="factorName" type="string" value="m_ARISA_522.8_ARISA_602.5"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_937.8_ARISA_1127.2" label="m_ARISA_937.8_ARISA_1127.2" name="m_ARISA_937.8_ARISA_1127.2">
     <att name="factorName" type="string" value="m_ARISA_937.8_ARISA_1127.2"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_452.1_ARISA_817.6" label="m_ARISA_452.1_ARISA_817.6" name="m_ARISA_452.1_ARISA_817.6">
     <att name="factorName" type="string" value="m_ARISA_452.1_ARISA_817.6"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="Temperature" label="Temperature" name="Temperature">
     <att name="factorName" type="string" value="Temperature"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="Temperature"/>
   </node>
   <node id="ARISA_1037.7" label="ARISA_1037.7" name="ARISA_1037.7">
     <att name="factorName" type="string" value="ARISA_1037.7"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Pseudo_1037.7"/>
   </node>
   <node id="pH" label="pH" name="pH">
     <att name="factorName" type="string" value="pH"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="pH"/>
   </node>
   <node id="ARISA_488" label="ARISA_488" name="ARISA_488">
     <att name="factorName" type="string" value="ARISA_488"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_488"/>
   </node>
   <node id="m_ARISA_418.5_ARISA_773.1" label="m_ARISA_418.5_ARISA_773.1" name="m_ARISA_418.5_ARISA_773.1">
     <att name="factorName" type="string" value="m_ARISA_418.5_ARISA_773.1"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_480" label="ARISA_480" name="ARISA_480">
     <att name="factorName" type="string" value="ARISA_480"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_480"/>
   </node>
   <node id="m_ARISA_912.5_ARISA_915.5" label="m_ARISA_912.5_ARISA_915.5" name="m_ARISA_912.5_ARISA_915.5">
     <att name="factorName" type="string" value="m_ARISA_912.5_ARISA_915.5"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_653.1" label="ARISA_653.1" name="ARISA_653.1">
     <att name="factorName" type="string" value="ARISA_653.1"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="AEGEAN_653.1"/>
   </node>
   <node id="ARISA_1035.2" label="ARISA_1035.2" name="ARISA_1035.2">
     <att name="factorName" type="string" value="ARISA_1035.2"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Synech_A.I_1035.2"/>
   </node>
   <node id="ARISA_570.1" label="ARISA_570.1" name="ARISA_570.1">
     <att name="factorName" type="string" value="ARISA_570.1"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Chloro_chloroplast_570.1"/>
   </node>
   <node id="m_ARISA_852.1_ARISA_871.5" label="m_ARISA_852.1_ARISA_871.5" name="m_ARISA_852.1_ARISA_871.5">
     <att name="factorName" type="string" value="m_ARISA_852.1_ARISA_871.5"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_507.4_ARISA_545.8" label="m_ARISA_507.4_ARISA_545.8" name="m_ARISA_507.4_ARISA_545.8">
     <att name="factorName" type="string" value="m_ARISA_507.4_ARISA_545.8"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_874" label="ARISA_874" name="ARISA_874">
     <att name="factorName" type="string" value="ARISA_874"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="OTU_874"/>
   </node>
   <node id="RDate" label="RDate" name="RDate">
     <att name="factorName" type="string" value="RDate"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="RDate"/>
   </node>
   <node id="ARISA_798.7" label="ARISA_798.7" name="ARISA_798.7">
     <att name="factorName" type="string" value="ARISA_798.7"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_798.7"/>
   </node>
   <node id="ARISA_679.4" label="ARISA_679.4" name="ARISA_679.4">
     <att name="factorName" type="string" value="ARISA_679.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="AEGEAN_679.4"/>
   </node>
   <node id="ARISA_667.6" label="ARISA_667.6" name="ARISA_667.6">
     <att name="factorName" type="string" value="ARISA_667.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR11_667.6"/>
   </node>
   <node id="ARISA_526.8" label="ARISA_526.8" name="ARISA_526.8">
     <att name="factorName" type="string" value="ARISA_526.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_526.8"/>
   </node>
   <node id="m_ARISA_933.7_ARISA_993.6" label="m_ARISA_933.7_ARISA_993.6" name="m_ARISA_933.7_ARISA_993.6">
     <att name="factorName" type="string" value="m_ARISA_933.7_ARISA_993.6"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_983.9" label="ARISA_983.9" name="ARISA_983.9">
     <att name="factorName" type="string" value="ARISA_983.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Roseob_983.9"/>
   </node>
   <node id="ARISA_607.4" label="ARISA_607.4" name="ARISA_607.4">
     <att name="factorName" type="string" value="ARISA_607.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_607.4"/>
   </node>
   <node id="m_ARISA_721.2_ARISA_785" label="m_ARISA_721.2_ARISA_785" name="m_ARISA_721.2_ARISA_785">
     <att name="factorName" type="string" value="m_ARISA_721.2_ARISA_785"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_502.9" label="ARISA_502.9" name="ARISA_502.9">
     <att name="factorName" type="string" value="ARISA_502.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_502.9"/>
   </node>
   <node id="m_ARISA_852.1_ARISA_874" label="m_ARISA_852.1_ARISA_874" name="m_ARISA_852.1_ARISA_874">
     <att name="factorName" type="string" value="m_ARISA_852.1_ARISA_874"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_481.8" label="ARISA_481.8" name="ARISA_481.8">
     <att name="factorName" type="string" value="ARISA_481.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_481.8"/>
   </node>
   <node id="ARISA_993.6" label="ARISA_993.6" name="ARISA_993.6">
     <att name="factorName" type="string" value="ARISA_993.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Hellea_993.6"/>
   </node>
   <node id="m_ARISA_417.6_ARISA_487.4" label="m_ARISA_417.6_ARISA_487.4" name="m_ARISA_417.6_ARISA_487.4">
     <att name="factorName" type="string" value="m_ARISA_417.6_ARISA_487.4"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_529.5_ARISA_788.5" label="m_ARISA_529.5_ARISA_788.5" name="m_ARISA_529.5_ARISA_788.5">
     <att name="factorName" type="string" value="m_ARISA_529.5_ARISA_788.5"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_763.9_ARISA_770.5" label="m_ARISA_763.9_ARISA_770.5" name="m_ARISA_763.9_ARISA_770.5">
     <att name="factorName" type="string" value="m_ARISA_763.9_ARISA_770.5"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_487.4" label="ARISA_487.4" name="ARISA_487.4">
     <att name="factorName" type="string" value="ARISA_487.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_487.4"/>
   </node>
   <node id="m_ARISA_522.8_ARISA_524.8" label="m_ARISA_522.8_ARISA_524.8" name="m_ARISA_522.8_ARISA_524.8">
     <att name="factorName" type="string" value="m_ARISA_522.8_ARISA_524.8"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_752.3" label="ARISA_752.3" name="ARISA_752.3">
     <att name="factorName" type="string" value="ARISA_752.3"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Tricho_752.3"/>
   </node>
   <node id="m_ARISA_833.8_ARISA_846" label="m_ARISA_833.8_ARISA_846" name="m_ARISA_833.8_ARISA_846">
     <att name="factorName" type="string" value="m_ARISA_833.8_ARISA_846"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_750.4" label="ARISA_750.4" name="ARISA_750.4">
     <att name="factorName" type="string" value="ARISA_750.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="NS5_750.4"/>
   </node>
   <node id="m_ARISA_791.4_ARISA_1185.8" label="m_ARISA_791.4_ARISA_1185.8" name="m_ARISA_791.4_ARISA_1185.8">
     <att name="factorName" type="string" value="m_ARISA_791.4_ARISA_1185.8"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_920.6_ARISA_1100.8" label="m_ARISA_920.6_ARISA_1100.8" name="m_ARISA_920.6_ARISA_1100.8">
     <att name="factorName" type="string" value="m_ARISA_920.6_ARISA_1100.8"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_524.8" label="ARISA_524.8" name="ARISA_524.8">
     <att name="factorName" type="string" value="ARISA_524.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="OCS155_524.8"/>
   </node>
   <node id="ARISA_987.8" label="ARISA_987.8" name="ARISA_987.8">
     <att name="factorName" type="string" value="ARISA_987.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Roseob_987.8"/>
   </node>
   <node id="m_ARISA_833.8_ARISA_848.9" label="m_ARISA_833.8_ARISA_848.9" name="m_ARISA_833.8_ARISA_848.9">
     <att name="factorName" type="string" value="m_ARISA_833.8_ARISA_848.9"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_663.4" label="ARISA_663.4" name="ARISA_663.4">
     <att name="factorName" type="string" value="ARISA_663.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR11_663.4"/>
   </node>
   <node id="ARISA_1014.9" label="ARISA_1014.9" name="ARISA_1014.9">
     <att name="factorName" type="string" value="ARISA_1014.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_1014.9"/>
   </node>
   <node id="m_ARISA_406.7_ARISA_416.4" label="m_ARISA_406.7_ARISA_416.4" name="m_ARISA_406.7_ARISA_416.4">
     <att name="factorName" type="string" value="m_ARISA_406.7_ARISA_416.4"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_545.8_ARISA_547.8" label="m_ARISA_545.8_ARISA_547.8" name="m_ARISA_545.8_ARISA_547.8">
     <att name="factorName" type="string" value="m_ARISA_545.8_ARISA_547.8"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="Oxygen" label="Oxygen" name="Oxygen">
     <att name="factorName" type="string" value="Oxygen"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="Oxygen"/>
   </node>
   <node id="m_ARISA_742.6_ARISA_744.7" label="m_ARISA_742.6_ARISA_744.7" name="m_ARISA_742.6_ARISA_744.7">
     <att name="factorName" type="string" value="m_ARISA_742.6_ARISA_744.7"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_454" label="ARISA_454" name="ARISA_454">
     <att name="factorName" type="string" value="ARISA_454"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_454"/>
   </node>
   <node id="ARISA_683.9" label="ARISA_683.9" name="ARISA_683.9">
     <att name="factorName" type="string" value="ARISA_683.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="NS9_683.9"/>
   </node>
   <node id="m_ARISA_460.7_ARISA_1037.7" label="m_ARISA_460.7_ARISA_1037.7" name="m_ARISA_460.7_ARISA_1037.7">
     <att name="factorName" type="string" value="m_ARISA_460.7_ARISA_1037.7"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="Salinity" label="Salinity" name="Salinity">
     <att name="factorName" type="string" value="Salinity"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="Salinity"/>
   </node>
   <node id="ARISA_1123.6" label="ARISA_1123.6" name="ARISA_1123.6">
     <att name="factorName" type="string" value="ARISA_1123.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Rueger_1123.6"/>
   </node>
   <node id="m_ARISA_964.8_ARISA_1056.1" label="m_ARISA_964.8_ARISA_1056.1" name="m_ARISA_964.8_ARISA_1056.1">
     <att name="factorName" type="string" value="m_ARISA_964.8_ARISA_1056.1"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_511.6_ARISA_577.6" label="m_ARISA_511.6_ARISA_577.6" name="m_ARISA_511.6_ARISA_577.6">
     <att name="factorName" type="string" value="m_ARISA_511.6_ARISA_577.6"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_939.4" label="ARISA_939.4" name="ARISA_939.4">
     <att name="factorName" type="string" value="ARISA_939.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_939.4"/>
   </node>
   <node id="m_ARISA_637.2_ARISA_848.9" label="m_ARISA_637.2_ARISA_848.9" name="m_ARISA_637.2_ARISA_848.9">
     <att name="factorName" type="string" value="m_ARISA_637.2_ARISA_848.9"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_920.6" label="ARISA_920.6" name="ARISA_920.6">
     <att name="factorName" type="string" value="ARISA_920.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Pseudo_920.6"/>
   </node>
   <node id="ARISA_671.2" label="ARISA_671.2" name="ARISA_671.2">
     <att name="factorName" type="string" value="ARISA_671.2"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_671.2"/>
   </node>
   <node id="log_NO3" label="log_NO3" name="log_NO3">
     <att name="factorName" type="string" value="log_NO3"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="log_NO3"/>
   </node>
   <node id="isApril" label="isApril" name="isApril">
     <att name="factorName" type="string" value="isApril"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="isApril"/>
   </node>
   <node id="m_ARISA_567.5_ARISA_884.8" label="m_ARISA_567.5_ARISA_884.8" name="m_ARISA_567.5_ARISA_884.8">
     <att name="factorName" type="string" value="m_ARISA_567.5_ARISA_884.8"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_964.8" label="ARISA_964.8" name="ARISA_964.8">
     <att name="factorName" type="string" value="ARISA_964.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Comamo_964.8"/>
   </node>
   <node id="ARISA_694.1" label="ARISA_694.1" name="ARISA_694.1">
     <att name="factorName" type="string" value="ARISA_694.1"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR11_694.1"/>
   </node>
   <node id="ARISA_820.5" label="ARISA_820.5" name="ARISA_820.5">
     <att name="factorName" type="string" value="ARISA_820.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Prochl_HL(II)_820.5"/>
   </node>
   <node id="dsCA4" label="dsCA4" name="dsCA4">
     <att name="factorName" type="string" value="dsCA4"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="dsCA4"/>
   </node>
   <node id="dsCA5" label="dsCA5" name="dsCA5">
     <att name="factorName" type="string" value="dsCA5"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="dsCA5"/>
   </node>
   <node id="m_ARISA_1020.8_ARISA_1023.2" label="m_ARISA_1020.8_ARISA_1023.2" name="m_ARISA_1020.8_ARISA_1023.2">
     <att name="factorName" type="string" value="m_ARISA_1020.8_ARISA_1023.2"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="dsCA2" label="dsCA2" name="dsCA2">
     <att name="factorName" type="string" value="dsCA2"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="dsCA2"/>
   </node>
   <node id="dsCA3" label="dsCA3" name="dsCA3">
     <att name="factorName" type="string" value="dsCA3"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="dsCA3"/>
   </node>
   <node id="ARISA_1127.2" label="ARISA_1127.2" name="ARISA_1127.2">
     <att name="factorName" type="string" value="ARISA_1127.2"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Roseob_1127.2"/>
   </node>
   <node id="Elapsed_Days" label="Elapsed_Days" name="Elapsed_Days">
     <att name="factorName" type="string" value="Elapsed_Days"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="Elapsed_Days"/>
   </node>
   <node id="m_ARISA_600.6_ARISA_852.1" label="m_ARISA_600.6_ARISA_852.1" name="m_ARISA_600.6_ARISA_852.1">
     <att name="factorName" type="string" value="m_ARISA_600.6_ARISA_852.1"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_421.5" label="ARISA_421.5" name="ARISA_421.5">
     <att name="factorName" type="string" value="ARISA_421.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="OCS155_421.5"/>
   </node>
   <node id="m_ARISA_602.5_ARISA_637.2" label="m_ARISA_602.5_ARISA_637.2" name="m_ARISA_602.5_ARISA_637.2">
     <att name="factorName" type="string" value="m_ARISA_602.5_ARISA_637.2"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_924.9" label="ARISA_924.9" name="ARISA_924.9">
     <att name="factorName" type="string" value="ARISA_924.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_924.9"/>
   </node>
   <node id="ARISA_1040" label="ARISA_1040" name="ARISA_1040">
     <att name="factorName" type="string" value="ARISA_1040"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_1040"/>
   </node>
   <node id="m_ARISA_591.6_ARISA_1181.7" label="m_ARISA_591.6_ARISA_1181.7" name="m_ARISA_591.6_ARISA_1181.7">
     <att name="factorName" type="string" value="m_ARISA_591.6_ARISA_1181.7"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_662.8_ARISA_667.6" label="m_ARISA_662.8_ARISA_667.6" name="m_ARISA_662.8_ARISA_667.6">
     <att name="factorName" type="string" value="m_ARISA_662.8_ARISA_667.6"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_522.8" label="ARISA_522.8" name="ARISA_522.8">
     <att name="factorName" type="string" value="ARISA_522.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_522.8"/>
   </node>
   <node id="ARISA_1145.6" label="ARISA_1145.6" name="ARISA_1145.6">
     <att name="factorName" type="string" value="ARISA_1145.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_1145.6"/>
   </node>
   <node id="ARISA_538.9" label="ARISA_538.9" name="ARISA_538.9">
     <att name="factorName" type="string" value="ARISA_538.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR86_538.9"/>
   </node>
   <node id="ARISA_618.6" label="ARISA_618.6" name="ARISA_618.6">
     <att name="factorName" type="string" value="ARISA_618.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_618.6"/>
   </node>
   <node id="m_ARISA_798.7_ARISA_868.8" label="m_ARISA_798.7_ARISA_868.8" name="m_ARISA_798.7_ARISA_868.8">
     <att name="factorName" type="string" value="m_ARISA_798.7_ARISA_868.8"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_912.5" label="ARISA_912.5" name="ARISA_912.5">
     <att name="factorName" type="string" value="ARISA_912.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Prochl_LL(I)_912.5"/>
   </node>
   <node id="m_ARISA_552.8_ARISA_639.8" label="m_ARISA_552.8_ARISA_639.8" name="m_ARISA_552.8_ARISA_639.8">
     <att name="factorName" type="string" value="m_ARISA_552.8_ARISA_639.8"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_484.9_ARISA_486.6" label="m_ARISA_484.9_ARISA_486.6" name="m_ARISA_484.9_ARISA_486.6">
     <att name="factorName" type="string" value="m_ARISA_484.9_ARISA_486.6"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="InvSimpson" label="InvSimpson" name="InvSimpson">
     <att name="factorName" type="string" value="InvSimpson"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="InvSimpson"/>
   </node>
   <node id="ARISA_554.9" label="ARISA_554.9" name="ARISA_554.9">
     <att name="factorName" type="string" value="ARISA_554.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_554.9"/>
   </node>
   <node id="m_ARISA_634.7_ARISA_732.2" label="m_ARISA_634.7_ARISA_732.2" name="m_ARISA_634.7_ARISA_732.2">
     <att name="factorName" type="string" value="m_ARISA_634.7_ARISA_732.2"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_556.7" label="ARISA_556.7" name="ARISA_556.7">
     <att name="factorName" type="string" value="ARISA_556.7"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="NS9_556.7"/>
   </node>
   <node id="m_ARISA_808_ARISA_1185.8" label="m_ARISA_808_ARISA_1185.8" name="m_ARISA_808_ARISA_1185.8">
     <att name="factorName" type="string" value="m_ARISA_808_ARISA_1185.8"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_624.5_ARISA_634.7" label="m_ARISA_624.5_ARISA_634.7" name="m_ARISA_624.5_ARISA_634.7">
     <att name="factorName" type="string" value="m_ARISA_624.5_ARISA_634.7"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_884.8" label="ARISA_884.8" name="ARISA_884.8">
     <att name="factorName" type="string" value="ARISA_884.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Synech_884.8"/>
   </node>
   <node id="Chl_A_Sat" label="Chl_A_Sat" name="Chl_A_Sat">
     <att name="factorName" type="string" value="Chl_A_Sat"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="Chl_A_Sat"/>
   </node>
   <node id="TCO2" label="TCO2" name="TCO2">
     <att name="factorName" type="string" value="TCO2"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="TCO2"/>
   </node>
   <node id="m_ARISA_613.3_ARISA_1011.5" label="m_ARISA_613.3_ARISA_1011.5" name="m_ARISA_613.3_ARISA_1011.5">
     <att name="factorName" type="string" value="m_ARISA_613.3_ARISA_1011.5"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_432_ARISA_439.2" label="m_ARISA_432_ARISA_439.2" name="m_ARISA_432_ARISA_439.2">
     <att name="factorName" type="string" value="m_ARISA_432_ARISA_439.2"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_511_ARISA_1130.1" label="m_ARISA_511_ARISA_1130.1" name="m_ARISA_511_ARISA_1130.1">
     <att name="factorName" type="string" value="m_ARISA_511_ARISA_1130.1"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_915.5_ARISA_920.6" label="m_ARISA_915.5_ARISA_920.6" name="m_ARISA_915.5_ARISA_920.6">
     <att name="factorName" type="string" value="m_ARISA_915.5_ARISA_920.6"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_863.9" label="ARISA_863.9" name="ARISA_863.9">
     <att name="factorName" type="string" value="ARISA_863.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_863.9"/>
   </node>
   <node id="m_ARISA_776.1_ARISA_787.7" label="m_ARISA_776.1_ARISA_787.7" name="m_ARISA_776.1_ARISA_787.7">
     <att name="factorName" type="string" value="m_ARISA_776.1_ARISA_787.7"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_902.5" label="ARISA_902.5" name="ARISA_902.5">
     <att name="factorName" type="string" value="ARISA_902.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Prochl_902.5"/>
   </node>
   <node id="ARISA_865.9" label="ARISA_865.9" name="ARISA_865.9">
     <att name="factorName" type="string" value="ARISA_865.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="ZD0405_865.9"/>
   </node>
   <node id="Leu" label="Leu" name="Leu">
     <att name="factorName" type="string" value="Leu"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="Leu"/>
   </node>
   <node id="PO4" label="PO4" name="PO4">
     <att name="factorName" type="string" value="PO4"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="PO4"/>
   </node>
   <node id="m_ARISA_735.5_ARISA_785" label="m_ARISA_735.5_ARISA_785" name="m_ARISA_735.5_ARISA_785">
     <att name="factorName" type="string" value="m_ARISA_735.5_ARISA_785"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="TurnoverLeu" label="TurnoverLeu" name="TurnoverLeu">
     <att name="factorName" type="string" value="TurnoverLeu"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="TurnoverLeu"/>
   </node>
   <node id="m_ARISA_592.1_ARISA_698.2" label="m_ARISA_592.1_ARISA_698.2" name="m_ARISA_592.1_ARISA_698.2">
     <att name="factorName" type="string" value="m_ARISA_592.1_ARISA_698.2"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_1035.2_ARISA_1040" label="m_ARISA_1035.2_ARISA_1040" name="m_ARISA_1035.2_ARISA_1040">
     <att name="factorName" type="string" value="m_ARISA_1035.2_ARISA_1040"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_721.2_ARISA_732.2" label="m_ARISA_721.2_ARISA_732.2" name="m_ARISA_721.2_ARISA_732.2">
     <att name="factorName" type="string" value="m_ARISA_721.2_ARISA_732.2"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_511.6_ARISA_535" label="m_ARISA_511.6_ARISA_535" name="m_ARISA_511.6_ARISA_535">
     <att name="factorName" type="string" value="m_ARISA_511.6_ARISA_535"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_697" label="ARISA_697" name="ARISA_697">
     <att name="factorName" type="string" value="ARISA_697"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR406_697"/>
   </node>
   <node id="m_ARISA_788.5_ARISA_897.8" label="m_ARISA_788.5_ARISA_897.8" name="m_ARISA_788.5_ARISA_897.8">
     <att name="factorName" type="string" value="m_ARISA_788.5_ARISA_897.8"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_863.9_ARISA_868.8" label="m_ARISA_863.9_ARISA_868.8" name="m_ARISA_863.9_ARISA_868.8">
     <att name="factorName" type="string" value="m_ARISA_863.9_ARISA_868.8"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_1134.1" label="ARISA_1134.1" name="ARISA_1134.1">
     <att name="factorName" type="string" value="ARISA_1134.1"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Roseob_1134.1"/>
   </node>
   <node id="m_ARISA_852.1_ARISA_956.5" label="m_ARISA_852.1_ARISA_956.5" name="m_ARISA_852.1_ARISA_956.5">
     <att name="factorName" type="string" value="m_ARISA_852.1_ARISA_956.5"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_409.4" label="ARISA_409.4" name="ARISA_409.4">
     <att name="factorName" type="string" value="ARISA_409.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_409.4"/>
   </node>
   <node id="ARISA_929" label="ARISA_929" name="ARISA_929">
     <att name="factorName" type="string" value="ARISA_929"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="OM60(N_929"/>
   </node>
   <node id="ARISA_552.8" label="ARISA_552.8" name="ARISA_552.8">
     <att name="factorName" type="string" value="ARISA_552.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Owenwe_552.8"/>
   </node>
   <node id="ARISA_857.1" label="ARISA_857.1" name="ARISA_857.1">
     <att name="factorName" type="string" value="ARISA_857.1"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Photob_857.1"/>
   </node>
   <node id="ARISA_532.4" label="ARISA_532.4" name="ARISA_532.4">
     <att name="factorName" type="string" value="ARISA_532.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR86_532.4"/>
   </node>
   <node id="ARISA_533.4" label="ARISA_533.4" name="ARISA_533.4">
     <att name="factorName" type="string" value="ARISA_533.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_533.4"/>
   </node>
   <node id="m_ARISA_602.5_ARISA_770.5" label="m_ARISA_602.5_ARISA_770.5" name="m_ARISA_602.5_ARISA_770.5">
     <att name="factorName" type="string" value="m_ARISA_602.5_ARISA_770.5"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_404.8_ARISA_405.6" label="m_ARISA_404.8_ARISA_405.6" name="m_ARISA_404.8_ARISA_405.6">
     <att name="factorName" type="string" value="m_ARISA_404.8_ARISA_405.6"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="sqrt_VBR" label="sqrt_VBR" name="sqrt_VBR">
     <att name="factorName" type="string" value="sqrt_VBR"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="sqrt_VBR"/>
   </node>
   <node id="sqrt_Bact" label="sqrt_Bact" name="sqrt_Bact">
     <att name="factorName" type="string" value="sqrt_Bact"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="sqrt_Bact"/>
   </node>
   <node id="ARISA_533.6" label="ARISA_533.6" name="ARISA_533.6">
     <att name="factorName" type="string" value="ARISA_533.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_533.6"/>
   </node>
   <node id="ARISA_540.1" label="ARISA_540.1" name="ARISA_540.1">
     <att name="factorName" type="string" value="ARISA_540.1"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="NS9_540.1"/>
   </node>
   <node id="m_ARISA_644.9_ARISA_884.3" label="m_ARISA_644.9_ARISA_884.3" name="m_ARISA_644.9_ARISA_884.3">
     <att name="factorName" type="string" value="m_ARISA_644.9_ARISA_884.3"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_586.4" label="ARISA_586.4" name="ARISA_586.4">
     <att name="factorName" type="string" value="ARISA_586.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_586.4"/>
   </node>
   <node id="m_ARISA_564.5_ARISA_860.9" label="m_ARISA_564.5_ARISA_860.9" name="m_ARISA_564.5_ARISA_860.9">
     <att name="factorName" type="string" value="m_ARISA_564.5_ARISA_860.9"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_697_ARISA_929" label="m_ARISA_697_ARISA_929" name="m_ARISA_697_ARISA_929">
     <att name="factorName" type="string" value="m_ARISA_697_ARISA_929"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_419.5" label="ARISA_419.5" name="ARISA_419.5">
     <att name="factorName" type="string" value="ARISA_419.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="OCS155_419.5"/>
   </node>
   <node id="m_ARISA_430.1_ARISA_788.5" label="m_ARISA_430.1_ARISA_788.5" name="m_ARISA_430.1_ARISA_788.5">
     <att name="factorName" type="string" value="m_ARISA_430.1_ARISA_788.5"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_847.4" label="ARISA_847.4" name="ARISA_847.4">
     <att name="factorName" type="string" value="ARISA_847.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="OM43_847.4"/>
   </node>
   <node id="ARISA_803.5" label="ARISA_803.5" name="ARISA_803.5">
     <att name="factorName" type="string" value="ARISA_803.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_803.5"/>
   </node>
   <node id="ARISA_709.4" label="ARISA_709.4" name="ARISA_709.4">
     <att name="factorName" type="string" value="ARISA_709.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="NS2b_709.4"/>
   </node>
   <node id="m_ARISA_554.9_ARISA_639.8" label="m_ARISA_554.9_ARISA_639.8" name="m_ARISA_554.9_ARISA_639.8">
     <att name="factorName" type="string" value="m_ARISA_554.9_ARISA_639.8"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_865.9_ARISA_1020.8" label="m_ARISA_865.9_ARISA_1020.8" name="m_ARISA_865.9_ARISA_1020.8">
     <att name="factorName" type="string" value="m_ARISA_865.9_ARISA_1020.8"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_1130.1_ARISA_1187.7" label="m_ARISA_1130.1_ARISA_1187.7" name="m_ARISA_1130.1_ARISA_1187.7">
     <att name="factorName" type="string" value="m_ARISA_1130.1_ARISA_1187.7"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_511_ARISA_511.6" label="m_ARISA_511_ARISA_511.6" name="m_ARISA_511_ARISA_511.6">
     <att name="factorName" type="string" value="m_ARISA_511_ARISA_511.6"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_602.5_ARISA_634.7" label="m_ARISA_602.5_ARISA_634.7" name="m_ARISA_602.5_ARISA_634.7">
     <att name="factorName" type="string" value="m_ARISA_602.5_ARISA_634.7"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_425.6" label="ARISA_425.6" name="ARISA_425.6">
     <att name="factorName" type="string" value="ARISA_425.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_425.6"/>
   </node>
   <node id="m_ARISA_568.1_ARISA_884.8" label="m_ARISA_568.1_ARISA_884.8" name="m_ARISA_568.1_ARISA_884.8">
     <att name="factorName" type="string" value="m_ARISA_568.1_ARISA_884.8"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_535" label="ARISA_535" name="ARISA_535">
     <att name="factorName" type="string" value="ARISA_535"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_535"/>
   </node>
   <node id="ARISA_801.8" label="ARISA_801.8" name="ARISA_801.8">
     <att name="factorName" type="string" value="ARISA_801.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_801.8"/>
   </node>
   <node id="ARISA_817.6" label="ARISA_817.6" name="ARISA_817.6">
     <att name="factorName" type="string" value="ARISA_817.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Prochl_HL(II)_817.6"/>
   </node>
   <node id="ARISA_703.7" label="ARISA_703.7" name="ARISA_703.7">
     <att name="factorName" type="string" value="ARISA_703.7"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR11_703.7"/>
   </node>
   <node id="ARISA_490" label="ARISA_490" name="ARISA_490">
     <att name="factorName" type="string" value="ARISA_490"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_490"/>
   </node>
   <node id="MEI" label="MEI" name="MEI">
     <att name="factorName" type="string" value="MEI"/>
+    <att name="nodetype" type="string" value=" "/>
+    <att name="Domain" type="string" value=" "/>
+    <att name="6Letter" type="string" value=" "/>
   </node>
   <node id="m_ARISA_639.8_ARISA_795.9" label="m_ARISA_639.8_ARISA_795.9" name="m_ARISA_639.8_ARISA_795.9">
     <att name="factorName" type="string" value="m_ARISA_639.8_ARISA_795.9"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_929_ARISA_1123.6" label="m_ARISA_929_ARISA_1123.6" name="m_ARISA_929_ARISA_1123.6">
     <att name="factorName" type="string" value="m_ARISA_929_ARISA_1123.6"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_831.8" label="ARISA_831.8" name="ARISA_831.8">
     <att name="factorName" type="string" value="ARISA_831.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Prochl_HL(I)_831.8"/>
   </node>
   <node id="ARISA_534.1" label="ARISA_534.1" name="ARISA_534.1">
     <att name="factorName" type="string" value="ARISA_534.1"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_534.1"/>
   </node>
   <node id="m_ARISA_773.1_ARISA_1023.2" label="m_ARISA_773.1_ARISA_1023.2" name="m_ARISA_773.1_ARISA_1023.2">
     <att name="factorName" type="string" value="m_ARISA_773.1_ARISA_1023.2"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_884.3" label="ARISA_884.3" name="ARISA_884.3">
     <att name="factorName" type="string" value="ARISA_884.3"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_884.3"/>
   </node>
   <node id="ARISA_403.8" label="ARISA_403.8" name="ARISA_403.8">
     <att name="factorName" type="string" value="ARISA_403.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_403.8"/>
   </node>
   <node id="ARISA_859.8" label="ARISA_859.8" name="ARISA_859.8">
     <att name="factorName" type="string" value="ARISA_859.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="OCS116_859.8"/>
   </node>
   <node id="ARISA_871.5" label="ARISA_871.5" name="ARISA_871.5">
     <att name="factorName" type="string" value="ARISA_871.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="OCS155_871.5"/>
   </node>
   <node id="ARISA_403.1" label="ARISA_403.1" name="ARISA_403.1">
     <att name="factorName" type="string" value="ARISA_403.1"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR86_403.1"/>
   </node>
   <node id="m_ARISA_920.6_ARISA_993.6" label="m_ARISA_920.6_ARISA_993.6" name="m_ARISA_920.6_ARISA_993.6">
     <att name="factorName" type="string" value="m_ARISA_920.6_ARISA_993.6"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_427.4" label="ARISA_427.4" name="ARISA_427.4">
     <att name="factorName" type="string" value="ARISA_427.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Prochl_427.4"/>
   </node>
   <node id="ARISA_630.6" label="ARISA_630.6" name="ARISA_630.6">
     <att name="factorName" type="string" value="ARISA_630.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_630.6"/>
   </node>
   <node id="ARISA_582.1" label="ARISA_582.1" name="ARISA_582.1">
     <att name="factorName" type="string" value="ARISA_582.1"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_582.1"/>
   </node>
   <node id="ARISA_429.3" label="ARISA_429.3" name="ARISA_429.3">
     <att name="factorName" type="string" value="ARISA_429.3"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_429.3"/>
   </node>
   <node id="log_Chl_A_Sat" label="log_Chl_A_Sat" name="log_Chl_A_Sat">
     <att name="factorName" type="string" value="log_Chl_A_Sat"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="log_Chl_A_Sat"/>
   </node>
   <node id="ARISA_632.6" label="ARISA_632.6" name="ARISA_632.6">
     <att name="factorName" type="string" value="ARISA_632.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_632.6"/>
   </node>
   <node id="ARISA_843" label="ARISA_843" name="ARISA_843">
     <att name="factorName" type="string" value="ARISA_843"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Piscir_843"/>
   </node>
   <node id="ARISA_1048.2" label="ARISA_1048.2" name="ARISA_1048.2">
     <att name="factorName" type="string" value="ARISA_1048.2"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Synech_A.III_1048.2"/>
   </node>
   <node id="m_ARISA_502.9_ARISA_902.5" label="m_ARISA_502.9_ARISA_902.5" name="m_ARISA_502.9_ARISA_902.5">
     <att name="factorName" type="string" value="m_ARISA_502.9_ARISA_902.5"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="Richness1000" label="Richness1000" name="Richness1000">
     <att name="factorName" type="string" value="Richness1000"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="Richness1000"/>
   </node>
   <node id="ARISA_592.1" label="ARISA_592.1" name="ARISA_592.1">
     <att name="factorName" type="string" value="ARISA_592.1"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Shewan_592.1"/>
   </node>
   <node id="m_ARISA_1035.2_ARISA_1127.2" label="m_ARISA_1035.2_ARISA_1127.2" name="m_ARISA_1035.2_ARISA_1127.2">
     <att name="factorName" type="string" value="m_ARISA_1035.2_ARISA_1127.2"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_559.4_ARISA_616.2" label="m_ARISA_559.4_ARISA_616.2" name="m_ARISA_559.4_ARISA_616.2">
     <att name="factorName" type="string" value="m_ARISA_559.4_ARISA_616.2"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_634.7" label="ARISA_634.7" name="ARISA_634.7">
     <att name="factorName" type="string" value="ARISA_634.7"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Microb_634.7"/>
   </node>
   <node id="ARISA_877.9" label="ARISA_877.9" name="ARISA_877.9">
     <att name="factorName" type="string" value="ARISA_877.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="OCS155_877.9"/>
   </node>
   <node id="ARISA_445.8" label="ARISA_445.8" name="ARISA_445.8">
     <att name="factorName" type="string" value="ARISA_445.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_445.8"/>
   </node>
   <node id="ARISA_833.8" label="ARISA_833.8" name="ARISA_833.8">
     <att name="factorName" type="string" value="ARISA_833.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Piscir_833.8"/>
   </node>
   <node id="m_ARISA_600.6_ARISA_874" label="m_ARISA_600.6_ARISA_874" name="m_ARISA_600.6_ARISA_874">
     <att name="factorName" type="string" value="m_ARISA_600.6_ARISA_874"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_407.7" label="ARISA_407.7" name="ARISA_407.7">
     <att name="factorName" type="string" value="ARISA_407.7"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_407.7"/>
   </node>
   <node id="ARISA_411.1" label="ARISA_411.1" name="ARISA_411.1">
     <att name="factorName" type="string" value="ARISA_411.1"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_411.1"/>
   </node>
   <node id="m_ARISA_545.8_ARISA_721.2" label="m_ARISA_545.8_ARISA_721.2" name="m_ARISA_545.8_ARISA_721.2">
     <att name="factorName" type="string" value="m_ARISA_545.8_ARISA_721.2"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_978.9" label="ARISA_978.9" name="ARISA_978.9">
     <att name="factorName" type="string" value="ARISA_978.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Vibrio_978.9"/>
   </node>
   <node id="ARISA_596.8" label="ARISA_596.8" name="ARISA_596.8">
     <att name="factorName" type="string" value="ARISA_596.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Prochl_596.8"/>
   </node>
   <node id="ARISA_405.6" label="ARISA_405.6" name="ARISA_405.6">
     <att name="factorName" type="string" value="ARISA_405.6"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR86_405.6"/>
   </node>
   <node id="m_ARISA_863.9_ARISA_1191" label="m_ARISA_863.9_ARISA_1191" name="m_ARISA_863.9_ARISA_1191">
     <att name="factorName" type="string" value="m_ARISA_863.9_ARISA_1191"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="m_ARISA_808_ARISA_1187.7" label="m_ARISA_808_ARISA_1187.7" name="m_ARISA_808_ARISA_1187.7">
     <att name="factorName" type="string" value="m_ARISA_808_ARISA_1187.7"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_963" label="ARISA_963" name="ARISA_963">
     <att name="factorName" type="string" value="ARISA_963"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_963"/>
   </node>
   <node id="ARISA_825.8" label="ARISA_825.8" name="ARISA_825.8">
     <att name="factorName" type="string" value="ARISA_825.8"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Prochl_HL(I)_825.8"/>
   </node>
   <node id="ARISA_840" label="ARISA_840" name="ARISA_840">
     <att name="factorName" type="string" value="ARISA_840"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Thioba_840"/>
   </node>
   <node id="m_ARISA_863.9_ARISA_993.6" label="m_ARISA_863.9_ARISA_993.6" name="m_ARISA_863.9_ARISA_993.6">
     <att name="factorName" type="string" value="m_ARISA_863.9_ARISA_993.6"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="ARISA_846" label="ARISA_846" name="ARISA_846">
     <att name="factorName" type="string" value="ARISA_846"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="OTU_846"/>
   </node>
   <node id="log_Leu" label="log_Leu" name="log_Leu">
     <att name="factorName" type="string" value="log_Leu"/>
+    <att name="nodetype" type="string" value="Env"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value="log_Leu"/>
   </node>
   <edge label="isAugust_nu_m_ARISA_404.8_ARISA_405.6" source="isAugust" target="m_ARISA_404.8_ARISA_405.6">
     <att name="interaction" type="string" value="nu"/>
