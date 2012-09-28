@@ -22,7 +22,7 @@ def tryIO( file, mode ):
     sys.exit(2)
   return handle
 
-def LA_Xgmml3(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=3, Delay_idx=9):
+def LA_Xgmml3(la_table, la_size, lsaq_table, lsaq_size, title, nodeinfor_table, nodeinfor_size, LA_idx=4, LS_idx=3, Delay_idx=9):
   laq_nodes = set()
   laq_edges = dict()   
   lai = LA_idx-1 #4-1
@@ -34,9 +34,17 @@ def LA_Xgmml3(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=
     node_y = r['''as.character''']((la_table.rx(i,True)[1]))[0]
     node_z = r['''as.character''']((la_table.rx(i,True)[2]))[0]
 
-def LA_Xgmml2(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=3, Delay_idx=9):
-  lsaq_nodes=set()
+def LA_Xgmml2(la_table, la_size, lsaq_table, lsaq_size, nodeinfor_table, nodeinfor_size, title, LA_idx=4, LS_idx=3, Delay_idx=9):
+  node_infor=dict()
+  lsaq_nodes=dict()
   lsaq_edges=dict()
+  for i in xrange(1, nodeinfor_size+1):
+    nodename=r['''as.character''']((nodeinfor_table.rx(i,True)[0]))[0]
+    nodetype=r['''as.character''']((nodeinfor_table.rx(i,True)[1]))[0]
+    Domain=r['''as.character''']((nodeinfor_table.rx(i,True)[19]))[0]
+    L=r['''as.character''']((nodeinfor_table.rx(i,True)[39]))[0]
+    node_infor[nodename]={"nodetype":nodetype, "Domain":Domain, "6Letter":L}
+     
   #construct lsaq_nodes
   #construct lsaq_edges
   #dict={key1:value1, k2:v2, k3:v3,....}
@@ -48,8 +56,8 @@ def LA_Xgmml2(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=
   for i in xrange(1, lsaq_size+1):  
     node_x = r['''as.character''']((lsaq_table.rx(i,True)[0]))[0]
     node_y = r['''as.character''']((lsaq_table.rx(i,True)[1]))[0]
-    lsaq_nodes.add(node_x)
-    lsaq_nodes.add(node_y)
+    lsaq_nodes[node_x]=node_infor[node_x]
+    lsaq_nodes[node_y]=node_infor[node_y]
      
     if tuple(lsaq_table.rx(i,True)[di])[0] > 0:
          d_code = 'dr'      #direction reta
@@ -76,8 +84,10 @@ def LA_Xgmml2(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=
     node_z = r['''as.character''']((la_table.rx(i,True)[2]))[0]
     if (node_x,node_y) in laq_edges:
       node_m_x_y = '_'.join( ['m', node_x, node_y] )
-      laq_nodes.add(node_m_x_y) 
-      laq_nodes.add(node_z)
+      laq_nodes[node_m_x_y]={"nodetype":"mid", "Domain":"na", "6Letter":"na"} 
+      print node_z
+      laq_nodes[node_z]=node_infor[node_z]
+      print laq_nodes[node_z]
       if tuple(la_table.rx(i,True)[lai])[0] >= 0:
          interaction_type3 = 'pu'
       else:
@@ -103,8 +113,7 @@ def LA_Xgmml2(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=
       #if tuple(la_table.rx(i,True)[3])[0] is 'nan':
       x = tuple(la_table.rx(i,True)[lai])[0]
       if isinstance(x, float) and math.isnan(x):
-         #LA_score = -9999
-         continue
+         LA_score = -9999
       else:
          #LA_score = tuple(la_table.rx(i,True)[3])[0]
          LA_score = x
@@ -132,6 +141,19 @@ def LA_Xgmml2(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=
     factorName_element.set('type', 'string')
     factorName_element.set('name', 'factorName')
     factorName_element.set('value', node)
+    nodetype_element = etree.SubElement(node_element, 'att')
+    nodetype_element.set('type', 'string')
+    nodetype_element.set('name', 'nodetype')
+    nodetype_element.set('value', laq_nodes[node]["nodetype"])
+    Domain_element = etree.SubElement(node_element, 'att')
+    Domain_element.set('type', 'string')
+    Domain_element.set('name', 'Domain')
+    Domain_element.set('value', laq_nodes[node]["Domain"])
+    Letter_element = etree.SubElement(node_element, 'att')
+    Letter_element.set('type', 'string')
+    Letter_element.set('name', '6Letter')
+    Letter_element.set('value', laq_nodes[node]["6Letter"]) 
+
 
   for edge in laq_edges:     
      if  laq_edges[edge][0] < 0: 

@@ -2,18 +2,33 @@
 <graph directed="1" label="LA Network" xmlns="http://www.cs.rpi.edu/XGMML" xmlns:cy="http://www.cytoscape.org" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink">
   <node id="5_ARISA_570.1" label="5_ARISA_570.1" name="5_ARISA_570.1">
     <att name="factorName" type="string" value="5_ARISA_570.1"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="Chloro_chloroplast_570.1"/>
   </node>
   <node id="5_ARISA_471.9" label="5_ARISA_471.9" name="5_ARISA_471.9">
     <att name="factorName" type="string" value="5_ARISA_471.9"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value=""/>
+    <att name="6Letter" type="string" value=""/>
   </node>
   <node id="m_5_ARISA_402.4_5_ARISA_419.5" label="m_5_ARISA_402.4_5_ARISA_419.5" name="m_5_ARISA_402.4_5_ARISA_419.5">
     <att name="factorName" type="string" value="m_5_ARISA_402.4_5_ARISA_419.5"/>
+    <att name="nodetype" type="string" value="mid"/>
+    <att name="Domain" type="string" value="na"/>
+    <att name="6Letter" type="string" value="na"/>
   </node>
   <node id="5_ARISA_402.4" label="5_ARISA_402.4" name="5_ARISA_402.4">
     <att name="factorName" type="string" value="5_ARISA_402.4"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="SAR86_402.4"/>
   </node>
   <node id="5_ARISA_419.5" label="5_ARISA_419.5" name="5_ARISA_419.5">
     <att name="factorName" type="string" value="5_ARISA_419.5"/>
+    <att name="nodetype" type="string" value="ARISA"/>
+    <att name="Domain" type="string" value="Bacteria"/>
+    <att name="6Letter" type="string" value="OCS155_419.5"/>
   </node>
   <edge label="5_ARISA_402.4_pu_5_ARISA_471.9" source="5_ARISA_402.4" target="5_ARISA_471.9">
     <att name="interaction" type="string" value="pu"/>
