@@ -1,0 +1,416 @@
+nodeIDs	nodeType	nodeDepths	mean	sd	median	mad	count1000	countALL	LB	UB	Project	Location	DepthCat	Clone1Hits	Clone2Hits	OtherHits	Clone1ID	Clone2ID	Domain	Phylum	Class	Order	Family	Genus	Species	SilvaTag	RDP Clade	Ecotype	SecDomain	SecPhylum	SecClass	SecOrder	SecFamily	SecGenus	SecSpecies	SecSilvaTag	SecRDPClade	SecEcotype	6Letter.
+ARISA_392.9	ARISA	5	1.12E-04	3.39E-04	0	0	2	21	391.9	392.9																													OTU_392.9
+ARISA_399.1	ARISA	5	2.68E-04	2.22E-03	0	0	2	10	398.1	399.1	Biocomplexity	Atlantic (Amazon River Plume)	surf	1			204250		Bacteria	Proteobacteria	Gammaproteobacteria	Oceanospirillales	Halomonadaceae	Candidatus Portiera		SAR86													SAR86_399.1
+ARISA_400.2	ARISA	5	3.49E-04	1.23E-03	0	0	8	29	399.2	400.2	Indian Ocean-RS/JCVI	Indian Ocean	surf	1			204251		Bacteria	Proteobacteria	Alphaproteobacteria	Rhodospirillales	Rhodospirillaceae			SAR116	Sar116_clade												SAR116_400.2
+ARISA_401.5	ARISA	5	9.13E-03	0.01	1.54E-03	2.28E-03	54	57	400.5	401.5	USC Microbial Observatory	SPOT	surf	1			204265		Bacteria	Proteobacteria	Gammaproteobacteria	Oceanospirillales	Halomonadaceae	Candidatus Portiera		SAR86	Sar86_clade												SAR86_401.5
+ARISA_402.4	ARISA	5	0.02	0.04	5.24E-03	7.77E-03	59	63	401.5	402.4	USC Microbial Observatory	SPOT	surf	3			204266		Bacteria	Proteobacteria	Gammaproteobacteria	Oceanospirillales	Halomonadaceae	Candidatus Portiera		SAR86	Sar86_clade												SAR86_402.4
+ARISA_403.1	ARISA	5	1.96E-04	8.05E-04	0	0	6	10	402.4	403.1	Global Ocean Survey (GOS)	xxx	surf	6			204256		Bacteria	Proteobacteria	Gammaproteobacteria	Oceanospirillales	Halomonadaceae	Candidatus Portiera		SAR86	Sar86_clade												SAR86_403.1
+ARISA_403.8	ARISA	5	2.20E-04	1.14E-03	0	0	6	10	403.1	403.8																													OTU_403.8
+ARISA_404.8	ARISA	5	2.49E-04	7.39E-04	0	0	9	21	403.8	404.8																													OTU_404.8
+ARISA_405.6	ARISA	5	2.54E-04	5.11E-04	0	0	10	34	404.8	405.6	Global Ocean Survey (GOS)	xxx	surf	3			204269		Bacteria	Proteobacteria	Gammaproteobacteria	Oceanospirillales	Halomonadaceae	Candidatus Portiera		SAR86													SAR86_405.6
+ARISA_406.7	ARISA	5	5.75E-04	1.16E-03	0	0	18	43	405.7	406.7																													OTU_406.7
+ARISA_407.7	ARISA	5	2.78E-04	7.89E-04	0	0	7	30	406.7	407.7																													OTU_407.7
+ARISA_408.8	ARISA	5	2.68E-04	1.11E-03	0	0	6	25	407.8	408.8																													OTU_408.8
+ARISA_409.4	ARISA	5	3.10E-05	1.67E-04	0	0	2	5	408.8	409.4																													OTU_409.4
+ARISA_411.1	ARISA	5	1.75E-05	8.73E-05	0	0	0	5	410.1	411.1																													OTU_411.1
+ARISA_412.7	ARISA	5	2.71E-05	1.52E-04	0	0	1	6	411.7	412.7	Biocomplexity	Atlantic (Amazon River Plume)	surf	1			204272		Bacteria	Actinobacteria	Actinobacteria (class)	koll13				OCS155													OCS155_412.7
+ARISA_413.3	ARISA	5	2.95E-05	1.57E-04	0	0	1	6	412.7	413.3																													OTU_413.3
+ARISA_414.2	ARISA	5	1.59E-04	5.84E-04	0	0	7	14	413.3	414.2	Biocomplexity	Atlantic (Amazon River Plume)	surf	1			204273		Bacteria	Actinobacteria	Actinobacteria (class)	koll13				OCS155													OCS155_414.2
+ARISA_415.1	ARISA	5	9.07E-05	2.63E-04	0	0	2	17	414.2	415.1	Biocomplexity	Atlantic (Amazon River Plume)	surf	1			204274		Bacteria	Actinobacteria	Actinobacteria (class)	koll13				OCS155													OCS155_415.1
+ARISA_416.4	ARISA	5	4.21E-04	8.83E-04	0	0	11	41	415.4	416.4																													OTU_416.4
+ARISA_417	ARISA	5	1.71E-04	6.77E-04	0	0	3	19	416.4	417	Biocomplexity	Atlantic (Amazon River Plume)	surf	1			204276		Bacteria	Actinobacteria	Actinobacteria (class)	koll13				OCS155													OCS155_417
+ARISA_417.6	ARISA	5	5.39E-04	4.48E-03	0	0	3	7	417	417.6	Global Ocean Survey (GOS)	xxx	surf	1			204275		Bacteria	Actinobacteria	Actinobacteria (class)	koll13				OCS155													OCS155_417.6
+ARISA_418.5	ARISA	5	4.23E-03	9.24E-03	0	0	36	42	417.6	418.5	USC Microbial Observatory	SPOT	surf	1			204305		Bacteria	Actinobacteria	Actinobacteria (class)	koll13				OCS155													OCS155_418.5
+ARISA_419.5	ARISA	5	0.03	0.05	0.01	0.01	85	88	418.5	419.5	USC Microbial Observatory	SPOT	surf	1			204292		Bacteria	Actinobacteria	Actinobacteria (class)	koll13				OCS155													OCS155_419.5
+ARISA_420.5	ARISA	5	5.74E-03	0.01	0	0	40	43	419.5	420.5	USC Microbial Observatory	SPOT	surf	1			204331		Bacteria	Actinobacteria	Actinobacteria (class)	koll13				OCS155													OCS155_420.5
+ARISA_421.5	ARISA	5	0.02	0.02	0.01	0.01	89	91	420.5	421.5	USC Microbial Observatory	SPOT	surf	3			204333		Bacteria	Actinobacteria	Actinobacteria (class)	koll13				OCS155													OCS155_421.5
+ARISA_422.3	ARISA	5	1.03E-04	5.31E-04	0	0	4	5	421.5	422.3																													OTU_422.3
+ARISA_423.3	ARISA	5	1.05E-03	1.83E-03	0	0	36	45	422.3	423.3	Global Ocean Survey (GOS)	xxx	surf	1			204337		Bacteria	Actinobacteria	Actinobacteria (class)	koll13				OCS155													OCS155_423.3
+ARISA_424.4	ARISA	5	5.91E-03	6.63E-03	4.53E-03	4.54E-03	91	96	423.4	424.4	USC Microbial Observatory	SPOT	surf	1			204344		Bacteria	Actinobacteria	Actinobacteria (class)	koll13				OCS155													OCS155_424.4
+ARISA_425.6	ARISA	5	4.78E-04	1.09E-03	0	0	16	29	424.6	425.6																													OTU_425.6
+ARISA_427.4	ARISA	5	3.19E-05	1.54E-04	0	0	1	5	426.5	427.4	Biocomplexity	Pacific (Hawaii)	surf	1			204345		Bacteria	Cyanobacteria	Synechococcophycideae	Synechococcales	Synechococcaceae	Prochlorococcus		Prochlorococcus	Sar86_clade												Prochl_427.4
+ARISA_429.3	ARISA	5	1.62E-04	1.15E-03	0	0	4	8	428.4	429.3																													OTU_429.3
+ARISA_430.1	ARISA	5	1.22E-04	8.15E-04	0	0	3	9	429.3	430.1																													OTU_430.1
+ARISA_431.4	ARISA	5	2.06E-04	4.55E-04	0	0	7	29	430.4	431.4																													OTU_431.4
+ARISA_432	ARISA	5	8.16E-05	2.91E-04	0	0	1	16	431.4	432																													OTU_432
+ARISA_432.8	ARISA	5	3.71E-04	1.76E-03	0	0	5	13	432	432.8																													OTU_432.8
+ARISA_433.6	ARISA	5	3.54E-04	3.38E-03	0	0	2	5	432.8	433.6																													OTU_433.6
+ARISA_434.5	ARISA	5	6.22E-03	0.02	0	0	6	7	433.6	434.5	Global Ocean Survey (GOS)	xxx	surf	1			204346		Bacteria	Actinobacteria	Actinobacteria (class)	koll13				OCS155													OCS155_434.5
+ARISA_435.5	ARISA	5	0.1	0.08	0.07	0.08	97	98	434.5	435.5	USC Microbial Observatory	SPOT	surf	1			204347		Bacteria	Actinobacteria	Actinobacteria (class)	koll13				OCS155													OCS155_435.5
+ARISA_436.3	ARISA	5	3.19E-03	0.01	0	0	9	11	435.5	436.3																													OTU_436.3
+ARISA_438.2	ARISA	5	9.12E-05	2.53E-04	0	0	2	16	437.5	438.2																													OTU_438.2
+ARISA_439.2	ARISA	5	2.40E-04	9.96E-04	0	0	5	24	438.2	439.2																													OTU_439.2
+ARISA_442	ARISA	5	6.62E-05	3.77E-04	0	0	2	8	441	442																													OTU_442
+ARISA_444	ARISA	5	2.35E-05	1.50E-04	0	0	1	5	443	444	Global Ocean Survey (GOS)	xxx	surf	1			204352		Bacteria	Proteobacteria	Gammaproteobacteria	Oceanospirillales	Halomonadaceae	Candidatus Portiera		SAR86	Sar86_clade												SAR86_444
+ARISA_445.8	ARISA	5	4.57E-05	1.43E-04	0	0	0	12	444.8	445.8																													OTU_445.8
+ARISA_446.5	ARISA	5	1.70E-05	8.10E-05	0	0	0	5	445.8	446.5																													OTU_446.5
+ARISA_448.7	ARISA	5	1.42E-05	6.06E-05	0	0	0	6	447.7	448.7	Indian Ocean-RS/JCVI	Indian Ocean	surf	1			204353		Bacteria	Proteobacteria	Gammaproteobacteria	Vibrionales	Vibrionaceae			Vibrionaceae													Vibrio_448.7
+ARISA_450.2	ARISA	5	2.08E-05	9.00E-05	0	0	0	7	448.7	450.2	Indian Ocean-RS/JCVI	Indian Ocean	surf	1			204354		Bacteria	Bacteroidetes	Flavobacteria	Flavobacteriales	Flavobacteriaceae			NS2b													NS2b_450.2
+ARISA_452.1	ARISA	5	5.21E-05	1.34E-04	0	0	0	17	450.2	452.1																													OTU_452.1
+ARISA_454	ARISA	5	2.10E-04	1.06E-03	0	0	2	26	452.1	454																													OTU_454
+ARISA_460.7	ARISA	5	3.85E-05	1.43E-04	0	0	0	10	459.5	460.7																													OTU_460.7
+ARISA_469.4	ARISA	5	1.44E-03	7.92E-03	0	0	10	13	467.4	469.4	Global Ocean Survey (GOS)	xxx	surf	7			204357		Bacteria	Proteobacteria	Gammaproteobacteria	Oceanospirillales	Halomonadaceae	Candidatus Portiera		SAR86	Sar86_clade												SAR86_469.4
+ARISA_471.9	ARISA	5	2.73E-03	4.20E-03	1.37E-03	2.04E-03	58	75	469.9	471.9	Global Ocean Survey (GOS)	xxx	surf	3			204366		Bacteria	Proteobacteria	Gammaproteobacteria	Oceanospirillales	Halomonadaceae	Candidatus Portiera		SAR86	Sar11_clade												SAR86_471.9
+ARISA_473	ARISA	5	6.33E-04	1.60E-03	0	0	20	28	471.9	473	Global Ocean Survey (GOS)	xxx	surf	2			204369		Bacteria	Proteobacteria	Gammaproteobacteria	Oceanospirillales	Halomonadaceae	Candidatus Portiera		SAR86	Sar86_clade												SAR86_473
+ARISA_474.9	ARISA	5	1.58E-03	2.37E-03	3.38E-04	5.01E-04	41	59	473	474.9																													OTU_474.9
+ARISA_476.8	ARISA	5	8.46E-04	1.72E-03	0	0	24	45	474.9	476.8																													OTU_476.8
+ARISA_478.8	ARISA	5	7.22E-03	0.01	3.18E-03	4.72E-03	69	79	476.8	478.8	USC Microbial Observatory	SPOT	deep	1			204371		Bacteria	Proteobacteria	Deltaproteobacteria	Bdellovibrionales	Bacteriovoracaceae	Bacteriovorax		Bacteriovorax													Bacter_478.8
+ARISA_480	ARISA	5	1.23E-03	3.24E-03	0	0	25	35	478.8	480																													OTU_480
+ARISA_481.8	ARISA	5	4.20E-04	2.27E-03	0	0	10	20	480	481.8																													OTU_481.8
+ARISA_482.2	ARISA	5	2.85E-04	1.17E-03	0	0	6	16	481.8	482.2																													OTU_482.2
+ARISA_484.1	ARISA	5	1.37E-03	2.23E-03	5.44E-04	8.06E-04	38	64	482.2	484.1	Global Ocean Survey (GOS)	xxx	surf	2	1	0	204374	204372	Bacteria	Proteobacteria	Gammaproteobacteria	Oceanospirillales	Halomonadaceae	Candidatus Portiera		SAR86	Sar86_clade		Bacteria	Actinobacteria	Actinobacteria (class)	Actinomycetales	ACK-M1			hgcI	Hgci_clade		SAR86_484.1
+ARISA_484.9	ARISA	5	1.64E-04	5.36E-04	0	0	7	14	484.1	484.9																													OTU_484.9
+ARISA_486.6	ARISA	5	2.91E-04	8.47E-04	0	0	11	21	484.9	486.6																													OTU_486.6
+ARISA_487.4	ARISA	5	8.03E-05	3.25E-04	0	0	4	9	486.6	487.4																													OTU_487.4
+ARISA_488	ARISA	5	1.62E-04	5.55E-04	0	0	5	17	487.4	488																													OTU_488
+ARISA_490	ARISA	5	2.31E-03	3.25E-03	7.79E-04	1.16E-03	49	81	488	490																													OTU_490
+ARISA_491.7	ARISA	5	1.17E-04	3.48E-04	0	0	5	14	490	491.7																													OTU_491.7
+ARISA_493.6	ARISA	5	6.84E-05	4.89E-04	0	0	2	5	491.7	493.6																													OTU_493.6
+ARISA_502.9	ARISA	5	2.53E-04	2.17E-03	0	0	2	5	501.1	502.9																													OTU_502.9
+ARISA_505.7	ARISA	5	3.55E-05	1.01E-04	0	0	0	13	503.7	505.7	Indian Ocean-RS/JCVI	Indian Ocean	surf	1			204380		Bacteria	Proteobacteria	Deltaproteobacteria	Bdellovibrionales	Bacteriovoracaceae			Bacteriovoraceae													Bacter_505.7
+ARISA_507.4	ARISA	5	1.38E-04	6.79E-04	0	0	4	12	505.7	507.4																													OTU_507.4
+ARISA_509.9	ARISA	5	1.71E-03	4.18E-03	3.62E-04	5.37E-04	35	58	507.9	509.9																													OTU_509.9
+ARISA_511	ARISA	5	2.54E-04	6.72E-04	0	0	8	26	509.9	511																													OTU_511
+ARISA_511.6	ARISA	5	5.81E-05	1.89E-04	0	0	1	13	511	511.6																													OTU_511.6
+ARISA_515.9	ARISA	5	6.34E-05	2.22E-04	0	0	2	13	513.9	515.9																													OTU_515.9
+ARISA_517	ARISA	5	6.77E-05	2.44E-04	0	0	1	12	516.1	517																													OTU_517
+ARISA_519	ARISA	5	1.72E-03	2.46E-03	6.26E-04	9.27E-04	44	65	517	519	USC Microbial Observatory	SPOT	deep	1			204381		Bacteria	Proteobacteria	Deltaproteobacteria					SAR324	Sar324_clade(marine_group_b)												SAR324_519
+ARISA_519.6	ARISA	5	2.40E-04	5.68E-04	0	0	7	29	519	519.6																													OTU_519.6
+ARISA_521.6	ARISA	5	1.03E-03	1.89E-03	2.70E-04	4.00E-04	32	56	519.6	521.6	USC Microbial Observatory	SPOT	deep	1			204382		Bacteria	SAR406	AB16	Arctic96B-7	A714017	Arctic95A-2		SAR406	Sar406_clade(marine_group_a)												SAR406_521.6
+ARISA_522.8	ARISA	5	2.86E-04	1.01E-03	0	0	9	15	521.6	522.8																													OTU_522.8
+ARISA_524.8	ARISA	5	3.38E-04	1.48E-03	0	0	5	19	522.8	524.8	Indian Ocean-RS/JCVI	Indian Ocean	surf	1			204383		Bacteria	Actinobacteria	Actinobacteria (class)	koll13				OCS155													OCS155_524.8
+ARISA_526.8	ARISA	5	6.36E-04	3.55E-03	0	0	11	29	524.8	526.8																													OTU_526.8
+ARISA_527.6	ARISA	5	8.70E-05	3.32E-04	0	0	4	11	526.8	527.6																													OTU_527.6
+ARISA_529.5	ARISA	5	3.23E-04	1.18E-03	0	0	8	25	527.6	529.5	Indian Ocean-RS/JCVI	Indian Ocean	surf	1			204384		Bacteria	Bacteroidetes	Flavobacteria					NS9													NS9_529.5
+ARISA_531.5	ARISA	5	3.04E-03	2.73E-03	2.23E-03	2.37E-03	81	91	529.5	531.5	USC Microbial Observatory	SPOT	surf	1			204389		Bacteria	Proteobacteria	Gammaproteobacteria	Oceanospirillales	Halomonadaceae	Candidatus Portiera		SAR86	Sar86_clade												SAR86_531.5
+ARISA_532.4	ARISA	5	7.46E-04	1.13E-03	0	0	33	45	531.5	532.4	USC Microbial Observatory	SPOT	surf	1			204391		Bacteria	Proteobacteria	Gammaproteobacteria	Oceanospirillales	Halomonadaceae	Candidatus Portiera		SAR86													SAR86_532.4
+ARISA_533.4	ARISA	5	6.02E-04	1.23E-03	0	0	20	37	532.4	533.4																													OTU_533.4
+ARISA_533.6	ARISA	5	5.26E-05	3.69E-04	0	0	1	5	533.4	533.6																													OTU_533.6
+ARISA_534.1	ARISA	5	1.60E-04	4.91E-04	0	0	7	18	533.6	534.1																													OTU_534.1
+ARISA_535	ARISA	5	4.05E-04	8.03E-04	0	0	17	35	534.1	535																													OTU_535
+ARISA_536.9	ARISA	5	1.88E-03	3.57E-03	0	0	37	46	535	536.9	USC Microbial Observatory	SPOT	surf	1			204394		Bacteria	Proteobacteria	Gammaproteobacteria	Oceanospirillales	Halomonadaceae	Candidatus Portiera		SAR86	Sar86_clade												SAR86_536.9
+ARISA_538.9	ARISA	5	0.02	0.01	0.02	0.01	103	104	536.9	538.9	USC Microbial Observatory	SPOT	surf	3	2	0	204396	204395	Bacteria	Proteobacteria	Gammaproteobacteria	Oceanospirillales	Halomonadaceae	Candidatus Portiera		SAR86	Sar86_clade		Bacteria	Bacteroidetes	Flavobacteria					NS9			SAR86_538.9
+ARISA_540.1	ARISA	5	1.72E-03	5.70E-03	0	0	31	38	538.9	540.1	Biocomplexity	Pacific (Hawaii)	surf	1			204412		Bacteria	Bacteroidetes	Flavobacteria					NS9													NS9_540.1
+ARISA_541.5	ARISA	5	1.25E-03	1.60E-03	6.48E-04	9.60E-04	47	58	540.1	541.5	Biocomplexity	Pacific (Hawaii)	surf	1			204414		Bacteria	Cyanobacteria	Synechococcophycideae	Synechococcales	Synechococcaceae	Prochlorococcus		Cyanobium													Cyanob_541.5
+ARISA_542.8	ARISA	5	7.71E-04	1.69E-03	0	0	24	39	541.5	542.8																													OTU_542.8
+ARISA_543.8	ARISA	5	5.76E-05	2.69E-04	0	0	1	8	542.8	543.8																													OTU_543.8
+ARISA_545.8	ARISA	5	4.03E-04	1.24E-03	0	0	7	23	543.8	545.8	USC Microbial Observatory	SPOT	deep	1			204415		Bacteria	Bacteroidetes	Flavobacteria																		OTU_545.8
+ARISA_547.8	ARISA	5	4.87E-04	1.04E-03	0	0	15	43	545.8	547.8																													OTU_547.8
+ARISA_549.8	ARISA	5	1.45E-04	3.30E-04	0	0	4	25	547.8	549.8	USC Microbial Observatory	SPOT	deep	3			204416		Bacteria	Bacteroidetes	Flavobacteria					NS9													NS9_549.8
+ARISA_552.8	ARISA	5	4.55E-04	2.06E-03	0	0	6	7	550.8	552.8	Indian Ocean-RS/JCVI	Indian Ocean	surf	1			204423		Bacteria	Bacteroidetes	Flavobacteria					Owenweeksia													Owenwe_552.8
+ARISA_554.9	ARISA	5	1.96E-04	1.20E-03	0	0	4	6	553.2	554.9																													OTU_554.9
+ARISA_556.7	ARISA	5	2.65E-04	2.17E-03	0	0	3	11	554.9	556.7	USC Microbial Observatory	SPOT	deep	2			204427		Bacteria	Bacteroidetes	Flavobacteria					NS9													NS9_556.7
+ARISA_557.8	ARISA	5	2.70E-04	9.86E-04	0	0	8	24	556.7	557.8	Global Ocean Survey (GOS)	xxx	surf	2			204430		Bacteria	Proteobacteria	Gammaproteobacteria	Oceanospirillales	Halomonadaceae	Candidatus Portiera		SAR86	Sar86_clade												SAR86_557.8
+ARISA_559	ARISA	5	7.31E-04	1.45E-03	0	0	26	48	557.8	559																													OTU_559
+ARISA_559.4	ARISA	5	1.94E-04	6.64E-04	0	0	6	14	559	559.4																													OTU_559.4
+ARISA_559.7	ARISA	5	2.30E-04	8.98E-04	0	0	7	11	559.4	559.7																													OTU_559.7
+ARISA_561.8	ARISA	5	0.01	0.02	5.96E-03	7.15E-03	87	90	559.8	561.8	USC Microbial Observatory	SPOT	surf	1			204432		Bacteria	Cyanobacteria	Chloroplast	Chlorophyta	Mamiellaceae			Chloroplast		chloroplast											Chloro_chloroplast_561.8
+ARISA_563.6	ARISA	5	6.36E-04	1.24E-03	0	0	22	38	561.8	563.6	Indian Ocean-RS/JCVI	Indian Ocean	surf	1			204434		Bacteria	Bacteroidetes	Flavobacteria					Owenweeksia													Owenwe_563.6
+ARISA_564.5	ARISA	5	1.96E-04	4.86E-04	0	0	9	21	563.6	564.5																													OTU_564.5
+ARISA_566.5	ARISA	5	9.76E-04	1.75E-03	2.11E-04	3.13E-04	27	54	564.5	566.5	Global Ocean Survey (GOS)	xxx	surf	1			204435		Bacteria	Cyanobacteria	Chloroplast	Chlorophyta	Mamiellaceae			Chloroplast													Chloro_566.5
+ARISA_567.5	ARISA	5	2.38E-04	5.91E-04	0	0	11	22	566.5	567.5	Indian Ocean-RS/JCVI	Indian Ocean	surf	2	1	1	204436	204438	Bacteria	Cyanobacteria	Chloroplast	Chlorophyta	Mamiellaceae			Chloroplast			Bacteria	Bacteroidetes	Flavobacteria								Chloro_567.5
+ARISA_568.1	ARISA	5	3.02E-05	1.76E-04	0	0	1	5	567.8	568.1																													OTU_568.1
+ARISA_570.1	ARISA	5	0.02	0.02	0.01	0.01	92	97	568.1	570.1	USC Microbial Observatory	SPOT	surf	1			204440		Bacteria	Cyanobacteria	Chloroplast	Chlorophyta	Mamiellaceae			Chloroplast		chloroplast											Chloro_chloroplast_570.1
+ARISA_571.4	ARISA	5	1.84E-03	9.60E-03	0	0	19	34	570.1	571.4																													OTU_571.4
+ARISA_573.6	ARISA	5	0.01	0.02	9.45E-03	9.96E-03	86	91	571.7	573.6	Indian Ocean-RS/JCVI	Indian Ocean	surf	1	1	0	204443	204442	Bacteria	Cyanobacteria	Chloroplast	Chlorophyta	Mamiellaceae			Chloroplast			Bacteria	Cyanobacteria	Chloroplast	Chlorophyta	Mamiellaceae			Micromonas			Chloro_573.6
+ARISA_575.6	ARISA	5	5.90E-04	1.44E-03	0	0	17	25	573.6	575.6	Global Ocean Survey (GOS)	xxx	surf	1			204445		Bacteria	Actinobacteria	Actinobacteria (class)	Acidimicrobiales	ZA3409c			Sva0996													Sva099_575.6
+ARISA_577.6	ARISA	5	2.22E-04	7.39E-04	0	0	6	16	576.1	577.6	Indian Ocean-RS/JCVI	Indian Ocean	surf	1			204446		Bacteria	Cyanobacteria	Synechococcophycideae	Synechococcales	Synechococcaceae	Prochlorococcus		Prochlorococcus													Prochl_577.6
+ARISA_579.3	ARISA	5	2.60E-04	7.27E-04	0	0	9	20	577.6	579.3	Global Ocean Survey (GOS)	xxx	surf	1	1	0	204449	204448	Bacteria	Bacteroidetes	Flavobacteria	Flavobacteriales	Flavobacteriaceae			NS4			Bacteria	Proteobacteria	Gammaproteobacteria	Oceanospirillales	Halomonadaceae	Candidatus Portiera		SAR86	Sar86_clade		NS4_579.3
+ARISA_581.3	ARISA	5	1.98E-03	5.21E-03	0	0	34	41	579.3	581.3																													OTU_581.3
+ARISA_582.1	ARISA	5	9.87E-04	2.88E-03	0	0	21	33	581.3	582.1																													OTU_582.1
+ARISA_584	ARISA	5	1.94E-04	5.47E-04	0	0	10	16	582.1	584	Global Ocean Survey (GOS)	xxx	surf	1			204450		Bacteria	Proteobacteria	Alphaproteobacteria	Rickettsiales		Candidatus Pelagibacter	Candidatus Pelagibacter ubique	SAR11	Surface_1												SAR11_584
+ARISA_586.4	ARISA	5	7.66E-05	4.63E-04	0	0	2	7	584.4	586.4																													OTU_586.4
+ARISA_588.6	ARISA	5	2.00E-03	4.04E-03	3.63E-04	5.38E-04	37	57	586.6	588.6	Global Ocean Survey (GOS)	xxx	surf	1			204452		Bacteria	Proteobacteria	Gammaproteobacteria	Alteromonadales	Shewanellaceae	Shewanella	Shewanella sp. ANA-3	Shewanella													Shewan_588.6
+ARISA_589.7	ARISA	5	3.78E-04	1.29E-03	0	0	10	25	588.6	589.7	USC Microbial Observatory	SPOT	surf	1			204456		Bacteria	Cyanobacteria	Chloroplast	Chlorophyta	Mamiellaceae			Chloroplast		chloroplast											Chloro_chloroplast_589.7
+ARISA_591.2	ARISA	5	8.24E-04	2.85E-03	0	0	14	25	589.7	591.2																													OTU_591.2
+ARISA_591.6	ARISA	5	7.15E-05	4.77E-04	0	0	1	7	591.2	591.6																													OTU_591.6
+ARISA_592.1	ARISA	5	4.72E-05	2.19E-04	0	0	3	5	591.6	592.1	WHOLE GENOME	xxx	xxx	1			204457		Bacteria	Proteobacteria	Gammaproteobacteria	Alteromonadales	Shewanellaceae	Shewanella		Shewanella													Shewan_592.1
+ARISA_594.1	ARISA	5	0.01	0.02	2.31E-03	3.42E-03	63	72	592.1	594.1	USC Microbial Observatory	SPOT	surf	1			204458		Bacteria	Bacteroidetes	Flavobacteria					Owenweeksia													Owenwe_594.1
+ARISA_595.8	ARISA	5	7.98E-04	1.86E-03	0	0	20	32	594.1	595.8	Global Ocean Survey (GOS)	xxx	surf	1			204461		Bacteria	SAR406	AB16	Arctic96B-7	A714017	Arctic95A-2		SAR406	Sar406_clade(marine_group_a)												SAR406_595.8
+ARISA_596.8	ARISA	5	5.61E-05	1.95E-04	0	0	2	10	595.8	596.8	Biocomplexity	Pacific (Hawaii)	surf	1			204465		Bacteria	Cyanobacteria	Synechococcophycideae	Synechococcales	Synechococcaceae	Prochlorococcus		Prochlorococcus													Prochl_596.8
+ARISA_597.9	ARISA	5	1.08E-04	7.32E-04	0	0	3	6	596.8	597.9	Global Ocean Survey (GOS)	xxx	surf	2			204463		Bacteria	Proteobacteria	Alphaproteobacteria	Rhodospirillales	Rhodospirillaceae			SAR116													SAR116_597.9
+ARISA_600.6	ARISA	5	2.71E-03	0.01	0	0	11	20	598.6	600.6	USC Microbial Observatory	SPOT	deep	1	1	0	204466	204467	Bacteria	PAUC34f						PAUC34f			Bacteria	SAR406	AB16	Arctic96B-7	A714017	Arctic95A-2		SAR406	Sar406_clade(marine_group_a)		PAUC34_600.6
+ARISA_602.5	ARISA	5	5.18E-04	1.72E-03	0	0	11	20	600.6	602.5	Global Ocean Survey (GOS)	xxx	surf	1			204469		Bacteria	Proteobacteria	Gammaproteobacteria	Alteromonadales	Shewanellaceae	Shewanella		Shewanella													Shewan_602.5
+ARISA_603.5	ARISA	5	8.51E-05	5.95E-04	0	0	2	5	602.5	603.5																													OTU_603.5
+ARISA_604.4	ARISA	5	5.18E-05	2.59E-04	0	0	3	5	603.5	604.4																													OTU_604.4
+ARISA_606.1	ARISA	5	3.83E-04	9.01E-04	0	0	15	25	604.4	606.1																													OTU_606.1
+ARISA_607.4	ARISA	5	8.48E-04	1.68E-03	0	0	26	45	606.1	607.4																													OTU_607.4
+ARISA_609.4	ARISA	5	2.05E-03	2.46E-03	1.24E-03	1.84E-03	56	70	607.4	609.4																													OTU_609.4
+ARISA_611	ARISA	5	6.80E-04	1.66E-03	0	0	19	39	609.4	611																													OTU_611
+ARISA_613.3	ARISA	5	6.82E-04	1.41E-03	0	0	21	43	611.4	613.3	USC Microbial Observatory	SPOT	surf	1			204476		Bacteria	Bacteroidetes	Flavobacteria					NS7													NS7_613.3
+ARISA_614.9	ARISA	5	3.97E-04	6.96E-04	0	0	17	42	613.3	614.9																													OTU_614.9
+ARISA_616.2	ARISA	5	8.80E-04	1.63E-03	0	0	32	46	614.9	616.2	Indian Ocean-RS/JCVI	Indian Ocean	surf	17	2	0	204474	204481	Bacteria	Bacteroidetes	Flavobacteria					Owenweeksia			Bacteria	Cyanobacteria	Synechococcophycideae	Synechococcales	Synechococcaceae	Prochlorococcus		Prochlorococcus			Owenwe_616.2
+ARISA_618.3	ARISA	5	4.26E-03	6.13E-03	2.41E-03	3.58E-03	68	76	616.3	618.3	Biocomplexity	Pacific (Hawaii)	surf	1			204516		Bacteria	Proteobacteria	Gammaproteobacteria	Oceanospirillales	Halomonadaceae	Candidatus Portiera		SAR86	Sar116_clade												SAR86_618.3
+ARISA_618.6	ARISA	5	1.37E-04	4.46E-04	0	0	7	12	618.3	618.6																													OTU_618.6
+ARISA_620.5	ARISA	5	4.48E-03	9.21E-03	1.98E-03	2.94E-03	60	71	618.6	620.5	USC Microbial Observatory	SPOT	mid	1			204517		Bacteria	Proteobacteria	Gammaproteobacteria	Enterobacteriales	Enterobacteriaceae			Cronobacter													Cronob_620.5
+ARISA_622.5	ARISA	5	7.89E-03	0.01	4.06E-03	6.03E-03	77	81	620.5	622.5	USC Microbial Observatory	SPOT	surf	1	1	0	204519	204524	Bacteria	Bacteroidetes	Flavobacteria	Flavobacteriales	Cryomorphaceae			Fluviicola			Bacteria	SAR406	AB16	Arctic96B-7	A714017	ZA3312c		SAR406	Sar406_clade(marine_group_a)		Fluvii_622.5
+ARISA_624.5	ARISA	5	2.37E-03	4.55E-03	0	0	40	48	622.5	624.5	USC Microbial Observatory	SPOT	surf	1			204520		Bacteria	SAR406	AB16	Arctic96B-7	A714017	ZA3312c		SAR406	Sar406_clade(marine_group_a)												SAR406_624.5
+ARISA_625.9	ARISA	5	2.26E-03	4.02E-03	5.99E-04	8.89E-04	48	62	624.5	625.9																													OTU_625.9
+ARISA_627.8	ARISA	5	4.57E-03	6.78E-03	2.92E-03	3.38E-03	76	88	625.9	627.8	USC Microbial Observatory	SPOT	surf	1			204529		Bacteria	SAR406	AB16	Arctic96B-7	A714017	SGSH944		SAR406	Sar406_clade(marine_group_a)												SAR406_627.8
+ARISA_628.6	ARISA	5	6.00E-04	1.13E-03	0	0	21	38	627.8	628.6																													OTU_628.6
+ARISA_630.6	ARISA	5	1.96E-03	2.39E-03	1.07E-03	1.58E-03	58	71	628.6	630.6																													OTU_630.6
+ARISA_632.6	ARISA	5	9.61E-04	1.71E-03	0	0	30	46	630.6	632.6																													OTU_632.6
+ARISA_634.7	ARISA	5	3.51E-03	0.01	0	0	17	27	632.7	634.7	Global Ocean Survey (GOS)	xxx	surf	2			204535		Bacteria	Actinobacteria	Actinobacteria (class)	Actinomycetales	Microbacteriaceae	Candidatus Aquiluna		Microbacteriaceae													Microb_634.7
+ARISA_635.4	ARISA	5	1.09E-04	5.76E-04	0	0	5	8	634.7	635.4																													OTU_635.4
+ARISA_637.2	ARISA	5	2.75E-04	8.40E-04	0	0	8	22	635.4	637.2	Global Ocean Survey (GOS)	xxx	surf	2			204538		Bacteria	Actinobacteria	Actinobacteria (class)	Actinomycetales	Microbacteriaceae	Candidatus Aquiluna	Candidatus Aquiluna rubra	Microbacteriaceae													Microb_637.2
+ARISA_637.9	ARISA	5	6.24E-05	2.36E-04	0	0	2	9	637.2	637.9																													OTU_637.9
+ARISA_639.8	ARISA	5	5.16E-04	4.33E-03	0	0	5	13	637.9	639.8	USC Microbial Observatory	SPOT	surf	1			204542		Bacteria	Bacteroidetes	Flavobacteria					NS9													NS9_639.8
+ARISA_642.6	ARISA	5	2.12E-04	8.14E-04	0	0	7	11	640.6	642.6	USC Microbial Observatory	SPOT	surf	1			204543		Bacteria	Bacteroidetes	Flavobacteria	Flavobacteriales	Cryomorphaceae	Fluviicola		Fluviicola													Fluvii_642.6
+ARISA_643.3	ARISA	5	3.89E-05	2.10E-04	0	0	2	5	642.9	643.3	Global Ocean Survey (GOS)	xxx	surf	1			204546		Bacteria	Proteobacteria	Alphaproteobacteria	Rhodospirillales	Rhodospirillaceae			Defluviicoccus													Defluv_643.3
+ARISA_644.9	ARISA	5	7.47E-04	1.84E-03	0	0	22	39	643.3	644.9	WHOLE GENOME	xxx	deep	1			204549		Bacteria	Proteobacteria	Gammaproteobacteria	Alteromonadales	Shewanellaceae	Shewanella	Shewanella baltica	Shewanella													Shewan_644.9
+ARISA_646.9	ARISA	5	4.55E-03	5.74E-03	3.21E-03	4.25E-03	76	84	644.9	646.9	USC Microbial Observatory	SPOT	surf	2			204550		Bacteria	Bacteroidetes	Flavobacteria	Flavobacteriales	Cryomorphaceae	Fluviicola		Fluviicola													Fluvii_646.9
+ARISA_647.7	ARISA	5	5.67E-04	1.45E-03	0	0	18	30	646.9	647.7																													OTU_647.7
+ARISA_650.2	ARISA	5	3.03E-03	5.89E-03	1.95E-03	2.89E-03	67	78	647.7	650.2	Global Ocean Survey (GOS)	xxx	surf	1			204563		Bacteria	Proteobacteria	Alphaproteobacteria	Rickettsiales		Candidatus Pelagibacter		AEGEAN-169													AEGEAN_650.2
+ARISA_653.1	ARISA	5	7.41E-03	5.86E-03	7.34E-03	5.41E-03	91	92	650.2	653.1	Global Ocean Survey (GOS)	xxx	surf	3	1	1	204565	204569	Bacteria	Proteobacteria	Alphaproteobacteria	Rickettsiales		Candidatus Pelagibacter		AEGEAN-169			Bacteria	Bacteroidetes	Flavobacteria					Owenweeksia			AEGEAN_653.1
+ARISA_654.9	ARISA	5	6.23E-03	7.33E-03	4.82E-03	6.59E-03	80	83	653.1	654.9	USC Microbial Observatory	SPOT	surf	1	1	0	204571	204568	Bacteria	Bacteroidetes	Flavobacteria					Owenweeksia			Bacteria	Proteobacteria	Alphaproteobacteria	Rhodospirillales	Rhodospirillaceae			SAR116	Sar116_clade		Owenwe_654.9
+ARISA_657.6	ARISA	5	4.75E-03	4.94E-03	4.21E-03	6.24E-03	67	67	654.9	657.6	USC Microbial Observatory	SPOT	surf	2	1	0	204574	204582	Bacteria	Proteobacteria	Alphaproteobacteria	Rhodospirillales	Rhodospirillaceae			SAR116			Bacteria	Proteobacteria	Gammaproteobacteria	Oceanospirillales	Halomonadaceae	Candidatus Portiera		SAR86	Sar86_clade		SAR116_657.6
+ARISA_659	ARISA	5	4.26E-03	9.88E-03	0	0	32	32	657.6	659	USC Microbial Observatory	SPOT	surf	1			204585		Bacteria	Proteobacteria	Alphaproteobacteria	Rhodospirillales	Rhodospirillaceae			SAR116													SAR116_659
+ARISA_662	ARISA	5	0.05	0.03	0.05	0.03	94	94	659	662	USC Microbial Observatory	SPOT	surf	3	1	1	204589	204596	Bacteria	Proteobacteria	Alphaproteobacteria	Rickettsiales		Candidatus Pelagibacter		AEGEAN-169			Bacteria	Proteobacteria	Alphaproteobacteria	Rickettsiales		Candidatus Pelagibacter	Candidatus Pelagibacter ubique	SAR11	Surface_1		AEGEAN_662
+ARISA_662.8	ARISA	5	3.87E-03	9.39E-03	0	0	25	25	662	662.8																													OTU_662.8
+ARISA_663.4	ARISA	5	9.83E-04	3.30E-03	0	0	11	11	662.8	663.4	Global Ocean Survey (GOS)	xxx	surf	1			204603		Bacteria	Proteobacteria	Alphaproteobacteria	Rickettsiales		Candidatus Pelagibacter	Candidatus Pelagibacter ubique	SAR11	Surface_1												SAR11_663.4
+ARISA_666.4	ARISA	5	0.08	0.06	0.08	0.04	98	98	663.4	666.4	USC Microbial Observatory	SPOT	surf	7			204600		Bacteria	Proteobacteria	Alphaproteobacteria	Rickettsiales		Candidatus Pelagibacter	Candidatus Pelagibacter ubique	SAR11	Surface_1												SAR11_666.4
+ARISA_667.6	ARISA	5	0.01	0.02	0	0	52	52	666.4	667.6	USC Microbial Observatory	SPOT	surf	1			204632		Bacteria	Proteobacteria	Alphaproteobacteria	Rickettsiales		Candidatus Pelagibacter		SAR11													SAR11_667.6
+ARISA_670.5	ARISA	5	0.04	0.02	0.05	0.03	100	100	667.6	670.5	USC Microbial Observatory	SPOT	surf	8			204644		Bacteria	Proteobacteria	Alphaproteobacteria	Rickettsiales		Candidatus Pelagibacter	Candidatus Pelagibacter ubique	SAR11	Surface_1												SAR11_670.5
+ARISA_671.2	ARISA	5	1.07E-03	3.67E-03	0	0	13	13	670.5	671.2																													OTU_671.2
+ARISA_674.2	ARISA	5	8.46E-03	0.01	3.36E-03	4.99E-03	61	64	671.2	674.2	USC Microbial Observatory	SPOT	surf	2	1	0	204656	204662	Bacteria	Proteobacteria	Alphaproteobacteria	Rickettsiales		Candidatus Pelagibacter	Candidatus Pelagibacter ubique	SAR11	Surface_1		Bacteria	Proteobacteria	Alphaproteobacteria	Rickettsiales		Candidatus Pelagibacter		SAR11	Surface_3		SAR11_674.2
+ARISA_676.9	ARISA	5	0.01	0.01	9.28E-03	8.59E-03	90	92	674.2	676.9	Global Ocean Survey (GOS)	xxx	surf	2			204667		Bacteria	Proteobacteria	Alphaproteobacteria	Rickettsiales		Candidatus Pelagibacter		AEGEAN-169													AEGEAN_676.9
+ARISA_679.4	ARISA	5	9.32E-03	0.01	2.41E-03	3.58E-03	58	59	676.9	679.4	USC Microbial Observatory	SPOT	surf	1	1	0	204669	204677	Bacteria	Proteobacteria	Alphaproteobacteria	Rickettsiales		Candidatus Pelagibacter		AEGEAN-169			Bacteria	Proteobacteria	Alphaproteobacteria	Rickettsiales		Candidatus Pelagibacter	Candidatus Pelagibacter ubique	SAR11	Surface_1		AEGEAN_679.4
+ARISA_682.4	ARISA	5	0.03	0.02	0.02	0.02	89	89	679.4	682.4	Global Ocean Survey (GOS)	xxx	surf	7	2	1	204684	204682	Bacteria	Proteobacteria	Alphaproteobacteria	Rickettsiales		Candidatus Pelagibacter		SAR11			Bacteria	Proteobacteria	Betaproteobacteria	Burkholderiales	Burkholderiaceae	Burkholderia		Burkholderia			SAR11_682.4
+ARISA_683.9	ARISA	5	2.92E-03	5.76E-03	0	0	33	33	682.4	683.9	Indian Ocean-RS/JCVI	Indian Ocean	surf	1			204694		Bacteria	Bacteroidetes	Flavobacteria					NS9													NS9_683.9
+ARISA_686.9	ARISA	5	0.04	0.03	0.04	0.03	95	95	683.9	686.9	USC Microbial Observatory	SPOT	surf	6	1	0	204702	204703	Bacteria	Proteobacteria	Alphaproteobacteria	Rickettsiales		Candidatus Pelagibacter	Candidatus Pelagibacter ubique	SAR11	Surface_1		Bacteria	Proteobacteria	Alphaproteobacteria	Rhodospirillales	Rhodospirillaceae			SAR116			SAR11_686.9
+ARISA_689.8	ARISA	5	0.01	0.01	0.01	0.01	78	78	686.9	689.8	USC Microbial Observatory	SPOT	surf	2	1	1	204716	204711	Bacteria	Proteobacteria	Alphaproteobacteria	Rhodospirillales	Rhodospirillaceae			SAR116			Bacteria	Proteobacteria	Alphaproteobacteria	Rickettsiales		Candidatus Pelagibacter		SAR11			SAR116_689.8
+ARISA_692.2	ARISA	5	4.43E-03	5.54E-03	3.92E-03	5.81E-03	69	72	689.8	692.2	USC Microbial Observatory	SPOT	surf	1			204720		Bacteria	Proteobacteria	Alphaproteobacteria	Rickettsiales		Candidatus Pelagibacter		SAR11	Surface_1												SAR11_692.2
+ARISA_694.1	ARISA	5	1.95E-03	6.55E-03	0	0	38	44	692.2	694.1	Global Ocean Survey (GOS)	xxx	surf	1			204724		Bacteria	Proteobacteria	Alphaproteobacteria	Rickettsiales		Candidatus Pelagibacter		SAR11													SAR11_694.1
+ARISA_697	ARISA	5	8.21E-04	1.33E-03	0	0	32	40	694.1	697	Biocomplexity	Atlantic (Amazon River Plume)	surf	1			204725		Bacteria	SAR406	AB16	Arctic96B-7	A714017	SGSH944		SAR406	Sar406_clade(marine_group_a)												SAR406_697
+ARISA_698.2	ARISA	5	3.47E-04	6.46E-04	0	0	16	31	697	698.2	WHOLE GENOME	xxx	deep	1			204731		Bacteria	Proteobacteria	Gammaproteobacteria	Alteromonadales	Shewanellaceae	Shewanella	Shewanella baltica	Shewanella													Shewan_698.2
+ARISA_700.7	ARISA	5	2.11E-03	3.00E-03	3.02E-04	4.47E-04	46	54	698.2	700.7	Indian Ocean-RS/JCVI	Indian Ocean	surf	1			204734		Bacteria	Proteobacteria	Gammaproteobacteria	Oceanospirillales	Halomonadaceae	Candidatus Portiera		SAR86													SAR86_700.7
+ARISA_703.7	ARISA	5	7.71E-03	0.01	5.12E-03	6.14E-03	79	87	700.7	703.7	USC Microbial Observatory	SPOT	surf	2	1	0	204738	204740	Bacteria	Proteobacteria	Alphaproteobacteria	Rickettsiales		Candidatus Pelagibacter		SAR11	Surface_4		Bacteria	Proteobacteria	Alphaproteobacteria	Rhodospirillales	Rhodospirillaceae			SAR116			SAR11_703.7
+ARISA_704.7	ARISA	5	7.27E-04	1.61E-03	0	0	21	30	703.7	704.7																													OTU_704.7
+ARISA_706.4	ARISA	5	6.57E-04	1.31E-03	0	0	24	34	704.7	706.4	Global Ocean Survey (GOS)	xxx	surf	1			204741		Bacteria	Actinobacteria	Actinobacteria (class)	Actinomycetales	Microbacteriaceae	Candidatus Rhodoluna	Candidatus Rhodoluna lacicola	Microbacteriaceae													Microb_706.4
+ARISA_709.4	ARISA	5	4.50E-03	0.01	4.54E-04	6.73E-04	43	56	706.4	709.4	USC Microbial Observatory	SPOT	surf	1	1	2	204748	204752	Bacteria	Bacteroidetes	Flavobacteria	Flavobacteriales	Flavobacteriaceae			NS2b			Bacteria	Proteobacteria	Alphaproteobacteria	Rickettsiales		Candidatus Pelagibacter		SAR11	Surface_2		NS2b_709.4
+ARISA_712.4	ARISA	5	1.60E-03	2.44E-03	0	0	44	48	709.4	712.4	USC Microbial Observatory	SPOT	surf	2			204754		Bacteria	Proteobacteria	Alphaproteobacteria	Rickettsiales		Candidatus Pelagibacter		SAR11	Surface_2												SAR11_712.4
+ARISA_713.9	ARISA	5	1.62E-03	2.38E-03	7.88E-04	1.17E-03	46	56	712.4	713.9	USC Microbial Observatory	SPOT	surf	1			204763		Bacteria	Proteobacteria	Alphaproteobacteria	Rickettsiales		Candidatus Pelagibacter		SAR11	Surface_2												SAR11_713.9
+ARISA_716.8	ARISA	5	5.94E-03	8.94E-03	3.76E-03	4.59E-03	79	87	713.9	716.8	Global Ocean Survey (GOS)	xxx	surf	2			204764		Bacteria	Proteobacteria	Alphaproteobacteria	Rickettsiales		Candidatus Pelagibacter		SAR11	Surface_2												SAR11_716.8
+ARISA_718.4	ARISA	5	1.97E-03	3.43E-03	0	0	43	50	716.8	718.4	USC Microbial Observatory	SPOT	surf	3			204766		Bacteria	Proteobacteria	Alphaproteobacteria	Rickettsiales		Candidatus Pelagibacter		SAR11	Surface_2												SAR11_718.4
+ARISA_721.2	ARISA	5	1.63E-03	2.94E-03	0	0	32	43	718.4	721.2	USC Microbial Observatory	SPOT	surf	1			204770		Bacteria	Proteobacteria	Alphaproteobacteria	Rickettsiales		Candidatus Pelagibacter		SAR11	Surface_2												SAR11_721.2
+ARISA_724.3	ARISA	5	2.67E-03	4.75E-03	3.91E-04	5.80E-04	47	55	721.3	724.3	USC Microbial Observatory	SPOT	surf	1			204774		Bacteria	Bacteroidetes	Flavobacteria	Flavobacteriales	Flavobacteriaceae			NS2b													NS2b_724.3
+ARISA_726.4	ARISA	5	5.40E-03	6.83E-03	2.99E-03	4.44E-03	73	79	724.3	726.4	USC Microbial Observatory	SPOT	surf	4			204777		Bacteria	Bacteroidetes	Flavobacteria	Flavobacteriales	Flavobacteriaceae			NS2b													NS2b_726.4
+ARISA_729.4	ARISA	5	0.01	0.01	8.59E-03	5.66E-03	90	92	726.4	729.4	USC Microbial Observatory	SPOT	surf	1			204788		Bacteria	Bacteroidetes	Flavobacteria	Flavobacteriales	Flavobacteriaceae			NS4													NS4_729.4
+ARISA_732.2	ARISA	5	3.11E-03	0.01	0	0	26	38	729.4	732.2	Indian Ocean-RS/JCVI	Indian Ocean	surf	1			204803		Bacteria	Bacteroidetes	Flavobacteria					NS9													NS9_732.2
+ARISA_735.5	ARISA	5	7.27E-04	1.99E-03	0	0	18	27	732.5	735.5	Global Ocean Survey (GOS)	xxx	surf	1			204811		Bacteria	Proteobacteria	Alphaproteobacteria	Rickettsiales		Candidatus Pelagibacter		SAR11													SAR11_735.5
+ARISA_738.8	ARISA	5	2.26E-03	3.72E-03	5.19E-04	7.69E-04	47	59	735.8	738.8	USC Microbial Observatory	SPOT	surf	1			204825		Bacteria	Bacteroidetes	Flavobacteria	Flavobacteriales	Flavobacteriaceae			NS2b													NS2b_738.8
+ARISA_741.8	ARISA	5	4.49E-03	9.61E-03	1.53E-03	2.27E-03	60	70	738.8	741.8	USC Microbial Observatory	SPOT	surf	4	1	0	204831	204835	Bacteria	Bacteroidetes	Flavobacteria	Flavobacteriales	Flavobacteriaceae			NS2b			Bacteria	Verrucomicrobia	Opitutae	Puniceicoccales	Puniceicoccaceae			MB11C04			NS2b_741.8
+ARISA_742.6	ARISA	5	4.89E-04	2.61E-03	0	0	7	13	741.8	742.6																													OTU_742.6
+ARISA_744.7	ARISA	5	6.54E-04	1.73E-03	0	0	21	27	742.6	744.7	USC Microbial Observatory	SPOT	surf	1			204849		Bacteria	Proteobacteria	Alphaproteobacteria	Rhodospirillales	Rhodospirillaceae			SAR116													SAR116_744.7
+ARISA_747.3	ARISA	5	1.70E-03	2.49E-03	5.24E-04	7.77E-04	42	58	744.7	747.3	USC Microbial Observatory	SPOT	surf	1	1	0	204852	204858	Bacteria	Bacteroidetes	Flavobacteria	Flavobacteriales	Flavobacteriaceae			NS5			Bacteria	Proteobacteria	Gammaproteobacteria	Oceanospirillales	Alteromonadaceae	HTCC2207		SAR92	Sar92_clade		NS5_747.3
+ARISA_749.6	ARISA	5	2.20E-03	3.28E-03	4.11E-04	6.09E-04	49	53	747.3	749.6	USC Microbial Observatory	SPOT	surf	1			204860		Bacteria	Bacteroidetes	Flavobacteria	Flavobacteriales	Flavobacteriaceae			NS5													NS5_749.6
+ARISA_750.4	ARISA	5	1.95E-04	4.62E-04	0	0	8	21	749.6	750.4	Biocomplexity	Atlantic (Amazon River Plume)	surf	1			204865		Bacteria	Bacteroidetes	Flavobacteria	Flavobacteriales	Flavobacteriaceae			NS5													NS5_750.4
+ARISA_752.3	ARISA	5	4.83E-04	1.29E-03	0	0	16	28	750.4	752.3	WHOLE GENOME	xxx	xxx	1			204866		Bacteria	Cyanobacteria	Oscillatoriophycideae	Oscillatoriales	Phormidiaceae	Trichodesmium	Trichodesmium erythraeum	Trichodesmium													Tricho_752.3
+ARISA_755.2	ARISA	5	2.32E-03	4.20E-03	5.62E-04	8.33E-04	47	55	752.3	755.2																													OTU_755.2
+ARISA_756.5	ARISA	5	4.29E-04	1.51E-03	0	0	10	18	755.4	756.5																													OTU_756.5
+ARISA_758.3	ARISA	5	5.34E-04	1.16E-03	0	0	21	30	756.5	758.3																													OTU_758.3
+ARISA_759.8	ARISA	5	8.04E-04	1.50E-03	0	0	29	41	758.3	759.8	Global Ocean Survey (GOS)	xxx	surf	4			204867		Bacteria	Proteobacteria	Gammaproteobacteria					ZD0417													ZD0417_759.8
+ARISA_762.8	ARISA	5	5.14E-03	5.97E-03	3.71E-03	5.50E-03	71	81	759.8	762.8	USC Microbial Observatory	SPOT	surf	1	1	0	204873	204871	Bacteria	Bacteroidetes	Flavobacteria	Flavobacteriales	Flavobacteriaceae			Formosa			Bacteria	Proteobacteria	Gammaproteobacteria	Oceanospirillales	Alteromonadaceae	HTCC2207		SAR92	Sar92_clade		Formos_762.8
+ARISA_763.9	ARISA	5	5.18E-04	1.23E-03	0	0	14	27	762.8	763.9																													OTU_763.9
+ARISA_764.5	ARISA	5	6.69E-05	3.15E-04	0	0	3	6	763.9	764.5																													OTU_764.5
+ARISA_765.7	ARISA	5	2.28E-04	7.15E-04	0	0	10	16	764.8	765.7	USC Microbial Observatory	SPOT	surf	1			204875		Bacteria	Proteobacteria	Alphaproteobacteria	Rhodospirillales	Rhodospirillaceae			SAR116	Sar116_clade												SAR116_765.7
+ARISA_767.5	ARISA	5	5.51E-04	1.76E-03	0	0	14	21	765.7	767.5	USC Microbial Observatory	SPOT	surf	1			204878		Bacteria	Proteobacteria	Gammaproteobacteria	Oceanospirillales	ZA3412c			OM182	Om182_clade												OM182_767.5
+ARISA_770.5	ARISA	5	7.71E-03	0.01	0	0	37	44	767.5	770.5	USC Microbial Observatory	SPOT	surf	1			204892		Bacteria	Bacteroidetes	Flavobacteria	Flavobacteriales	Flavobacteriaceae			Formosa													Formos_770.5
+ARISA_773.1	ARISA	5	2.74E-03	8.65E-03	0	0	27	37	770.5	773.1	USC Microbial Observatory	SPOT	surf	1			204902		Bacteria	Bacteroidetes	Flavobacteria	Flavobacteriales	Flavobacteriaceae			Formosa													Formos_773.1
+ARISA_776.1	ARISA	5	6.88E-03	0.03	0	0	35	43	773.1	776.1	Biocomplexity	Atlantic (Amazon River Plume)	surf	1			204915		Bacteria	Bacteroidetes	Sphingobacteria	Sphingobacteriales				Marinoscillum													Marino_776.1
+ARISA_779.2	ARISA	5	6.36E-03	0.04	6.16E-04	9.14E-04	45	64	776.2	779.2	Global Ocean Survey (GOS)	xxx	surf	1			204917		Bacteria	Bacteroidetes	Sphingobacteria	Sphingobacteriales				Marinoscillum													Marino_779.2
+ARISA_781.3	ARISA	5	3.46E-04	8.21E-04	0	0	15	24	779.7	781.3																													OTU_781.3
+ARISA_782	ARISA	5	1.71E-04	6.79E-04	0	0	5	12	781.3	782																													OTU_782
+ARISA_785	ARISA	5	6.96E-04	1.64E-03	0	0	21	31	782	785	USC Microbial Observatory	SPOT	surf	2			204918		Bacteria	Bacteroidetes	Flavobacteria	Flavobacteriales	Flavobacteriaceae			Formosa													Formos_785
+ARISA_787.7	ARISA	5	9.80E-04	3.46E-03	0	0	26	47	785	787.7	USC Microbial Observatory	SPOT	surf	2			204919		Bacteria	Proteobacteria	Gammaproteobacteria					Thiothrix													Thioth_787.7
+ARISA_788.5	ARISA	5	1.19E-04	4.90E-04	0	0	4	12	787.7	788.5																													OTU_788.5
+ARISA_791.4	ARISA	5	1.99E-03	8.16E-03	0	0	23	44	788.5	791.4	Global Ocean Survey (GOS)	xxx	surf	1	1	0	204921	204924	Bacteria	Bacteroidetes	Sphingobacteria	Sphingobacteriales				Sediminibacterium			Bacteria	Verrucomicrobia	Opitutae	Puniceicoccales	Puniceicoccaceae			vadinHA64			Sedimi_791.4
+ARISA_792.6	ARISA	5	1.90E-04	7.56E-04	0	0	7	15	791.4	792.6																													OTU_792.6
+ARISA_795	ARISA	5	1.17E-03	3.01E-03	0	0	23	41	792.6	795	Biocomplexity	Pacific (Hawaii)	surf	1			204931		Bacteria	Cyanobacteria	Synechococcophycideae	Synechococcales	Synechococcaceae	Prochlorococcus		Prochlorococcus													Prochl_795
+ARISA_795.9	ARISA	5	1.86E-04	5.36E-04	0	0	9	17	795	795.9	Global Ocean Survey (GOS)	xxx	surf	2			204929		Bacteria	Proteobacteria	Alphaproteobacteria	Rhizobiales	Phyllobacteriaceae			OCS116	Ocs116_clade												OCS116_795.9
+ARISA_798.7	ARISA	5	1.84E-03	8.10E-03	0	0	22	38	795.9	798.7																													OTU_798.7
+ARISA_800.9	ARISA	5	9.06E-04	4.54E-03	0	0	11	17	798.7	800.9	WHOLE GENOME	xxx	xxx	1			204933		Bacteria	Bacteroidetes	Flavobacteria	Flavobacteriales	Flavobacteriaceae			Maribacter													Mariba_800.9
+ARISA_801.8	ARISA	5	5.12E-05	3.91E-04	0	0	1	5	800.9	801.8																													OTU_801.8
+ARISA_802.9	ARISA	5	1.63E-04	7.36E-04	0	0	3	14	801.8	802.9	WHOLE GENOME	xxx	xxx	1	1	0	204935	204934	Bacteria	Bacteroidetes	Flavobacteria	Flavobacteriales	Flavobacteriaceae			Maribacter			Bacteria	Proteobacteria	Gammaproteobacteria	Oceanospirillales	Alcanivoracaceae	Alcanivorax	Alcanivorax borkumensis	Alcanivorax			Mariba_802.9
+ARISA_803.5	ARISA	5	5.63E-05	3.19E-04	0	0	2	5	802.9	803.5																													OTU_803.5
+ARISA_804.9	ARISA	5	5.07E-04	1.70E-03	0	0	11	21	803.5	804.9																													OTU_804.9
+ARISA_808	ARISA	5	1.61E-03	5.71E-03	0	0	22	31	805.1	808																													OTU_808
+ARISA_816.5	ARISA	5	1.25E-04	4.75E-04	0	0	4	14	813.5	816.5	Biocomplexity	Pacific (Hawaii)	surf	5	1	3	204955	204956	Bacteria	Cyanobacteria	Synechococcophycideae	Synechococcales	Synechococcaceae	Prochlorococcus		Prochlorococcus			Bacteria	Actinobacteria	Actinobacteria (class)	koll13				OCS155			Prochl_816.5
+ARISA_817.6	ARISA	5	2.92E-05	1.59E-04	0	0	2	5	817.2	817.6	CYANOBACTERIA_ITS	xxx	xxx	1			204952		Bacteria	Cyanobacteria	Synechococcophycideae	Synechococcales	Synechococcaceae	Prochlorococcus				HL(II)											Prochl_HL(II)_817.6
+ARISA_820.5	ARISA	5	3.71E-04	6.66E-04	0	0	18	35	817.6	820.5	CYANOBACTERIA_ITS	xxx	xxx	2			204962		Bacteria	Cyanobacteria	Synechococcophycideae	Synechococcales	Synechococcaceae	Prochlorococcus				HL(II)											Prochl_HL(II)_820.5
+ARISA_823.1	ARISA	5	6.02E-04	1.35E-03	0	0	19	31	820.5	823.1	CYANOBACTERIA_ITS	xxx	xxx	4			204984		Bacteria	Cyanobacteria	Synechococcophycideae	Synechococcales	Synechococcaceae	Prochlorococcus				HL(II)											Prochl_HL(II)_823.1
+ARISA_825.8	ARISA	5	5.57E-04	1.07E-03	0	0	20	36	823.1	825.8	USC Microbial Observatory	SPOT	surf	2			205098		Bacteria	Cyanobacteria	Synechococcophycideae	Synechococcales	Synechococcaceae	Prochlorococcus		Prochlorococcus		HL(I)											Prochl_HL(I)_825.8
+ARISA_828.8	ARISA	5	0.02	0.04	4.01E-03	5.94E-03	72	82	825.8	828.8	USC Microbial Observatory	SPOT	surf	5			205094		Bacteria	Cyanobacteria	Synechococcophycideae	Synechococcales	Synechococcaceae	Prochlorococcus		Prochlorococcus		HL(I)											Prochl_HL(I)_828.8
+ARISA_831.8	ARISA	5	9.48E-03	0.01	1.09E-03	1.61E-03	55	62	828.8	831.8	USC Microbial Observatory	SPOT	surf	1			205107		Bacteria	Cyanobacteria	Synechococcophycideae	Synechococcales	Synechococcaceae	Prochlorococcus		Prochlorococcus		HL(I)											Prochl_HL(I)_831.8
+ARISA_833.8	ARISA	5	9.05E-04	3.56E-03	0	0	16	25	831.8	833.8	USC Microbial Observatory	SPOT	surf	1			205112		Bacteria	Proteobacteria	Gammaproteobacteria	Thiotrichales	Piscirickettsiaceae			Piscirickettsiaceae													Piscir_833.8
+ARISA_836.8	ARISA	5	2.99E-03	4.53E-03	1.18E-03	1.74E-03	54	62	833.8	836.8	USC Microbial Observatory	SPOT	surf	1			205114		Bacteria	Proteobacteria	Betaproteobacteria	Methylophilales	Methylophilaceae			OM43	Om43_clade												OM43_836.8
+ARISA_837.1	ARISA	5	1.02E-04	4.52E-04	0	0	5	6	836.8	837.1																													OTU_837.1
+ARISA_840	ARISA	5	3.82E-03	4.63E-03	2.53E-03	3.75E-03	64	72	837.1	840	USC Microbial Observatory	SPOT	surf	2	2	2	205116	205121	Bacteria	Proteobacteria	Betaproteobacteria	Rhodocyclales				Thiobacillus			Bacteria	Proteobacteria	Betaproteobacteria	Methylophilales	Methylophilaceae			OM43	Om43_clade		Thioba_840
+ARISA_843	ARISA	5	1.25E-03	2.17E-03	0	0	36	47	840	843	USC Microbial Observatory	SPOT	surf	1			205129		Bacteria	Proteobacteria	Gammaproteobacteria	Thiotrichales	Piscirickettsiaceae			Piscirickettsiaceae													Piscir_843
+ARISA_846	ARISA	5	7.21E-04	1.91E-03	0	0	19	34	843	846																													OTU_846
+ARISA_847.4	ARISA	5	2.20E-04	9.01E-04	0	0	5	15	846.2	847.4	USC Microbial Observatory	SPOT	surf	1			205133		Bacteria	Proteobacteria	Betaproteobacteria	Methylophilales	Methylophilaceae			OM43	Om43_clade												OM43_847.4
+ARISA_848.9	ARISA	5	2.05E-04	5.60E-04	0	0	8	21	847.7	848.9	USC Microbial Observatory	SPOT	surf	1			205135		Bacteria	Proteobacteria	Gammaproteobacteria	Oceanospirillales	SUP05			ZD0405													ZD0405_848.9
+ARISA_852.1	ARISA	5	1.86E-03	4.75E-03	0	0	32	47	849.1	852.1	Global Ocean Survey (GOS)	xxx	surf	3			205136		Bacteria	Proteobacteria	Alphaproteobacteria	Rhizobiales	Phyllobacteriaceae			OCS116													OCS116_852.1
+ARISA_854.8	ARISA	5	3.36E-03	9.32E-03	3.95E-04	5.86E-04	41	61	852.1	854.8																													OTU_854.8
+ARISA_856.6	ARISA	5	3.38E-03	6.35E-03	1.08E-03	1.61E-03	57	69	854.8	856.6	USC Microbial Observatory	SPOT	surf	1			205145		Bacteria	Bacteroidetes	Flavobacteria	Flavobacteriales	Flavobacteriaceae			Flavobacteriaceae													Flavob_856.6
+ARISA_857.1	ARISA	5	1.52E-04	6.46E-04	0	0	5	11	856.6	857.1	WHOLE GENOME	xxx	deep	1			205143		Bacteria	Proteobacteria	Gammaproteobacteria	Vibrionales	Vibrionaceae	Photobacterium		Photobacterium													Photob_857.1
+ARISA_859.8	ARISA	5	1.63E-03	4.72E-03	0	0	35	47	857.1	859.8	USC Microbial Observatory	SPOT	surf	1			205146		Bacteria	Proteobacteria	Alphaproteobacteria	Rhizobiales	Phyllobacteriaceae			OCS116	Ocs116_clade												OCS116_859.8
+ARISA_860.4	ARISA	5	4.40E-05	2.44E-04	0	0	1	6	859.8	860.4																													OTU_860.4
+ARISA_860.9	ARISA	5	7.52E-05	5.38E-04	0	0	1	7	860.4	860.9																													OTU_860.9
+ARISA_863.9	ARISA	5	6.02E-04	1.70E-03	0	0	14	33	860.9	863.9																													OTU_863.9
+ARISA_865.9	ARISA	5	9.83E-05	3.88E-04	0	0	3	12	863.9	865.9	USC Microbial Observatory	SPOT	deep	1			205147		Bacteria	Proteobacteria	Gammaproteobacteria	Oceanospirillales	SUP05			ZD0405													ZD0405_865.9
+ARISA_868.8	ARISA	5	2.62E-03	0.01	0	0	15	19	865.9	868.8	WHOLE GENOME	xxx	xxx	1			205148		Bacteria	Proteobacteria	Gammaproteobacteria	Alteromonadales	Shewanellaceae	Shewanella		Shewanella													Shewan_868.8
+ARISA_871.5	ARISA	5	6.27E-04	2.18E-03	0	0	10	14	868.8	871.5	Biocomplexity	Atlantic (Amazon River Plume)	surf	1			205151		Bacteria	Actinobacteria	Actinobacteria (class)	koll13				OCS155													OCS155_871.5
+ARISA_874	ARISA	5	3.02E-04	1.23E-03	0	0	6	16	871.5	874	Biocomplexity	Atlantic (Amazon River Plume)	surf	1	1	1	205157	205156	Bacteria	Bacteroidetes	Flavobacteria	Flavobacteriales	Flavobacteriaceae						Bacteria	Cyanobacteria	Synechococcophycideae	Synechococcales	Synechococcaceae	Prochlorococcus		Cyanobium			OTU_874
+ARISA_874.7	ARISA	5	3.41E-05	1.59E-04	0	0	1	6	874	874.7																													OTU_874.7
+ARISA_877.9	ARISA	5	6.38E-05	3.07E-04	0	0	2	8	874.9	877.9	Indian Ocean-RS/JCVI	Indian Ocean	surf	1			205160		Bacteria	Actinobacteria	Actinobacteria (class)	koll13				OCS155													OCS155_877.9
+ARISA_880.7	ARISA	5	1.47E-04	6.96E-04	0	0	3	13	877.9	880.7	Global Ocean Survey (GOS)	xxx	xxx	2			205158		Bacteria	Proteobacteria	Alphaproteobacteria	Rhodobacterales	Rhodobacteraceae			Rhodobacteraceae													Rhodob_880.7
+ARISA_881.4	ARISA	5	7.35E-05	2.90E-04	0	0	2	11	880.7	881.4																													OTU_881.4
+ARISA_884.3	ARISA	5	9.13E-04	1.99E-03	0	0	25	40	881.4	884.3																													OTU_884.3
+ARISA_884.8	ARISA	5	1.47E-04	4.62E-04	0	0	7	14	884.3	884.8	WHOLE GENOME	xxx	xxx	1			205161		Bacteria	Cyanobacteria	Synechococcophycideae	Synechococcales	Synechococcaceae	Prochlorococcus		Synechococcus													Synech_884.8
+ARISA_887.8	ARISA	5	1.01E-03	1.76E-03	2.43E-04	3.60E-04	33	54	884.8	887.8	USC Microbial Observatory	SPOT	surf	1			205164		Bacteria	Proteobacteria	Alphaproteobacteria	Rhodospirillales	Rhodospirillaceae			OM75	Om75_clade												OM75_887.8
+ARISA_889.2	ARISA	5	2.53E-04	7.43E-04	0	0	8	22	887.8	889.2	Global Ocean Survey (GOS)	xxx	surf	1			205162		Bacteria	Proteobacteria	Alphaproteobacteria	Rhodospirillales	Rhodospirillaceae			OM75	Om75_clade												OM75_889.2
+ARISA_891.9	ARISA	5	3.84E-04	9.59E-04	0	0	14	28	889.2	891.9	Global Ocean Survey (GOS)	xxx	surf	1			205166		Bacteria	Actinobacteria	Actinobacteria (class)	koll13				OCS155													OCS155_891.9
+ARISA_895.3	ARISA	5	1.63E-04	6.38E-04	0	0	4	17	892.7	895.3																													OTU_895.3
+ARISA_897.8	ARISA	5	1.49E-04	5.33E-04	0	0	4	15	895.3	897.8	USC Microbial Observatory	SPOT	surf	1			205170		Bacteria	Proteobacteria	Alphaproteobacteria	Rhodobacterales	Rhodobacteraceae			Rhodobacteraceae													Rhodob_897.8
+ARISA_902.5	ARISA	5	1.77E-04	7.39E-04	0	0	5	11	897.8	902.5	Biocomplexity	Pacific (Hawaii)	surf	1			205171		Bacteria	Cyanobacteria	Synechococcophycideae	Synechococcales	Synechococcaceae	Prochlorococcus		Prochlorococcus	Sar86_clade												Prochl_902.5
+ARISA_907.8	ARISA	5	1.63E-03	2.31E-03	7.81E-04	1.16E-03	45	67	902.8	907.8	USC Microbial Observatory	SPOT	surf	1	1	0	205176	205174	Bacteria	Cyanobacteria	Synechococcophycideae	Synechococcales	Synechococcaceae	Prochlorococcus		Prochlorococcus		LL(IV)	Bacteria	Proteobacteria	Gammaproteobacteria	Oceanospirillales	OM60			OM60(NOR5)	Om60(nor5)_clade		Prochl_LL(IV)_907.8
+ARISA_912.5	ARISA	5	7.13E-04	1.61E-03	0	0	19	40	907.8	912.5	CYANOBACTERIA_ITS	xxx	xxx	1			205178		Bacteria	Cyanobacteria	Synechococcophycideae	Synechococcales	Synechococcaceae	Prochlorococcus				LL(I)											Prochl_LL(I)_912.5
+ARISA_915.5	ARISA	5	1.66E-04	8.71E-04	0	0	3	11	912.5	915.5																													OTU_915.5
+ARISA_920.6	ARISA	5	1.26E-04	5.69E-04	0	0	4	13	915.9	920.6	USC Microbial Observatory	SPOT	surf	1			205185		Bacteria	Proteobacteria	Gammaproteobacteria	Oceanospirillales	HTCC2188			Pseudospirillum													Pseudo_920.6
+ARISA_924.9	ARISA	5	6.60E-05	3.51E-04	0	0	3	5	920.6	924.9																													OTU_924.9
+ARISA_929	ARISA	5	2.08E-04	8.95E-04	0	0	6	12	924.9	929	USC Microbial Observatory	SPOT	surf	1			205187		Bacteria	Proteobacteria	Gammaproteobacteria	Oceanospirillales	OM60			OM60(NOR5)	Om60(nor5)_clade												OM60(N_929
+ARISA_933.7	ARISA	5	5.38E-04	1.60E-03	0	0	16	25	929	933.7	Biocomplexity	Atlantic (Amazon River Plume)	surf	1			205191		Bacteria	Cyanobacteria	Synechococcophycideae	Synechococcales	Synechococcaceae	Prochlorococcus		Prochlorococcus													Prochl_933.7
+ARISA_937.8	ARISA	5	4.44E-04	1.43E-03	0	0	10	28	933.7	937.8	USC Microbial Observatory	SPOT	surf	1	1	0	205190	205188	Bacteria	Proteobacteria	Gammaproteobacteria	Oceanospirillales	HTCC2188			Pseudospirillum			Bacteria	Proteobacteria	Gammaproteobacteria	Oceanospirillales	OM60			OM60(NOR5)	Om60(nor5)_clade		Pseudo_937.8
+ARISA_939.4	ARISA	5	1.60E-04	7.68E-04	0	0	5	13	937.8	939.4																													OTU_939.4
+ARISA_943.3	ARISA	5	1.29E-03	2.42E-03	0	0	33	52	939.4	943.3	Indian Ocean-RS/JCVI	Indian Ocean	surf	1			205196		Bacteria	Bacteroidetes	Flavobacteria					NS9													NS9_943.3
+ARISA_946.3	ARISA	5	1.47E-03	2.02E-03	7.73E-04	1.15E-03	47	70	943.3	946.3	USC Microbial Observatory	SPOT	surf	1	1	0	205197	205201	Bacteria	Proteobacteria	Alphaproteobacteria	Rhodobacterales	Rhodobacteraceae			Rhodobacteraceae			Bacteria	Proteobacteria	Gammaproteobacteria	Chromatiales				SPOTSOCT00m83			Rhodob_946.3
+ARISA_951.6	ARISA	5	2.42E-03	0.01	6.57E-04	9.74E-04	42	66	946.6	951.6	USC Microbial Observatory	SPOT	surf	2			205203		Bacteria	Proteobacteria	Alphaproteobacteria	Rhodobacterales	Rhodobacteraceae			Rhodobacteraceae													Rhodob_951.6
+ARISA_954	ARISA	5	5.56E-05	2.41E-04	0	0	1	8	951.6	954																													OTU_954
+ARISA_956.5	ARISA	5	1.05E-05	5.02E-05	0	0	0	5	954	956.5																													OTU_956.5
+ARISA_957.7	ARISA	5	4.54E-05	2.93E-04	0	0	1	5	956.5	957.7																													OTU_957.7
+ARISA_963	ARISA	5	2.41E-03	3.22E-03	6.59E-04	9.77E-04	52	61	958	963																													OTU_963
+ARISA_964.8	ARISA	5	1.14E-03	1.98E-03	0	0	34	50	963	964.8	Global Ocean Survey (GOS)	xxx	surf	1			205205		Bacteria	Proteobacteria	Betaproteobacteria	Burkholderiales		Methylibium		Comamonadaceae													Comamo_964.8
+ARISA_969.6	ARISA	5	1.01E-03	1.86E-03	0	0	29	44	964.8	969.6	USC Microbial Observatory	SPOT	surf	1			205209		Bacteria	Bacteroidetes	Flavobacteria	Flavobacteriales	Flavobacteriaceae			NS5													NS5_969.6
+ARISA_973.5	ARISA	5	1.01E-04	4.94E-04	0	0	5	6	969.6	973.5	USC Microbial Observatory	SPOT	surf	2			205210		Bacteria	Proteobacteria	Alphaproteobacteria	Rhodobacterales	Rhodobacteraceae			Rhodobacteraceae													Rhodob_973.5
+ARISA_978.9	ARISA	5	1.10E-04	4.23E-04	0	0	7	9	973.9	978.9	WHOLE GENOME	xxx	xxx	1			205214		Bacteria	Proteobacteria	Gammaproteobacteria	Vibrionales	Vibrionaceae	Vibrio		Vibrio													Vibrio_978.9
+ARISA_983.9	ARISA	5	1.14E-03	2.46E-03	0	0	30	37	978.9	983.9	Global Ocean Survey (GOS)	xxx	surf	1			205215		Bacteria	Proteobacteria	Alphaproteobacteria	Rhodobacterales	Rhodobacteraceae			Roseobacter	Roseobacter_clade_oct_lineage												Roseob_983.9
+ARISA_987.8	ARISA	5	2.06E-03	3.62E-03	6.34E-04	9.39E-04	44	58	983.9	987.8	USC Microbial Observatory	SPOT	surf	2			205216		Bacteria	Proteobacteria	Alphaproteobacteria	Rhodobacterales	Rhodobacteraceae			Roseobacter	Roseobacter_clade_oct_lineage												Roseob_987.8
+ARISA_988.5	ARISA	5	1.03E-04	6.64E-04	0	0	2	7	987.8	988.5																													OTU_988.5
+ARISA_993.6	ARISA	5	1.19E-03	3.07E-03	0	0	24	29	988.6	993.6	USC Microbial Observatory	SPOT	surf	1			205222		Bacteria	Proteobacteria	Alphaproteobacteria	Rhodobacterales	Hyphomonadaceae			Hellea													Hellea_993.6
+ARISA_998.8	ARISA	5	1.68E-04	7.28E-04	0	0	5	11	993.8	998.8	WHOLE GENOME	xxx	deep	3			205220		Bacteria	Proteobacteria	Gammaproteobacteria	Alteromonadales	Shewanellaceae	Shewanella	Shewanella baltica	Shewanella													Shewan_998.8
+ARISA_1007.2	ARISA	5	2.04E-04	5.42E-04	0	0	7	22	1002.2	1007.2	Global Ocean Survey (GOS)	xxx	surf	2			205224		Bacteria	Cyanobacteria	Synechococcophycideae	Synechococcales	Synechococcaceae	Prochlorococcus		Synechococcus													Synech_1007.2
+ARISA_1011.5	ARISA	5	2.60E-04	8.52E-04	0	0	10	16	1008.1	1011.5	Global Ocean Survey (GOS)	xxx	xxx	2			205226		Bacteria	Proteobacteria	Alphaproteobacteria	Sphingomonadales	Sphingomonadaceae	Sphingomonas		Sphingomonas													Sphing_1011.5
+ARISA_1014.9	ARISA	5	4.67E-05	1.69E-04	0	0	0	10	1012	1014.9																													OTU_1014.9
+ARISA_1017.8	ARISA	5	1.29E-04	1.03E-03	0	0	1	10	1015.9	1017.8	Global Ocean Survey (GOS)	xxx	surf	1			205231		Bacteria	Proteobacteria	Alphaproteobacteria	Rhodospirillales	Rhodospirillaceae			Defluviicoccus													Defluv_1017.8
+ARISA_1020.8	ARISA	5	1.34E-04	5.07E-04	0	0	3	18	1017.8	1020.8	Indian Ocean-RS/JCVI	Indian Ocean	surf	1			205236		Bacteria	Cyanobacteria	Synechococcophycideae	Synechococcales	Synechococcaceae	Prochlorococcus		Synechococcus													Synech_1020.8
+ARISA_1023.2	ARISA	5	1.88E-04	1.12E-03	0	0	4	15	1020.8	1023.2	Biocomplexity	Pacific (Hawaii)	deep	1			205240		Bacteria	Proteobacteria	Deltaproteobacteria					SAR324	Sar324_clade(marine_group_b)												SAR324_1023.2
+ARISA_1025	ARISA	5	4.21E-05	1.80E-04	0	0	1	7	1023.2	1025	WHOLE GENOME	xxx	xxx	1			205238		Bacteria	Proteobacteria	Gammaproteobacteria	Alteromonadales	Shewanellaceae	Shewanella	Shewanella baltica	Shewanella													Shewan_1025
+ARISA_1030.5	ARISA	5	1.63E-04	5.35E-04	0	0	5	15	1026.9	1030.5	CYANOBACTERIA_ITS	xxx	xxx	1			205244		Bacteria	Cyanobacteria	Synechococcophycideae	Synechococcales	Synechococcaceae	Prochlorococcus				A.I											Prochl_A.I_1030.5
+ARISA_1035.2	ARISA	5	4.50E-04	1.03E-03	0	0	14	39	1030.5	1035.2	USC Microbial Observatory	SPOT	surf	2	1	0	205245	205249	Bacteria	Cyanobacteria	Synechococcophycideae	Synechococcales	Synechococcaceae	Prochlorococcus		Synechococcus		A.I	Bacteria	Proteobacteria	Gammaproteobacteria	Oceanospirillales	HTCC2188			Pseudospirillum			Synech_A.I_1035.2
+ARISA_1037.7	ARISA	5	2.22E-04	5.52E-04	0	0	10	20	1035.2	1037.7	USC Microbial Observatory	SPOT	surf	1			205255		Bacteria	Proteobacteria	Gammaproteobacteria	Oceanospirillales	HTCC2188			Pseudospirillum													Pseudo_1037.7
+ARISA_1040	ARISA	5	2.11E-04	7.99E-04	0	0	5	15	1037.7	1040																													OTU_1040
+ARISA_1043.1	ARISA	5	1.49E-04	5.63E-04	0	0	5	15	1040	1043.1	USC Microbial Observatory	SPOT	surf	4			205250		Bacteria	Cyanobacteria	Synechococcophycideae	Synechococcales	Synechococcaceae	Prochlorococcus		Synechococcus		A.IV											Synech_A.IV_1043.1
+ARISA_1048.2	ARISA	5	8.36E-04	1.66E-03	0	0	22	42	1043.2	1048.2	USC Microbial Observatory	SPOT	surf	1	1	0	205265	205264	Bacteria	Cyanobacteria	Synechococcophycideae	Synechococcales	Synechococcaceae	Prochlorococcus		Synechococcus		A.III	Bacteria	Cyanobacteria	Synechococcophycideae	Synechococcales	Synechococcaceae	Prochlorococcus		Synechococcus		A.IV	Synech_A.III_1048.2
+ARISA_1053.2	ARISA	5	3.13E-03	4.82E-03	1.17E-03	1.74E-03	55	74	1048.2	1053.2	CYANOBACTERIA_ITS	xxx	xxx	2			205269		Bacteria	Cyanobacteria	Synechococcophycideae	Synechococcales	Synechococcaceae	Prochlorococcus				A.V											Prochl_A.V_1053.2
+ARISA_1056.1	ARISA	5	6.27E-04	1.36E-03	0	0	23	36	1053.2	1056.1	CYANOBACTERIA_ITS	xxx	xxx	2			205272		Bacteria	Cyanobacteria	Synechococcophycideae	Synechococcales	Synechococcaceae	Prochlorococcus				A.I											Prochl_A.I_1056.1
+ARISA_1061.5	ARISA	5	4.42E-04	1.45E-03	0	0	9	28	1056.8	1061.5	CYANOBACTERIA_ITS	xxx	xxx	1			205275		Bacteria	Cyanobacteria	Synechococcophycideae	Synechococcales	Synechococcaceae	Prochlorococcus				B											Prochl_B_1061.5
+ARISA_1070.6	ARISA	5	1.91E-05	9.03E-05	0	0	0	5	1067.4	1070.6																													OTU_1070.6
+ARISA_1095.8	ARISA	5	3.35E-05	1.32E-04	0	0	1	9	1090.8	1095.8																													OTU_1095.8
+ARISA_1100.8	ARISA	5	3.97E-05	1.22E-04	0	0	0	14	1095.8	1100.8	Biocomplexity	Pacific (Hawaii)	surf	1			205291		Bacteria	Cyanobacteria	Synechococcophycideae	Synechococcales	Synechococcaceae	Prochlorococcus		Prochlorococcus	Sar86_clade												Prochl_1100.8
+ARISA_1123.6	ARISA	5	1.11E-04	5.80E-04	0	0	4	11	1118.6	1123.6	WHOLE GENOME	xxx	xxx	1			205293		Bacteria	Proteobacteria	Alphaproteobacteria	Rhodobacterales	Rhodobacteraceae	Ruegeria	Ruegeria sp. TM1040	Ruegeria													Rueger_1123.6
+ARISA_1127.2	ARISA	5	1.57E-04	5.35E-04	0	0	7	13	1123.6	1127.2	USC Microbial Observatory	SPOT	surf	2			205298		Bacteria	Proteobacteria	Alphaproteobacteria	Rhodobacterales	Rhodobacteraceae			Roseobacter	Roseobacter_clade_dc5												Roseob_1127.2
+ARISA_1130.1	ARISA	5	5.02E-04	2.50E-03	0	0	7	16	1127.2	1130.1	CYANOBACTERIA_ITS	xxx	xxx	1			205295		Bacteria	Cyanobacteria	Synechococcophycideae	Synechococcales	Synechococcaceae	Prochlorococcus				B											Prochl_B_1130.1
+ARISA_1134.1	ARISA	5	2.85E-04	1.02E-03	0	0	9	17	1130.1	1134.1	USC Microbial Observatory	SPOT	surf	1			205296		Bacteria	Proteobacteria	Alphaproteobacteria	Rhodobacterales	Rhodobacteraceae			Roseobacter	Roseobacter_clade_dc5												Roseob_1134.1
+ARISA_1145.6	ARISA	5	4.54E-05	2.07E-04	0	0	2	7	1140.6	1145.6																													OTU_1145.6
+ARISA_1181.1	ARISA	5	6.32E-04	2.56E-03	0	0	12	27	1176.4	1181.1	USC Microbial Observatory	SPOT	surf	1			205312		Bacteria	Proteobacteria	Alphaproteobacteria	Rhodobacterales	Rhodobacteraceae			Roseobacter	Roseobacter_clade_nac11												Roseob_1181.1
+ARISA_1181.7	ARISA	5	1.24E-04	7.74E-04	0	0	2	6	1181.1	1181.7																													OTU_1181.7
+ARISA_1185.8	ARISA	5	3.58E-03	0.01	0	0	25	41	1181.7	1185.8	USC Microbial Observatory	SPOT	surf	6			205308		Bacteria	Proteobacteria	Alphaproteobacteria	Rhodobacterales	Rhodobacteraceae			Roseobacter	Roseobacter_clade_nac11												Roseob_1185.8
+ARISA_1187.7	ARISA	5	6.83E-04	2.87E-03	0	0	7	9	1186.7	1187.7																													OTU_1187.7
+ARISA_1191	ARISA	5	8.09E-04	2.07E-03	0	0	18	29	1187.7	1191																													OTU_1191
+ARISA_1192.4	ARISA	5	9.64E-05	5.55E-04	0	0	3	7	1191	1192.4																													OTU_1192.4
+ARISA_1195.5	ARISA	5	8.42E-05	4.74E-04	0	0	3	5	1194.3	1195.5	WHOLE GENOME	xxx	xxx	1			205317		Bacteria	Proteobacteria	Gammaproteobacteria	Alteromonadales	Shewanellaceae	Shewanella	Shewanella denitrificans	Shewanella													Shewan_1195.5
+ARISA_1199.7	ARISA	5	1.04E-04	6.60E-04	0	0	3	5	1197.4	1199.7																													OTU_1199.7
+Bact	Env	5	1726600.25	1148599.83	1499545.54	805983.98	100	100																															Bact
+CHL-A	Env	5	0.44	0.34	0.3	0.17	53	53																															CHL-A
+Chl_A_Sat	Env	5	0.61	0.52	0.42	0.23	112	112																															Chl_A_Sat
+Cmax_Depth	Env	5	29.14	9.41	30	8.89	83	83																															Cmax_Depth
+Depth	Env	5	3.45	2.04	5	0	81	81																															Depth
+Leu	Env	5	441535.76	423789.46	256619.67	196290.72	100	100																															Leu
+Methane	Env	5	7.88	5.32	7.57	4.74	15	15																															Methane
+NO2	Env	5	0.17	0.15	0.12	0.13	72	72																															NO2
+NO3	Env	5	0.19	0.26	0.12	0.16	65	65																															NO3
+Old_NO2	Env	5	0.16	0.13	0.1	0.1	55	55																															Old_NO2
+Old_NO3	Env	5	0.22	0.36	0.16	0.16	55	55																															Old_NO3
+Old_PO4	Env	5	0.31	0.11	0.32	0.11	55	55																															Old_PO4
+Oxygen	Env	5	245.51	30.15	244.18	18.35	55	55																															Oxygen
+pH	Env	5	8.14	0.16	8.17	0.07	17	17																															pH
+PO4	Env	5	0.28	0.32	0.27	0.16	69	69																															PO4
+Prim_Prod	Env	5	1578	660.88	1402.33	466.98	111	111																															Prim_Prod
+qAmoA	Env	5					0	0																															qAmoA
+qArch	Env	5					0	0																															qArch
+qGroup1	Env	5					0	0																															qGroup1
+Salinity	Env	5	33.43	0.18	33.45	0.14	87	87																															Salinity
+SiO3	Env	5	1.09	1	0.74	0.62	55	55																															SiO3
+SSHD_Sat	Env	5	1.92E-03	0.03	2.58E-03	0.03	49	50																															SSHD_Sat
+TCO2	Env	5	2014.04	45.53	2024.3	39.14	11	11																															TCO2
+Temperature	Env	5	16.98	2.44	16.54	3.01	90	90																															Temperature
+Thy	Env	5	375698.21	431655.65	240651.25	194201.05	101	101																															Thy
+Vir	Env	5	31332596.29	15945052.66	31095564.5	16345355.21	100	100																															Vir
+VBR	Env	5	22.34	13.33	19.73	10.77	100	100																															VBR
+PStar	Env	5	0.28	0.33	0.26	0.14	65	65																															PStar
+TurnoverLeu	Env	5	6.81	8.94	4.64	3.48	93	93																															TurnoverLeu
+TurnoverThy	Env	5	8.05	6.82	5.94	4.99	94	94																															TurnoverThy
+isJanuary	Env	5	0.06	0.24	0	0	7	7																															isJanuary
+isFebruary	Env	5	0.07	0.25	0	0	8	8																															isFebruary
+isMarch	Env	5	0.07	0.27	0	0	9	9																															isMarch
+isApril	Env	5	0.07	0.27	0	0	9	9																															isApril
+isMay	Env	5	0.09	0.29	0	0	11	11																															isMay
+isJune	Env	5	0.1	0.3	0	0	12	12																															isJune
+isJuly	Env	5	0.07	0.27	0	0	9	9																															isJuly
+isAugust	Env	5	0.09	0.29	0	0	11	11																															isAugust
+isSeptember	Env	5	0.09	0.29	0	0	11	11																															isSeptember
+isOctober	Env	5	0.07	0.27	0	0	9	9																															isOctober
+isNovember	Env	5	0.07	0.25	0	0	8	8																															isNovember
+isDecember	Env	5	0.08	0.28	0	0	10	10																															isDecember
+is2000	Env	5	0.03	0.18	0	0	4	4																															is2000
+is2001	Env	5	0.12	0.32	0	0	14	14																															is2001
+is2002	Env	5	0.08	0.28	0	0	10	10																															is2002
+is2003	Env	5	0.09	0.29	0	0	11	11																															is2003
+is2004	Env	5	0.09	0.29	0	0	11	11																															is2004
+is2005	Env	5	0.11	0.31	0	0	13	13																															is2005
+is2006	Env	5	0.07	0.27	0	0	9	9																															is2006
+is2007	Env	5	0.07	0.25	0	0	8	8																															is2007
+is2008	Env	5	0.08	0.28	0	0	10	10																															is2008
+is2009	Env	5	0.09	0.29	0	0	11	11																															is2009
+is2010	Env	5	0.1	0.3	0	0	12	12																															is2010
+is2011	Env	5	8.77E-03	0.09	0	0	1	1																															is2011
+DayI	Env	5	17.29	5.98	17.5	5.18	114	114																															DayI
+Elapsed_Days	Env	5	1869.28	1144.47	1779.5	1552.28	113	113																															Elapsed_Days
+RDate	Env	5	13055.28	1144.47	12965.5	1552.28	114	114																															RDate
+day.length	Env	5	12.3	1.53	12.36	2.09	114	114																															day.length
+day.length.change.per.month	Env	5	-0.01	0.79	0.03	1.23	57	57																															day.length.change.per.month
+ShannonH	Env	5	3.38	0.37	3.42	0.37	105	105																															ShannonH
+InvSimpson	Env	5	16.88	6.55	16.45	6.51	105	105																															InvSimpson
+Richness10000	Env	5	105.98	21.39	102	13.34	105	105																															Richness10000
+Richness1000	Env	5	73.29	14.35	74	14.82	105	105																															Richness1000
+Richness100	Env	5	20.72	4.72	21	4.44	105	105																															Richness100
+dsCA1	Env	5	-4.55E-17	0.7	0.11	0.05	94	94																															dsCA1
+dsCA2	Env	5	5.38E-18	0.54	-0.15	0.15	23	23																															dsCA2
+dsCA3	Env	5	3.78E-17	0.51	0.04	0.44	56	56																															dsCA3
+dsCA4	Env	5	-3.21E-17	0.44	1.49E-03	0.15	53	53																															dsCA4
+dsCA5	Env	5	-1.85E-17	0.41	9.86E-03	0.16	55	56																															dsCA5
+bc.shift	Env	5	0.48	0.16	0.47	0.18	81	81																															bc.shift
+day.shift	Env	5	33.61	16.38	32	8.89	113	113																															day.shift
+sqrt_Bact	Env	5	1257.01	384.69	1224.55	341.73	100	100																															sqrt_Bact
+sqrt_Vir	Env	5	5413.91	1429.19	5576.33	1409.1	100	100																															sqrt_Vir
+sqrt_VBR	Env	5	4.53	1.34	4.44	1.21	100	100																															sqrt_VBR
+log_Leu	Env	5	12.6	0.92	12.45	0.86	100	100																															log_Leu
+log_NO2	Env	5	-1.44	0.54	-1.51	0.64	0	0																															log_NO2
+log_NO3	Env	5	-1.45	0.64	-1.51	0.81	1	1																															log_NO3
+log_PO4	Env	5	-1.13	0.6	-0.99	0.38	1	1																															log_PO4
+log_Thy	Env	5	12.38	0.98	12.39	0.89	101	101																															log_Thy
+log_TurnoverLeu	Env	5	1.57	0.77	1.55	0.73	92	92																															log_TurnoverLeu
+log_TurnoverThy	Env	5	1.8	0.77	1.79	0.86	94	94																															log_TurnoverThy
+log_PStar	Env	5	-0.55	0.35	-0.51	0.22	1	1																															log_PStar
+log_Chl_A_Sat	Env	5	-0.51	0.55	-0.65	0.5	22	22																															log_Chl_A_Sat
