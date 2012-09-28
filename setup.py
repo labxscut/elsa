@@ -38,7 +38,7 @@ The results can be summarized and easily queried for desired analysis.
 from setuptools import setup, find_packages
 from distutils.core import Extension
 from distutils.command import build
-import os, sys
+import os, sys, subprocess
 
 doclines=__doc__.splitlines()
 
@@ -46,8 +46,15 @@ os.environ['CC'] = 'g++'  #temporary measure to trick distutils use g++, need up
 #lines = open("VERSION.txt", 'rU').readlines()
 #version_desc = ','.join([lines[1].strip(), lines[0].strip()])
 
-os.system("hg id > VERSION.txt")
-os.system("hg kwshrink && hg kwexpand")
+hg_on=subprocess.call("hg id > VERSION.txt", shell=True)
+if hg_on == 1:
+  print >>sys.stderr, "warning: mercurial tools is required to include version number in binary" 
+  nohg_confirm = raw_input("do you want to continue without versioned binary? type yes to continue")
+  if nohg_confirm not in ['y','Y','yes','Yes']:
+    quit("Abort setup. Try to install mercurial tools first")
+  
+#subprocess.Popen("hg kwshrink && hg kwexpand")
+
 
 if os.path.exists('MANIFEST'): os.remove('MANIFEST')
 
@@ -80,7 +87,7 @@ setup(name="lsa",
     #packages=['lsa'],
     #requires=['numpy(>=1.1)','scipy(>=0.6)','python(>=2.5)','matplotlib(>=0.98)'],
     zip_safe=False,
-    install_requires=[ "python >= 2.7","numpy >= 1.0","scipy >= 0.6" ],
+    install_requires=["python >= 2.7","numpy >= 1.0","scipy >= 0.6"],
     provides=['lsa'],
     ext_modules = [Extension('lsa._compcore', sources = ['lsa/compcore_wrap.cpp', 'lsa/compcore.cpp'],
                                               depends = ['lsa/compcore.hpp'],
@@ -99,8 +106,9 @@ setup(name="lsa",
             'la_query = lsa.la_query:main',
             'to_trend = lsa.to_trend:main',
             'lsa_sim = lsa.lsa_sim:main',
-            'par_la = lsa.par_la:main',
+            'par_ana = lsa.par_ana:main',
 	    'check_data = lsa.check_data:main',
+	    'fix_qv = lsa.fix_qv:main',
         ]
     },
 )

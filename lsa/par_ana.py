@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#par_la -- parallel computation of liquid association 
+#par_ana -- parallel computation of LSA and LAA analysis
 
 #License: BSD
 

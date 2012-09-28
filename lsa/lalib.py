@@ -107,9 +107,9 @@ def applyLA(inputData, scoutVars, factorLabels, bootCI=.95, bootNum=1000, minOcc
         continue   #ignore redundant entries
       cp[Xi,Yi,Zi]=True
       Zo = np.ma.masked_invalid(inputData[Zi], copy=True)    # need to convert to masked array with na's, not F-normalized
-      Xo_badOccur = np.sum(np.logical_not(np.isnan(ma_average(Xo)), ma_average(Xo)==0))/float(timespots) < minOccur
-      Yo_badOccur = np.sum(np.logical_not(np.isnan(ma_average(Yo)), ma_average(Yo)==0))/float(timespots) < minOccur
-      Zo_badOccur = np.sum(np.logical_not(np.isnan(ma_average(Zo)), ma_average(Zo)==0))/float(timespots) < minOccur
+      Xo_badOccur = np.sum(np.logical_not(np.isnan(lsalib.ma_average(Xo)), lsalib.ma_average(Xo)==0))/float(timespots) < minOccur
+      Yo_badOccur = np.sum(np.logical_not(np.isnan(lsalib.ma_average(Yo)), lsalib.ma_average(Yo)==0))/float(timespots) < minOccur
+      Zo_badOccur = np.sum(np.logical_not(np.isnan(lsalib.ma_average(Zo)), lsalib.ma_average(Zo)==0))/float(timespots) < minOccur
       if Xo_badOccur or Yo_badOccur or Zo_badOccur:           #either one of these not satisfying the minOccur criteria
         continue						 # minOccur not satisfied for one of the factors
       if np.all(Xo.mask) or np.all(Yo.mask) or np.all(Zo.mask):  # not any unmasked value in Xz or Yz, all nan in input, continue
