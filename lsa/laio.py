@@ -38,6 +38,7 @@ def LA_Xgmml2(la_table, la_size, lsaq_table, lsaq_size, nodeinfor_table, nodeinf
   node_infor=dict()
   lsaq_nodes=dict()
   lsaq_edges=dict()
+  missnode=set()
   for i in xrange(1, nodeinfor_size+1):
     nodename=r['''as.character''']((nodeinfor_table.rx(i,True)[0]))[0]
     nodetype=r['''as.character''']((nodeinfor_table.rx(i,True)[1]))[0]
@@ -85,9 +86,11 @@ def LA_Xgmml2(la_table, la_size, lsaq_table, lsaq_size, nodeinfor_table, nodeinf
     if (node_x,node_y) in laq_edges:
       node_m_x_y = '_'.join( ['m', node_x, node_y] )
       laq_nodes[node_m_x_y]={"nodetype":"mid", "Domain":"na", "6Letter":"na"} 
-      print node_z
-      laq_nodes[node_z]=node_infor[node_z]
-      print laq_nodes[node_z]
+      if node_z in node_infor:
+         laq_nodes[node_z]=node_infor[node_z]
+      else:
+         missnode.add(node_z)
+         laq_nodes[node_z]={"nodetype":" ", "Domain":" ", "6Letter":" "}  
       if tuple(la_table.rx(i,True)[lai])[0] >= 0:
          interaction_type3 = 'pu'
       else:
@@ -123,6 +126,8 @@ def LA_Xgmml2(la_table, la_size, lsaq_table, lsaq_size, nodeinfor_table, nodeinf
       laq_edges[(node_y, node_m_x_y)] = (-1, {'L_name':'LS', 'L':LS_score, 'interaction':interaction_type2, 'source':node_y, 'target':node_m_x_y})
       laq_edges[(node_z, node_m_x_y)] = (-1, {'L_name':'LA', 'L':LA_score, 'interaction':interaction_type3, 'source':node_z, 'target':node_m_x_y}) 
       laq_edges[(node_x, node_y)]=(0, {'LS':LS_score, 'interaction':interaction, 'source':node_x, 'target':node_y})
+  print "miss node_z in nodeinfor"
+  print missnode
   xgmml_element=etree.Element('graph')
   xgmml_element.set('xmlns:dc', "http://purl.org/dc/elements/1.1/")
   xgmml_element.set('xmlns:xlink', "http://www.w3.org/1999/xlink")
