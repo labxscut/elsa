@@ -50,7 +50,7 @@ print >>sys.stderr, "testing mercurial tools  (hg) availability ..."
 hg_on=subprocess.call("hg id > VERSION.txt", shell=True)
 if hg_on != 0:
   print >>sys.stderr, "warning: mercurial tools is required to include version number in binary" 
-  nohg_confirm = raw_input("do you want to continue without versioned binary? type yes to continue")
+  nohg_confirm = raw_input("do you want to continue without versioned binary (type yes to continue) ? ")
   if nohg_confirm not in ['y','Y','yes','Yes']:
     quit("Abort setup. Try to install mercurial tools first")
   
