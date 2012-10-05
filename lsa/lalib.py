@@ -75,7 +75,8 @@ Q_lam_max = 0.95
 
 ### LAA functions ###
 
-def applyLA(inputData, scoutVars, factorLabels, bootCI=.95, bootNum=1000, minOccur=.50, pvalueMethod=1000,\
+def applyLA(inputData, scoutVars, factorLabels, bootCI=.95, bootNum=1000, minOccur=.50, \
+    pvalueMethod="perm", precision=1000,\
     fTransform=lsalib.simpleAverage, zNormalize=lsalib.noZeroNormalize, resultFile=None, qvalue_func=lsalib.storeyQvalue):
 
   col_labels = ['X','Y','Z','LA','lowCI','upCI','P','Q','Xi','Yi','Zi']
@@ -125,11 +126,11 @@ def applyLA(inputData, scoutVars, factorLabels, bootCI=.95, bootNum=1000, minOcc
       #This Part Must Follow Static Calculation Part
       #Otherwise Yz may be changed, now it is copied
       #np.ma.array(copy=True) to copy, otherwise is only reference
-      if pvalueMethod >= 0 or pvalueMethod < 0:
+      if pvalueMethod == "perm":
         Xp = np.ma.array(Xo,copy=True)
         Yp = np.ma.array(Yo,copy=True)
         Zp = np.ma.array(Zo,copy=True)
-        laP = LApermuPvalue(Xp, Yp, Zp, pvalueMethod, np.abs(LA_score), fTransform, zNormalize)          # do Permutation Test
+        laP = LApermuPvalue(Xp, Yp, Zp, precision, np.abs(LA_score), fTransform, zNormalize)          # do Permutation Test
       else: #reserved 
         print >>sys.stderr, "this branch should not be receahed by now"
 
@@ -183,16 +184,16 @@ def LAbootstrapCI(series1, series2, series3, LA_score, bootCI, bootNum, fTransfo
   BS_mean = np.mean(BS_set)
   return ( BS_mean, BS_set[np.floor(bootNum*a1)-1], BS_set[np.ceil(bootNum*a2)-1] )
 
-def LApermuPvalue(series1, series2, series3, pvalueMethod, LA_score, fTransform, zNormalize):
-  PP_set = np.zeros(pvalueMethod, dtype='float')
+def LApermuPvalue(series1, series2, series3, precision, LA_score, fTransform, zNormalize):
+  PP_set = np.zeros(precision, dtype='float')
   X = zNormalize(fTransform(series1))
   Y = zNormalize(fTransform(series2))
   Z = np.ma.array(series3)                                               #use = only assigns reference, must use a constructor
-  for i in xrange(0, pvalueMethod):
+  for i in xrange(0, precision):
     np.random.shuffle(Z.T)
     PP_set[i] = compcore.calc_LA(X, Y, zNormalize(fTransform(Z)))
   if LA_score >= 0:
-    P_two_tail = np.sum(np.abs(PP_set) >= LA_score)/np.float(pvalueMethod)
+    P_two_tail = np.sum(np.abs(PP_set) >= LA_score)/np.float(precision)
   else:
-    P_two_tail = np.sum(-np.abs(PP_set) <= LA_score)/np.float(pvalueMethod)
+    P_two_tail = np.sum(-np.abs(PP_set) <= LA_score)/np.float(precision)
   return P_two_tail

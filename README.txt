@@ -18,6 +18,8 @@ DEPENDENCIES:
         download @ http://www.scipy.org/
     Scipy(>=0.6)
         download @ http://www.scipy.org/
+    Mercurial
+	introduction @ http://en.wikipedia.org/wiki/Mercurial
     
     For setting up the dependencies, users may refer to the author's development document @
 		http://dl.dropbox.com/u/35182955/Mac_development_environment.html

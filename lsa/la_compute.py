@@ -63,14 +63,17 @@ def main():
                         help="the input datafile specify the scouting pairs, \n \
                             it can be any tab delimited file (e.g. .lsa) with (xi, yi) pair indecies for scouting pairs")
   parser.add_argument("resultFile", metavar="resultFile", type=argparse.FileType('w'), help="the output result file")
-  parser.add_argument("-x", "--xiCol", dest="xiCol", default=26, type=int, 
+  parser.add_argument("-xi", "--xiCol", dest="xiCol", default=26, type=int, 
                     	help="specify the x-th column to store Xi indecies")
-  parser.add_argument("-y", "--yiCol", dest="yiCol", default=27, type=int, 
+  parser.add_argument("-yi", "--yiCol", dest="yiCol", default=27, type=int, 
                     	help="specify the y-th column to store Yi indecies")
-  parser.add_argument("-p", "--pvalueMethod", dest="pvalueMethod", default=1000, type=int,
-                    	help="specify the method=sgn(pvalueMethod) and precision=1/abs(pvalueMethod) for p-value estimation, \n \
-                          default: pvalueMethod=1000, i.e. precision=0.001 and mode=permutation \n \
-                          mode +: permutation approximaton; -: unused, fall back to permutation")
+  parser.add_argument("-x", "--precision", dest="precision", default=1000, type=int,
+    help="permutation/precision, specify the permutation number or precision=1/permutation for p-value estimation. \n \
+          must be integer >0")
+  parser.add_argument("-p", "--pvalueMethod", dest="pvalueMethod", default="perm", choices=["perm"],
+    help="specify the method for p-value estimation, \n \
+    default: pvalueMethod=perm, i.e. use  permutation \n \
+    theo: theoretical approximaton; mix: use theoretical approximation for pre-screening if promising (<0.05) then use permutation. ")
   parser.add_argument("-m", "--minOccur", dest="minOccur", default=50, type=int,
                               help="specify the minimum occurence percentile of all times, default: 50,\n")
   parser.add_argument("-b", "--bootNum", dest="bootNum", default=0, type=int, choices=[0, 100, 200, 500, 1000, 2000],
@@ -125,6 +128,7 @@ def main():
   yiCol = vars(arg_namespace)['yiCol']
   minOccur = vars(arg_namespace)['minOccur']
   pvalueMethod = vars(arg_namespace)['pvalueMethod']
+  precision = vars(arg_namespace)['precision']
   bootNum = vars(arg_namespace)['bootNum']
   repNum = vars(arg_namespace)['repNum']
   spotNum = vars(arg_namespace)['spotNum']
@@ -161,10 +165,10 @@ def main():
   else:
     zNormalize = lsalib.noZeroNormalize # fallback to default
   
-  pars = ['fillMethod','minOccur', 'pvalueMethod','dataFile','scoutFile','resultFile','repNum','spotNum','bootNum','transFunc','normMethod']
+  pars = ['fillMethod','minOccur', 'pvalueMethod','precision','dataFile','scoutFile','resultFile','repNum','spotNum','bootNum','transFunc','normMethod']
   print "\t".join(pars)
   print "\t".join(['%s']*len(pars)) \
-      % (fillMethod,minOccur,pvalueMethod,dataFile.name,scoutFile.name,resultFile.name,repNum,spotNum,bootNum,transFunc,normMethod)
+      % (fillMethod,minOccur,pvalueMethod,precision,dataFile.name,scoutFile.name,resultFile.name,repNum,spotNum,bootNum,transFunc,normMethod)
   
   #start timing main
   start_time = time.time()
@@ -214,7 +218,7 @@ def main():
   #print factorLabels
 
   lalib.applyLA(tempData, scoutVars, factorLabels, bootNum=bootNum, minOccur=minOccur/100.,\
-      pvalueMethod=pvalueMethod, fTransform=fTransform, zNormalize=zNormalize, resultFile=resultFile)
+      pvalueMethod=pvalueMethod, precision=precision, fTransform=fTransform, zNormalize=zNormalize, resultFile=resultFile)
 
   print >>sys.stderr, "finishing up..."
   resultFile.close()

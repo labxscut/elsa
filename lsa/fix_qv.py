@@ -55,8 +55,8 @@ def main():
 
   parser.add_argument("rawInput", metavar="rawInput", type=argparse.FileType('r'), help="the raw input file")
   parser.add_argument("fixedOutput", metavar="fixedOutput", type=argparse.FileType('w'), help="the fixed output file")
-  parser.add_argument("-qi", "--qIndex", dest="qIndex", type=int, default=5, help="qvalue column index")
-  parser.add_argument("-pi", "--pIndex", dest="pIndex", type=int, default=6, help="pvalue column index")
+  parser.add_argument("-pi", "--pIndex", dest="pIndex", type=int, default=7, help="pvalue column index")
+  parser.add_argument("-qi", "--qIndex", dest="qIndex", type=int, default=8, help="qvalue column index")
 
   arg_namespace=parser.parse_args()
   rawInput=vars(arg_namespace)['rawInput']
@@ -65,7 +65,9 @@ def main():
   pIndex=vars(arg_namespace)['pIndex']
 
   #read contents
-  full_table = csv.reader(rawInput).read() 
+  full_table = []
+  for row in csv.reader(rawInput, delimiter="\t"):
+    full_table.append(row)
   
   #collect pvalues
   pvalues = []
@@ -74,11 +76,14 @@ def main():
     if j ==0:
       j=j+1
       continue
-    else
+    else:
       pvalues.append(row[pIndex-1])
+
+  pvalues=np.array(pvalues, dtype='float')
+  print pvalues
   
   #pvalues to qvalues
-  qvalues = lsa.storeyQvalue(pvalues)
+  qvalues = lsalib.storeyQvalue(pvalues)
   
   #insert qvalues
   j=0
@@ -86,12 +91,13 @@ def main():
     if j ==0:
       j=j+1
       continue
-    else
-      row[qIndex]=qvalues[j-1]
+    else:
+      row[qIndex-1]=qvalues[j-1]
       j=j+1
   
   #write contents
-  csv.write(fixedOutput, full_table)
+  write_table = csv.writer(fixedOutput,delimiter="\t")
+  write_table.writerows(full_table) 
 
 if __name__ == "__main__":
   main()
