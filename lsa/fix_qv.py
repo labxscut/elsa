@@ -77,11 +77,11 @@ def main():
       j=j+1
       continue
     else:
-      print len(row)
+      #print len(row)
       pvalues.append(row[pIndex-1])
 
   pvalues=np.array(pvalues, dtype='float')
-  print pvalues
+  #print pvalues
   
   #pvalues to qvalues
   qvalues = lsalib.storeyQvalue(pvalues)
