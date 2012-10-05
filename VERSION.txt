@@ -1,1 +1,1 @@
-lsa_version
+see README.txt on how to get version number
