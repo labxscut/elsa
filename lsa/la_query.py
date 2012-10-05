@@ -66,16 +66,16 @@ def main():
   parser.add_argument("rawFile3", metavar= "rawFile3", type=argparse.FileType('rU'), help="the node information file")
   parser.add_argument("entryFile", metavar= "entryFile", type=argparse.FileType('w'), help="the query result file")
 
-  parser.add_argument("-q", "--queryLine", dest="queryLine", default=None,
+  parser.add_argument("-q", "--queryLine", dest="queryLine", default='(!la$P>0.01)&(la$Q<0.01)',
                       help="specify the highest pValue threshold for querying, default: None \n \
                         formatting a query: \n \
                         '[!]la$Key1[>,<,>=,<=,==,!=]V1[|,&][!]la$Key2[>,<,>=,<=,==,!=]V2[|,&]...' \n \
-                        and any groupings using '(' and ')' e.g. \n \
+                        and any groupings using '(' and ')' default: \n \
                         '(!la$P>0.01)&(la$Q<0.01)'") 
   parser.add_argument("-x", "--xgmmlFile", dest="xgmmlFile", default="",
                       help="if specified, will also produce a XGMML format file for cytoscape")
-  parser.add_argument("-s", "--sifFile", dest="sifFile", default="",
-                      help="if specified, will also produce a SIF format file for backward compatibility")
+  #parser.add_argument("-s", "--sifFile", dest="sifFile", default="",
+  #                    help="if specified, will also produce a SIF format file for backward compatibility")
   arg_namespace = parser.parse_args()
 
   #get the arguments
@@ -89,7 +89,7 @@ def main():
   queryLine = vars(arg_namespace)['queryLine']
   print "q=", queryLine
   xgmmlFile = vars(arg_namespace)['xgmmlFile']
-  sifFile = vars(arg_namespace)['sifFile']
+  #sifFile = vars(arg_namespace)['sifFile']
   analysisTitle = os.path.basename(rawFile2.name)
   rawFile1.close()
   rawFile2.close()

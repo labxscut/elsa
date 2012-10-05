@@ -77,6 +77,7 @@ def main():
       j=j+1
       continue
     else:
+      print len(row)
       pvalues.append(row[pIndex-1])
 
   pvalues=np.array(pvalues, dtype='float')
@@ -92,6 +93,7 @@ def main():
       j=j+1
       continue
     else:
+      #print len(row)
       row[qIndex-1]=qvalues[j-1]
       j=j+1
   

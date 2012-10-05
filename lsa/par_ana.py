@@ -90,7 +90,7 @@ def get_content(file):
     if i==0:
       header=line
       i+=1
-    else:
+    elif not line.strip():   #not empty, to something
       content.append(line)
   return (header, content)
 
