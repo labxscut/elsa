@@ -80,7 +80,8 @@ except ImportError:
 #multiInput, multiOutput, singleCmd
 
 ws=os.path.join(os.environ.get("HOME"),'tmp','multi')
-print "tmpDir=",ws
+print >>sys.stderr, "tmpDir=",ws
+print >>sys.stderr, "Note: if deadlocked with unfinished jobs finally, manually collect the corresponding pbs files in above path and run"
 
 def get_content(file):
   i=0
@@ -121,7 +122,7 @@ PBS_PREAMBLE = """#!/bin/bash
 #PBS -l walltime=299:00:00
 #PBS -l nodes=1:ppn=1,mem=%d000mb,vmem=%d000mb,pmem=%d000mb"""
 vmem=2
-print "vmem=", str(vmem)+"000mb"
+print >>sys.stderr, "vmem=", str(vmem)+"000mb"
 
 def gen_pbs(singleFile, singleCmd, workDir, singleEnd):
   singleResult=singleFile+".tmp"
@@ -147,7 +148,7 @@ def gen_output(multiOutput, resultFiles):
 def ssa_pbs(singlePBS):
   try:
     tmp=subprocess.Popen("ssa.py %s" % singlePBS, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
-    print "submitted", singlePBS
+    print >>sys.stderr, "submitted", singlePBS
   except ValueError:
     quit()
   return tmp[0]
@@ -171,7 +172,7 @@ def main():
   dryRun=vars(arg_namespace)['dryRun']
 
   singleFiles,resultFiles,endFiles=gen_singles(multiInput,multiOutput)
-  for endFile in endFiles:
+  for endFile in endFiles: #ensure .end file from previous runs will be removed
     if os.path.exists(endFile):
       os.remove(endFile)
 
@@ -190,7 +191,7 @@ def main():
 
   while(len(endJob)!=len(inProgress)):
     for job in inProgress:
-      time.sleep(10)
+      #time.sleep(1)
       if os.path.exists(job):
         header, content = get_content(open(job[:-4]+".tmp",'r'))
         if len(endJob)==0:

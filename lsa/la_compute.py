@@ -119,7 +119,7 @@ def main():
   arg_namespace = parser.parse_args()
 
   #get arguments
-  print >>sys.stderr, "la_compute ($Revision$) - copyright Li Charlie Xia, lxia@usc.edu"
+  #print >>sys.stderr, "la_compute ($Revision$) - copyright Li Charlie Xia, lxia@usc.edu"
   
   dataFile = vars(arg_namespace)['dataFile']				#dataFile
   scoutFile = vars(arg_namespace)['scoutFile']				#extraFile
@@ -162,8 +162,10 @@ def main():
     zNormalize = lsalib.percentileNormalize
   elif normMethod == 'pnz':
     zNormalize = lsalib.noZeroNormalize  
+  elif normMethod == 'percentileZ':
+    zNormalize = lsalib.percentileZNormalize 
   else:
-    zNormalize = lsalib.noZeroNormalize # fallback to default
+    zNormalize = lsalib.percentileZNormalize # fallback to default
   
   pars = ['fillMethod','minOccur', 'pvalueMethod','precision','dataFile','scoutFile','resultFile','repNum','spotNum','bootNum','transFunc','normMethod']
   print "\t".join(pars)

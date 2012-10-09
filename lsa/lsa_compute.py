@@ -117,12 +117,12 @@ def main():
                           percentile: percentile normalization, including zeros (only with perm)   \n \
                           pnz: percentile normalization, excluding zeros (only with perm) \n  \
                           percentileZ: percentile normalization + Z-normalization \n \
-                            (with perm, mix and theo, and must use this for theo and mix) \n \
+                            (with perm, mix and theo, and must use this for theo and mix, default) \n \
                           a float: no normalization and calculate Ptheo using specified float variance  \n \
                           (only for advanced use in local shape analysis with mix and theo)")
   parser.add_argument("-q", "--qvalueMethod", dest="qvalueMethod", default='scipy', choices=['R', 'scipy'],
                       help= "specify the qvalue calculation method, \n \
-                          scipy: use scipy and storeyQvalue function \n \
+                          scipy: use scipy and storeyQvalue function, default \n \
                           R: use R's qvalue package, require X connection")
   
   arg_namespace = parser.parse_args()
