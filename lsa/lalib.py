@@ -119,6 +119,9 @@ def applyLA(inputData, scoutVars, factorLabels, bootCI=.95, bootNum=1000, minOcc
 
       if np.isnan(LA_score):
         print >>sys.stderr, "found na in LA score, to be fixed"
+        #print >>sys.stderr, Xo, zNormalize(fTransform(Xo))
+        #print >>sys.stderr, Yo, zNormalize(fTransform(Yo))
+        #print >>sys.stderr, Zo, zNormalize(fTransform(Zo))
         laTable[ti] = [Xi, Yi, Zi, LA_score, LA_score, LA_score, LA_score]
         ti += 1
         continue

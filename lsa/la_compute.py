@@ -107,7 +107,7 @@ def main():
                           quadratic: fill up with quadratic spline;             \n \
                           cubic: fill up with cubic spline;                \n \
                           nearest: fill up with nearest neighbor") 
-  parser.add_argument("-n", "--normMethod", dest="normMethod", default='pnz', #choices=['percentile', 'percentileZ', 'pnz', 'none'],
+  parser.add_argument("-n", "--normMethod", dest="normMethod", default='percentileZ', #choices=['percentile', 'percentileZ', 'pnz', 'none'],
                         help= "specify the method to normalize data, default: percentile,       \n \
                           choices: percentile, none, pnz, percentileZ                         \n \
                           NOTE:                                                         \n \

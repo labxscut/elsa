@@ -724,6 +724,7 @@ def noZeroNormalize(tseries):
     zt = nt - np.ma.mean(nt, axis=0)
   #nt = np.nan_to_num(nt)              #filling zeros to nan, shall be no na's from here on
   #print "nt=", nt
+  zt = np.ma.masked_invalid(zt)
   zt = zt.filled(fill_value=0)         #filling zeros to nan, shall be no na's from here on
   #print "zt=", zt
   return zt
