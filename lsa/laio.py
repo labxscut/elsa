@@ -34,11 +34,25 @@ def LA_Xgmml3(la_table, la_size, lsaq_table, lsaq_size, title, nodeinfor_table, 
     node_y = r['''as.character''']((la_table.rx(i,True)[1]))[0]
     node_z = r['''as.character''']((la_table.rx(i,True)[2]))[0]
 
-def LA_Xgmml2(la_table, la_size, lsaq_table, lsaq_size, nodeinfor_table, nodeinfor_size, title, LA_idx=4, LS_idx=3, Delay_idx=9):
+def LA_Xgmml2(la_table, la_size, lsaq_table, lsaq_size, nodeinfor_table, nodeinfor_size, nodelist_table, nodelist_size, title, LA_idx=4, LS_idx=3, Delay_idx=9):
   node_infor=dict()
   lsaq_nodes=dict()
   lsaq_edges=dict()
   missnode=set()
+  nodelist_name=set()
+  for i in xrange(1, nodelist_size+1):
+    # s=0
+    # for k in xrange(1,115):
+    #   y=r['''as.character''']((nodelist_table.rx(i,True)[k]))[0]
+    #   print y
+    #   if y=='0':
+    #      s+=1
+    #   elif y=='na':
+    #      s+=1
+    # if s>=58: 
+    n_name=r['''as.character''']((nodelist_table.rx(i,True)[0]))[0]
+    nodelist_name.add(n_name)
+  print nodelist_name
   for i in xrange(1, nodeinfor_size+1):
     nodename=r['''as.character''']((nodeinfor_table.rx(i,True)[0]))[0]
     nodetype=r['''as.character''']((nodeinfor_table.rx(i,True)[1]))[0]
@@ -57,9 +71,17 @@ def LA_Xgmml2(la_table, la_size, lsaq_table, lsaq_size, nodeinfor_table, nodeinf
   for i in xrange(1, lsaq_size+1):  
     node_x = r['''as.character''']((lsaq_table.rx(i,True)[0]))[0]
     node_y = r['''as.character''']((lsaq_table.rx(i,True)[1]))[0]
-    lsaq_nodes[node_x]=node_infor[node_x]
-    lsaq_nodes[node_y]=node_infor[node_y]
-     
+    if node_x in node_infor:
+         lsaq_nodes[node_x]=node_infor[node_x]
+    else:
+         missnode.add(node_x)
+         lsaq_nodes[node_x]={"nodetype":" ", "Domain":" ", "6Letter":" "}  
+    
+    if node_y in node_infor:
+         lsaq_nodes[node_y]=node_infor[node_y]
+    else:
+         missnode.add(node_y)
+         lsaq_nodes[node_y]={"nodetype":" ", "Domain":" ", "6Letter":" "}  
     if tuple(lsaq_table.rx(i,True)[di])[0] > 0:
          d_code = 'dr'      #direction reta
     elif tuple(lsaq_table.rx(i,True)[di])[0] < 0:
@@ -73,7 +95,7 @@ def LA_Xgmml2(la_table, la_size, lsaq_table, lsaq_size, nodeinfor_table, nodeinf
          c_code = 'n'
     interaction = c_code+d_code
     LS_score = tuple(lsaq_table.rx(i,True)[2])[0]
-    lsaq_edges[(node_x, node_y)]=(1, {'LS':LS_score, 'interaction':interaction, 'source':node_x, 'target':node_y})
+    lsaq_edges[(node_x, node_y)]=(1, {'LS':LS_score, 'interaction':interaction, 'source':node_x, 'target':node_y, 'edgetype':'l'})
 
   laq_nodes=lsaq_nodes
   laq_edges=lsaq_edges
@@ -83,49 +105,52 @@ def LA_Xgmml2(la_table, la_size, lsaq_table, lsaq_size, nodeinfor_table, nodeinf
     node_x = r['''as.character''']((la_table.rx(i,True)[0]))[0]
     node_y = r['''as.character''']((la_table.rx(i,True)[1]))[0]
     node_z = r['''as.character''']((la_table.rx(i,True)[2]))[0]
-    if (node_x,node_y) in laq_edges:
-      node_m_x_y = '_'.join( ['m', node_x, node_y] )
-      laq_nodes[node_m_x_y]={"nodetype":"mid", "Domain":"na", "6Letter":"na"} 
-      if node_z in node_infor:
-         laq_nodes[node_z]=node_infor[node_z]
-      else:
-         missnode.add(node_z)
-         laq_nodes[node_z]={"nodetype":" ", "Domain":" ", "6Letter":" "}  
-      if tuple(la_table.rx(i,True)[lai])[0] >= 0:
-         interaction_type3 = 'pu'
-      else:
-         interaction_type3 = 'nu'
-      if laq_edges[(node_x,node_y)][1]['interaction'] == 'pdl':
-         interaction_type1 = 'pu'
-         interaction_type2 = 'pdr'
-      elif laq_edges[(node_x,node_y)][1]['interaction'] == 'ndl':
-         interaction_type1 = 'nu'
-         interaction_type2 = 'ndr'
-      elif laq_edges[(node_x,node_y)][1]['interaction'] == 'pdr':
-         interaction_type1 = 'pdr'
-         interaction_type2 = 'pu'
-      elif laq_edges[(node_x,node_y)][1]['interaction'] == 'ndr':
-         interaction_type1 = 'ndr'
-         interaction_type2 = 'nu'
-      elif laq_edges[(node_x,node_y)][1]['interaction'] == 'pu':
-         interaction_type1 = 'pu'
-         interaction_type2 = 'pu'
-      else:
-         interaction_type1 = 'nu'
-         interaction_type2 = 'nu'
-      #if tuple(la_table.rx(i,True)[3])[0] is 'nan':
-      x = tuple(la_table.rx(i,True)[lai])[0]
-      if isinstance(x, float) and math.isnan(x):
-         LA_score = -9999
-      else:
-         #LA_score = tuple(la_table.rx(i,True)[3])[0]
-         LA_score = x
-      LS_score = laq_edges[(node_x,node_y)][1]['LS'] 
-      interaction = laq_edges[(node_x,node_y)][1]['interaction']
-      laq_edges[(node_x, node_m_x_y)] = (-1, {'L_name':'LS', 'L':LS_score, 'interaction':interaction_type1, 'source':node_x, 'target':node_m_x_y})
-      laq_edges[(node_y, node_m_x_y)] = (-1, {'L_name':'LS', 'L':LS_score, 'interaction':interaction_type2, 'source':node_y, 'target':node_m_x_y})
-      laq_edges[(node_z, node_m_x_y)] = (-1, {'L_name':'LA', 'L':LA_score, 'interaction':interaction_type3, 'source':node_z, 'target':node_m_x_y}) 
-      laq_edges[(node_x, node_y)]=(0, {'LS':LS_score, 'interaction':interaction, 'source':node_x, 'target':node_y})
+    if node_z in nodelist_name:
+       pass
+    else: 
+       if (node_x,node_y) in laq_edges:
+         x = tuple(la_table.rx(i,True)[lai])[0]
+         if isinstance(x, float) and math.isnan(x):
+            #LA_score = -9999
+            pass
+         else:
+            #LA_score = tuple(la_table.rx(i,True)[3])[0]
+            LA_score = x
+            node_m_x_y = '_'.join( ['m', node_x, node_y] )
+            laq_nodes[node_m_x_y]={"nodetype":"mid", "Domain":"na", "6Letter":"na"} 
+            if node_z in node_infor:
+               laq_nodes[node_z]=node_infor[node_z]
+            else:
+               missnode.add(node_z)
+               laq_nodes[node_z]={"nodetype":" ", "Domain":" ", "6Letter":" "}  
+            if tuple(la_table.rx(i,True)[lai])[0] >= 0:
+               interaction_type3 = 'pu'
+            else:
+               interaction_type3 = 'nu'
+            if laq_edges[(node_x,node_y)][1]['interaction'] == 'pdl':
+               interaction_type1 = 'pu'
+               interaction_type2 = 'pdr'
+            elif laq_edges[(node_x,node_y)][1]['interaction'] == 'ndl':
+               interaction_type1 = 'nu'
+               interaction_type2 = 'ndr'
+            elif laq_edges[(node_x,node_y)][1]['interaction'] == 'pdr':
+               interaction_type1 = 'pdr'
+               interaction_type2 = 'pu'
+            elif laq_edges[(node_x,node_y)][1]['interaction'] == 'ndr':
+               interaction_type1 = 'ndr'
+               interaction_type2 = 'nu'
+            elif laq_edges[(node_x,node_y)][1]['interaction'] == 'pu':
+               interaction_type1 = 'pu'
+               interaction_type2 = 'pu'
+            else:
+               interaction_type1 = 'nu'
+               interaction_type2 = 'nu'
+            LS_score = laq_edges[(node_x,node_y)][1]['LS'] 
+            interaction = laq_edges[(node_x,node_y)][1]['interaction']
+            laq_edges[(node_x, node_m_x_y)] = (-1, {'L_name':'LS', 'L':LS_score, 'interaction':interaction_type1, 'source':node_x, 'target':node_m_x_y, 'edgetype':'m'})
+            laq_edges[(node_y, node_m_x_y)] = (-1, {'L_name':'LS', 'L':LS_score, 'interaction':interaction_type2, 'source':node_y, 'target':node_m_x_y, 'edgetype':'m'})
+            laq_edges[(node_z, node_m_x_y)] = (-1, {'L_name':'LA', 'L':LA_score, 'interaction':interaction_type3, 'source':node_z, 'target':node_m_x_y, 'edgetype':'n'})
+            laq_edges[(node_x, node_y)]=(0, {'LS':LS_score, 'interaction':interaction, 'source':node_x, 'target':node_y, 'edgetype':'l'})
   print "miss node_z in nodeinfor"
   print missnode
   xgmml_element=etree.Element('graph')
@@ -175,6 +200,10 @@ def LA_Xgmml2(la_table, la_size, lsaq_table, lsaq_size, nodeinfor_table, nodeinf
         L_element.set('type', 'real')       
         L_element.set('name', laq_edges[edge][1]['L_name'])
         L_element.set('value', "%.4f" % laq_edges[edge][1]['L'])
+        edgetype_element = etree.SubElement(edge_element, 'att')
+        edgetype_element.set('type', 'string')
+        edgetype_element.set('name', 'edgetype')
+        edgetype_element.set('value', laq_edges[edge][1]['edgetype'])
      elif laq_edges[edge][0] > 0:
         edge_label = '_'.join( [laq_edges[edge][1]['source'], laq_edges[edge][1]['interaction'], laq_edges[edge][1]['target']] )
         edge_element = etree.SubElement(xgmml_element, 'edge')
@@ -189,6 +218,10 @@ def LA_Xgmml2(la_table, la_size, lsaq_table, lsaq_size, nodeinfor_table, nodeinf
         LS_element.set('type', 'real')       
         LS_element.set('name', 'LS')
         LS_element.set('value', "%.4f" % laq_edges[edge][1]['LS'])
+        edgetype_element = etree.SubElement(edge_element, 'att')
+        edgetype_element.set('type', 'string')
+        edgetype_element.set('name', 'edgetype')
+        edgetype_element.set('value', laq_edges[edge][1]['edgetype'])
      else:
         pass     
   xgmml_string = etree.tostring(xgmml_element, encoding='utf-8')
