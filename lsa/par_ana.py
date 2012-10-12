@@ -201,9 +201,9 @@ def main():
       if os.path.exists(job):
         header, content = get_content(open(job[:-4]+".tmp",'r'))
         if len(endJob)==0:
-          print >>multiOutput, "".join([header]+content)
+          print >>multiOutput, "\n".join([header]+content)
         else:
-          print >>multiOutput, "".join(content)
+          print >>multiOutput, "\n".join(content)
         os.remove(job)
         endJob.add(job)
         print >>sys.stderr, "ended", job
