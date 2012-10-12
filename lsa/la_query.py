@@ -64,6 +64,7 @@ def main():
   parser.add_argument("rawFile1", metavar= "rawFile1", type=argparse.FileType('rU'), help="the raw lsaq file")
   parser.add_argument("rawFile2", metavar= "rawFile2", type=argparse.FileType('rU'), help="the raw la file")
   parser.add_argument("rawFile3", metavar= "rawFile3", type=argparse.FileType('rU'), help="the node information file")
+  parser.add_argument("rawFile4", metavar= "rawFile4", type=argparse.FileType('rU'), help="the node list file")
   parser.add_argument("entryFile", metavar= "entryFile", type=argparse.FileType('w'), help="the query result file")
 
   parser.add_argument("-q", "--queryLine", dest="queryLine", default='(!la$P>0.01)&(la$Q<0.01)',
@@ -85,6 +86,7 @@ def main():
   rawFile1 = vars(arg_namespace)['rawFile1']
   rawFile2 = vars(arg_namespace)['rawFile2']
   rawFile3 = vars(arg_namespace)['rawFile3']
+  rawFile4 = vars(arg_namespace)['rawFile4']
   entryFile = vars(arg_namespace)['entryFile']
   queryLine = vars(arg_namespace)['queryLine']
   print "q=", queryLine
@@ -94,13 +96,14 @@ def main():
   rawFile1.close()
   rawFile2.close()
   rawFile3.close()
+  rawFile4.close()
   entryFile.close()
 
   print >>sys.stderr, "reading the lsatable..."
   r('''lsaq <- read.delim("%s")''' % (rawFile1.name))
   r('''la <- read.delim("%s")''' % (rawFile2.name))
   r('''nodeinfor <- read.delim("%s")''' % (rawFile3.name))  
-
+  r('''nodelist <- read.delim("%s")''' % (rawFile4.name))
   try:
     print >>sys.stderr, "querying the lsatable..."
     r('''la_select <- la[%s,]''' % queryLine)
@@ -118,7 +121,7 @@ def main():
   la_size=r('''dim(la_select)''')[0]
   lsaq_size=r('''dim(lsaq)''')[0]
   nodeinfor_size=r('''dim(nodeinfor)''')[0]
-
+  nodelist_size=r('''dim(nodelist)''')[0]
   #rpy2 and R interfacing debug
   #print r.lsa_select
   #print r('''dim(lsa_select)''')[0]
@@ -131,7 +134,7 @@ def main():
 
   if xgmmlFile != "":
     print >>sys.stderr, "filtering result as a XGMML file for visualization such as cytoscape..."
-    print >>laio.tryIO(xgmmlFile,'w'), laio.LA_Xgmml2(r.la_select, la_size, r.lsaq, lsaq_size, r.nodeinfor, nodeinfor_size, analysisTitle)
+    print >>laio.tryIO(xgmmlFile,'w'), laio.LA_Xgmml2(r.la_select, la_size, r.lsaq, lsaq_size, r.nodeinfor, nodeinfor_size, r.nodelist, nodelist_size, analysisTitle)
 
   #if sifFile != "":
   #  print >>sys.stderr, "filtering result as a SIF file for visualization such as cytoscape..."
