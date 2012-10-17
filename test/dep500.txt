@@ -364,3 +364,5 @@ log_TurnoverLeu	Env	500	4.24	0.9	4.35	0.41	85	85																															l
 log_TurnoverThy	Env	500	2.58	0.98	2.75	0.91	44	44																															log_TurnoverThy
 log_PStar	Env	500	0.6	0.2	0.63	0.21	47	47																															log_PStar
 log_Chl_A_Sat	Env	500	-0.52	0.56	-0.66	0.52	19	19																															log_Chl_A_Sat
+MEI	Env	500																																					MEI
+st.shift	Env	500																																					st.shift

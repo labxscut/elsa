@@ -407,3 +407,5 @@ log_TurnoverLeu	Env	CMAX	1.67	0.83	1.7	0.79	70	70																															
 log_TurnoverThy	Env	CMAX	1.9	0.94	1.86	0.8	65	65																															log_TurnoverThy
 log_PStar	Env	CMAX	-0.36	0.44	-0.31	0.22	6	6																															log_PStar
 log_Chl_A_Sat	Env	CMAX	-0.51	0.56	-0.65	0.52	19	19																															log_Chl_A_Sat
+MEI	Env	CMAX																																					MEI
+st.shift	Env	CMAX																																					st.shift

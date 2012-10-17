@@ -327,3 +327,5 @@ log_TurnoverLeu	Env	890	4.1	0.75	4.09	0.63	56	56																															l
 log_TurnoverThy	Env	890	2.2	0.58	2.31	0.36	6	6																															log_TurnoverThy
 log_PStar	Env	890	0.79	0.13	0.78	0.08	20	20																															log_PStar
 log_Chl_A_Sat	Env	890	-0.37	0.58	-0.53	0.59	18	18																															log_Chl_A_Sat
+MEI	Env	890																																					MEI
+st.shift	Env	890																																					st.shift
