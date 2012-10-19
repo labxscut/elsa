@@ -89,14 +89,16 @@ def get_content(file):
   content=[]
   for line in file:
     if i==0:
-      header=line
+      header=line.rstrip('\n')
       i+=1
-    elif not line.strip():   #not empty, to something
-      content.append(line)
+    else:   #not empty, to something
+      #print line.rstrip('\n')
+      content.append(line.rstrip('\n'))
   return (header, content)
 
 def gen_singles(multiInput, multiOutput):
   header, content=get_content(multiInput)
+  #print header, content
   multiname=multiInput.name
   i=1
   singles=[]
@@ -139,10 +141,10 @@ def gen_output(multiOutput, resultFiles):
   for resultFile in resultFiles:
     header, content = get_content(resultFile)
     if i==0:
-      print >>multiOutput, "".join([header]+content)
+      print >>multiOutput, "\n".join([header]+content)
       i+=1
     else:
-      print >>multiOutput, "".join(content)
+      print >>multiOutput, "\n".join(content)
   return
 
 def ssa_pbs(singlePBS):
@@ -172,6 +174,7 @@ def main():
   dryRun=vars(arg_namespace)['dryRun']
 
   singleFiles,resultFiles,endFiles=gen_singles(multiInput,multiOutput)
+  #print >>sys.stderr, singleFiles,resultFiles,endFiles
   for endFile in endFiles: #ensure .end file from previous runs will be removed
     if os.path.exists(endFile):
       os.remove(endFile)
@@ -189,15 +192,18 @@ def main():
     print >>sys.stderr, "finish dryRun"
     quit()
 
+  #print >>sys.stderr, "inProgress=", inProgress
+  #print >>sys.stderr, "endJob=", endJob
+  #print >>sys.stderr, "am I here?"
   while(len(endJob)!=len(inProgress)):
     for job in inProgress:
       #time.sleep(1)
       if os.path.exists(job):
         header, content = get_content(open(job[:-4]+".tmp",'r'))
         if len(endJob)==0:
-          print >>multiOutput, "".join([header]+content)
+          print >>multiOutput, "\n".join([header]+content)
         else:
-          print >>multiOutput, "".join(content)
+          print >>multiOutput, "\n".join(content)
         os.remove(job)
         endJob.add(job)
         print >>sys.stderr, "ended", job
