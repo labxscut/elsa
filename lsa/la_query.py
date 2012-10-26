@@ -75,8 +75,8 @@ def main():
                         '(!la$P>0.01)&(la$Q<0.01)'") 
   parser.add_argument("-x", "--xgmmlFile", dest="xgmmlFile", default="",
                       help="if specified, will also produce a XGMML format file for cytoscape")
-  #parser.add_argument("-s", "--sifFile", dest="sifFile", default="",
-  #                    help="if specified, will also produce a SIF format file for backward compatibility")
+  parser.add_argument("-s", "--sifFile", dest="sifFile", default="",
+                      help="if specified, will also produce a SIF format file for backward compatibility")
   arg_namespace = parser.parse_args()
 
   #get the arguments
@@ -91,7 +91,7 @@ def main():
   queryLine = vars(arg_namespace)['queryLine']
   print "q=", queryLine
   xgmmlFile = vars(arg_namespace)['xgmmlFile']
-  #sifFile = vars(arg_namespace)['sifFile']
+  sifFile = vars(arg_namespace)['sifFile']
   analysisTitle = os.path.basename(rawFile2.name)
   rawFile1.close()
   rawFile2.close()
@@ -136,9 +136,9 @@ def main():
     print >>sys.stderr, "filtering result as a XGMML file for visualization such as cytoscape..."
     print >>laio.tryIO(xgmmlFile,'w'), laio.LA_Xgmml2(r.la_select, la_size, r.lsaq, lsaq_size, r.nodeinfor, nodeinfor_size, r.nodelist, nodelist_size, analysisTitle)
 
-  #if sifFile != "":
-  #  print >>sys.stderr, "filtering result as a SIF file for visualization such as cytoscape..."
-  #  lsaio.writeTable(lsaio.tryIO(sifFile,'w'), lsaio.toSif(r.la_select, la_size))
+  if sifFile != "":
+    print >>sys.stderr, "filtering result as a SIF file for visualization such as cytoscape..."
+    laio.writeTable(laio.tryIO(sifFile,'w'), laio.toSif(r.la_select, la_size))
 
   print >>sys.stderr, "finishing up..."
   print >>sys.stderr, "Thank you for using lsa-query, byebye!"
