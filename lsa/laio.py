@@ -33,17 +33,17 @@ def writeTable( handle, table, sep='\t' ):
   csvWriter.writerows(table)
 
 
-def LA_Xgmml3(la_table, la_size, lsaq_table, lsaq_size, title, nodeinfor_table, nodeinfor_size, LA_idx=4, LS_idx=3, Delay_idx=9):
-  laq_nodes = set()
-  laq_edges = dict()   
-  lai = LA_idx-1 #4-1
-  di = Delay_idx-1 #9-1
-  li = LS_idx-1 #3-1
+#def LA_Xgmml3(la_table, la_size, lsaq_table, lsaq_size, title, nodeinfor_table, nodeinfor_size, LA_idx=4, LS_idx=3, Delay_idx=9):
+  #laq_nodes = set()
+  #laq_edges = dict()   
+  #lai = LA_idx-1 #4-1
+  #di = Delay_idx-1 #9-1
+  #li = LS_idx-1 #3-1
 
-  for i in xrange(1, laq_size+1):
-    node_x = r['''as.character''']((la_table.rx(i,True)[0]))[0]
-    node_y = r['''as.character''']((la_table.rx(i,True)[1]))[0]
-    node_z = r['''as.character''']((la_table.rx(i,True)[2]))[0]
+  #for i in xrange(1, laq_size+1):
+    #node_x = r['''as.character''']((la_table.rx(i,True)[0]))[0]
+    #node_y = r['''as.character''']((la_table.rx(i,True)[1]))[0]
+    #node_z = r['''as.character''']((la_table.rx(i,True)[2]))[0]
 
 def LA_Xgmml2(la_table, la_size, lsaq_table, lsaq_size, nodeinfor_table, nodeinfor_size, nodelist_table, nodelist_size, title, LA_idx=4, LS_idx=3, Delay_idx=9):
   node_infor=dict()
@@ -128,7 +128,6 @@ def LA_Xgmml2(la_table, la_size, lsaq_table, lsaq_size, nodeinfor_table, nodeinf
        pass
     else: 
        if (node_x,node_y) in laq_edges:
-         print len(laq_edges[node_x,node_y][1])
          x = tuple(la_table.rx(i,True)[lai])[0]
          if isinstance(x, float) and math.isnan(x):
             #LA_score = -9999
@@ -427,41 +426,45 @@ def LA_Xgmml(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=3
   return xml.dom.minidom.parseString(xgmml_string).toprettyxml('  ')
 
 # filter for SIF format table
-def toSif( lsa_table, lsa_size, LS_idx=3, Delay_idx=9):
+def toSif( la_table, la_size, LA_idx=4):
   """ filter the lsa table for sif format which can be accepted by Cytoscape
   table - input table
   skiprows - number of rows to skip
   """
-  lsa_cols = list(r['colnames'](r.lsa_select))
+  la_cols = list(r['colnames'](r.la_select))
   sifTable = []
-  li = LS_idx-1
-  di = Delay_idx-1
+  lai = LA_idx-1
   #(li, di) = (LS_idx-1, Delay_idx-1)
-  for i in xrange(0,lsa_size+1): 
+  for i in xrange(0,la_size+1): 
     if i < 1:
-      sifTable.append( ["X", "interaction", "Y"] + lsa_cols[2:]  )
+      sifTable.append( ["X","Y", "interaction", "Z"] + la_cols[3:]  )
       #print row[li], row[di]
       continue
     else:
-      node_x = r['''as.character''']((lsa_table.rx(i,True)[0]))[0]
-      node_y = r['''as.character''']((lsa_table.rx(i,True)[1]))[0]
-      relation = "u"
-      if tuple(lsa_table.rx(i,True)[di])[0] == 0: # non delayed, undirected
-        if tuple(lsa_table.rx(i,True)[li])[0] > 0:
-          relation = "pu"
-        elif tuple(lsa_table.rx(i,True)[li])[0] < 0:
-          relation = "nu"
-      elif tuple(lsa_table.rx(i,True)[di])[0] < 0: # X lead Y  
-        if tuple(lsa_table.rx(i,True)[li])[0] > 0:
-          relation = "pdl"
-        elif tuple(lsa_table.rx(i,True)[li])[0] < 0:
-          relation = "ndl"
-      else: # X retard Y  
-        if tuple(lsa_table.rx(i,True)[li])[0] > 0:
-          relation = "pdr"
-        elif tuple(lsa_table.rx(i,True)[li])[0] < 0:
-          relation = "ndr"
-      sifTable.append( [node_x, relation, node_y] + list(r['as.character'](r.lsa_select.rx(i, True)))[2:] )
+      node_x = r['''as.character''']((la_table.rx(i,True)[0]))[0]
+      node_y = r['''as.character''']((la_table.rx(i,True)[1]))[0]
+      node_z = r['''as.character''']((la_table.rx(i,True)[2]))[0]
+      #relation = "u"
+      #if tuple(lsa_table.rx(i,True)[di])[0] == 0: # non delayed, undirected
+        #if tuple(lsa_table.rx(i,True)[li])[0] > 0:
+          #relation = "pu"
+        #elif tuple(lsa_table.rx(i,True)[li])[0] < 0:
+          #relation = "nu"
+      #elif tuple(lsa_table.rx(i,True)[di])[0] < 0: # X lead Y  
+        #if tuple(lsa_table.rx(i,True)[li])[0] > 0:
+          #relation = "pdl"
+        #elif tuple(lsa_table.rx(i,True)[li])[0] < 0:
+          #relation = "ndl"
+      #else: # X retard Y  
+        #if tuple(lsa_table.rx(i,True)[li])[0] > 0:
+          #relation = "pdr"
+        #elif tuple(lsa_table.rx(i,True)[li])[0] < 0:
+          #relation = "ndr"
+      if tuple(la_table.rx(i,True)[lai])[0] >= 0:
+         relation = 'pu'
+      else:
+         relation = 'nu'
+      sifTable.append( [node_x, node_y, relation, node_z] + list(r['as.character'](r.la_select.rx(i, True)))[3:] )
   return sifTable
 
 if __name__=="__main__":
