@@ -138,7 +138,9 @@ def main():
 
   if sifFile != "":
     print >>sys.stderr, "filtering result as a SIF file for visualization such as cytoscape..."
-    laio.writeTable(laio.tryIO(sifFile,'w'), laio.toSif(r.la_select, la_size))
+    laio.writeTable(laio.tryIO(sifFile,'w'), laio.toSif(r.la_select, la_size, r.lsaq, lsaq_size, r.nodelist, nodelist_size, analysisTitle)
+)
+
 
   print >>sys.stderr, "finishing up..."
   print >>sys.stderr, "Thank you for using lsa-query, byebye!"

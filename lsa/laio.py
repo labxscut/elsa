@@ -426,45 +426,94 @@ def LA_Xgmml(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=3
   return xml.dom.minidom.parseString(xgmml_string).toprettyxml('  ')
 
 # filter for SIF format table
-def toSif( la_table, la_size, LA_idx=4):
+def toSif( la_table, la_size, lsaq_table, lsaq_size, nodelist_table, nodelist_size, title, LA_idx=4, LS_idx=3, Delay_idx=9):
   """ filter the lsa table for sif format which can be accepted by Cytoscape
   table - input table
   skiprows - number of rows to skip
   """
-  la_cols = list(r['colnames'](r.la_select))
   sifTable = []
-  lai = LA_idx-1
-  #(li, di) = (LS_idx-1, Delay_idx-1)
-  for i in xrange(0,la_size+1): 
-    if i < 1:
-      sifTable.append( ["X","Y", "interaction", "Z"] + la_cols[3:]  )
-      #print row[li], row[di]
-      continue
+  sifTable.append( ["X", "interaction", "Y", "LS or LA", "score", "edgetype", "P", "Q"]  )
+  lsaq_edges=dict()
+  nodelist_name=set()
+  for i in xrange(1, nodelist_size+1):
+    n_name=r['''as.character''']((nodelist_table.rx(i,True)[0]))[0]
+    nodelist_name.add(n_name)
+     
+  lai = LA_idx-1 #4-1
+  di = Delay_idx-1 #9-1
+  li = LS_idx-1 #3-1
+  for i in xrange(1, lsaq_size+1):  
+    node_x = r['''as.character''']((lsaq_table.rx(i,True)[0]))[0]
+    node_y = r['''as.character''']((lsaq_table.rx(i,True)[1]))[0]
+    if tuple(lsaq_table.rx(i,True)[di])[0] > 0:
+         d_code = 'dr'      #direction reta
+    elif tuple(lsaq_table.rx(i,True)[di])[0] < 0:
+         d_code = 'dl'      #direction lead
     else:
-      node_x = r['''as.character''']((la_table.rx(i,True)[0]))[0]
-      node_y = r['''as.character''']((la_table.rx(i,True)[1]))[0]
-      node_z = r['''as.character''']((la_table.rx(i,True)[2]))[0]
-      #relation = "u"
-      #if tuple(lsa_table.rx(i,True)[di])[0] == 0: # non delayed, undirected
-        #if tuple(lsa_table.rx(i,True)[li])[0] > 0:
-          #relation = "pu"
-        #elif tuple(lsa_table.rx(i,True)[li])[0] < 0:
-          #relation = "nu"
-      #elif tuple(lsa_table.rx(i,True)[di])[0] < 0: # X lead Y  
-        #if tuple(lsa_table.rx(i,True)[li])[0] > 0:
-          #relation = "pdl"
-        #elif tuple(lsa_table.rx(i,True)[li])[0] < 0:
-          #relation = "ndl"
-      #else: # X retard Y  
-        #if tuple(lsa_table.rx(i,True)[li])[0] > 0:
-          #relation = "pdr"
-        #elif tuple(lsa_table.rx(i,True)[li])[0] < 0:
-          #relation = "ndr"
-      if tuple(la_table.rx(i,True)[lai])[0] >= 0:
-         relation = 'pu'
-      else:
-         relation = 'nu'
-      sifTable.append( [node_x, node_y, relation, node_z] + list(r['as.character'](r.la_select.rx(i, True)))[3:] )
+         d_code = 'u'
+    #print(lsa_table.rx(i,True)[li])
+    if tuple(lsaq_table.rx(i,True)[li])[0] >= 0:
+         c_code = 'p'
+    else:
+         c_code = 'n'
+    interaction = c_code+d_code
+    LS_score = tuple(lsaq_table.rx(i,True)[2])[0]
+    LS_P = tuple(lsaq_table.rx(i,True)[9])[0]
+    LS_Q = tuple(lsaq_table.rx(i,True)[20])[0]
+    lsaq_edges[(node_x, node_y)]=(1, {'score':LS_score, 'L_name':'LS', 'interaction':interaction, 'source':node_x, 'target':node_y, 'edgetype':'LS', 'L_p':LS_P, 'L_q':LS_Q})
+  laq_edges=lsaq_edges
+
+  for i in xrange(1, la_size+1):
+    node_x = r['''as.character''']((la_table.rx(i,True)[0]))[0]
+    node_y = r['''as.character''']((la_table.rx(i,True)[1]))[0]
+    node_z = r['''as.character''']((la_table.rx(i,True)[2]))[0]
+    if node_z not in nodelist_name:
+       pass
+    else: 
+       if (node_x,node_y) in laq_edges:
+         x = tuple(la_table.rx(i,True)[lai])[0]
+         if isinstance(x, float) and math.isnan(x):
+            #LA_score = -9999
+            pass
+         else:
+            #LA_score = tuple(la_table.rx(i,True)[3])[0]
+            LA_score = x
+            node_m_x_y = '_'.join( ['m', node_x, node_y] )
+            if tuple(la_table.rx(i,True)[lai])[0] >= 0:
+               interaction_type3 = 'pu'
+            else:
+               interaction_type3 = 'nu'
+            if laq_edges[(node_x,node_y)][1]['interaction'] == 'pdl':
+               interaction_type1 = 'pu'
+               interaction_type2 = 'pdr'
+            elif laq_edges[(node_x,node_y)][1]['interaction'] == 'ndl':
+               interaction_type1 = 'nu'
+               interaction_type2 = 'ndr'
+            elif laq_edges[(node_x,node_y)][1]['interaction'] == 'pdr':
+               interaction_type1 = 'pdr'
+               interaction_type2 = 'pu'
+            elif laq_edges[(node_x,node_y)][1]['interaction'] == 'ndr':
+               interaction_type1 = 'ndr'
+               interaction_type2 = 'nu'
+            elif laq_edges[(node_x,node_y)][1]['interaction'] == 'pu':
+               interaction_type1 = 'pu'
+               interaction_type2 = 'pu'
+            else:
+               interaction_type1 = 'nu'
+               interaction_type2 = 'nu'
+            LS_score = laq_edges[(node_x,node_y)][1]['score'] 
+            interaction = laq_edges[(node_x,node_y)][1]['interaction']
+            LS_P = laq_edges[(node_x,node_y)][1]['L_p']     
+            LS_Q = laq_edges[(node_x,node_y)][1]['L_q']
+            LA_P = tuple(la_table.rx(i,True)[6])[0]
+            LA_Q = tuple(la_table.rx(i,True)[7])[0]
+            laq_edges[(node_x, node_m_x_y)]=(-1,{'Lp':'Lsp','L_p':LS_P,'Lq':'Lsq','L_q':LS_Q,'score':LS_score,'L_name':'LS','interaction':interaction_type1,'source':node_x,'target':node_m_x_y,'edgetype':'LA'})
+            laq_edges[(node_y, node_m_x_y)]=(-1,{'Lp':'Lsp','L_p':LS_P,'Lq':'Lsq','L_q':LS_Q,'score':LS_score,'L_name':'LS','interaction':interaction_type2,'source':node_y,'target':node_m_x_y,'edgetype':'LA'})
+            laq_edges[(node_z, node_m_x_y)]=(-1,{'Lp':'Lap','L_p':LA_P,'Lq':'Laq','L_q':LA_Q,'score':LA_score,'L_name':'LA', 'interaction':interaction_type3,'source':node_z,'target':node_m_x_y,'edgetype':'Z'})
+  
+  for edge in laq_edges:  
+     sifTable.append( [laq_edges[edge][1]['source'],laq_edges[edge][1]['interaction'],laq_edges[edge][1]['target'],laq_edges[edge][1]['L_name'],laq_edges[edge][1]['score'],laq_edges[edge][1]['edgetype'],laq_edges[edge][1]['L_p'],laq_edges[edge][1]['L_q']]  )
+   
   return sifTable
 
 if __name__=="__main__":
