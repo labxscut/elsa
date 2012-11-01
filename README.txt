@@ -6,8 +6,8 @@ INSTRODUCTION:
     It might work for Windows with Cygwin (not tested).
     More current information of this package is available @
 		http://meta.usc.edu/softs/lsa
-    Wiki like manual is available @
-		http://bitbucket.org/charade/lsa/wiki/Home
+    eLSA Wiki (must read and welcome to contribute) is available @
+		http://bitbucket.org/charade/elsa/wiki/Home
 
 DEPENDENCIES:
     C++ build environment
@@ -86,8 +86,8 @@ INSTALL:
 
     Download the latest release of eLSA from http://meta.usc.edu/softs/lsa.
     Follow standard python module setup to install:
-        $tar -zxvf charade-lsa-release.tar.gz
-        $cd charade-lsa-release
+        $tar -zxvf charade-elsa-release.tar.gz
+        $cd charade-elsa-release
         $python setup.py install
         $cd test      #test the scripts are workable
         $. test.sh    #ad hoc test of the script on test data
@@ -96,19 +96,19 @@ INSTALL:
 
     Download the latest release of GRAMMy from http://meta.usc.edu/softs/lsa.
     Follow standard python module setup to install:
-        $tar -zxvf charade-lsa-release.tar.gz
-        $cd charade-lsa-release
+        $tar -zxvf charade-elsa-release.tar.gz
+        $cd charade-elsa-release
         $python setup.py install
 
     [Development]
 
     eLSA is open source and the version controlled repository is @:
-    	  https://bitbucket.org/charade/lsa.
+    	  https://bitbucket.org/charade/elsa.
     Use mercurial tools (http://mercurial.selenic.com) to download a local copy:
-        $hg clone ssh://hg@bitbucket.org/charade/lsa lsa-tip
+        $hg clone ssh://hg@bitbucket.org/charade/elsa elsa-tip
 
     Follow standard python module setup to install:
-        $cd lsa-tip
+        $cd elsa-tip
         $python setup.py install
 
 EXECUTABLES:
