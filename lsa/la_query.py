@@ -65,7 +65,8 @@ def main():
   parser.add_argument("rawFile2", metavar= "rawFile2", type=argparse.FileType('rU'), help="the raw lat file")
   parser.add_argument("rawFile3", metavar= "rawFile3", type=argparse.FileType('rU'), help="the node information file,like:Domain,6Letter,Class....")
   parser.add_argument("rawFile4", metavar= "rawFile4", type=argparse.FileType('rU'), help="the original time series file,Used to screen out some nodes what we need")
-  parser.add_argument("entryFile", metavar= "entryFile", type=argparse.FileType('w'), help="the query result file")
+  parser.add_argument("newnodeFile", metavar= "newnodeFile", help="add m_x_y node into node information,and get a new file as newnodeFile")
+  parser.add_argument("entryFile", metavar= "entryFile", help="the query result file")
 
   parser.add_argument("-q", "--queryLine", dest="queryLine", default='(!la$P>0.01)&(la$Q<0.01)',
                       help="specify the highest pValue threshold for querying, default: None \n \
@@ -87,6 +88,7 @@ def main():
   rawFile2 = vars(arg_namespace)['rawFile2']
   rawFile3 = vars(arg_namespace)['rawFile3']
   rawFile4 = vars(arg_namespace)['rawFile4']
+  newnodeFile = vars(arg_namespace)['newnodeFile']
   entryFile = vars(arg_namespace)['entryFile']
   queryLine = vars(arg_namespace)['queryLine']
   print "q=", queryLine
@@ -97,7 +99,6 @@ def main():
   rawFile2.close()
   rawFile3.close()
   rawFile4.close()
-  entryFile.close()
 
   print >>sys.stderr, "reading the lsatable..."
   r('''lsaq <- read.delim("%s")''' % (rawFile1.name))
@@ -110,18 +111,21 @@ def main():
   except ValueError:
     print >>sys.stderr, "error query formatting, try again"
     quit()
-  try:
-    print >>sys.stderr, "writing up result file..."
-    r('''write.table( la_select, file="%s", quote=FALSE, row.names=FALSE, sep='\t' )''' % entryFile.name)
-  except ValueError:
-    print >>sys.stderr, "no entry selected, try again"
-    quit()
-
-  
   la_size=r('''dim(la_select)''')[0]
   lsaq_size=r('''dim(lsaq)''')[0]
   nodeinfor_size=r('''dim(nodeinfor)''')[0]
   nodelist_size=r('''dim(nodelist)''')[0]
+  print "writing up result file..."
+  laio.writeTable(laio.tryIO(entryFile,'w'), laio.tolaq(r.la_select, la_size))
+  print "writing up new node information file..."
+  laio.writeTable(laio.tryIO(newnodeFile,'w'), laio.tonewnode(r.la_select, la_size, r.lsaq, lsaq_size, r.nodeinfor, nodeinfor_size, r.nodelist, nodelist_size))
+  # try:
+  #  print >>sys.stderr, "writing up result file..."
+  # r('''write.table( la_select, file="%s", quote=FALSE, row.names=FALSE, sep='\t' )''' % entryFile.name)
+  # except ValueError:
+  #  print >>sys.stderr, "no entry selected, try again"
+  # quit()
+
   #rpy2 and R interfacing debug
   #print r.lsa_select
   #print r('''dim(lsa_select)''')[0]
@@ -138,8 +142,7 @@ def main():
 
   if sifFile != "":
     print >>sys.stderr, "filtering result as a SIF file for visualization such as cytoscape..."
-    laio.writeTable(laio.tryIO(sifFile,'w'), laio.toSif(r.la_select, la_size, r.lsaq, lsaq_size, r.nodelist, nodelist_size, analysisTitle)
-)
+    laio.writeTable(laio.tryIO(sifFile,'w'), laio.toSif(r.la_select, la_size, r.lsaq, lsaq_size, r.nodelist, nodelist_size, analysisTitle))
 
 
   print >>sys.stderr, "finishing up..."

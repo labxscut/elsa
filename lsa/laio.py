@@ -9,6 +9,22 @@ from rpy2.robjects.numpy2ri import numpy2ri
 ro.conversion.py2ri = numpy2ri
 r = ro.r
 
+def tolaq(la_table, la_size):
+  la_cols = list(r['colnames'](la_table))
+  laqTable = []
+  for i in xrange(0,la_size+1): 
+    if i < 1:
+      laqTable.append( la_cols[0:] + ["tag"])
+      continue
+    else:
+      node_x = r['''as.character''']((la_table.rx(i,True)[0]))[0]
+      node_y = r['''as.character''']((la_table.rx(i,True)[1]))[0]
+      node_z = r['''as.character''']((la_table.rx(i,True)[2]))[0]
+      ds = "ARIS.dep5.abd"
+      tag =  '|'.join( [ds, node_x, node_y, node_z] )
+      laqTable.append([node_x, node_y, node_z] + list(r['as.character'](la_table.rx(i, True)))[3:] + [tag] )
+  return laqTable 
+
 def tryIO( file, mode ):
   """ Test the IO file before using it.
   file - string including path and filname.
@@ -516,6 +532,83 @@ def toSif( la_table, la_size, lsaq_table, lsaq_size, nodelist_table, nodelist_si
    
   return sifTable
 
+def tonewnode(la_table, la_size, lsaq_table, lsaq_size, nodeinfor_table, nodeinfor_size, nodelist_table, nodelist_size):
+  node_cols = list(r['colnames'](nodeinfor_table))
+  nodedepth = r['''as.character''']((nodeinfor_table.rx(1,True)[2]))[0]
+  nodeTable = []
+  for i in xrange(0,nodeinfor_size+1):
+    if i<1:
+      nodeTable.append( node_cols[0:] + ["tag"]  )
+      #print row[li], row[di]
+      continue
+    else:          
+      nodeID = r['''as.character''']((nodeinfor_table.rx(i,True)[0]))[0]
+      nodetype = r['''as.character''']((nodeinfor_table.rx(i,True)[1]))[0]
+      aa=r['''as.character''']((nodeinfor_table.rx(i,True)[3]))[0]
+      ab=r['''as.character''']((nodeinfor_table.rx(i,True)[4]))[0]
+      ac=r['''as.character''']((nodeinfor_table.rx(i,True)[5]))[0]
+      ad=r['''as.character''']((nodeinfor_table.rx(i,True)[6]))[0]
+      ae=r['''as.character''']((nodeinfor_table.rx(i,True)[7]))[0]
+      af=r['''as.character''']((nodeinfor_table.rx(i,True)[8]))[0]
+      ag=r['''as.character''']((nodeinfor_table.rx(i,True)[9]))[0]
+      ah=r['''as.character''']((nodeinfor_table.rx(i,True)[10]))[0]
+      ai=r['''as.character''']((nodeinfor_table.rx(i,True)[11]))[0]
+      aj=r['''as.character''']((nodeinfor_table.rx(i,True)[12]))[0]
+      ak=r['''as.character''']((nodeinfor_table.rx(i,True)[13]))[0]
+      al=r['''as.character''']((nodeinfor_table.rx(i,True)[14]))[0]
+      am=r['''as.character''']((nodeinfor_table.rx(i,True)[15]))[0]
+      an=r['''as.character''']((nodeinfor_table.rx(i,True)[16]))[0]
+      ao=r['''as.character''']((nodeinfor_table.rx(i,True)[17]))[0]
+      ap=r['''as.character''']((nodeinfor_table.rx(i,True)[18]))[0]
+      aq=r['''as.character''']((nodeinfor_table.rx(i,True)[19]))[0]
+      ar=r['''as.character''']((nodeinfor_table.rx(i,True)[20]))[0]
+      aS=r['''as.character''']((nodeinfor_table.rx(i,True)[21]))[0]
+      at=r['''as.character''']((nodeinfor_table.rx(i,True)[22]))[0]
+      au=r['''as.character''']((nodeinfor_table.rx(i,True)[23]))[0]
+      av=r['''as.character''']((nodeinfor_table.rx(i,True)[24]))[0]
+      aw=r['''as.character''']((nodeinfor_table.rx(i,True)[25]))[0]
+      ax=r['''as.character''']((nodeinfor_table.rx(i,True)[26]))[0]
+      ay=r['''as.character''']((nodeinfor_table.rx(i,True)[27]))[0]
+      az=r['''as.character''']((nodeinfor_table.rx(i,True)[28]))[0]
+      ba=r['''as.character''']((nodeinfor_table.rx(i,True)[29]))[0]
+      bb=r['''as.character''']((nodeinfor_table.rx(i,True)[30]))[0]
+      bc=r['''as.character''']((nodeinfor_table.rx(i,True)[31]))[0]
+      bd=r['''as.character''']((nodeinfor_table.rx(i,True)[32]))[0]
+      be=r['''as.character''']((nodeinfor_table.rx(i,True)[33]))[0]
+      bf=r['''as.character''']((nodeinfor_table.rx(i,True)[34]))[0]
+      bg=r['''as.character''']((nodeinfor_table.rx(i,True)[35]))[0]
+      bh=r['''as.character''']((nodeinfor_table.rx(i,True)[36]))[0]
+      bi=r['''as.character''']((nodeinfor_table.rx(i,True)[37]))[0]
+      bj=r['''as.character''']((nodeinfor_table.rx(i,True)[38]))[0]
+      bk=r['''as.character''']((nodeinfor_table.rx(i,True)[39]))[0]   
+      nodeTable.append( [nodeID,nodetype,nodedepth,aa,ab,ac,ad,ae,af,ag,ah,ai,aj,ak,al,am,an,ao,ap,aq,ar,aS,at,au,av,aw,ax,ay,az,ba,bb,bc,bd,be,bf,bg,bh,bi,bj,bk," "] )
+  lsaq_edges=dict()
+  nodelist_name=set()
+  for i in xrange(1, nodelist_size+1):
+    n_name=r['''as.character''']((nodelist_table.rx(i,True)[0]))[0]
+    nodelist_name.add(n_name)
+  for i in xrange(1, lsaq_size+1):  
+    node_x = r['''as.character''']((lsaq_table.rx(i,True)[0]))[0]
+    node_y = r['''as.character''']((lsaq_table.rx(i,True)[1]))[0]
+    lsaq_edges[(node_x, node_y)]=(1) 
+  for i in xrange(1, la_size+1):
+    node_x = r['''as.character''']((la_table.rx(i,True)[0]))[0]
+    node_y = r['''as.character''']((la_table.rx(i,True)[1]))[0]
+    node_z = r['''as.character''']((la_table.rx(i,True)[2]))[0]
+    if node_z not in nodelist_name:
+       pass
+    else: 
+       if (node_x,node_y) in lsaq_edges:
+         x = tuple(la_table.rx(i,True)[3])[0]
+         if isinstance(x, float) and math.isnan(x):
+            #LA_score = -9999
+            pass
+         else:
+            #LA_score = tuple(la_table.rx(i,True)[3])[0]
+            node_m_x_y = '_'.join( ['m', node_x, node_y] )            
+            tag = '|'.join(['ARISA.dep5.abd', node_x, node_y, node_z])
+            nodeTable.append( [node_m_x_y, 'LA', nodedepth,'na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na',node_m_x_y, tag] )
+  return nodeTable  
 if __name__=="__main__":
   main()
   exit(0)
