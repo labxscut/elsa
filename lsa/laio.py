@@ -9,7 +9,7 @@ from rpy2.robjects.numpy2ri import numpy2ri
 ro.conversion.py2ri = numpy2ri
 r = ro.r
 
-def tolaq(la_table, la_size):
+def tolaq(la_table, la_size, title):
   la_cols = list(r['colnames'](la_table))
   laqTable = []
   for i in xrange(0,la_size+1): 
@@ -20,8 +20,7 @@ def tolaq(la_table, la_size):
       node_x = r['''as.character''']((la_table.rx(i,True)[0]))[0]
       node_y = r['''as.character''']((la_table.rx(i,True)[1]))[0]
       node_z = r['''as.character''']((la_table.rx(i,True)[2]))[0]
-      ds = "ARIS.dep5.abd"
-      tag =  '|'.join( [ds, node_x, node_y, node_z] )
+      tag =  '|'.join( [title, node_x, node_y, node_z] )
       laqTable.append([node_x, node_y, node_z] + list(r['as.character'](la_table.rx(i, True)))[3:] + [tag] )
   return laqTable 
 
@@ -532,7 +531,7 @@ def toSif( la_table, la_size, lsaq_table, lsaq_size, nodelist_table, nodelist_si
    
   return sifTable
 
-def tonewnode(la_table, la_size, lsaq_table, lsaq_size, nodeinfor_table, nodeinfor_size, nodelist_table, nodelist_size):
+def tonewnode(la_table, la_size, lsaq_table, lsaq_size, nodeinfor_table, nodeinfor_size, nodelist_table, nodelist_size, title):
   node_cols = list(r['colnames'](nodeinfor_table))
   nodedepth = r['''as.character''']((nodeinfor_table.rx(1,True)[2]))[0]
   nodeTable = []
@@ -606,7 +605,7 @@ def tonewnode(la_table, la_size, lsaq_table, lsaq_size, nodeinfor_table, nodeinf
          else:
             #LA_score = tuple(la_table.rx(i,True)[3])[0]
             node_m_x_y = '_'.join( ['m', node_x, node_y] )            
-            tag = '|'.join(['ARISA.dep5.abd', node_x, node_y, node_z])
+            tag = '|'.join([title, node_x, node_y, node_z])
             nodeTable.append( [node_m_x_y, 'LA', nodedepth,'na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na',node_m_x_y, tag] )
   return nodeTable  
 if __name__=="__main__":

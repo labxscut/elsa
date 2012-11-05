@@ -94,12 +94,16 @@ def main():
   print "q=", queryLine
   xgmmlFile = vars(arg_namespace)['xgmmlFile']
   sifFile = vars(arg_namespace)['sifFile']
-  analysisTitle = os.path.basename(rawFile2.name)
+  analysisTitle = os.path.basename(rawFile4.name)
   rawFile1.close()
   rawFile2.close()
   rawFile3.close()
   rawFile4.close()
+  ds = analysisTitle.split('.',3)
+  dsTitle = '.'.join(ds[0:3]) 
 
+
+  print dsTitle
   print >>sys.stderr, "reading the lsatable..."
   r('''lsaq <- read.delim("%s")''' % (rawFile1.name))
   r('''la <- read.delim("%s")''' % (rawFile2.name))
@@ -116,9 +120,9 @@ def main():
   nodeinfor_size=r('''dim(nodeinfor)''')[0]
   nodelist_size=r('''dim(nodelist)''')[0]
   print "writing up result file..."
-  laio.writeTable(laio.tryIO(entryFile,'w'), laio.tolaq(r.la_select, la_size))
+  laio.writeTable(laio.tryIO(entryFile,'w'), laio.tolaq(r.la_select, la_size, dsTitle))
   print "writing up new node information file..."
-  laio.writeTable(laio.tryIO(newnodeFile,'w'), laio.tonewnode(r.la_select, la_size, r.lsaq, lsaq_size, r.nodeinfor, nodeinfor_size, r.nodelist, nodelist_size))
+  laio.writeTable(laio.tryIO(newnodeFile,'w'), laio.tonewnode(r.la_select, la_size, r.lsaq, lsaq_size, r.nodeinfor, nodeinfor_size, r.nodelist, nodelist_size, dsTitle))
   # try:
   #  print >>sys.stderr, "writing up result file..."
   # r('''write.table( la_select, file="%s", quote=FALSE, row.names=FALSE, sep='\t' )''' % entryFile.name)
@@ -138,7 +142,7 @@ def main():
 
   if xgmmlFile != "":
     print >>sys.stderr, "filtering result as a XGMML file for visualization such as cytoscape..."
-    print >>laio.tryIO(xgmmlFile,'w'), laio.LA_Xgmml2(r.la_select, la_size, r.lsaq, lsaq_size, r.nodeinfor, nodeinfor_size, r.nodelist, nodelist_size, analysisTitle)
+    print >>laio.tryIO(xgmmlFile,'w'), laio.LA_Xgmml2(r.la_select, la_size, r.lsaq, lsaq_size, r.nodeinfor, nodeinfor_size, r.nodelist, nodelist_size, dsTitle)
 
   if sifFile != "":
     print >>sys.stderr, "filtering result as a SIF file for visualization such as cytoscape..."
