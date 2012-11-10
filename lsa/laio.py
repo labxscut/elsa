@@ -606,7 +606,7 @@ def tonewnode(la_table, la_size, lsaq_table, lsaq_size, nodeinfor_table, nodeinf
             #LA_score = tuple(la_table.rx(i,True)[3])[0]
             node_m_x_y = '_'.join( ['m', node_x, node_y] )            
             tag = '|'.join([title, node_x, node_y, node_z])
-            nodeTable.append( [node_m_x_y, 'LA', nodedepth,'na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na','na',node_m_x_y, tag] )
+            nodeTable.append( [node_m_x_y, 'LA', nodedepth,' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',' ',node_m_x_y, tag] )
   return nodeTable  
 if __name__=="__main__":
   main()
