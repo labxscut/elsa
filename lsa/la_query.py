@@ -61,12 +61,13 @@ def main():
   # define arguments: delayLimit, fillMethod, permuNum
   parser = argparse.ArgumentParser(description="Auxillary tool to new LSA package for querying la results")
 
-  parser.add_argument("rawFile1", metavar= "rawFile1", type=argparse.FileType('rU'), help="the raw lsaq file,get it from 'lsa_compute'")
-  parser.add_argument("rawFile2", metavar= "rawFile2", type=argparse.FileType('rU'), help="the raw lat file")
+  parser.add_argument("rawFile1", metavar= "rawFile1", type=argparse.FileType('rU'), help="the raw lsaq file,get it from 'lsa_query'")
+  parser.add_argument("rawFile2", metavar= "rawFile2", type=argparse.FileType('rU'), help="the raw lat file,get it from 'la_compute'")
   parser.add_argument("rawFile3", metavar= "rawFile3", type=argparse.FileType('rU'), help="the node information file,like:Domain,6Letter,Class....")
   parser.add_argument("rawFile4", metavar= "rawFile4", type=argparse.FileType('rU'), help="the original time series file,Used to screen out some nodes what we need")
-  parser.add_argument("newnodeFile", metavar= "newnodeFile", help="add m_x_y node into node information,and get a new file as newnodeFile")
-  parser.add_argument("entryFile", metavar= "entryFile", help="the query result file")
+  parser.add_argument("newnodeFile", metavar= "newnodeFile",
+                      help="This file contains the contents of third files and add the information of the m_x_y node, and added at the end of a column 'tag'")
+  parser.add_argument("entryFile", metavar= "entryFile", help="the query result file,and add 'tag' column")
 
   parser.add_argument("-q", "--queryLine", dest="queryLine", default='(!la$P>0.01)&(la$Q<0.01)',
                       help="specify the highest pValue threshold for querying, default: None \n \
