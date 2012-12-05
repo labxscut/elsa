@@ -20,8 +20,16 @@ def tolaq(la_table, la_size, title):
       node_x = r['''as.character''']((la_table.rx(i,True)[0]))[0]
       node_y = r['''as.character''']((la_table.rx(i,True)[1]))[0]
       node_z = r['''as.character''']((la_table.rx(i,True)[2]))[0]
+      LA = r['''as.character''']((la_table.rx(i,True)[3]))[0]
+      LOW = r['''as.character''']((la_table.rx(i,True)[4]))[0]
+      UP = r['''as.character''']((la_table.rx(i,True)[5]))[0]
+      P = r['''as.character''']((la_table.rx(i,True)[6]))[0]
+      Q = r['''as.character''']((la_table.rx(i,True)[7]))[0]
+      Xi = r['''as.character''']((la_table.rx(i,True)[8]))[0]
+      Yi = r['''as.character''']((la_table.rx(i,True)[9]))[0]
+      Zi = r['''as.character''']((la_table.rx(i,True)[10]))[0]
       tag =  '|'.join( [title, node_x, node_y, node_z] )
-      laqTable.append([node_x, node_y, node_z] + list(r['as.character'](la_table.rx(i, True)))[3:] + [tag] )
+      laqTable.append([node_x, node_y, node_z, LA, LOW, UP, P, Q, Xi, Yi, Zi, tag] )
   return laqTable 
 
 def tryIO( file, mode ):
