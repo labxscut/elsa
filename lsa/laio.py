@@ -494,13 +494,7 @@ def toSif( la_table, la_size, lsaq_table, lsaq_size, nodelist_table, nodelist_si
        pass
     else: 
        if (node_x,node_y) in laq_edges:
-         x = tuple(la_table.rx(i,True)[lai])[0]
-         if isinstance(x, float) and math.isnan(x):
-            #LA_score = -9999
-            pass
-         else:
-            #LA_score = tuple(la_table.rx(i,True)[3])[0]
-            LA_score = x
+            LA_score = r['''as.character''']((la_table.rx(i,True)[3]))[0]
             node_m_x_y = '_'.join( ['m', node_x, node_y] )
             if tuple(la_table.rx(i,True)[lai])[0] >= 0:
                interaction_type3 = 'pu'
