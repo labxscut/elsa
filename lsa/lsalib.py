@@ -50,6 +50,8 @@ import scipy as sp
 import scipy.interpolate
 import scipy.stats
 #R through Rpy
+import rpy2
+import rpy2.interface
 import rpy2.rlike.container as rlc
 import rpy2.robjects as ro
 from rpy2.robjects.numpy2ri import numpy2ri
@@ -105,7 +107,7 @@ def rpy_spearmanr(Xz, Yz):
     sr=r('''cor.test''')(Xz,Yz,method='spearman')
     return (sr[3][0],sr[2][0])
   except rpy2.rinterface.RRuntimeError:
-    return (np.nan, np.nan)
+    return (np.nan,np.nan)
 
 def calc_spearmanr(Xz, Yz, sfunc=rpy_spearmanr):
   mask = np.logical_or(Xz.mask, Yz.mask)
