@@ -51,7 +51,7 @@ import scipy.interpolate
 import scipy.stats
 #R through Rpy
 import rpy2
-import rpy2.interface
+#import rpy2.interface
 import rpy2.rlike.container as rlc
 import rpy2.robjects as ro
 from rpy2.robjects.numpy2ri import numpy2ri
