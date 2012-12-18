@@ -101,8 +101,11 @@ Q_lam_max = 0.95
 ############################### 
 
 def rpy_spearmanr(Xz, Yz):
-  sr=r('''cor.test''')(Xz,Yz,method='spearman')
-  return (sr[3][0],sr[2][0])
+  try:
+    sr=r('''cor.test''')(Xz,Yz,method='spearman')
+    return (sr[3][0],sr[2][0])
+  except rpy2.rinterface.RRuntimeError:
+    return (np.nan, np.nan)
 
 def calc_spearmanr(Xz, Yz, sfunc=rpy_spearmanr):
   mask = np.logical_or(Xz.mask, Yz.mask)
