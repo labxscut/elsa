@@ -30,7 +30,7 @@
 #THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #public libs
-import argparse, sys, os, csv, re, rpy2
+import argparse, sys, os, csv, re
 import numpy as np
 try:
   # installed 
@@ -40,16 +40,24 @@ except ImportError:
   import laio
 import lsa
 
-import rpy2.rlike.container as rlc
-import rpy2.robjects as ro
-from rpy2.robjects.numpy2ri import numpy2ri
-ro.conversion.py2ri = numpy2ri
-r = ro.r
+rpy_import=True
+try:
+  import rpy2
+  import rpy2.rlike.container as rlc
+  import rpy2.robjects as ro
+  from rpy2.robjects.numpy2ri import numpy2ri
+  ro.conversion.py2ri = numpy2ri
+  r = ro.r
 
-#print '''setwd("%s")''' % os.environ.get('PWD')
-r('''setwd("%s")''' % os.environ.get('PWD'))
-#r('''library(graphics)''')
-#r('''library(gplots)''')
+  #print '''setwd("%s")''' % os.environ.get('PWD')
+  r('''setwd("%s")''' % os.environ.get('PWD'))
+  #r('''library(graphics)''')
+  #r('''library(gplots)''')
+except:
+  rpy_import=False
+  print >>sys.stderr, "IMPORTANT!!!: R and rpy2 are not working on this system"
+  print >>sys.stderr, "IMPORTANT!!!: This script is only workable with R and rpy2"
+  exit()
 
 def main():
 

@@ -1,13 +1,17 @@
-import os, sys, csv, rpy2
+import os, sys, csv
 import xml.etree.ElementTree as etree
 import xml.dom.minidom
 import math
 
-import rpy2.rlike.container as rlc
-import rpy2.robjects as ro
-from rpy2.robjects.numpy2ri import numpy2ri
-ro.conversion.py2ri = numpy2ri
-r = ro.r
+try:
+  import rpy2.rlike.container as rlc
+  import rpy2.robjects as ro
+  from rpy2.robjects.numpy2ri import numpy2ri
+  ro.conversion.py2ri = numpy2ri
+  r = ro.r
+except:
+  rpy_import = False
+  print >>sys.stderr, "IMPORTANT!!!: R and rpy2 are not working on this system"
 
 def tolaq(la_table, la_size, title):
   la_cols = list(r['colnames'](la_table))

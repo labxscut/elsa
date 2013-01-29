@@ -63,7 +63,8 @@ try:
   r('''setwd("%s")''' % os.environ.get('PWD'))
   r('''options(warn=-1)''') 
 except:
-  print >>sys.stderr, "R and rpy2 not working on this system"
+  print >>sys.stderr, "IMPORTANT!!!: R and rpy2 are not working on this system"
+  print >>sys.stderr, "IMPORTANT!!!: All calculations will fallback to scipy"
   rpy_import = False
 
 #import lower level resource
@@ -113,13 +114,20 @@ def rpy_spearmanr(Xz, Yz):
   except rpy2.rinterface.RRuntimeError:
     return (np.nan,np.nan)
 
+def rpy_pearsonr(Xz, Yz):
+  try:
+    sr=r('''cor.test''')(Xz,Yz,method='pearson')
+    return (sr[3][0],sr[2][0])
+  except rpy2.rinterface.RRuntimeError:
+    return (np.nan,np.nan)
+
 def scipy_spearmanr(Xz, Yz):
   try:
     return scipy.stats.spearmanr(Xz, Yz)
   except:
     return (np.nan,np.nan)
 
-def calc_spearmanr(Xz, Yz, sfunc=scipy_spearmanr):
+def calc_spearmanr(Xz, Yz, sfunc=rpy_spearmanr):
   if not rpy_import:
     sfunc = scipy_spearmanr
   mask = np.logical_or(Xz.mask, Yz.mask)
@@ -134,7 +142,7 @@ def scipy_pearsonr(Xz, Yz):
   except:
     return (np.nan,np.nan)
 
-def calc_pearsonr(Xz, Yz, pfunc=scipy_pearsonr):
+def calc_pearsonr(Xz, Yz, pfunc=rpy_pearsonr):
   mask = np.logical_or(Xz.mask, Yz.mask)
   Xz.mask = mask
   Yz.mask = mask

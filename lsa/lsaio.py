@@ -34,15 +34,21 @@
     interpreting the parameter to actual list index
 """
 
-import os, sys, csv, rpy2
+import os, sys, csv
 import xml.etree.ElementTree as etree
 import xml.dom.minidom
 
-import rpy2.rlike.container as rlc
-import rpy2.robjects as ro
-from rpy2.robjects.numpy2ri import numpy2ri
-ro.conversion.py2ri = numpy2ri
-r = ro.r
+rpy_import=True
+try:
+  import rpy2
+  import rpy2.rlike.container as rlc
+  import rpy2.robjects as ro
+  from rpy2.robjects.numpy2ri import numpy2ri
+  ro.conversion.py2ri = numpy2ri
+  r = ro.r
+except:
+  print >>sys.stderr, "IMPORTANT!!!: R and rpy2 are not working on this system"
+  rpy_import=False
 
 def tryIO( file, mode ):
   """ Test the IO file before using it.
