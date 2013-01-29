@@ -49,18 +49,22 @@ import numpy as np
 import scipy as sp
 import scipy.interpolate
 import scipy.stats
-#R through Rpy
-import rpy2
-#import rpy2.interface
-import rpy2.rlike.container as rlc
-import rpy2.robjects as ro
-from rpy2.robjects.numpy2ri import numpy2ri
-ro.conversion.py2ri = numpy2ri
-r = ro.r
-
-#print '''setwd("%s")''' % os.environ.get('PWD')
-r('''setwd("%s")''' % os.environ.get('PWD'))
-r('''options(warn=-1)''') 
+#Import R through Rpy2
+rpy_import = True
+try:
+  import rpy2
+  #import rpy2.interface
+  import rpy2.rlike.container as rlc
+  import rpy2.robjects as ro
+  from rpy2.robjects.numpy2ri import numpy2ri
+  ro.conversion.py2ri = numpy2ri
+  r = ro.r
+  #print '''setwd("%s")''' % os.environ.get('PWD')
+  r('''setwd("%s")''' % os.environ.get('PWD'))
+  r('''options(warn=-1)''') 
+except:
+  print >>sys.stderr, "R and rpy2 not working on this system"
+  rpy_import = False
 
 #import lower level resource
 try:
@@ -109,14 +113,28 @@ def rpy_spearmanr(Xz, Yz):
   except rpy2.rinterface.RRuntimeError:
     return (np.nan,np.nan)
 
-def calc_spearmanr(Xz, Yz, sfunc=rpy_spearmanr):
+def scipy_spearmanr(Xz, Yz):
+  try:
+    return scipy.stats.spearmanr(Xz, Yz)
+  except:
+    return (np.nan,np.nan)
+
+def calc_spearmanr(Xz, Yz, sfunc=scipy_spearmanr):
+  if not rpy_import:
+    sfunc = scipy_spearmanr
   mask = np.logical_or(Xz.mask, Yz.mask)
   Xz.mask = mask
   Yz.mask = mask
   (SCC, P_SCC) = sfunc(Xz.compressed(), Yz.compressed()) # two tailed p-value
   return (SCC, P_SCC)
 
-def calc_pearsonr(Xz, Yz, pfunc=scipy.stats.pearsonr):
+def scipy_pearsonr(Xz, Yz):
+  try:
+    return scipy.stats.pearsonr(Xz, Yz)
+  except:
+    return (np.nan,np.nan)
+
+def calc_pearsonr(Xz, Yz, pfunc=scipy_pearsonr):
   mask = np.logical_or(Xz.mask, Yz.mask)
   Xz.mask = mask
   Yz.mask = mask
@@ -841,10 +859,10 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
   stdX = np.sqrt(varianceX) #make comparable with previous command line
   ti = 0
   
-  if qvalueMethod in ['scipy']:
-    qvalue_func = storeyQvalue
+  if qvalueMethod in ['R'] and rpy_import:
+    qvalue_func = R_Qvalue
   else:
-    qvalue_func = R_Qvalue 
+    qvalue_func = storeyQvalue 
 
   if pvalueMethod in ['theo','mix']:
     #P_table = theoPvalue(D=0, precision=.0001, x_decimal=3)   #let's produce 2 tail-ed p-value

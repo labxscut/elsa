@@ -40,16 +40,21 @@ except ImportError:
   import lsaio
 import lsa
 
-import rpy2.rlike.container as rlc
-import rpy2.robjects as ro
-from rpy2.robjects.numpy2ri import numpy2ri
-ro.conversion.py2ri = numpy2ri
-r = ro.r
-
-#print '''setwd("%s")''' % os.environ.get('PWD')
-r('''setwd("%s")''' % os.environ.get('PWD'))
-#r('''library(graphics)''')
-#r('''library(gplots)''')
+rpy_import=True
+try:
+  import rpy2.rlike.container as rlc
+  import rpy2.robjects as ro
+  from rpy2.robjects.numpy2ri import numpy2ri
+  ro.conversion.py2ri = numpy2ri
+  r = ro.r
+  #print '''setwd("%s")''' % os.environ.get('PWD')
+  r('''setwd("%s")''' % os.environ.get('PWD'))
+  #r('''library(graphics)''')
+  #r('''library(gplots)''')
+except:
+  print >>sys.stderr, "R and rpy2 is not available on this platform"
+  rpy_import=False
+  exit()
 
 def main():
 
