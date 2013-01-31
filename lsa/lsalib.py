@@ -53,7 +53,6 @@ import scipy.stats
 rpy_import = True
 try:
   import rpy2
-  #import rpy2.interface
   import rpy2.rlike.container as rlc
   import rpy2.robjects as ro
   from rpy2.robjects.numpy2ri import numpy2ri
@@ -62,7 +61,8 @@ try:
   #print '''setwd("%s")''' % os.environ.get('PWD')
   r('''setwd("%s")''' % os.environ.get('PWD'))
   r('''options(warn=-1)''') 
-except:
+except ImportError:
+  #print >>sys.stderr, "I am in lsalib.py"
   print >>sys.stderr, "IMPORTANT!!!: R and rpy2 are not working on this system"
   print >>sys.stderr, "IMPORTANT!!!: All calculations will fallback to scipy"
   rpy_import = False

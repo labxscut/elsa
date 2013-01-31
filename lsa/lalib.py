@@ -51,7 +51,7 @@ try:
   #print '''setwd("%s")''' % os.environ.get('PWD')
   r('''setwd("%s")''' % os.environ.get('PWD'))
   r('''options(warn=-1)''')
-except:
+except ImportError:
   rpy_import=False
   print >>sys.stderr, "IMPORTANT!!!: R and rpy2 are not working on this system"
   print >>sys.stderr, "IMPORTANT!!!: All calculatios fall back to scipy"

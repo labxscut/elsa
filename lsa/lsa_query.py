@@ -52,7 +52,7 @@ try:
   r('''setwd("%s")''' % os.environ.get('PWD'))
   #r('''library(graphics)''')
   #r('''library(gplots)''')
-except:
+except ImportError:
   print >>sys.stderr, "IMPORTANT!!!: R and rpy2 are not working on this system"
   print >>sys.stderr, "IMPORTANT!!!: This script is only workable with R and rpy2"
   #print >>sys.stderr, "R and rpy2 is not available on this platform"

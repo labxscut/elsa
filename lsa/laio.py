@@ -9,7 +9,7 @@ try:
   from rpy2.robjects.numpy2ri import numpy2ri
   ro.conversion.py2ri = numpy2ri
   r = ro.r
-except:
+except ImportError:
   rpy_import = False
   print >>sys.stderr, "IMPORTANT!!!: R and rpy2 are not working on this system"
 

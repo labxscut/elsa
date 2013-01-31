@@ -48,12 +48,11 @@ try:
   from rpy2.robjects.numpy2ri import numpy2ri
   ro.conversion.py2ri = numpy2ri
   r = ro.r
-
   #print '''setwd("%s")''' % os.environ.get('PWD')
   r('''setwd("%s")''' % os.environ.get('PWD'))
   #r('''library(graphics)''')
   #r('''library(gplots)''')
-except:
+except ImportError:
   rpy_import=False
   print >>sys.stderr, "IMPORTANT!!!: R and rpy2 are not working on this system"
   print >>sys.stderr, "IMPORTANT!!!: This script is only workable with R and rpy2"
