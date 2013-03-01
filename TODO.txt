@@ -1,6 +1,4 @@
 TODO:
-  [0] Learn how to use hg command
-      wwwwwww
-      Learn how to use vi editor     
+  [0] Migrate to use git version control?
   [1] Smarter Tab delimited file handling
-  [2] Learn resolve conflicts in mercurial
+  [2] Learn resolve conflicts in git and hg?

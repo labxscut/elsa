@@ -13,3 +13,5 @@ include lsa/lsalibx.py
 include lsa/lsa_compute.py
 include lsa/lsa_infer.py
 include lsa/lsa_query.py
+include lsa/lsa_sim.py
+include lsa/to_trend.py
