@@ -45,10 +45,12 @@
 #import public resources
 import csv, sys, os, random
 import numpy as np
+import numpy.testing
 #import numpy.ma as np.ma
 import scipy as sp
 import scipy.interpolate
 import scipy.stats
+import scipy.linalg
 #Import R through Rpy2
 rpy_import = True
 try:
@@ -1069,6 +1071,207 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
           + ["%f" % np.round(v, decimals=disp_decimal) if isinstance(v, float) else v for v in row[2:]]
           + [row[0]+1, row[1]+1] )
 
+#### trend analysis functions ####
+def ji_calc_trend(oSeries, lengthSeries, thresh):
+  #Liping Ji and Kian-Lee Tan, Bioinformatics 2005
+  #print oSeries
+  #print lengthSeries
+  tSeries = np.zeros(lengthSeries-1, dtype='float')
+  for i in xrange(0, lengthSeries-1):
+    if oSeries[i] == 0 and oSeries[i+1] > 0:
+      trend = 1
+    elif oSeries[i] == 0 and oSeries[i+1] < 0:
+      trend = -1
+    elif oSeries[i] == 0 and oSeries[i+1] == 0:
+      trend = 0
+    else:
+      trend = (oSeries[i+1]-oSeries[i])/np.abs(oSeries[i])
+
+    if np.isnan(trend):
+      tSeries[i] = np.nan
+    elif trend >= thresh:
+      tSeries[i] = 1
+    elif trend <= -thresh:
+      tSeries[i] = -1
+    else:
+      tSeries[i] = 0
+
+  #print tSeries
+  #exit()
+  return tSeries
+
+def ji_calc_trend_rep(oSeries, thresh): #sim trend series with replicates
+ #Liping Ji and Kian-Lee Tan, Bioinformatics 2005
+
+  lengthSeries=oSeries.shape[1]-1
+  tSeries = np.zeros((1,lengthSeries), dtype='float')
+
+  for i in xrange(0, lengthSeries):
+    if oSeries[0][i] == 0 and oSeries[0][i+1] > 0:
+      trend = 1
+    elif oSeries[0][i] == 0 and oSeries[0][i+1] < 0:
+      trend = -1
+    elif oSeries[0][i] == 0 and oSeries[0][i+1] == 0:
+      trend = 0
+    else:
+      trend = (oSeries[0][i+1]-oSeries[0][i])/np.abs(oSeries[0][i])
+
+    if trend >= thresh:
+      tSeries[0][i] = 1
+    elif trend <= -thresh:
+      tSeries[0][i] = -1
+    else:
+      tSeries[0][i] = 0
+
+  return tSeries
+
+def calc_tmatrix(bootNum, trend_threshold, timeNum=10000, randomFunc=np.random.normal):
+  # return a 3 by 3 transition matrix
+  Tm = np.zeros((bootNum,5)) #each row in order: a,b,c,d,t
+  for b in xrange(0, bootNum):
+    Tm[b,] = to_markov(trend_threshold, timeNum, randomFunc)
+  #print(Tm)
+  #print np.average(Tm, axis=0)
+  return np.average(Tm, axis=0)
+
+def float_equal(a,b,tol=0.000001):
+  if np.abs(a-b) <= tol:
+    return True
+  else:
+    return False
+
+#default float_tol = 6 decimal
+def calc_eigen(P):
+  #P=(a,b,c,d,t)
+  #rightEigenVec 3 by 1, leftEigenVec 1 by 3, r1 = 1, 
+  #l1 = stationary distribution, lambda1=1                      
+  Tmatrix = np.array( [ P[1], 1-P[1]-P[2], P[2], P[3], 1-2*P[3], P[3], P[2], 1-P[1]-P[2], P[1] ] ).reshape(3,3)
+  w, vl, vr = sp.linalg.eig(Tmatrix, left=True, right=True) 
+  w=np.real_if_close(w)
+  #vl[:,i] is i-th left normalized eigenvector
+  #vr[:,i] is i-th right normalized eigenvector
+  # first find 1, if right place go on, otherwise switch, no sort needed, need to take care of roundign error.
+  #print "P=", P
+  #print "Tmatrix=", Tmatrix
+  #print "w=",w
+  #print "vl=",vl
+  #print "vr=",vr
+  w_one = None
+  for i in xrange(0, len(w)):
+    try:
+      np.testing.assert_almost_equal(w[i],1.0)
+    except AssertionError:
+      continue
+    w_one = i
+  if w_one == None:
+    print >>sys.stderr, "unexpected! reduce float_equal_tolerance"
+    quit()
+  #print "w_one=", w_one
+  if w_one != 0: #switch lambda=1 to the first place
+    tmp = w[0]
+    w[0] = w[w_one]
+    w[w_one] = tmp
+    tmp = vl[:,0]
+    vl[:,0] = vl[:,w_one]
+    vl[:,w_one] = tmp
+    tmp = vr[:,0]
+    vr[:,0] = vr[:,w_one]
+    vr[:,w_one] = tmp
+  #print "w_sort=", w
+  #print "vl_sort=", vl
+  #print "vr_sort=", vr
+  #print "unnormalized=", np.dot(vl.T, vr)
+  #normalization such that dot(vr[:,j],vl[:,j])=1 for all j
+  #assgin vr[:,0] to be (1,1,1)
+  #assign vl[:,0] to be vl[:,0]/sum(vl[:,0])
+  #normalize eigen vectors:
+  vr[:,0]=np.array([1.0,1.0,1.0])
+  vl[:,0]=vl[:,0]/np.sum(vl[:,0])
+  for i in xrange(1, len(w)):
+    scale = np.sum(np.inner(vl[:,i], vr[:,i]))
+    vl[:,i] = vl[:,i]/scale
+  #print "w_stand=", w 
+  #print "vl_stand=", vl
+  #print "vr_stand=", vr
+  #print "normalize=", np.dot(vl.T, vr)
+  # probably needs more dealing
+  try:
+    tmp = np.dot(vl.T, vr)
+    #print "tmp=", tmp
+    np.testing.assert_almost_equal(w[0], 1.0)
+    #print "vl[1]", vl[:,0]
+    #print "sum=", np.sum(vl[:,0])
+    np.testing.assert_almost_equal(np.sum(vl[:,0]), 1.0)
+    for i in range(0, len(w)):
+      for j in range(0, len(w)):
+        if i == j:
+          np.testing.assert_almost_equal(tmp[i,j], 1.0)
+        else:
+          np.testing.assert_almost_equal(tmp[i,j], 0.0)
+  except AssertionError:
+    print >>sys.stderr, "eigen values, right eigen vectors and left eigen vectors not properly found!"
+    quit()
+  return w, vl, vr
+                                           
+def calc_sigma_square(w_sort, vl_sort, vr_sort):
+  #assume proper set of w, vl, vr given
+  #w[i] is i-th eigen value in decreasing sorted order
+  #vl_sort[:,i] is i-th left normalized eigenvector
+  #vr_sort[:,i] is i-th right normalized eigenvector
+  vl_trans = vl_sort.T
+  vr_trans = vr_sort.T
+  var_phi = vl_trans[0,:]
+  A = (vr_trans[1,0]-vr_trans[1,2])*(vl_trans[1,0]-vl_trans[1,2])
+  B = (vr_trans[2,0]-vr_trans[2,2])*(vl_trans[2,0]-vl_trans[2,2])
+  sigma = 4*var_phi[0]**2 + 2*var_phi[0]**2*(\
+      A**2*w_sort[1]**2/(1-w_sort[1]**2)\
+      +2*A*B*w_sort[1]*w_sort[2]/(1-w_sort[1]*w_sort[2])\
+      +B**2*w_sort[2]**2/(1-w_sort[2]**2) )
+  #print sigma
+  return sigma
+  
+def to_markov(threshold, timeNum, randomFunc): #t is threshold vector
+  t = threshold
+  N = timeNum
+  Xo = randomFunc(size=N+2)    #N+1 observations lead to   
+  Xt = []
+  for i in range(0,N+1):                                                       
+    if Xo[i] == 0 and Xo[i+1] > 0:
+      Xt.append(1) 
+    elif Xo[i] == 0 and Xo[i+1] < 0:
+      Xt.append(-1)
+    elif Xo[i] == 0 and Xo[i+1] == 0:
+      Xt.append(0)
+    elif (Xo[i+1]-Xo[i])/np.abs(Xo[i]) >= t:
+      Xt.append(1)
+    elif (Xo[i+1]-Xo[i])/np.abs(Xo[i]) <= -t:
+      Xt.append(-1) 
+    else:
+      Xt.append(0)
+  #print(Xo)
+  #print(Xt)
+  P = np.zeros(5)
+  for j in range(0,N):
+    if Xt[j]==1 and Xt[j+1]==1:
+      P[1] = P[1] +1
+    elif Xt[j]==1 and Xt[j+1]==-1:
+      P[2] = P[2] +1
+    elif Xt[j]==0 and Xt[j+1]==1:
+      P[3] = P[3] +1
+    else:
+      #print "not used", 
+      pass
+  Xt = np.array(Xt, dtype='int')
+  #print Xt[Xt==1]
+  P[0] = np.sum(Xt[Xt==1]) #di=1
+  P[0] = P[0]/(N+1)
+  P[1] = (P[1]/N)/(P[0])
+  P[2] = (P[2]/N)/(P[0])
+  P[3] = (P[3]/N)/(1-2*P[0])
+  P[4] = t
+  #print(P)
+  return(P)
+
 ### Liquid Association Section ###
 #def applyLA(inputData, scoutVars, factorLabels, bootCI=.95, bootNum=1000, minOccur=.50, pvalueMethod=1000,\
 #    fTransform=simpleAverage, zNormalize=noZeroNormalize, resultFile=None):
@@ -1185,6 +1388,7 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
 #  else:
 #    P_two_tail = np.sum(-np.abs(PP_set) <= LA_score)/np.float(pvalueMethod)
 #  return P_two_tail
+
 
 def test():
   """ self test script

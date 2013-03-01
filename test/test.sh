@@ -8,6 +8,9 @@ lsa_query ARISA20.lsa ARISA20.sig.lsaq -q '(!lsa$P>0.01)&(lsa$Q<0.01)' -x ARISA2
 la_compute ARISA20.csv ARISA20.sig.lsaq ARISA20.sig.la -s 127 -n percentileZ -m 0 -p perm -x 1000 -f linear
 la_query ARISA20.sig.lsaq ARISA20.sig.la ARISA20.sig.laq -q '(!la$P>0.01)&(la$Q<0.01)' -x ARISA20.sig.xgmml
 
+#### Local Trend Tests ####
+to_trend -T 1 -S 119 ARISA20.txt ARISA20.trend.txt
+
 #Outdated Tests
 #LSA test na, appearantly PCC of a zero vector is not defined, so shown nan in output
 #lsa_compute ../test/testna.txt ../test/testna.lsa -r 2 -s 4 -d 0 
