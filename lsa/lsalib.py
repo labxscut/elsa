@@ -43,7 +43,7 @@
 #Considering using R for simple numerics, rpy or use swig+R?
 
 #import public resources
-import csv, sys, os, random
+import csv, sys, os, random, tempfile
 import numpy as np
 import numpy.testing
 #import numpy.ma as np.ma
