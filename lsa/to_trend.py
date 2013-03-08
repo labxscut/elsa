@@ -56,12 +56,13 @@ def main():
   if trend_threshold==0:
     sigma_square = 1.25
   else:
-    P = lsalib.calc_tmatrix(bootNum, trend_threshold) \
-      # return parameters P=(a,b,c,d,t)
-    w, vl, vr = lsalib.calc_eigen(P)
-      #rightEigenVec 3 by 1, leftEigenVec 1 by 3, r1 = 1, 
-      #l1 = stationary distribution, lambda1=1
-    sigma_square = lsalib.calc_sigma_square(w, vl, vr)
+    P = lsalib.calc_tmatrix(bootNum, trend_threshold)
+    sigma_square = lsalib.calc_markov_var(P)
+    # return parameters P=(a,b,c,d,t)
+    # w, vl, vr = lsalib.calc_eigen(P)
+    # rightEigenVec 3 by 1, leftEigenVec 1 by 3, r1 = 1, 
+    # l1 = stationary distribution, lambda1=1
+    # sigma_square = lsalib.calc_sigma_square(w, vl, vr)
   print >>sys.stderr, "sigma=", sigma_square
 
   trendData = []
