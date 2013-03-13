@@ -35,10 +35,10 @@ LSA_Result DP_lsa( const LSA_Data& data, bool keep_trace ){  //python does not s
         //double s0=sm[i-1][j-1];
         psm[i][j] = std::max(0., psm[i-1][j-1]+s1);
         nsm[i][j] = std::max(0., nsm[i-1][j-1]-s1);
-        if ( psm[i][j] > max_s ) {
+        if ( psm[i][j] >= max_s ) {
           max_p[0] = i; max_p[1] = j; max_s = psm[i][j]; porn=1;
         }
-        if ( nsm[i][j] > max_s ) {
+        if ( nsm[i][j] >= max_s ) {
           max_p[0] = i; max_p[1] = j; max_s = nsm[i][j]; porn=-1;
         }
       }

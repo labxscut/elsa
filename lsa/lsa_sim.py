@@ -5,7 +5,7 @@ import numpy as np
 
 #kcut_min=100
 #Rmax_min=10
-my_decimal = 3    # preset x step size for P_table
+my_decimal = 1    # preset x.? step size 0.1 for P_table, for paper tables
 
 try:
   #debug import
@@ -28,7 +28,8 @@ def main():
   parser.add_argument("-L", "--lengthSeries", dest="lengthSeries", \
       default=50, type=int,\
       help="specify the length of series to generate, default: 50")
-  parser.add_argument("-T", "--trendSeries", dest="trendSeries", default=None,\
+  parser.add_argument("-T", "--trendThresh", dest="trendThresh", default=None,\
+      type=float,\
       help="if specified must be a threshold number, will generate trend series, \
       with the specified threshold")
   parser.add_argument("-A", "--approxVar", dest="approxVar", default=1, type=float,\
@@ -42,14 +43,17 @@ def main():
   parser.add_argument("-n", "--nullDistribution", dest="nullDistribution", \
       default="yes", choices=['yes','no'],
       help="yes: randomize timpoints; no: do not randomize timepoints")
-  parser.add_argument("-P", "--permPrecision", dest="permPrecision", \
+  parser.add_argument("-p", "--permPrecision", dest="permPrecision", \
       default=1, type=float,\
       help="numeric>0, default=.1, inverse of number of permutations")
   parser.add_argument("-x", "--theoPrecision", dest="theoPrecision", \
-      default=0.1, type=float,\
-      help="numeric>0, default=0.1, precision of theo approximation" )
+      default=0.0001, type=float,\
+      help="numeric>0, default=0.0001, precision of theo approximation" )
   parser.add_argument("-d", "--simDelay", dest="simDelay", default=0, type=int,\
       help="sim delay effects" )
+  parser.add_argument("-N", "--normMethod", dest="normMethod", default="percentileZ",\
+      choices=["percentileZ", "none", "pnz", "percentile"],
+      help="normalization method")
   arg_namespace = parser.parse_args()
 
   # parse arguments: 
@@ -65,17 +69,32 @@ def main():
   simMethod = str.split(vars(arg_namespace)['simMethod'],',')
   simDelay = vars(arg_namespace)['simDelay']
   nullDistribution = vars(arg_namespace)['nullDistribution']
+  trendThresh = vars(arg_namespace)['trendThresh']
+  normMethod = vars(arg_namespace)['normMethod']
   #theo_precision = 0.0001
 
-  if vars(arg_namespace)['trendSeries'] == None:
-    trendSeries = False
-    x_var = approxVar
+  #check normMethod
+  if normMethod == 'none':
+    zNormalize = lsalib.noneNormalize
+  elif normMethod == 'percentile':
+    zNormalize = lsalib.percentileNormalize
+  elif normMethod == 'percentileZ':
+    zNormalize = lsalib.percentileZNormalize
+  elif normMethod == 'pnz':
+    zNormalize = lsalib.noZeroNormalize
   else:
-    trendSeries = True
-    x_var = approxVar
-    trend_threshold = int(vars(arg_namespace)['trendSeries'])
+    zNormalize = lsalib.percentileZNormalize # fallback to default
 
-  print >>sys.stderr, "simulating...",
+  #if vars(arg_namespace)['trendThresh'] == None:
+  #  trendSeries = False
+  #  x_var = approxVar
+  #else:
+  #  trendSeries = True
+  #  x_var = approxVar
+  #  trend_threshold = int(vars(arg_namespace)['trendSeries'])
+
+  print >>sys.stderr, "simulating..."
+  assert trendThresh == None or trendThresh >= 0
   start_time = time.time()
 
   LS_values = np.zeros(simTimes, dtype='float')
@@ -93,77 +112,101 @@ def main():
   beta = np.zeros(simTimes, dtype='float')
   P_table = lsalib.theoPvalue(Rmax=lengthSeries, Dmax=delayLimit, \
       precision=theo_precision, x_decimal=my_decimal)
+  print >>sys.stderr, "P table generated"
 
   for j in range(0, simTimes):
     #generate series
-    nz_x = int(np.round(lengthSeries * (1-alphaValue))) # zeros in X
-    nz_y = int(np.round(lengthSeries * (1-betaValue)))  # zeros in Y
-    if not trendSeries:
-      nnz_x = lengthSeries - nz_x 
-      nnz_y = lengthSeries - nz_y 
-    else:
-      nnz_x = lengthSeries - nz_x + 1
-      nnz_y = lengthSeries - nz_y + 1
+    #nz_x = int(np.round(lengthSeries * (1-alphaValue))) # zeros in X, default=0
+    #nz_y = int(np.round(lengthSeries * (1-betaValue)))  # zeros in Y, default=0
+    #if trendThresh == None:
+    #  nnz_x = lengthSeries - nz_x 
+    #  nnz_y = lengthSeries - nz_y 
+    #else:
+    #  nnz_x = lengthSeries - nz_x + 1
+    #  nnz_y = lengthSeries - nz_y + 1
+
+    timespots = lengthSeries 
+    #timespots as in original data, lengthSeries as in converted
+    if trendThresh != None:
+      timespots = timespots+1
 
     #generate two arrays: OxSeries, OySeries
     if simMethod[0] == 'idn':
-      OxSeries = np.random.randn(1,nnz_x)[0]
-      OySeries = np.random.randn(1,nnz_y)[0]
-    elif simMethod[0] == 'sin':  # to implement
-      sigma = float(simMethod[1])
-      x = np.array(range(0,nnz_x+simDelay), dtype='float')
-      x.shape = (1,len(x))
-      sin_x = np.sin(x*np.pi/6.)
-      OxSeries = sin_x[:nnz_x+1]
-      OySeries = sin_x[simDelay:nnz_x+simDelay+1] + np.random.randn(1,nnz_x)
+      OxSeries = np.random.randn(1,timespots)[0]
+      OySeries = np.random.randn(1,timespots)[0]
+    #elif simMethod[0] == 'sin':  # to implement
+    #  sigma = float(simMethod[1])
+    #  x = np.array(range(0,nnz_x+simDelay), dtype='float')
+    #  x.shape = (1,len(x))
+    #  sin_x = np.sin(x*np.pi/6.)
+    #  OxSeries = sin_x[:nnz_x+1]
+    #  OySeries = sin_x[simDelay:nnz_x+simDelay+1] + np.random.randn(1,nnz_x)
     else: # to implement
       print >>sys.stderr, "simMethod not implemented"
 
-    lengthXSeries=len(OxSeries)
-    lengthYSeries=len(OySeries)
-    if not trendSeries:
-      xSeries = OxSeries
-      ySeries = OySeries
-    else:
-      xSeries = lsalib.ji_calc_trend(OxSeries, lengthXSeries, trend_threshold)
-      ySeries = lsalib.ji_calc_trend(OySeries, lengthYSeries, trend_threshold)
+    #if nullDistribution == 'yes':
+    #  xSeries = np.array([np.random.permutation\
+    #      (np.concatenate((OxSeries,np.zeros(nz_x))))])
+    #  ySeries = np.array([np.random.permutation\
+    #      (np.concatenate((OySeries,np.zeros(nz_y))))])
 
-    if nullDistribution == 'yes':
-      xSeries = np.array([np.random.permutation\
-          (np.concatenate((xSeries,np.zeros(nz_x))))])
-      ySeries = np.array([np.random.permutation\
-          (np.concatenate((ySeries,np.zeros(nz_y))))])
+    #lengthXSeries=len(OxSeries)
+    #lengthYSeries=len(OySeries)
 
-    xSeries = np.ma.masked_invalid(xSeries)
-    ySeries = np.ma.masked_invalid(ySeries)
+    #if trendThresh != None:
+    #  xSeries = lsalib.ji_calc_trend(OxSeries, timespots, trendThresh)
+    #  ySeries = lsalib.ji_calc_trend(OySeries, timespots, trendThresh)
+    #else:
+    #  xSeries = OxSeries
+    #  ySeries = OySeries
+
+    xSeries = np.ma.masked_invalid(OxSeries)
+    ySeries = np.ma.masked_invalid(OySeries)
     (u1[j], u2[j], v1[j], v2[j]) = \
         (np.mean(xSeries),np.var(xSeries),np.mean(ySeries),np.var(ySeries))
-    a = 1 - (np.sum(xSeries.mask)+np.sum(xSeries==0))/float(lengthSeries)
-    b = 1 - (np.sum(ySeries.mask)+np.sum(ySeries==0))/float(lengthSeries)
+    a = 1 - (np.sum(xSeries.mask)+np.sum(xSeries==0))/float(timespots)
+    b = 1 - (np.sum(ySeries.mask)+np.sum(ySeries==0))/float(timespots)
     (alpha[j], beta[j]) = (a,b)
 
-    if not trendSeries:
-      xSeriesData = xSeries.reshape(1,lengthSeries)
-      ySeriesData = ySeries.reshape(1,lengthSeries) 
-      lsa_result = lsalib.singleLSA(xSeriesData, ySeriesData, delayLimit, \
-          lsalib.simpleAverage, lsalib.percentileZNormalize, True)
-      LS_values[j] = np.abs( lengthSeries * lsa_result.score )
-      P_perm[j] = lsalib.permuPvalue(xSeriesData, ySeriesData, delayLimit, \
-          int(1/perm_precision), LS_values[j]/lengthSeries, \
-          lsalib.simpleAverage, lsalib.percentileZNormalize)
-    else:
-      lsa_result = lsalib.singleLSA(xSeriesData, ySeriesData, delayLimit, \
-          lsalib.simpleAverage, lsalib.noneNormalize, True)
-      LS_values[j] = np.abs( lengthSeries * lsa_result.score )
-      P_perm[j] = lsalib.permuPvalue(xSeriesData, ySeriesData, delayLimit, \
-          int(1/perm_precision), LS_values[j]/lengthSeries, \
-          lsalib.simpleAverage, lsalib.noneNormalize)
-    P_theo[j] = lsalib.readPvalue(P_table, R=LS_values[j], N=lengthSeries, \
-        x_sd=np.sqrt(approxVar), M=1, alpha=a, beta=b, x_decimal=my_decimal)
+    xSeriesData = xSeries.reshape(1,timespots)
+    ySeriesData = ySeries.reshape(1,timespots) 
+
+    lsa_result = lsalib.singleLSA(xSeriesData, ySeriesData, delayLimit, \
+          lsalib.simpleAverage, zNormalize, trendThresh, keepTrace=True)
     Al_tmp = len(lsa_result.trace)
-    (Xs[j], Ys[j]) = (lsa_result.trace[Al_tmp-1][0], lsa_result.trace[Al_tmp-1][1])
+    if Al_tmp >= 1:
+      (Xs[j], Ys[j]) = (lsa_result.trace[Al_tmp-1][0], lsa_result.trace[Al_tmp-1][1])
+    else:
+      (Xs[j], Ys[j]) = (-1, -1)
+      #print >>sys.stderr, "impossible to align:"
+      #print >>sys.stderr, "X=", \
+      #    lsalib.ji_calc_trend(zNormalize(lsalib.simpleAverage(xSeriesData)),\
+      #        lengthSeries, trendThresh) 
+      #print >>sys.stderr, "Y=", \
+      #    lsalib.ji_calc_trend(zNormalize(lsalib.simpleAverage(ySeriesData)),\
+      #        lengthSeries, trendThresh) 
+    #print "X=", xSeriesData
+    #print "Y=", ySeriesData
+    #print "Xt=", \
+    #    lsalib.ji_calc_trend(zNormalize(lsalib.simpleAverage(xSeriesData)),\
+    #              timespots, trendThresh)
+    #print "Yt=", \
+    #    lsalib.ji_calc_trend(zNormalize(lsalib.simpleAverage(ySeriesData)),\
+    #              timespots, trendThresh)
+    #print "length=", Al_tmp
+    #print "R=", lsa_result.score*lengthSeries
+    #print [ (lsa_result.trace[i][0], lsa_result.trace[i][1]) for i in range(0,Al_tmp) ]
+      
     D[j]=Xs[j]-Ys[j]
+    LS_values[j] = lengthSeries * np.abs(lsa_result.score)
+    P_perm[j] = lsalib.permuPvalue(xSeriesData, ySeriesData, delayLimit, \
+          int(1/perm_precision), np.abs(lsa_result.score), \
+          lsalib.simpleAverage, zNormalize, trendThresh)
+    P_theo[j] = lsalib.readPvalue(P_table, R=lengthSeries * np.abs(lsa_result.score),\
+        N=lengthSeries, \
+        x_sd=np.sqrt(approxVar), M=1., alpha=1., beta=1., x_decimal=my_decimal)
     Al[j]=Al_tmp
+
   print >>resultFile, "R\tP_theo\tP_perm\talpha\tbeta\tu1\tu2\tv1\tv2\tXs\tYs\tD\tAl"
   print >>resultFile, '\n'.join(['\t'.join( \
     [str(LS_values[i]),str(P_theo[i]),str(P_perm[i]),str(alpha[i]),str(beta[i]),\

@@ -182,7 +182,8 @@ def calc_shift_corr(Xz, Yz, D, corfunc=calc_pearsonr):
       p_max = cor[1]
   return (r_max, p_max, d_max)
         
-def singleLSA(series1, series2, delayLimit, fTransform, zNormalize, keepTrace=True):
+def singleLSA(series1, series2, delayLimit, fTransform, zNormalize, \
+    trendThresh=None, keepTrace=True):
   """	do local simularity alignment 
 		
 		Args:
@@ -202,7 +203,18 @@ def singleLSA(series1, series2, delayLimit, fTransform, zNormalize, keepTrace=Tr
   #print "f1=", isinstance(fTransform(series1),np.ma.core.MaskedArray)
   #print "f2=", isinstance(fTransform(series2),np.ma.core.MaskedArray)
   #try:
-  lsad=compcore.LSA_Data(delayLimit, zNormalize(fTransform(series1)), zNormalize(fTransform(series2)))
+
+  timespots = series1.shape[1] #time points in original data, not in trend data
+  if trendThresh != None:
+    xSeries = ji_calc_trend(\
+        zNormalize(fTransform(series1)), timespots, trendThresh )
+    ySeries = ji_calc_trend(\
+        zNormalize(fTransform(series2)), timespots, trendThresh )
+  else:
+    xSeries = zNormalize(fTransform(series1))
+    ySeries = zNormalize(fTransform(series2))
+
+  lsad=compcore.LSA_Data(delayLimit, xSeries, ySeries)
   #except NotImplementedError:
   #  print series1, series1.mask, series2, series2.mask
   #  print fTransform, fTransform(series1), fTransform(series1).mask, fTransform(series2), fTransform(series2).mask
@@ -246,7 +258,8 @@ def ma_average(ts, axis=0):
     ns.mask = [ns.mask] * ns.shape[axis]
   return ns
 
-def bootstrapCI(series1, series2, Smax, delayLimit, bootCI, bootNum, fTransform, zNormalize, debug=0):
+def bootstrapCI(series1, series2, Smax, delayLimit, bootCI, bootNum, \
+    fTransform, zNormalize, trendThresh=None, debug=0):
   """	do bootstrap CI estimation
 
 		Args:
@@ -266,15 +279,35 @@ def bootstrapCI(series1, series2, Smax, delayLimit, bootCI, bootNum, fTransform,
   if series1.shape[0] == 1:
     return (Smax, Smax, Smax)
 
+  assert series1.shape[1] == series2.shape[1]
+  timespots = series1.shape[1]
+  lengthSeries = series1.shape[1]
+  if trendThresh != None:
+    lengthSeries = timespots - 1
+
   ###print "------Bootstrapping------"
   lsad = compcore.LSA_Data()
   BS_set = np.zeros(bootNum, dtype='float')
   for i in range(0, bootNum):
-    Xb = np.ma.array([ sample_wr(series1[:,j], series1.shape[0]) for j in xrange(0,series1.shape[1]) ]).T
-    Yb = np.ma.array([ sample_wr(series2[:,j], series2.shape[0]) for j in xrange(0,series2.shape[1]) ]).T
+    if trendTresh == None:
+      Xb = zNormalize(fTransform(np.ma.array(\
+          [ sample_wr(series1[:,j], series1.shape[0]) \
+            for j in xrange(0,series1.shape[1]) ]).T))
+      Yb = zNormalize(fTransform(np.ma.array(\
+          [ sample_wr(series2[:,j], series2.shape[0]) \
+            for j in xrange(0,series2.shape[1]) ]).T))
+    else:
+      Xb = ji_calc_trend( zNormalize(fTransform(np.ma.array(\
+          [ sample_wr(series1[:,j], series1.shape[0]) \
+            for j in xrange(0,series1.shape[1]) ]).T)), \
+            timespots, trendThresh )
+      Yb = ji_calc_trend( zNormalize(fTransform(np.ma.array(\
+          [ sample_wr(series2[:,j], series2.shape[0]) \
+            for j in xrange(0,series2.shape[1]) ]).T)), \
+            timespots, trendThresh )
     #print "Xb=", Xb
     #print "Yb=", Yb
-    lsad.assign( delayLimit, zNormalize(fTransform(Xb)), zNormalize(fTransform(Yb)) )
+    lsad.assign( delayLimit, Xb, Yb )
     BS_set[i] = compcore.DP_lsa(lsad, False).score
   BS_set.sort()                                 #from smallest to largest
   BS_mean = np.mean(BS_set)
@@ -293,13 +326,13 @@ def bootstrapCI(series1, series2, Smax, delayLimit, bootCI, bootNum, fTransform,
     #print "z0=", z0, "a1=", a1, "a2=", a2
   return ( BS_mean, BS_set[np.floor(bootNum*a1)-1], BS_set[np.ceil(bootNum*a2)-1] )
 
-def readPvalue(P_table, R, N, x_sd=1, M=1, alpha=1, beta=1, x_decimal=3):  
+def readPvalue(P_table, R, N, x_sd=1., M=1., alpha=1., beta=1., x_decimal=3):  
   # R=observed range, N=timepoints, x_sd=std.dev of single series, M=replicates, alpha=1-portion of zero in X, beta=1-portion of zero in Y
   # x' = R*M/(alpha*beta*sqrt(N)*sd) * 10^(x_decimal)
   # has to ceil the x value to avoid round to 0, which is not amenable to calculation
   try:
     xi = int(np.around(R*M/(x_sd*np.sqrt(alpha*beta*N))*(10**x_decimal)))    #
-  except OverflowError:
+  except OverflowError, ValueError:
     #print alpha, beta
     #print "x=", np.around(R*M/np.sqrt(alpha*beta*N)*(10**x_decimal))
     #quit()
@@ -324,7 +357,8 @@ def theoPvalue(Rmax, Dmax=0, precision=.001, x_decimal=2):
     if xi == 0:
       P_table[xi] = 1
       continue
-    #print x
+    #if np.mod(xi,100) == 0:
+    #  print >>sys.stderr, "progress: %f " % (xi/float(Rmax*10**(x_decimal)))
     x = xi/float(10**(x_decimal)) #standard x with variance corrected
     xx = x**2
     pipi_over_xx = pipi/xx
@@ -334,7 +368,8 @@ def theoPvalue(Rmax, Dmax=0, precision=.001, x_decimal=2):
     #print alpha
     #print np.log(alpha*xx*(1-np.exp(-pipi_over_xx))/(8**B)/2)
     #print np.log(alpha*xx*(1-np.exp(-pipi_over_xx))/(8**B)/2) / pipi_over_xx
-    Kcut = np.max((kcut_min, int(np.ceil( .5 - np.log( (alpha/(2**B-1))**(1/B) *xx*(1-np.exp(-pipi_over_xx))/8/2 )/pipi_over_xx ))))
+    Kcut = np.max((kcut_min, int(np.ceil( .5 - np.log( \
+        (alpha/(2**B-1))**(1/B) *xx*(1-np.exp(-pipi_over_xx))/8/2 )/pipi_over_xx ))))
     #Kcut = 200
     A = 1/xx
     Rcdf = 0     # root of cdf
@@ -357,7 +392,7 @@ def theoPvalue(Rmax, Dmax=0, precision=.001, x_decimal=2):
   return P_table
 	
 def permuPvalue(series1, series2, delayLimit, precisionP, \
-    Smax, fTransform, zNormalize):
+    Smax, fTransform, zNormalize, trendThresh=None):
   """ do permutation Test
 
     Args:
@@ -372,17 +407,31 @@ def permuPvalue(series1, series2, delayLimit, precisionP, \
       p-value
 
 	"""
-	
-  ###print "-------permutation------"
+  
+  lengthSeries = series1.shape[1]
+  timespots = series1.shape[1]
+  if trendThresh != None:
+    lengthSeries = timespots - 1
+
   lsad = compcore.LSA_Data()
   PP_set = np.zeros(precisionP, dtype='float')
-  Xz = zNormalize(fTransform(series1))
-  Y = np.ma.array(series2)                                               #use = only assigns reference, must use a constructor
+  if trendThresh == None:
+    Xz = zNormalize(fTransform(series1))
+  else:
+    Xz = ji_calc_trend(\
+        zNormalize(fTransform(series1)), timespots, trendThresh)
+  Y = np.ma.array(series2)  #use = only assigns reference, must use a constructor
+
   for i in xrange(0, precisionP):
-    np.random.shuffle(Y.T)
-    lsad.assign( delayLimit, Xz, zNormalize(fTransform(Y)) )
+    np.random.shuffle(Y.T)  #shuffle is in place
+    if trendThresh == None:
+      Yz = zNormalize(fTransform(Y)) 
+    else:
+      Yz = ji_calc_trend(\
+        zNormalize(fTransform(Y)), timespots, trendThresh)
+    lsad.assign( delayLimit, Xz, Yz)
     PP_set[i] = compcore.DP_lsa(lsad, False).score
-  #PP_set[pvalueMethod]=Smax                                               #the original test shall not be considerred
+  #PP_set[pvalueMethod]=Smax  #the original test shall not be considerred
   #print "PP_set", PP_set, PP_set >= Smax, np.sum(PP_set>=Smax), np.float(pvalueMethod)
   if Smax >= 0:
     P_two_tail = np.sum(np.abs(PP_set) >= Smax)/np.float(precisionP)
@@ -815,8 +864,8 @@ def fillMissing(tseries, method): #teseries is 2d matrix unmasked
     
 def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5, \
     bootCI=.95, bootNum=0, pvalueMethod='perm', precisionP=1000,\
-    fTransform=simpleAverage, zNormalize=noZeroNormalize, varianceX=1, \
-    resultFile=tempfile.TemporaryFile('w'), \
+    fTransform=simpleAverage, zNormalize=noZeroNormalize, approxVar=1, \
+    resultFile=tempfile.TemporaryFile('w'), trendThresh=None,\
     firstFactorLabels=None, secondFactorLabels=None, qvalueMethod='R'):
   """ calculate pairwise LS scores and p-values
 
@@ -840,6 +889,12 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
         	
   """	
 
+  #to do trend:
+  #(1) if trendThresh != None -> trendSeries:
+  #        update trendLength=len-1
+  #        whenever do singleLSA, convert to trend first then do
+  #        otherwise the same
+
   col_labels= ['X','Y','LS','lowCI','upCI','Xs','Ys','Len','Delay',\
       'P','PCC','Ppcc','SPCC','Pspcc','Dspcc','SCC','Pscc','SSCC',\
       'Psscc','Dsscc','Q','Qpcc','Qspcc','Qscc','Qsscc','Xi','Yi']
@@ -851,6 +906,7 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
   secondFactorNum = secondData.shape[0]
   secondRepNum = secondData.shape[1]
   secondSpotNum = secondData.shape[2]
+
   if not firstFactorLabels:
     firstFactorLabels= [str(v) for v in range(1, firstFactorNum+1)]
   if not secondFactorLabels:
@@ -872,9 +928,13 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
   ssccpvalues = np.zeros(pairwiseNum, dtype='float')
   #print factorNum, repNum, spotNum, lsaTable, pvalues
 
-  timespots = secondSpotNum #same length already assumed
+  timespots = secondSpotNum
+  lengthSeries = secondSpotNum #same length already assumed
+  if trendThresh != None:
+    lengthSeries = timespots - 1
+
   replicates = firstRepNum
-  stdX = np.sqrt(varianceX) #make comparable with previous command line
+  stdX = np.sqrt(approxVar) #make comparable with previous command line
   ti = 0
   
   if qvalueMethod in ['R'] and rpy_import:
@@ -883,12 +943,15 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
     qvalue_func = storeyQvalue 
 
   if pvalueMethod in ['theo','mix']:
-    #P_table = theoPvalue(D=0, precision=.0001, x_decimal=3)   #let's produce 2 tail-ed p-value
-    P_table = theoPvalue(Rmax=timespots, Dmax=delayLimit, \
+    #P_table = theoPvalue(D=0, precision=.0001, x_decimal=3)   
+    #let's produce 2 tail-ed p-value
+    P_table = theoPvalue(Rmax=lengthSeries, Dmax=delayLimit, \
         precision=1./precisionP, x_decimal=my_decimal)
     #print P_table
+
   for i in xrange(0, firstFactorNum):
-    Xz = np.ma.masked_invalid(firstData[i], copy=True) #need to convert to masked array with na's, not F-normalized
+    Xz = np.ma.masked_invalid(firstData[i], copy=True) 
+    #need to convert to masked array with na's, not F-normalized
     Xz_badOccur = np.sum(np.logical_not(np.isnan(ma_average(Xz)), \
         ma_average(Xz)==0))/float(timespots) < minOccur
     if Xz.shape[1] == None: #For 1-d array, convert to 2-d
@@ -896,7 +959,8 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
     for j in xrange(0, secondFactorNum):
       if onDiag and i>=j:
         continue   #only care lower triangle entries, ignore i=j entries
-      Yz = np.ma.masked_invalid(secondData[j], copy=True)    # need to convert to masked array with na's, not F-normalized
+      Yz = np.ma.masked_invalid(secondData[j], copy=True)    
+      # need to convert to masked array with na's, not F-normalized
       Yz_badOccur = np.sum(np.logical_not(np.isnan(ma_average(Yz)), \
           ma_average(Yz)==0))/float(timespots) < minOccur
       #print i+1, np.sum(np.logical_not(np.isnan(ma_average(Xz)), ma_average(Xz)==0))/float(timespots), Xz_badOccur, \
@@ -910,11 +974,11 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
         #print "j=",j,"data=",secondData[j]
         #print Xz, Yz
         #print np.all(Yz.mask), np.all(Xz.mask), np.all(Yz.mask) or np.all(Xz.mask)
-
       #control minZeroPercent or allNA here
       
-      if np.all(Yz.mask) or np.all(Xz.mask) or Xz_badOccur or Yz_badOccur:  # not any unmasked value in Xz or Yz, all nan in input, warn code -1
-      #lsaTable[ti] = [i, j, Smax,   Sl,     Su,     Xs,Ys,Al,Xs-Ys, lsaP,   PCC,    P_PCC,  SPCC,   P_SPCC, D_SPCC, SCC,    P_SCC,  SSCC,   P_SSCC, D_SSCC]
+      if np.all(Yz.mask) or np.all(Xz.mask) or Xz_badOccur or Yz_badOccur:  
+      # not any unmasked value in Xz or Yz, all nan in input, warn code -1
+      # lsaTable[ti] = [i, j, Smax,   Sl,     Su,     Xs,Ys,Al,Xs-Ys, lsaP,   PCC,    P_PCC,  SPCC,   P_SPCC, D_SPCC, SCC,    P_SCC,  SSCC,   P_SSCC, D_SSCC]
         lsaTable[ti] =[i, j, np.nan, np.nan, np.nan, -1, -1, -1, -1, \
             np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, \
             np.nan, np.nan, np.nan, np.nan]
@@ -931,18 +995,21 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
       #print "Xz%d="%i, zNormalize(fTransform(Xz))
       #print "Xf%d="%j, Yz
       #print "Xz%d="%j, zNormalize(fTransform(Yz))
-      LSA_result = singleLSA(Xz, Yz, delayLimit, fTransform, zNormalize, True)                          # do LSA computation
+      LSA_result = singleLSA(Xz, Yz, delayLimit, fTransform, zNormalize, \
+          trendThresh, True) #now allowing trend analysis in singleLSA
+      #else:
+      #  LSA_result = singleLTA(Xz, Yz, delayLimit, fTransform, ZNormalize, \
+      #      trendTresh, True) 
       #except NotImplementedError:
       #  print "Xz=", Xz
       #  print "Yz=", Yz
       #  quit()
           
-      Smax = LSA_result.score                                                               # get Smax
+      Smax = LSA_result.score 
       Al = len(LSA_result.trace)
       (PCC, P_PCC) = calc_pearsonr(ma_average(Xz, axis=0), ma_average(Yz, axis=0)) 
       # it is two tailed p-value
-      (SCC, P_SCC) = calc_spearmanr(ma_average(Xz, axis=0), ma_average(Yz, axis=0))
-      
+      (SCC, P_SCC) = calc_spearmanr(ma_average(Xz, axis=0), ma_average(Yz, axis=0)) 
       try:
         (SPCC, P_SPCC, D_SPCC) = calc_shift_corr(ma_average(Xz, axis=0), \
             ma_average(Yz, axis=0), delayLimit, calc_pearsonr) 
@@ -1014,20 +1081,20 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
       if pvalueMethod in ['theo', 'mix']:
         #x = np.abs(Smax)*np.sqrt(timespots) # x=Rn/sqrt(n)=Smax*sqrt(n)
         #alpha=1-{#(nan+zeros)/timespots}
-        Xz_alpha = 1 - np.sum(zNormalize(fTransform(Xz))==0)/float(timespots)
-        Yz_beta = 1 - np.sum(zNormalize(fTransform(Yz))==0)/float(timespots)
-        if Xz_alpha==0 or Yz_beta==0:
-          lsaP = np.nan
-        else:
-          lsaP = readPvalue(P_table, R=np.abs(Smax)*timespots, \
-            N=timespots, x_sd=stdX, M=replicates, alpha=Xz_alpha, \
-            beta=Yz_beta, x_decimal=my_decimal)
+        #Xz_alpha = 1 - np.sum(zNormalize(fTransform(Xz))==0)/float(timespots)
+        #Yz_beta = 1 - np.sum(zNormalize(fTransform(Yz))==0)/float(timespots)
+        #if Xz_alpha==0 or Yz_beta==0:
+        #  lsaP = np.nan
+        #else:
+        lsaP = readPvalue(P_table, R=np.abs(Smax)*lengthSeries, \
+            N=lengthSeries, x_sd=stdX, M=replicates, alpha=1., \
+            beta=1., x_decimal=my_decimal) #consider no extra zeros
 
       if (pvalueMethod in ['mix'] and lsaP<=promisingP) or (pvalueMethod in ['perm']):
         Xp = np.ma.array(Xz,copy=True)
         Yp = np.ma.array(Yz,copy=True)
         lsaP = permuPvalue(Xp, Yp, delayLimit, precisionP, np.abs(Smax), \
-            fTransform, zNormalize)          # do Permutation Test
+            fTransform, zNormalize, trendThresh)  # do Permutation Test
 
       pvalues[ti] = lsaP
       #print "bootstrap computing..."
@@ -1035,7 +1102,7 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
         Xb = np.ma.array(Xz,copy=True)
         Yb = np.ma.array(Yz,copy=True)
         (Smax, Sl, Su) = bootstrapCI(Xb, Yb, Smax, delayLimit, \
-            bootCI, bootNum, fTransform, zNormalize)           # do Bootstrap CI
+            bootCI, bootNum, fTransform, zNormalize, trendThresh) # do Bootstrap CI
       else: #skip BS
         (Smax, Sl, Su) = (Smax, Smax, Smax)
 
@@ -1125,30 +1192,30 @@ def ji_calc_trend(oSeries, lengthSeries, thresh):
   #exit()
   return tSeries
 
-def ji_calc_trend_rep(oSeries, thresh): #sim trend series with replicates
+#def ji_calc_trend_rep(oSeries, thresh): #sim trend series with replicates
  #Liping Ji and Kian-Lee Tan, Bioinformatics 2005
+#
+#  lengthSeries=oSeries.shape[1]-1
+#  tSeries = np.zeros((1,lengthSeries), dtype='float')
 
-  lengthSeries=oSeries.shape[1]-1
-  tSeries = np.zeros((1,lengthSeries), dtype='float')
+#  for i in xrange(0, lengthSeries):
+#    if oSeries[0][i] == 0 and oSeries[0][i+1] > 0:
+#      trend = 1
+#    elif oSeries[0][i] == 0 and oSeries[0][i+1] < 0:
+#      trend = -1
+#    elif oSeries[0][i] == 0 and oSeries[0][i+1] == 0:
+#      trend = 0
+#    else:
+#      trend = (oSeries[0][i+1]-oSeries[0][i])/np.abs(oSeries[0][i])
 
-  for i in xrange(0, lengthSeries):
-    if oSeries[0][i] == 0 and oSeries[0][i+1] > 0:
-      trend = 1
-    elif oSeries[0][i] == 0 and oSeries[0][i+1] < 0:
-      trend = -1
-    elif oSeries[0][i] == 0 and oSeries[0][i+1] == 0:
-      trend = 0
-    else:
-      trend = (oSeries[0][i+1]-oSeries[0][i])/np.abs(oSeries[0][i])
+#    if trend >= thresh:
+#      tSeries[0][i] = 1
+#    elif trend <= -thresh:
+#      tSeries[0][i] = -1
+#    else:
+#      tSeries[0][i] = 0
 
-    if trend >= thresh:
-      tSeries[0][i] = 1
-    elif trend <= -thresh:
-      tSeries[0][i] = -1
-    else:
-      tSeries[0][i] = 0
-
-  return tSeries
+#  return tSeries
 
 def calc_tmatrix(bootNum, trend_threshold, timeNum=10000, randomFunc=np.random.normal):
   # return a 3 by 3 transition matrix
