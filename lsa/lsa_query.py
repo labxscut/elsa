@@ -77,7 +77,7 @@ def main():
                         formatting a query: \n \
                         '[!]lsa$Key1[>,<,>=,<=,==,!=]V1[|,&][!]lsa$Key2[>,<,>=,<=,==,!=]V2[|,&]...' \n \
                         and any groupings using '(' and ')' e.g. \n \
-                        '(!lsa$P>0.01)&(lsa$Q<0.01)'") 
+                        '(!lsa$P>0.01)&(lsa$Q<0.01)', if use X to select ,must have'(lsa$X>x)&(!is.na(lsa$X))'") 
   parser.add_argument("-x", "--xgmmlFile", dest="xgmmlFile", default="",
                       help="if specified, will also produce a XGMML format file for cytoscape")
   parser.add_argument("-s", "--sifFile", dest="sifFile", default="",
@@ -85,7 +85,7 @@ def main():
   arg_namespace = parser.parse_args()
 
   #get the arguments
-  print >>sys.stderr, "lsa_query ($Revision$) - copyright Li Charlie Xia, lxia@usc.edu"
+  print >>sys.stderr, "lsa_query ($Revision: cf5af45de4d2 $) - copyright Li Charlie Xia, lxia@usc.edu"
   print >>sys.stderr, "learning arguments..."
   
   rawFile = vars(arg_namespace)['rawFile']
