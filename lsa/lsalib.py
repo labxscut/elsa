@@ -96,8 +96,8 @@ except ImportError:
 disp_decimal=8
 kcut_min=100
 Rmax_min=10
-my_decimal = 2    # preset x step size for P_table
-pipi = np.pi**2 # pi^2
+my_decimal = 2        # preset x step size for P_table
+pipi = np.pi**2       # pi^2
 pipi_inv = 1/pipi
 Q_lam_step = 0.05
 Q_lam_max = 0.95
@@ -326,7 +326,7 @@ def bootstrapCI(series1, series2, Smax, delayLimit, bootCI, bootNum, \
     #print "z0=", z0, "a1=", a1, "a2=", a2
   return ( BS_mean, BS_set[np.floor(bootNum*a1)-1], BS_set[np.ceil(bootNum*a2)-1] )
 
-def readPvalue(P_table, R, N, x_sd=1., M=1., alpha=1., beta=1., x_decimal=3):  
+def readPvalue(P_table, R, N, x_sd=1., M=1., alpha=1., beta=1., x_decimal=my_decimal):
   # R=observed range, N=timepoints, x_sd=std.dev of single series, M=replicates, alpha=1-portion of zero in X, beta=1-portion of zero in Y
   # x' = R*M/(alpha*beta*sqrt(N)*sd) * 10^(x_decimal)
   # has to ceil the x value to avoid round to 0, which is not amenable to calculation
@@ -342,7 +342,7 @@ def readPvalue(P_table, R, N, x_sd=1., M=1., alpha=1., beta=1., x_decimal=3):
   else:
     return 0.
 
-def theoPvalue(Rmax, Dmax=0, precision=.001, x_decimal=2):   
+def theoPvalue(Rmax, Dmax=0, precision=.001, x_decimal=my_decimal):   
   # let's produce 2 tail-ed p-value
   # the produced P_table is for P(X>=x) when X=(R(D)/sqrt(n)) 
   # and indexed by xi=x*(10^x_decimal) 
@@ -368,26 +368,23 @@ def theoPvalue(Rmax, Dmax=0, precision=.001, x_decimal=2):
     #print alpha
     #print np.log(alpha*xx*(1-np.exp(-pipi_over_xx))/(8**B)/2)
     #print np.log(alpha*xx*(1-np.exp(-pipi_over_xx))/(8**B)/2) / pipi_over_xx
-    Kcut = np.max((kcut_min, int(np.ceil( .5 - np.log( \
-        (alpha/(2**B-1))**(1/B) *xx*(1-np.exp(-pipi_over_xx))/8/2 )/pipi_over_xx ))))
+    Kcut = np.max((kcut_min, int(np.ceil(.5\
+      - np.log((alpha/(2**B-1))**(1/B)*xx*(1-np.exp(-pipi_over_xx))/8/2)\
+      /pipi_over_xx ))))
     #Kcut = 200
     A = 1/xx
     Rcdf = 0     # root of cdf
-
+    P_two_tail = 1.
     for k in xrange(1,Kcut+1):
       C = (2*k-1)**2
       Rcdf = Rcdf + (A+pipi_inv/C)*np.exp(-C*pipi_over_xx/2)
-      P_two_tail = 1 - (8**B)*(Rcdf**B)
-      #if x==2.52:
-      #  print "k=",k, "A=",A, "B=",B, "C=",C, "F=",(8**B)*(R**B), "dR=",(A+pipi_inv/C)*np.exp(-C*pipi_over_xx/2), "P=",P,"pipi_inv=",pipi_inv,"pipi_over_xx=",pipi_over_xx 
-    #print xi, x, Kcut, P, P/2;
-
-    #print "xi=", xi, "Kut=", Kcut, "k=", k
-    #if P_two_tail <= precision and Kcut != :
-    #  P_table[xi] = precision
-    #  continue
-    #else:
-    P_table[xi] = P_two_tail #return two tailed probability
+      P_current = 1 - (8**B)*(Rcdf**B)
+      if P_current<0:
+        break
+      else:
+        P_two_tail = P_current
+    #P_two_tail >= 0 is already ensured above
+    P_table[xi] = P_two_tail
 
   return P_table
 	
