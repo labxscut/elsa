@@ -227,10 +227,16 @@ def main():
     firstData=np.genfromtxt( \
         dataFile, comments='#', delimiter='\t', missing_values=['na','','NA'], \
         filling_values=np.nan, usecols=range(1,spotNum*repNum+1) )
+    if len(firstData.shape)==1:
+      firstData=np.array([firstData])
+    #print firstData.shape
     dataFile.seek(0)  #rewind
-    firstFactorLabels=list(\
-        np.genfromtxt( dataFile, comments='#', delimiter='\t', \
-        usecols=xrange(0,1), dtype='string' ))
+    #print "we can get here"
+    firstFactorLabels=np.genfromtxt( dataFile, comments='#', delimiter='\t', \
+        usecols=xrange(0,1), dtype='string' ).tolist()
+    if type(firstFactorLabels)==str:
+      firstFactorLabels=[firstFactorLabels]
+    #print "but we cann't get here"
     if not extraFile:
       onDiag = True
       #print >>sys.stderr, "reading raw data from dataFile..."
@@ -238,20 +244,28 @@ def main():
       secondData=np.genfromtxt( dataFile, comments='#', delimiter='\t', \
           missing_values=['na','','NA'], \
           filling_values=np.nan, usecols=range(1,spotNum*repNum+1) )
+      if len(secondData.shape)==1:
+        secondData=np.array([secondData.shape])
       dataFile.seek(0)  #rewind
-      secondFactorLabels=list(\
-          np.genfromtxt( dataFile, comments='#', delimiter='\t', \
-          usecols=xrange(0,1), dtype='string' ))
+      secondFactorLabels=np.genfromtxt( dataFile, comments='#', delimiter='\t', \
+          usecols=xrange(0,1), dtype='string' ).tolist()
+      if type(secondFactorLabels)==str:
+        secondFactorLabels=[secondFactorLabels]
     else:
+      #print "can we get here"
       #dataFile.close()  #incase feeding the same file twice
       extraFile.seek(0)
       secondData=np.genfromtxt( \
           extraFile, comments='#', delimiter='\t', missing_values=['na','','NA'], \
           filling_values=np.nan, usecols=range(1,spotNum*repNum+1) )
+      if len(secondData.shape)==1:
+        secondData=np.array([secondData.shape])
+      print secondData.shape
       extraFile.seek(0)  #rewind
-      secondFactorLabels=list(\
-          np.genfromtxt( extraFile, comments='#', delimiter='\t', \
-          usecols=xrange(0,1), dtype='string' ))
+      secondFactorLabels=np.genfromtxt( extraFile, comments='#', delimiter='\t', \
+          usecols=xrange(0,1), dtype='string' ).tolist()
+      if type(secondFactorLabels)==str:
+        secondFactorLabels=[secondFactorLabels]
   except ValueError:
     print >>sys.stderr, "ValueError:", str(ValueError)
     exit(0)
