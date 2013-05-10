@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import argparse
+import numpy as np
 
 
 def main():
@@ -37,7 +38,13 @@ def main():
           except AssertionError:
             print
       index += 1
-  
+  dataFile.seek(0)
+  try:
+    np.genfromtxt( \
+        dataFile, comments='#', delimiter='\t', missing_values=['na','','NA'], \
+        filling_values=np.nan, usecols=range(1,spotNum*repNum+1) )
+  except ValueError:
+    print "Numpy cann't read", str(ValueError)
 
 if __name__=="__main__":
   main()

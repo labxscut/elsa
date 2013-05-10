@@ -159,7 +159,7 @@ def main():
 
   parser = argparse.ArgumentParser(description="Multiline Input Split and Combine Tool for LSA and LA")
 
-  parser.add_argument("multiInput", metavar="multiInput", type=argparse.FileType('r'), help="the multiline input file")
+  parser.add_argument("multiInput", metavar="multiInput", type=argparse.FileType('rU'), help="the multiline input file")
   parser.add_argument("multiOutput", metavar="multiOutput", type=argparse.FileType('w'), help="the multiline output file")
   parser.add_argument("singleCmd", metavar="singleCmd", help="single line command line in quotes")
   parser.add_argument("workDir", metavar="workDir", help="set current working directory")

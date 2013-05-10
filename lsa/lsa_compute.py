@@ -61,7 +61,7 @@ def main():
   # define arguments: delayLimit, fillMethod, pvalueMethod
   parser = argparse.ArgumentParser()
 
-  parser.add_argument("dataFile", metavar="dataFile", type=argparse.FileType('r'), \
+  parser.add_argument("dataFile", metavar="dataFile", type=argparse.FileType('rU'), \
       help="the input data file,\n \
       m by (r * s)tab delimited text; top left cell start with \
       '#' to mark this is the header line; \n \
@@ -72,7 +72,7 @@ def main():
   parser.add_argument("resultFile", metavar="resultFile", type=argparse.FileType('w'), \
       help="the output result file")
   parser.add_argument("-e", "--extraFile", dest="extraFile", default=None, \
-      type=argparse.FileType('r'),
+      type=argparse.FileType('rU'),
       help="specify an extra datafile, otherwise the first datafile will be used \n \
             and only lower triangle entries of pairwise matrix will be computed")
   parser.add_argument("-d", "--delayLimit", dest="delayLimit", default=3, type=int, 
@@ -252,6 +252,12 @@ def main():
       secondFactorLabels=list(\
           np.genfromtxt( extraFile, comments='#', delimiter='\t', \
           usecols=xrange(0,1), dtype='string' ))
+  except ValueError:
+    print >>sys.stderr, "ValueError:", str(ValueError)
+    exit(0)
+  except TypeError:
+    print >>sys.stderr, "TypeError:", str(TypeError)
+    exit(0)
   except:
     print >>sys.stderr, "unexpected error:", sys.exc_info()[0]
     print >>sys.stderr, "error reading dataFile, \n \
