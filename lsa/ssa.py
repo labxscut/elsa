@@ -6,6 +6,8 @@
 import os, shutil, subprocess, argparse, fnmatch, time
 core_max=300
 mem_max=300
+uname="lxia"
+qname="cmb"
 
 def mem_size(mem):
   if mem[-2:]=='mb':
@@ -52,7 +54,7 @@ def peek_current(uname):
   return full_status
 
 def submit( pbsFile ):
-  tmp=subprocess.Popen("qsub -q cmb %s" % pbsFile, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+  tmp=subprocess.Popen("qsub -q %s %s" % (qname, pbsFile), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
   submitted=True
   if tmp[1] == '':
     print tmp[0]
@@ -74,7 +76,7 @@ def main():
   #print pbsFiles
 
   while( len(pbsFiles) != 0 ):
-    if peek_current('lxia'):  #full
+    if peek_current(uname):  #full
       time.sleep(1)
     else:
       pbsFile=pbsFiles.pop()
