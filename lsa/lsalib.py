@@ -145,6 +145,8 @@ def scipy_pearsonr(Xz, Yz):
     return (np.nan,np.nan)
 
 def calc_pearsonr(Xz, Yz, pfunc=rpy_pearsonr):
+  if not rpy_import:
+    pfunc = scipy_pearson
   mask = np.logical_or(Xz.mask, Yz.mask)
   Xz.mask = mask
   Yz.mask = mask
