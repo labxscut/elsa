@@ -4,10 +4,10 @@
 # current mem limit is 300G
 
 import os, shutil, subprocess, argparse, fnmatch, time
-core_max=300
+core_max=63
 mem_max=300
-uname="lxia"
-qname="cmb"
+uname="lixia"
+qname="main"
 
 def mem_size(mem):
   if mem[-2:]=='mb':
@@ -23,34 +23,35 @@ def peek_current(uname):
   #print mems
   tmp=subprocess.Popen("qstat -u %s | awk '{print $6}'" % uname, shell=True, stdout=subprocess.PIPE).communicate()
   cores=tmp[0].split('\n')
+  #print cores
   tmp=subprocess.Popen("qstat -u %s | awk '{print $5}'" % uname, shell=True, stdout=subprocess.PIPE).communicate()
   sessions=tmp[0].split('\n')
-  #print cores
+  #print sessions
   hskip=5
   tskip=1
   total_core=0
   total_mem=0
   #print queue
-  assert len(mems) == len(cores)
+  #assert len(mems) == len(cores)
 
-  for i in range(hskip+1,len(cores)-tskip):
-    #print cores[i]
-    #print mems[i]
-    #print sessions[i]
+  for i in range(hskip+1,len(sessions)-tskip):
     try:
       session=int(sessions[i])
     except ValueError:
-      return True
+      return True #if seesion is not started, just wait
 
+  for i in range(hskip+1,len(cores)-tskip):
     total_core+=int(cores[i])
-    if mem_size>0:
+  
+  for i in range(hskip+1,len(mems)-tskip):
+    if mem_size(mems[i])>0:
       total_mem+=mem_size(mems[i])
     else: #Let's just wait
-      total_core=300
-      total_mem=300
+      total_core=core_max
+      total_mem=mem_max
       break
 
-  full_status=(total_core>=300) or (total_mem>=300)
+  full_status=(total_core>=core_max) or (total_mem>=mem_max)
   return full_status
 
 def submit( pbsFile ):
@@ -85,4 +86,4 @@ def main():
         pbsFiles.add(pbsFile)
 
 if __name__=="__main__":
-    main()
+  main()
