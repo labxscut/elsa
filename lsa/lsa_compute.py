@@ -41,6 +41,11 @@ except ImportError:
   from lsa import lsalib
   #np.seterr(all='raise')
 import lsa
+import rpy2.robjects as robjects
+import rpy2.robjects.numpy2ri as rpyn
+
+robjects.conversion.py2ri = rpyn.numpy2ri
+robjects.conversion.ri2numpy = rpyn.ri2numpy
 
 def main():  
 
@@ -146,7 +151,7 @@ def main():
             values for -p, -a, -n options")
   parser.add_argument("-a", "--approxVar", dest="approxVar", default=1, type=float,\
       help="if use -p theo and -T, must set this value appropriately, \n \
-            precalculated -a {1.25, 0.92, 0.55, } for i.i.d. standard normal null \n \
+            precalculated -a {1.25, 0.93, 0.56,0.13 } for i.i.d. standard normal null \n \
             and -T {0, 0.5, 1, 2} respectively. For other distribution \n \
             and -T values, see FAQ and Xia et al. 2013 in reference")
   arg_namespace = parser.parse_args()
@@ -291,7 +296,12 @@ def main():
     # (num_rows-1) x (num_cols/repNum) x (repNum)
     for i in xrange(0, factorNum):
       for j in xrange(0, repNum):
-        tempData[i,j] = rawData[i][np.arange(j,spotNum*repNum,repNum)]
+        try:
+          tempData[i,j] = rawData[i][np.arange(j,spotNum*repNum,repNum)]
+        except IndexError:
+          print >>sys.stderr, """Error: one input file need more than two data row
+or use -e to specify another input file"""
+          quit()
     for i in xrange(0, factorNum):
       for j in range(0, repNum):
         tempData[i,j] = lsalib.fillMissing( tempData[i,j], fillMethod )

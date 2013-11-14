@@ -133,6 +133,7 @@ def gen_pbs(singleFile, singleCmd, workDir, singleEnd):
   print >>singlePBS, "cd %s" % workDir
   print >>singlePBS, singleCmd % (singleFile, singleResult)
   print >>singlePBS, "touch %s" % singleEnd
+  print >>singlePBS, "rm -f %s %s" % (singleFile, singlePBS.name)
   singlePBS.close()
   return singlePBS.name
 
