@@ -96,6 +96,7 @@ except ImportError:
 disp_decimal=8
 kcut_min=100
 Rmax_min=10
+Rmax_max=100
 my_decimal = 2        # preset x step size for P_table
 pipi = np.pi**2       # pi^2
 pipi_inv = 1/pipi
@@ -332,6 +333,8 @@ def readPvalue(P_table, R, N, x_sd=1., M=1., alpha=1., beta=1., x_decimal=my_dec
   # R=observed range, N=timepoints, x_sd=std.dev of single series, M=replicates, alpha=1-portion of zero in X, beta=1-portion of zero in Y
   # x' = R*M/(alpha*beta*sqrt(N)*sd) * 10^(x_decimal)
   # has to ceil the x value to avoid round to 0, which is not amenable to calculation
+  if xi>max(P_table.keys()):
+    return 0.
   try:
     xi = int(np.around(R*M/(x_sd*np.sqrt(alpha*beta*N))*(10**x_decimal)))    #
   except OverflowError, ValueError:
@@ -354,6 +357,7 @@ def theoPvalue(Rmax, Dmax=0, precision=.001, x_decimal=my_decimal):
   # print np.linspace(0,timespots,timespots/10**(-x_decimal)+1) 
   # x_decimal is for augment x_index
   Rmax = np.max((Rmax, Rmax_min))
+  Rmax = np.min((Rmax, Rmax_max)) #avoid extreme time consuming for long series
   P_table = dict()
   for xi in xrange(0,Rmax*10**(x_decimal)+1): 
     if xi == 0:
@@ -894,6 +898,8 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
   #        whenever do singleLSA, convert to trend first then do
   #        otherwise the same
 
+  print >>sys.stderr, "inside applyAnalysis..."
+
   col_labels= ['X','Y','LS','lowCI','upCI','Xs','Ys','Len','Delay',\
       'P','PCC','Ppcc','SPCC','Pspcc','Dspcc','SCC','Pscc','SSCC',\
       'Psscc','Dsscc','Q','Qpcc','Qspcc','Qscc','Qsscc','Xi','Yi']
@@ -942,6 +948,7 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
     qvalue_func = storeyQvalue 
 
   if pvalueMethod in ['theo','mix']:
+    print >>sys.stderr, "computing p_table"
     #P_table = theoPvalue(D=0, precision=.0001, x_decimal=3)   
     #let's produce 2 tail-ed p-value
     P_table = theoPvalue(Rmax=lengthSeries, Dmax=delayLimit, \
@@ -956,6 +963,8 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
     if Xz.shape[1] == None: #For 1-d array, convert to 2-d
       Xz.shape = (1, Xz.shape[0])
     for j in xrange(0, secondFactorNum):
+      if (i*secondFactorNum+j+1)%1000 == 0:
+        print >>sys.stderr, i*secondFactorNum+j+1, " of ", firstFactorNum*secondFactorNum, ", ", float(i*secondFactorNum+j+1)/(firstFactorNum*secondFactorNum)*100, "%"
       if onDiag and i>=j:
         continue   #only care lower triangle entries, ignore i=j entries
       Yz = np.ma.masked_invalid(secondData[j], copy=True)    
