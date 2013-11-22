@@ -43,7 +43,7 @@
 #Considering using R for simple numerics, rpy or use swig+R?
 
 #import public resources
-import csv, sys, os, random, tempfile
+import csv, sys, os, random, tempfile, time
 import numpy as np
 import numpy.testing
 #import numpy.ma as np.ma
@@ -955,6 +955,7 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
         precision=1./precisionP, x_decimal=my_decimal)
     #print P_table
 
+  start_time = time.time()
   for i in xrange(0, firstFactorNum):
     Xz = np.ma.masked_invalid(firstData[i], copy=True) 
     #need to convert to masked array with na's, not F-normalized
@@ -964,7 +965,10 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
       Xz.shape = (1, Xz.shape[0])
     for j in xrange(0, secondFactorNum):
       if (i*secondFactorNum+j+1)%1000 == 0:
-        print >>sys.stderr, i*secondFactorNum+j+1, " of ", firstFactorNum*secondFactorNum, ", ", float(i*secondFactorNum+j+1)/(firstFactorNum*secondFactorNum)*100, "%"
+        elapsed_time = time.time() - start_time
+        pct = float(i*secondFactorNum+j+1)/(firstFactorNum*secondFactorNum)
+        print >>sys.stderr, i*secondFactorNum+j+1, " of ", firstFactorNum*secondFactorNum, ", ", \
+          pct*100, "%", "estimated remaining time", round(elapsed_time/pct*(1-pct)), "s"
       if onDiag and i>=j:
         continue   #only care lower triangle entries, ignore i=j entries
       Yz = np.ma.masked_invalid(secondData[j], copy=True)    
