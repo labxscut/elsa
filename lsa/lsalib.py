@@ -1012,10 +1012,10 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
       #print "Xz%d="%i, zNormalize(fTransform(Xz))
       #print "Xf%d="%j, Yz
       #print "Xz%d="%j, zNormalize(fTransform(Yz))
-      print >>sys.stderr, "can get here?"
+      #print >>sys.stderr, "can get here?"
       LSA_result = singleLSA(Xz, Yz, delayLimit, fTransform, zNormalize, \
           trendThresh, True) #now allowing trend analysis in singleLSA
-      print >>sys.stderr, "can get here?"
+      #print >>sys.stderr, "can get here?"
       #else:
       #  LSA_result = singleLTA(Xz, Yz, delayLimit, fTransform, ZNormalize, \
       #      trendTresh, True) 
