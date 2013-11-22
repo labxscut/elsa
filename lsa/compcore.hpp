@@ -13,10 +13,12 @@ typedef vector<double> VectorDouble;
 typedef vector<VectorDouble> MatrixDouble;
 typedef vector<int> VectorInt;
 typedef vector<VectorInt> MatrixInt;
+//typedef vector<double> VectorDouble;
+//typedef vector<VectorDouble> MatrixDouble;
 
 //easy functions
 int test();
-float calc_LA(VectorDouble, VectorDouble, VectorDouble);
+double calc_LA(VectorDouble, VectorDouble, VectorDouble);
 
 //// LSA section
 

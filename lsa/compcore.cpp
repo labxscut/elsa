@@ -16,16 +16,21 @@ LSA_Result DP_lsa( const LSA_Data& data, bool keep_trace ){  //python does not s
   LSA_Result lsa_result;
   int max_p[2]={0}; int porn=0;
   double max_s=-std::numeric_limits<double>::infinity(); //initialize to negative infinite
-  double psm[data.X.size()+1][data.Y.size()+1]; // positive score matrix
-  double nsm[data.X.size()+1][data.Y.size()+1]; // negative score matrix
-  for( unsigned int i=0; i<=data.X.size(); i++ )
-    for( unsigned int j=0; j<=data.Y.size(); j++ )
-      { psm[i][j]=0.; nsm[i][j]=0.; } //initialize score matrix elements to 0
-  //cout << sm[3][4][5] << endl;
-  int tm[data.X.size()+1][data.Y.size()+1]; // trace matrix
-  for( unsigned int i=0; i<=data.X.size(); i++ )
-    for( unsigned int j=0; j<=data.Y.size(); j++ )
-      tm[i][j]=0; //initialize trace matrix elements to 0
+  //MatrixDouble psm; MatrixDouble nsm;
+  MatrixDouble psm = vector<vector<double> >(data.X.size()+1, vector<double>(data.Y.size()+1));
+  MatrixDouble nsm = vector<vector<double> >(data.X.size()+1, vector<double>(data.Y.size()+1));
+  //double psm[data.X.size()+1][data.Y.size()+1]; // positive score matrix
+  cout << "here" <<endl;
+  //double nsm[data.X.size()+1][data.Y.size()+1]; // negative score matrix
+  cout << data.X.size() <<endl;
+  cout << data.X.size() <<endl;
+  //for( unsigned int i=0; i<=data.X.size(); i++ )
+  //  for( unsigned int j=0; j<=data.Y.size(); j++ )
+  //    { psm[i][j]=0.; nsm[i][j]=0.; } //initialize score matrix elements to 0
+  //int tm[data.X.size()+1][data.Y.size()+1]; // trace matrix
+  //for( unsigned int i=0; i<=data.X.size(); i++ )
+  //  for( unsigned int j=0; j<=data.Y.size(); j++ )
+  //    tm[i][j]=0; //initialize trace matrix elements to 0
                         //0x0??? for the moving direction, no gap <=> only 0x0000 and 0x0111
   //cout << tm[3][4][5] << endl;
   for( unsigned int i=1; i<=data.X.size(); i++)
@@ -116,10 +121,10 @@ LLA_Result DP_lla( const LLA_Data& data ){
   return lla_result;
 }
 
-float calc_LA(VectorDouble X, VectorDouble Y, VectorDouble Z){
+double calc_LA(VectorDouble X, VectorDouble Y, VectorDouble Z){
   //assert X.size() = Y.size() = Z.size() 
-  float sum=0;
-  for(int i=0; i<X.size(); i++){
+  double sum=0;
+  for(unsigned int i=0; i<X.size(); i++){
     sum += X[i]*Y[i]*Z[i];
   }
   return sum/X.size();

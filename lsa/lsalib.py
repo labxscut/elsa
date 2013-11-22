@@ -217,13 +217,17 @@ def singleLSA(series1, series2, delayLimit, fTransform, zNormalize, \
     xSeries = zNormalize(fTransform(series1))
     ySeries = zNormalize(fTransform(series2))
 
+  print "x=", xSeries
+  print "y=", ySeries
   lsad=compcore.LSA_Data(delayLimit, xSeries, ySeries)
   #except NotImplementedError:
   #  print series1, series1.mask, series2, series2.mask
   #  print fTransform, fTransform(series1), fTransform(series1).mask, fTransform(series2), fTransform(series2).mask
   #  print zNormalize, zNormalize(fTransform(series1)), zNormalize(fTransform(series1)).mask, zNormalize(fTransform(series2)), zNormalize(fTransform(series2)).mask
   #  quit()
+  print "can get here lsad"
   lsar=compcore.DP_lsa(lsad, keepTrace)
+  print "can get here lsar"
   del lsad
   return lsar
 	
@@ -954,7 +958,8 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
     P_table = theoPvalue(Rmax=lengthSeries, Dmax=delayLimit, \
         precision=1./precisionP, x_decimal=my_decimal)
     #print P_table
-
+  
+  print >>sys.stderr, "pairwise calculation..."
   start_time = time.time()
   for i in xrange(0, firstFactorNum):
     Xz = np.ma.masked_invalid(firstData[i], copy=True) 
@@ -1007,8 +1012,10 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
       #print "Xz%d="%i, zNormalize(fTransform(Xz))
       #print "Xf%d="%j, Yz
       #print "Xz%d="%j, zNormalize(fTransform(Yz))
+      print >>sys.stderr, "can get here?"
       LSA_result = singleLSA(Xz, Yz, delayLimit, fTransform, zNormalize, \
           trendThresh, True) #now allowing trend analysis in singleLSA
+      print >>sys.stderr, "can get here?"
       #else:
       #  LSA_result = singleLTA(Xz, Yz, delayLimit, fTransform, ZNormalize, \
       #      trendTresh, True) 
