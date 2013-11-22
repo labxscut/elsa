@@ -20,10 +20,10 @@ LSA_Result DP_lsa( const LSA_Data& data, bool keep_trace ){  //python does not s
   MatrixDouble psm = vector<vector<double> >(data.X.size()+1, vector<double>(data.Y.size()+1));
   MatrixDouble nsm = vector<vector<double> >(data.X.size()+1, vector<double>(data.Y.size()+1));
   //double psm[data.X.size()+1][data.Y.size()+1]; // positive score matrix
-  cout << "here" <<endl;
+  //cout << "here" <<endl;
   //double nsm[data.X.size()+1][data.Y.size()+1]; // negative score matrix
-  cout << data.X.size() <<endl;
-  cout << data.X.size() <<endl;
+  //cout << data.X.size() <<endl;
+  //cout << data.X.size() <<endl;
   //for( unsigned int i=0; i<=data.X.size(); i++ )
   //  for( unsigned int j=0; j<=data.Y.size(); j++ )
   //    { psm[i][j]=0.; nsm[i][j]=0.; } //initialize score matrix elements to 0
