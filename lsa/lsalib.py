@@ -874,7 +874,7 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
     bootCI=.95, bootNum=0, pvalueMethod='perm', precisionP=1000,\
     fTransform=simpleAverage, zNormalize=noZeroNormalize, approxVar=1, \
     resultFile=tempfile.TemporaryFile('w'), trendThresh=None,\
-    firstFactorLabels=None, secondFactorLabels=None, qvalueMethod='R'):
+    firstFactorLabels=None, secondFactorLabels=None, qvalueMethod='R', progressive=0):
   """ calculate pairwise LS scores and p-values
 
     	Args:
@@ -930,7 +930,7 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
     pairwiseNum = firstFactorNum*(firstFactorNum-1)/2
   else:
     pairwiseNum = firstFactorNum*secondFactorNum
-  lsaTable = [None]*pairwiseNum
+  lsaTable = None
   pvalues = np.zeros(pairwiseNum, dtype='float')
   pccpvalues = np.zeros(pairwiseNum, dtype='float')
   spccpvalues = np.zeros(pairwiseNum, dtype='float')
@@ -945,7 +945,7 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
 
   replicates = firstRepNum
   stdX = np.sqrt(approxVar) #make comparable with previous command line
-  ti = 0
+  ti = 0  # total index for lsaTable
   
   if qvalueMethod in ['R'] and rpy_import:
     qvalue_func = R_Qvalue
@@ -961,6 +961,13 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
   
   print >>sys.stderr, "pairwise calculation..."
   start_time = time.time()
+
+  ti = 0
+  if progressive>0:
+    lsaTable = [None]*progressive
+  else:
+    lsaTable = [None]*pairwiseNum
+
   for i in xrange(0, firstFactorNum):
     Xz = np.ma.masked_invalid(firstData[i], copy=True) 
     #need to convert to masked array with na's, not F-normalized
@@ -969,11 +976,6 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
     if Xz.shape[1] == None: #For 1-d array, convert to 2-d
       Xz.shape = (1, Xz.shape[0])
     for j in xrange(0, secondFactorNum):
-      if (i*secondFactorNum+j+1)%1000 == 0:
-        elapsed_time = time.time() - start_time
-        pct = float(i*secondFactorNum+j+1)/(firstFactorNum*secondFactorNum)
-        print >>sys.stderr, i*secondFactorNum+j+1, " of ", firstFactorNum*secondFactorNum, ", ", \
-          pct*100, "%", "estimated remaining time", round(elapsed_time/pct*(1-pct)), "s"
       if onDiag and i>=j:
         continue   #only care lower triangle entries, ignore i=j entries
       Yz = np.ma.masked_invalid(secondData[j], copy=True)    
@@ -994,8 +996,8 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
       #control minZeroPercent or allNA here
       
       if np.all(Yz.mask) or np.all(Xz.mask) or Xz_badOccur or Yz_badOccur:  
-      # not any unmasked value in Xz or Yz, all nan in input, warn code -1
-      # lsaTable[ti] = [i, j, Smax,   Sl,     Su,     Xs,Ys,Al,Xs-Ys, lsaP,   PCC,    P_PCC,  SPCC,   P_SPCC, D_SPCC, SCC,    P_SCC,  SSCC,   P_SSCC, D_SSCC]
+        # not any unmasked value in Xz or Yz, all nan in input, warn code -1
+        # lsaTable[ti] = [i, j, Smax,   Sl,     Su,     Xs,Ys,Al,Xs-Ys, lsaP,   PCC,    P_PCC,  SPCC,   P_SPCC, D_SPCC, SCC,    P_SCC,  SSCC,   P_SSCC, D_SSCC]
         lsaTable[ti] =[i, j, np.nan, np.nan, np.nan, -1, -1, -1, -1, \
             np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, \
             np.nan, np.nan, np.nan, np.nan]
@@ -1004,179 +1006,194 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
         spccpvalues[ti] = np.nan
         sccpvalues[ti] = np.nan
         ssccpvalues[ti] = np.nan
-        ti += 1
-        continue
-      #print "lsa computing..."
-      #try:
-      #print "Xf%d="%i, Xz
-      #print "Xz%d="%i, zNormalize(fTransform(Xz))
-      #print "Xf%d="%j, Yz
-      #print "Xz%d="%j, zNormalize(fTransform(Yz))
-      #print >>sys.stderr, "can get here?"
-      LSA_result = singleLSA(Xz, Yz, delayLimit, fTransform, zNormalize, \
+        #print "lsa computing..."
+        #try:
+        #print "Xf%d="%i, Xz
+        #print "Xz%d="%i, zNormalize(fTransform(Xz))
+        #print "Xf%d="%j, Yz
+        #print "Xz%d="%j, zNormalize(fTransform(Yz))
+        #print >>sys.stderr, "can get here?"
+      else:
+        LSA_result = singleLSA(Xz, Yz, delayLimit, fTransform, zNormalize, \
           trendThresh, True) #now allowing trend analysis in singleLSA
-      #print >>sys.stderr, "can get here?"
-      #else:
-      #  LSA_result = singleLTA(Xz, Yz, delayLimit, fTransform, ZNormalize, \
-      #      trendTresh, True) 
-      #except NotImplementedError:
-      #  print "Xz=", Xz
-      #  print "Yz=", Yz
-      #  quit()
-          
-      Smax = LSA_result.score 
-      Al = len(LSA_result.trace)
-      (PCC, P_PCC) = calc_pearsonr(ma_average(Xz, axis=0), ma_average(Yz, axis=0)) 
-      # it is two tailed p-value
-      (SCC, P_SCC) = calc_spearmanr(ma_average(Xz, axis=0), ma_average(Yz, axis=0)) 
-      try:
-        (SPCC, P_SPCC, D_SPCC) = calc_shift_corr(ma_average(Xz, axis=0), \
-            ma_average(Yz, axis=0), delayLimit, calc_pearsonr) 
-        # corr for shifted-cut seq
-        (SSCC, P_SSCC, D_SSCC) = calc_shift_corr(ma_average(Xz, axis=0), \
-            ma_average(Yz, axis=0), delayLimit, calc_spearmanr) 
-        # corr for shifted-cut seq
-        #if np.isnan(SSCC) or np.isnan(SPCC): 
-        #  print "Al=", Al, "X shape", Xz.shape, "Y shape", Yz.shape
-        #  print "Xs=", Xs, X_seg.shape
-        #  print "Ys=", Ys, Y_seg.shape
+        #print >>sys.stderr, "can get here?"
+        #else:
+        #  LSA_result = singleLTA(Xz, Yz, delayLimit, fTransform, ZNormalize, \
+        #      trendTresh, True) 
+        #except NotImplementedError:
+        #  print "Xz=", Xz
+        #  print "Yz=", Yz
         #  quit()
-      except FloatingPointError:
-        (SPCC, P_SPCC, D_SPCC) = (np.nan, np.nan, np.nan)
-        (SSCC, P_SSCC, D_SSCC) = (np.nan, np.nan, np.nan)
-        #print np.ma.mean(Xz[:,:Al], axis=0), np.ma.mean(Xz[:,:Al], axis=0).mask, \
-        #  np.ma.mean(Yz[:,(Ys-Xs):(Ys-Xs+Al)], axis=0), np.ma.mean(Yz[:,(Ys-Xs):(Ys-Xs+Al)], axis=0).mask
-        #quit()
-      pccpvalues[ti] = P_PCC
-      spccpvalues[ti] = P_SPCC
-      try:
-        sccpvalues[ti] = P_SCC
-      except ValueError:
-        #print "error at lsalib P_SCC", P_SCC  #sometimes produce [], why?
-        sccpvalues[ti] = np.nan
-      ssccpvalues[ti] = P_SSCC
+          
+        Smax = LSA_result.score 
+        Al = len(LSA_result.trace)
+        (PCC, P_PCC) = calc_pearsonr(ma_average(Xz, axis=0), ma_average(Yz, axis=0)) 
+        # it is two tailed p-value
+        (SCC, P_SCC) = calc_spearmanr(ma_average(Xz, axis=0), ma_average(Yz, axis=0)) 
+        try:
+          (SPCC, P_SPCC, D_SPCC) = calc_shift_corr(ma_average(Xz, axis=0), \
+            ma_average(Yz, axis=0), delayLimit, calc_pearsonr) 
+          # corr for shifted-cut seq
+          (SSCC, P_SSCC, D_SSCC) = calc_shift_corr(ma_average(Xz, axis=0), \
+            ma_average(Yz, axis=0), delayLimit, calc_spearmanr) 
+          # corr for shifted-cut seq
+          #if np.isnan(SSCC) or np.isnan(SPCC): 
+          #  print "Al=", Al, "X shape", Xz.shape, "Y shape", Yz.shape
+          #  print "Xs=", Xs, X_seg.shape
+          #  print "Ys=", Ys, Y_seg.shape
+          #  quit()
+        except FloatingPointError:
+          (SPCC, P_SPCC, D_SPCC) = (np.nan, np.nan, np.nan)
+          (SSCC, P_SSCC, D_SSCC) = (np.nan, np.nan, np.nan)
+          #print np.ma.mean(Xz[:,:Al], axis=0), np.ma.mean(Xz[:,:Al], axis=0).mask, \
+          #  np.ma.mean(Yz[:,(Ys-Xs):(Ys-Xs+Al)], axis=0), np.ma.mean(Yz[:,(Ys-Xs):(Ys-Xs+Al)], axis=0).mask
+          #quit()
+        pccpvalues[ti] = P_PCC
+        spccpvalues[ti] = P_SPCC
+        try:
+          sccpvalues[ti] = P_SCC
+        except ValueError:
+          #print "error at lsalib P_SCC", P_SCC  #sometimes produce [], why?
+          sccpvalues[ti] = np.nan
+        ssccpvalues[ti] = P_SSCC
 
-      if Al == 0: #handel align impossibility, usually too many nas'
-        #(SCC, P_SCC) = calc_spearmanr(ma_average(Xz, axis=0), ma_average(Yz, axis=0), statlib.stats.lspearmanr)
-        pvalues[ti] = np.nan
-        #lsaTable[ti] = [i, j, Smax,   Sl,     Su,     Xs,Ys,Al,Xs-Ys, lsaP,   PCC, P_PCC,  SPCC,   P_SPCC, D_SPCC, SCC, P_SCC,  SSCC, P_SSCC, D_SSCC]
-        lsaTable[ti] =  [i, j, np.nan, np.nan, np.nan, 0, 0, 0, 0,\
+        if Al == 0: #handel align impossibility, usually too many nas'
+          #(SCC, P_SCC) = calc_spearmanr(ma_average(Xz, axis=0), ma_average(Yz, axis=0), statlib.stats.lspearmanr)
+          pvalues[ti] = np.nan
+          #lsaTable[ti] = [i, j, Smax,   Sl,     Su,     Xs,Ys,Al,Xs-Ys, lsaP,   PCC, P_PCC,  SPCC,   P_SPCC, D_SPCC, SCC, P_SCC,  SSCC, P_SSCC, D_SSCC]
+          lsaTable[ti] =  [i, j, np.nan, np.nan, np.nan, 0, 0, 0, 0,\
             np.nan, PCC, P_PCC,  SPCC, P_SPCC, D_SPCC, \
             SCC, P_SCC, SSCC, P_SSCC, D_SSCC]
+        else:
+          (Xs, Ys, Al) = (LSA_result.trace[Al-1][0], \
+            LSA_result.trace[Al-1][1], len(LSA_result.trace))
+          #try:
+          #  (Xs, Ys, Al) = (LSA_result.trace[Al-1][0], LSA_result.trace[Al-1][1], len(LSA_result.trace))
+          #except IndexError:
+          #  print "Xz=", Xz
+          #  print "Yz=", Yz
+          #  print "Xs=", Xs, "Ys=", Ys, "Al=", Al  
+          #  quit()
+          #print "PPC..." 
+          #print np.mean(Xz, axis=0), np.mean(Yz, axis=0)
+
+          #if Xs <= Ys:
+            #print Xz[:,:Al].shape
+            #print Yz[:,(Ys-Xs):(Ys-Xs)+Al].shape
+          #  X_seg = Xz[:,:(Xz.shape[1]-(Ys-Xs))]
+          #  Y_seg = Yz[:,(Ys-Xs):Yz.shape[1]]
+          #else:
+          #  X_seg = Xz[:,(Xs-Ys):Xz.shape[1]]
+          #  Y_seg = Yz[:,:(Yz.shape[1]-(Xs-Ys))]
+          #print "Al=", Al, "X shape", Xz.shape, "Y shape", Yz.shape
+          #print "Xs=", Xs, X_seg.shape
+          #print "Ys=", Ys, Y_seg.shape
+          #if Xs != Ys:
+          #  quit()
+
+
+          #This Part Must Follow Static Calculation Part
+          #Otherwise Yz may be changed, now it is copied
+          #np.ma.array(copy=True) to copy, otherwise is only reference
+          promisingP = 0.05 #this is according to convention of P-value
+          if pvalueMethod in ['theo', 'mix']:
+            #x = np.abs(Smax)*np.sqrt(timespots) # x=Rn/sqrt(n)=Smax*sqrt(n)
+            #alpha=1-{#(nan+zeros)/timespots}
+            #Xz_alpha = 1 - np.sum(zNormalize(fTransform(Xz))==0)/float(timespots)
+            #Yz_beta = 1 - np.sum(zNormalize(fTransform(Yz))==0)/float(timespots)
+            #if Xz_alpha==0 or Yz_beta==0:
+            #  lsaP = np.nan
+            #else:
+            lsaP = readPvalue(P_table, R=np.abs(Smax)*lengthSeries, \
+                N=lengthSeries, x_sd=stdX, M=replicates, alpha=1., \
+                beta=1., x_decimal=my_decimal) #consider no extra zeros
+
+          if (pvalueMethod in ['mix'] and lsaP<=promisingP) or (pvalueMethod in ['perm']):
+            Xp = np.ma.array(Xz,copy=True)
+            Yp = np.ma.array(Yz,copy=True)
+            lsaP = permuPvalue(Xp, Yp, delayLimit, precisionP, np.abs(Smax), \
+              fTransform, zNormalize, trendThresh)  # do Permutation Test
+
+          pvalues[ti] = lsaP
+          #print "bootstrap computing..."
+          if bootNum > 0: #do BS
+            Xb = np.ma.array(Xz,copy=True)
+            Yb = np.ma.array(Yz,copy=True)
+            (Smax, Sl, Su) = bootstrapCI(Xb, Yb, Smax, delayLimit, \
+                bootCI, bootNum, fTransform, zNormalize, trendThresh) # do Bootstrap CI
+          else: #skip BS
+            (Smax, Sl, Su) = (Smax, Smax, Smax)
+
+          #uncomment to verify Xz, Yz unchanged by bootstrap and permutation
+          #print 'i=',i,"Data=",firstData[i],"Xz=",Xz,"mask=",Xz.mask, "mask_invalid=", np.ma.masked_invalid(firstData[i])
+          #print 'j=',j,"Data=",secondData[j],"Yz=",Yz,"mask=",Yz.mask, "mask_invalid=", np.ma.masked_invalid(secondData[j])
+          #print ma_average(Xz, axis=0), "mask=", ma_average(Xz, axis=0).mask
+          #print ma_average(Yz, axis=0), "mask=", ma_average(Yz, axis=0).mask
+          #print sp.stats.pearsonr(ma_average(Xz, axis=0), ma_average(Yz, axis=0))
+          #quit()
+
+          # need +epsilon to avoid all zeros
+          lsaTable[ti] = [i, j, Smax, Sl, Su, Xs, Ys, Al, Xs-Ys, lsaP, PCC, P_PCC, \
+              SPCC, P_SPCC, D_SPCC, SCC, P_SCC, SSCC, P_SSCC, D_SSCC]
+          #END IF AL==0
+        #END IF np.all
+        del LSA_result
+
+      if progressive>0 and (ti+1)%progressive == 0: #print every 0:porgressive-1 terms and reset lsaTable and ti
+        elapsed_time = time.time() - start_time
+        pct = float(i*secondFactorNum+j+1)/(firstFactorNum*secondFactorNum)
+        print >>sys.stderr, i*secondFactorNum+j+1, " of ", firstFactorNum*secondFactorNum, ", ", \
+          pct*100, "%", "estimated remaining time", round(elapsed_time/pct*(1-pct)), "s"
+        for row in lsaTable:
+          row=row+[np.nan,np.nan,np.nan,np.nan,np.nan] # shorter than labels, make up
+          print >>resultFile, "\t".join(['%s']*len(col_labels)) % \
+            tuple( [firstFactorLabels[row[0]], secondFactorLabels[row[1]]] \
+            + ["%f" % np.round(v, decimals=disp_decimal) \
+            if isinstance(v, float) else v for v in row[2:]] \
+            + [row[0]+1, row[1]+1] )
+        lsaTable = [None]*progressive
+        ti=0
+      else:
         ti += 1
-        continue
 
-      (Xs, Ys, Al) = (LSA_result.trace[Al-1][0], \
-          LSA_result.trace[Al-1][1], len(LSA_result.trace))
-      #try:
-      #  (Xs, Ys, Al) = (LSA_result.trace[Al-1][0], LSA_result.trace[Al-1][1], len(LSA_result.trace))
-      #except IndexError:
-      #  print "Xz=", Xz
-      #  print "Yz=", Yz
-      #  print "Xs=", Xs, "Ys=", Ys, "Al=", Al  
-      #  quit()
-      #print "PPC..." 
-      #print np.mean(Xz, axis=0), np.mean(Yz, axis=0)
+  if progressive==0:
+    #print lsaTable
+    #print "qvalues ..."
+    #pvalues = np.ma.masked_invalid(pvalues)
+    #pccpvalues = np.ma.masked_invalid(pccpvalues)
+    #print "pvalues", pvalues, np.isnan(np.sum(pvalues))
+    #print "pccpvalues", pccpvalues, np.isnan(np.sum(pccpvalues))
+    #print "lsaP"
+    #qvalues = storeyQvalue( pvalues )
+    print >>sys.stderr, "LS Qvalues..."
+    qvalues = qvalue_func( pvalues )
+    #print "pccP"
+    #pccqvalues = storeyQvalue( pccpvalues )
+    print >>sys.stderr, "PCC Qvalues..."
+    pccqvalues = qvalue_func( pccpvalues )
+    #print "sccP"
+    #sccqvalues = storeyQvalue( sccpvalues )
+    print >>sys.stderr, "SCC Qvalues..."
+    sccqvalues = qvalue_func( sccpvalues )
+    #print "spccP"
+    #spccqvalues = storeyQvalue( spccpvalues )
+    print >>sys.stderr, "SPCC Qvalues..."
+    spccqvalues = qvalue_func( spccpvalues )
+    #print "ssccP"
+    #ssccqvalues = storeyQvalue( ssccpvalues )
+    print >>sys.stderr, "SSCC Qvalues..."
+    ssccqvalues = qvalue_func( ssccpvalues )
 
-      #if Xs <= Ys:
-        #print Xz[:,:Al].shape
-        #print Yz[:,(Ys-Xs):(Ys-Xs)+Al].shape
-      #  X_seg = Xz[:,:(Xz.shape[1]-(Ys-Xs))]
-      #  Y_seg = Yz[:,(Ys-Xs):Yz.shape[1]]
-      #else:
-      #  X_seg = Xz[:,(Xs-Ys):Xz.shape[1]]
-      #  Y_seg = Yz[:,:(Yz.shape[1]-(Xs-Ys))]
-      #print "Al=", Al, "X shape", Xz.shape, "Y shape", Yz.shape
-      #print "Xs=", Xs, X_seg.shape
-      #print "Ys=", Ys, Y_seg.shape
-      #if Xs != Ys:
-      #  quit()
-
-
-      #This Part Must Follow Static Calculation Part
-      #Otherwise Yz may be changed, now it is copied
-      #np.ma.array(copy=True) to copy, otherwise is only reference
-      promisingP = 0.05 #this is according to convention of P-value
-      if pvalueMethod in ['theo', 'mix']:
-        #x = np.abs(Smax)*np.sqrt(timespots) # x=Rn/sqrt(n)=Smax*sqrt(n)
-        #alpha=1-{#(nan+zeros)/timespots}
-        #Xz_alpha = 1 - np.sum(zNormalize(fTransform(Xz))==0)/float(timespots)
-        #Yz_beta = 1 - np.sum(zNormalize(fTransform(Yz))==0)/float(timespots)
-        #if Xz_alpha==0 or Yz_beta==0:
-        #  lsaP = np.nan
-        #else:
-        lsaP = readPvalue(P_table, R=np.abs(Smax)*lengthSeries, \
-            N=lengthSeries, x_sd=stdX, M=replicates, alpha=1., \
-            beta=1., x_decimal=my_decimal) #consider no extra zeros
-
-      if (pvalueMethod in ['mix'] and lsaP<=promisingP) or (pvalueMethod in ['perm']):
-        Xp = np.ma.array(Xz,copy=True)
-        Yp = np.ma.array(Yz,copy=True)
-        lsaP = permuPvalue(Xp, Yp, delayLimit, precisionP, np.abs(Smax), \
-            fTransform, zNormalize, trendThresh)  # do Permutation Test
-
-      pvalues[ti] = lsaP
-      #print "bootstrap computing..."
-      if bootNum > 0: #do BS
-        Xb = np.ma.array(Xz,copy=True)
-        Yb = np.ma.array(Yz,copy=True)
-        (Smax, Sl, Su) = bootstrapCI(Xb, Yb, Smax, delayLimit, \
-            bootCI, bootNum, fTransform, zNormalize, trendThresh) # do Bootstrap CI
-      else: #skip BS
-        (Smax, Sl, Su) = (Smax, Smax, Smax)
-
-      #uncomment to verify Xz, Yz unchanged by bootstrap and permutation
-      #print 'i=',i,"Data=",firstData[i],"Xz=",Xz,"mask=",Xz.mask, "mask_invalid=", np.ma.masked_invalid(firstData[i])
-      #print 'j=',j,"Data=",secondData[j],"Yz=",Yz,"mask=",Yz.mask, "mask_invalid=", np.ma.masked_invalid(secondData[j])
-      #print ma_average(Xz, axis=0), "mask=", ma_average(Xz, axis=0).mask
-      #print ma_average(Yz, axis=0), "mask=", ma_average(Yz, axis=0).mask
-      #print sp.stats.pearsonr(ma_average(Xz, axis=0), ma_average(Yz, axis=0))
-      #quit()
-
-      # need +epsilon to avoid all zeros
-      lsaTable[ti] = [i, j, Smax, Sl, Su, Xs, Ys, Al, Xs-Ys, lsaP, PCC, P_PCC, \
-          SPCC, P_SPCC, D_SPCC, SCC, P_SCC, SSCC, P_SSCC, D_SSCC]
-      ti += 1
-      del LSA_result
-      #print "finalizing..."
-
-  #print lsaTable
-  #print "qvalues ..."
-  #pvalues = np.ma.masked_invalid(pvalues)
-  #pccpvalues = np.ma.masked_invalid(pccpvalues)
-  #print "pvalues", pvalues, np.isnan(np.sum(pvalues))
-  #print "pccpvalues", pccpvalues, np.isnan(np.sum(pccpvalues))
-  #print "lsaP"
-  #qvalues = storeyQvalue( pvalues )
-  print >>sys.stderr, "LS Qvalues..."
-  qvalues = qvalue_func( pvalues )
-  #print "pccP"
-  #pccqvalues = storeyQvalue( pccpvalues )
-  print >>sys.stderr, "PCC Qvalues..."
-  pccqvalues = qvalue_func( pccpvalues )
-  #print "sccP"
-  #sccqvalues = storeyQvalue( sccpvalues )
-  print >>sys.stderr, "SCC Qvalues..."
-  sccqvalues = qvalue_func( sccpvalues )
-  #print "spccP"
-  #spccqvalues = storeyQvalue( spccpvalues )
-  print >>sys.stderr, "SPCC Qvalues..."
-  spccqvalues = qvalue_func( spccpvalues )
-  #print "ssccP"
-  #ssccqvalues = storeyQvalue( ssccpvalues )
-  print >>sys.stderr, "SSCC Qvalues..."
-  ssccqvalues = qvalue_func( ssccpvalues )
-
-  for k in xrange(0, len(qvalues)):
-    lsaTable[k].append( qvalues[k] )
-    lsaTable[k].append( pccqvalues[k] )
-    lsaTable[k].append( spccqvalues[k] )
-    lsaTable[k].append( sccqvalues[k] )
-    lsaTable[k].append( ssccqvalues[k] )
+    for k in xrange(0, len(qvalues)):
+      lsaTable[k].append( qvalues[k] )
+      lsaTable[k].append( pccqvalues[k] )
+      lsaTable[k].append( spccqvalues[k] )
+      lsaTable[k].append( sccqvalues[k] )
+      lsaTable[k].append( ssccqvalues[k] )
     
-  #print lsaTable
-  for row in lsaTable:
-    print >>resultFile, "\t".join(['%s']*len(col_labels)) % \
+    #print lsaTable
+    for row in lsaTable:
+      print >>resultFile, "\t".join(['%s']*len(col_labels)) % \
       tuple( [firstFactorLabels[row[0]], secondFactorLabels[row[1]]] \
           + ["%f" % np.round(v, decimals=disp_decimal) \
               if isinstance(v, float) else v for v in row[2:]] \

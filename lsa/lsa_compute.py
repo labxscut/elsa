@@ -154,6 +154,9 @@ def main():
             precalculated -a {1.25, 0.93, 0.56,0.13 } for i.i.d. standard normal null \n \
             and -T {0, 0.5, 1, 2} respectively. For other distribution \n \
             and -T values, see FAQ and Xia et al. 2013 in reference")
+  parser.add_argument("-v", "--progressive", dest="progressive", default=0, type=int, 
+      help="specify the number of progressive output to save memory, default: 0,\n \
+            2G memory is required for 1M pairwise comparison. ")
   arg_namespace = parser.parse_args()
   
   delayLimit = vars(arg_namespace)['delayLimit']
@@ -324,7 +327,7 @@ or use -e to specify another input file"""
       pvalueMethod=pvalueMethod, precisionP=precision, fTransform=fTransform,\
       zNormalize=zNormalize, approxVar=approxVar, resultFile=resultFile,\
       firstFactorLabels=firstFactorLabels, trendThresh=trendThresh,\
-      secondFactorLabels=secondFactorLabels, qvalueMethod=qvalueMethod)
+      secondFactorLabels=secondFactorLabels, qvalueMethod=qvalueMethod, progressive=progressive)
 
   #print >>sys.stderr, "writing results ..."
   #col_labels= ['X','Y','LS','lowCI','upCI','Xs','Ys','Len','Delay','P','PCC','Ppcc','SPCC','Pspcc','SCC','Pscc','SSCC','Psscc',
