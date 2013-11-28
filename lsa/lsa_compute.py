@@ -175,6 +175,7 @@ def main():
   spotNum = vars(arg_namespace)['spotNum']
   approxVar = vars(arg_namespace)['approxVar'] 
   trendThresh = vars(arg_namespace)['trendThresh'] 
+  progressive = vars(arg_namespace)['progressive'] 
 
   try:
     extraFile_name = extraFile.name 

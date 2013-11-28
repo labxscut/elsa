@@ -985,7 +985,7 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
       #print i+1, np.sum(np.logical_not(np.isnan(ma_average(Xz)), ma_average(Xz)==0))/float(timespots), Xz_badOccur, \
       #	    j+1, np.sum(np.logical_not(np.isnan(ma_average(Yz)), ma_average(Yz)==0))/float(timespots), Yz_badOccur
       #if Yz_badOccur:
-	#print ma_average(Yz), ma_average(Yz).mask, quit()
+	    #print ma_average(Yz), ma_average(Yz).mask, quit()
       if Yz.shape[1] == None: #For 1-d array, convert to 2-d
         Yz.shape = (1, Yz.shape[0])
       #if i == 36 or j == 36:
@@ -1142,21 +1142,31 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
       if progressive>0 and (ti+1)%progressive == 0: #print every 0:porgressive-1 terms and reset lsaTable and ti
         elapsed_time = time.time() - start_time
         pct = float(i*secondFactorNum+j+1)/(firstFactorNum*secondFactorNum)
-        print >>sys.stderr, i*secondFactorNum+j+1, " of ", firstFactorNum*secondFactorNum, ", ", \
+        print >>sys.stderr, i*secondFactorNum+j+1, " of ", (onDiag)*firstFactorNum*(firstFactorNum-1)/2+(not onDiag)*firstFactorNum*secondFactorNum, ", ", \
           pct*100, "%", "estimated remaining time", round(elapsed_time/pct*(1-pct)), "s"
         for row in lsaTable:
-          row=row+[np.nan,np.nan,np.nan,np.nan,np.nan] # shorter than labels, make up
-          print >>resultFile, "\t".join(['%s']*len(col_labels)) % \
-            tuple( [firstFactorLabels[row[0]], secondFactorLabels[row[1]]] \
-            + ["%f" % np.round(v, decimals=disp_decimal) \
-            if isinstance(v, float) else v for v in row[2:]] \
-            + [row[0]+1, row[1]+1] )
+          if row != None:
+            row=row+[np.nan,np.nan,np.nan,np.nan,np.nan] # shorter than labels, make up
+            print >>resultFile, "\t".join(['%s']*len(col_labels)) % \
+              tuple( [firstFactorLabels[row[0]], secondFactorLabels[row[1]]] \
+              + ["%f" % np.round(v, decimals=disp_decimal) \
+              if isinstance(v, float) else v for v in row[2:]] \
+              + [row[0]+1, row[1]+1] )
         lsaTable = [None]*progressive
         ti=0
       else:
         ti += 1
 
-  if progressive==0:
+  if progressive>0: #print remaining entries
+    for row in lsaTable:
+      if row != None:
+        row=row+[np.nan,np.nan,np.nan,np.nan,np.nan] # shorter than labels, make up
+        print >>resultFile, "\t".join(['%s']*len(col_labels)) % \
+          tuple( [firstFactorLabels[row[0]], secondFactorLabels[row[1]]] \
+          + ["%f" % np.round(v, decimals=disp_decimal) \
+          if isinstance(v, float) else v for v in row[2:]] \
+          + [row[0]+1, row[1]+1] )
+  else:
     #print lsaTable
     #print "qvalues ..."
     #pvalues = np.ma.masked_invalid(pvalues)
