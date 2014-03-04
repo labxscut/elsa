@@ -80,9 +80,11 @@ except ImportError:
 #multiInput, multiOutput, singleCmd
 
 ws=os.path.join(os.environ.get("HOME"),'tmp','multi')
+print >>>sys.stderr, """Example: par_ana ARISA.txt ARISA.la 'la_compute %s ARISA.laq %s -s 114 -r 1 -p 1000'"""
+print >>>sys.stderr, """Example: par_ana ARISA.txt ARISA.lsa 'lsa_compute %s %s -s 114 -r -p theo'"""
+print >>sys.stderr, """Note: if deadlocked with unfinished jobs finally, manually collect the corresponding pbs files in above path and run"""
 print >>sys.stderr, "tmpDir=",ws
-print >>sys.stderr, "Example: "la_compute ARISA.depCmax.txt ARISA.depCmax.S5_L75_Ptheo.lsaq ARISA.depCmax.S5_L75_Ptheo.la -s 114 -r 1 -p 1000"
-print >>sys.stderr, "Note: if deadlocked with unfinished jobs finally, manually collect the corresponding pbs files in above path and run"
+
 
 def get_content(file):
   i=0
