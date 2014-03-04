@@ -46,16 +46,13 @@ os.environ['CC'] = 'g++'  #temporary measure to trick distutils use g++, need up
 #lines = open("VERSION.txt", 'rU').readlines()
 #version_desc = ','.join([lines[1].strip(), lines[0].strip()])
 
-print >>sys.stderr, "testing mercurial tools  (hg) availability ..."
-hg_on=subprocess.call("hg id > VERSION.txt", shell=True)
+print >>sys.stderr, "testing git availability ..."
+hg_on=subprocess.call("git log --pretty=format:'%h' | head -n 1 > VERSION.txt", shell=True)
 if hg_on != 0:
-  print >>sys.stderr, "warning: mercurial tools is required to include version number in binary" 
-  nohg_confirm = raw_input("do you want to continue without versioned binary (type yes to continue) ? ")
+  print >>sys.stderr, "warning: git is required to include revision number in binary" 
+  nohg_confirm = raw_input("do you want to continue without revision (type yes to continue) ? ")
   if nohg_confirm not in ['y','Y','yes','Yes']:
-    quit("Abort setup. Try to install mercurial tools first")
-  
-#subprocess.Popen("hg kwshrink && hg kwexpand")
-
+    quit("Abort setup. Try to install git first")
 
 if os.path.exists('MANIFEST'): os.remove('MANIFEST')
 

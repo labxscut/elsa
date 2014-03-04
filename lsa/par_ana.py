@@ -79,27 +79,26 @@ except ImportError:
 #input arguments:
 #multiInput, multiOutput, singleCmd
 
-ws=os.path.join(os.environ.get("HOME"),'tmp','multi')
-print >>>sys.stderr, """Example: par_ana ARISA.txt ARISA.la 'la_compute %s ARISA.laq %s -s 114 -r 1 -p 1000'"""
-print >>>sys.stderr, """Example: par_ana ARISA.txt ARISA.lsa 'lsa_compute %s %s -s 114 -r -p theo'"""
-print >>sys.stderr, """Note: if deadlocked with unfinished jobs finally, manually collect the corresponding pbs files in above path and run"""
-print >>sys.stderr, "tmpDir=",ws
-
+print >>sys.stderr, """Example: par_ana ARISA.txt ARISA.la 'la_compute %s ARISA.laq %s -s 114 -r 1 -p 1000' """
+print >>sys.stderr, """Example: par_ana ARISA.txt ARISA.lsa 'lsa_compute %s %s -e ARISA.txt -s 114 -r -p theo'"""
 
 def get_content(file):
   i=0
   header=None
   content=[]
+  pline=None
   for line in file:
-    if i==0:
-      header=line.rstrip('\n')
+    if line[0] == '#':
       i+=1
+      pline=line #keep previous line
     else:   #not empty, to something
+      if header==None:
+        header=pline.rstrip('\n') #use last comment line as header
       #print line.rstrip('\n')
       content.append(line.rstrip('\n'))
   return (header, content)
 
-def gen_singles(multiInput, multiOutput):
+def gen_singles(multiInput, multiOutput, workDir):
   header, content=get_content(multiInput)
   #print header, content
   multiname=multiInput.name
@@ -109,7 +108,7 @@ def gen_singles(multiInput, multiOutput):
   ends=[]
   for line in content:
     singlename=multiname+".%d" % i
-    tmp=open(os.path.join(ws, singlename), "w")
+    tmp=open(os.path.join(workDir, singlename), "w")
     print >>tmp, header.rstrip('\n')
     print >>tmp, line.rstrip('\n')
     tmp.close()
@@ -117,7 +116,8 @@ def gen_singles(multiInput, multiOutput):
     results.append(tmp.name+".tmp") 
     ends.append(tmp.name+".end")
     i+=1
-  return singles, results, ends
+
+  return list(reversed(singles)), list(reversed(results)), list(reversed(ends))
 
 PBS_PREAMBLE = """#!/bin/bash
 #PBS -N %s 
@@ -177,8 +177,12 @@ def main():
   singleCmd=vars(arg_namespace)['singleCmd']
   workDir=vars(arg_namespace)['workDir']
   dryRun=vars(arg_namespace)['dryRun']
+  
+  #ws=os.path.join(os.environ.get("HOME"),'tmp','multi')
+  print >>sys.stderr, "workDir=", workDir
+  print >>sys.stderr, """Note: if deadlocked with unfinished jobs finally, manually collect the corresponding pbs files in above path and run"""
 
-  singleFiles,resultFiles,endFiles=gen_singles(multiInput,multiOutput)
+  singleFiles,resultFiles,endFiles=gen_singles(multiInput,multiOutput,workDir)
   #print >>sys.stderr, singleFiles,resultFiles,endFiles
   for endFile in endFiles: #ensure .end file from previous runs will be removed
     if os.path.exists(endFile):
@@ -191,6 +195,7 @@ def main():
     endFile=endFiles.pop()
     pbsFile=gen_pbs(singleFile, singleCmd, workDir, endFile)
     inProgress.add(endFile)
+    print >>sys.stderr, pbsFile
     if dryRun=='':
       ssa_pbs(pbsFile)
   if dryRun!='':
