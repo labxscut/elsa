@@ -82,7 +82,7 @@ except ImportError:
 print >>sys.stderr, """Example: par_ana ARISA.txt ARISA.la 'la_compute %s ARISA.laq %s -s 114 -r 1 -p 1000' """
 print >>sys.stderr, """Example: par_ana ARISA.txt ARISA.lsa 'lsa_compute %s %s -e ARISA.txt -s 114 -r -p theo'"""
 
-def get_content(file):
+def get_content(file, hasHeader=False):
   i=0
   header=None
   content=[]
@@ -91,9 +91,12 @@ def get_content(file):
     if line[0] == '#':
       i+=1
       pline=line #keep previous line
+    else if (i==0) & hasHeader: #keep header
+      pline=line
+      i+=1
     else:   #not empty, to something
-      if header==None:
-        header=pline.rstrip('\n') #use last comment line as header
+      if (hasHeader==True) & (pline!=None):
+        header=pline.rstrip('\n') #use last comment line or first line header
       #print line.rstrip('\n')
       content.append(line.rstrip('\n'))
   return (header, content)
@@ -143,7 +146,7 @@ def gen_pbs(singleFile, singleCmd, workDir, singleEnd):
 def gen_output(multiOutput, resultFiles):
   i=0
   for resultFile in resultFiles:
-    header, content = get_content(resultFile)
+    header, content = get_content(resultFile, hasHeader=True)
     if i==0:
       print >>multiOutput, "\n".join([header]+content)
       i+=1
@@ -209,7 +212,7 @@ def main():
     for job in inProgress:
       #time.sleep(1)
       if os.path.exists(job):
-        header, content = get_content(open(job[:-4]+".tmp",'r'))
+        header, content = get_content(open(job[:-4]+".tmp",'r'),hasHeader=True)
         if len(endJob)==0:
           print >>multiOutput, "\n".join([header]+content)
         else:
