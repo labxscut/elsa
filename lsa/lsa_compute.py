@@ -80,8 +80,8 @@ def main():
       type=argparse.FileType('rU'),
       help="specify an extra datafile, otherwise the first datafile will be used \n \
             and only lower triangle entries of pairwise matrix will be computed")
-  parser.add_argument("-d", "--delayLimit", dest="delayLimit", default=3, type=int, 
-      help="specify the maximum delay possible, default: 3,\n choices: 0 to 6")
+  parser.add_argument("-d", "--delayLimit", dest="delayLimit", default=0, type=int, 
+      help="specify the maximum delay possible, default: 3,\n must be integer >0 and <spotNum")
   parser.add_argument("-m", "--minOccur", dest="minOccur", default=50, type=int, 
       help="specify the minimum occurence percentile of all times, default: 50,\n")
   parser.add_argument("-p", "--pvalueMethod", dest="pvalueMethod", default="perm", \
@@ -130,14 +130,15 @@ def main():
             quadratic: fill up with quadratic spline;             \n \
             cubic: fill up with cubic spline;                \n \
             nearest: fill up with nearest neighbor") 
-  parser.add_argument("-n", "--normMethod", dest="normMethod", default='percentileZ', \
-      choices=['percentile', 'percentileZ', 'pnz', 'none'], \
-      help="must specify the method to normalize data, default: percentileZ, \n \
-            choices: percentile, none, pnz, percentileZ or a float  \n \
+  parser.add_argument("-n", "--normMethod", dest="normMethod", default='robustZ', \
+      choices=['percentile', 'percentileZ', 'pnz', 'robustZ', 'none'], \
+      help="must specify the method to normalize data, default: robustZ, \n \
+            choices: percentile, none, pnz, percentileZ, robustZ or a float  \n \
             NOTE:                                                   \n \
             percentile: percentile normalization, including zeros (only with perm)\n \
             pnz: percentile normalization, excluding zeros (only with perm) \n  \
             percentileZ: percentile normalization + Z-normalization \n \
+            robustZ: percentileZ normalization + robust estimates \n \
             (with perm, mix and theo, and must use this for theo and mix, default) \n")
   parser.add_argument("-q", "--qvalueMethod", dest="qvalueMethod", \
       default='scipy', choices=['R', 'scipy'],
@@ -213,6 +214,8 @@ def main():
     zNormalize = lsalib.percentileNormalize
   elif normMethod == 'percentileZ':
     zNormalize = lsalib.percentileZNormalize
+  elif normMethod == 'robustZ':
+    zNormalize = lsalib.robustZNormalize
   elif normMethod == 'pnz':
     zNormalize = lsalib.noZeroNormalize  
   else:

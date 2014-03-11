@@ -792,6 +792,32 @@ def percentileZNormalize(tseries):
   zt = zt.filled(fill_value=0)         #filling zeros to nan, shall be no na's from here on
   return zt
 
+def robustZNormalize(tseries):
+  """ score normalizing
+
+    Args:
+      tseries(np.array): 1-d time series
+    
+    Returns:
+      score normalized time series
+  """
+  ranks = tied_rank(tseries)
+  #print "tseries=", tseries
+  #print "ranks=", ranks
+  #print "ranks.mask", ranks.mask
+  nt = np.ma.masked_invalid(sp.stats.distributions.norm.ppf( ranks/(len(ranks)-np.sum(ranks.mask)+1) ),copy=True)
+  mad_sd = 1.4826 * np.ma.median( np.ma.abs(nt - np.ma.median(nt)))
+  range_sd = (np.ma.max(nt) - np.ma.min(nt))/4
+  sd_est = range_sd if mad_sd == 0 else mad_sd 
+  try:
+    zt = (nt - np.ma.median(nt))/sd_est
+  except FloatingPointError:
+    zt = nt - np.ma.median(nt)
+  #print "nt=", nt
+  #nt = np.nan_to_num(nt)              #filling zeros to nan, shall be no na's from here on
+  zt = zt.filled(fill_value=0)         #filling zeros to nan, shall be no na's from here on
+  return zt
+
 def noZeroNormalize(tseries):
   """ score normalizing
 
@@ -998,8 +1024,8 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
       if np.all(Yz.mask) or np.all(Xz.mask) or Xz_badOccur or Yz_badOccur:  
         # not any unmasked value in Xz or Yz, all nan in input, warn code -1
         # lsaTable[ti] = [i, j, Smax,   Sl,     Su,     Xs,Ys,Al,Xs-Ys, lsaP,   PCC,    P_PCC,  SPCC,   P_SPCC, D_SPCC, SCC,    P_SCC,  SSCC,   P_SSCC, D_SSCC]
-        lsaTable[ti] =[i, j, np.nan, np.nan, np.nan, -1, -1, -1, -1, \
-            np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, \
+        lsaTable[ti] =[i, j, 0, 0, 0, -2, -2, 0, 0, \
+            1, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, \
             np.nan, np.nan, np.nan, np.nan]
         pvalues[ti] = np.nan
         pccpvalues[ti] = np.nan
@@ -1024,8 +1050,12 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
         #  print "Xz=", Xz
         #  print "Yz=", Yz
         #  quit()
+
           
         Smax = LSA_result.score 
+        #if np.isnan(Smax):
+        #  print "error" 
+        #  quit()
         Al = len(LSA_result.trace)
         (PCC, P_PCC) = calc_pearsonr(ma_average(Xz, axis=0), ma_average(Yz, axis=0)) 
         # it is two tailed p-value
@@ -1057,12 +1087,12 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
           sccpvalues[ti] = np.nan
         ssccpvalues[ti] = P_SSCC
 
-        if Al == 0: #handel align impossibility, usually too many nas'
+        if Al == 0: #handel possibility of aligning nothing, usually too many nas' or zeros
           #(SCC, P_SCC) = calc_spearmanr(ma_average(Xz, axis=0), ma_average(Yz, axis=0), statlib.stats.lspearmanr)
           pvalues[ti] = np.nan
           #lsaTable[ti] = [i, j, Smax,   Sl,     Su,     Xs,Ys,Al,Xs-Ys, lsaP,   PCC, P_PCC,  SPCC,   P_SPCC, D_SPCC, SCC, P_SCC,  SSCC, P_SSCC, D_SSCC]
-          lsaTable[ti] =  [i, j, np.nan, np.nan, np.nan, 0, 0, 0, 0,\
-            np.nan, PCC, P_PCC,  SPCC, P_SPCC, D_SPCC, \
+          lsaTable[ti] =  [i, j, 0, 0, 0, -1, -1, 0, 0,\
+            1, PCC, P_PCC,  SPCC, P_SPCC, D_SPCC, \
             SCC, P_SCC, SSCC, P_SSCC, D_SSCC]
         else:
           (Xs, Ys, Al) = (LSA_result.trace[Al-1][0], \
