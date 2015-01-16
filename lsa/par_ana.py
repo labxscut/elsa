@@ -91,7 +91,7 @@ def get_content(file, hasHeader=False):
     if line[0] == '#':
       i+=1
       pline=line #keep previous line
-    else if (i==0) & hasHeader: #keep header
+    elif (i==0) & hasHeader: #keep header
       pline=line
       i+=1
     else:   #not empty, to something
