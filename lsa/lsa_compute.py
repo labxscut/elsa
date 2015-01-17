@@ -41,20 +41,17 @@ except ImportError:
   from lsa import lsalib
   #np.seterr(all='raise')
 import lsa
-import rpy2.robjects as robjects
-import rpy2.robjects.numpy2ri as rpyn
 
-robjects.conversion.py2ri = rpyn.numpy2ri
-robjects.conversion.ri2numpy = rpyn.ri2numpy
+# let's display something about VERSION first, need to put VERSION.py there
+#execfile(os.path.join(os.path.dirname(os.path.dirname(lsa.__file__)),\
+#			    'VERSION.py')) #only one variable named version_desc
 
 def main():  
-
-  # let's display something about VERSION first, need to put VERSION.txt there
   __script__ = "lsa_compute"
-  version_desc = "%s (rev: %s) - copyright Li Charlie Xia, lxia@usc.edu" \
-    % (__script__, open(os.path.join(os.path.dirname(os.path.dirname(lsa.__file__)),\
-    'VERSION.txt')).read().strip())
-  print >>sys.stderr, version_desc
+  version_desc = os.popen("lsa_version").read().rstrip()
+  version_print = "%s (rev: %s) - copyright Li Charlie Xia, lxia@usc.edu" \
+    % (__script__, version_desc) 
+  print >>sys.stderr, version_print
 
   #version_desc = "lsa_compute (rev: %s) - copyright Li Charlie Xia, lxia@usc.edu" \
   #    % open(os.path.join(os.path.dirname(os.path.dirname(lsa.__file__)), 'VERSION.txt')).read().strip()

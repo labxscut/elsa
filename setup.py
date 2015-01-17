@@ -47,7 +47,8 @@ os.environ['CC'] = 'g++'  #temporary measure to trick distutils use g++, need up
 #version_desc = ','.join([lines[1].strip(), lines[0].strip()])
 
 print >>sys.stderr, "testing git availability ..."
-hg_on=subprocess.call("git log --pretty=format:'%h' | head -n 1 > VERSION.txt", shell=True)
+hg_on=subprocess.call("echo 'def main():\n\tprint \"'$(git log --pretty=format:'%h' | head -n 1)'\"' > lsa/lsa_version.py", shell=True)
+#hg_on=subprocess.call("git log --pretty=format:'%h' | head -n 1 | > lsa/VERSION.py", shell=True)
 if hg_on != 0:
   print >>sys.stderr, "warning: git is required to include revision number in binary" 
   nohg_confirm = raw_input("do you want to continue without revision (type yes to continue) ? ")
@@ -105,8 +106,9 @@ setup(name="lsa",
             'to_trend = lsa.to_trend:main',
             'lsa_sim = lsa.lsa_sim:main',
             'par_ana = lsa.par_ana:main',
-	    'check_data = lsa.check_data:main',
-	    'fix_qv = lsa.fix_qv:main',
+						'check_data = lsa.check_data:main',
+						'fix_qv = lsa.fix_qv:main',
+						'lsa_version = lsa.lsa_version:main'
         ]
     },
 )

@@ -1,6 +1,7 @@
 include MANIFEST.in
 include LICENSE.txt
 include README.txt
+include VERSION.txt
 include setup.py
 include lsa/__init__.py
 include lsa/compcore.cpp
@@ -15,3 +16,4 @@ include lsa/lsa_infer.py
 include lsa/lsa_query.py
 include lsa/lsa_sim.py
 include lsa/to_trend.py
+include lsa/VERSION.py
