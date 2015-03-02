@@ -42,7 +42,7 @@ import os, sys, subprocess
 
 doclines=__doc__.splitlines()
 
-os.environ['CC'] = 'g++'  #temporary measure to trick distutils use g++, need update to distutils2
+#os.environ['CC'] = 'g++'  #temporary measure to trick distutils use g++, need update to distutils2
 #lines = open("VERSION.txt", 'rU').readlines()
 #version_desc = ','.join([lines[1].strip(), lines[0].strip()])
 
