@@ -95,15 +95,16 @@ def get_content(file, hasHeader=False):
       pline=line
       i+=1
     else:   #not empty, to something
-      if pline != None:
-        header=pline.rstrip('\n') #use last comment line or first line as header if hasHeader==True
+      #if pline != None:
+      #  header=pline.rstrip('\n') 
       #print line.rstrip('\n')
       content.append(line.rstrip('\n'))
+  header=pline.rstrip('\n') #use last comment line or first line as header if hasHeader==True
   return (header, content)
 
 def gen_singles(multiInput, multiOutput, workDir):
   header, content=get_content(multiInput)
-  #print header
+  #print multiInput.name, header
   multiname=multiInput.name
   i=1
   singles=[]
@@ -112,8 +113,8 @@ def gen_singles(multiInput, multiOutput, workDir):
   for line in content:
     singlename=multiname+".%d" % i
     tmp=open(os.path.join(workDir, singlename), "w")
-    #print >>tmp, header.rstrip('\n')
-    #print >>tmp, line.rstrip('\n')
+    print >>tmp, header.rstrip('\n')
+    print >>tmp, line.rstrip('\n')
     tmp.close()
     singles.append(tmp.name) 
     results.append(tmp.name+".tmp") 
