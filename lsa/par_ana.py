@@ -79,31 +79,31 @@ except ImportError:
 #input arguments:
 #multiInput, multiOutput, singleCmd
 
-print >>sys.stderr, """Example: par_ana ARISA.txt ARISA.la 'la_compute %s ARISA.laq %s -s 114 -r 1 -p 1000' """
-print >>sys.stderr, """Example: par_ana ARISA.txt ARISA.lsa 'lsa_compute %s %s -e ARISA.txt -s 114 -r -p theo'"""
+print >>sys.stderr, "Example: par_ana ARISA20.txt ARISA20.lsa 'lsa_compute %s %s -e ARISA20.txt -s 127 -r 1 -p theo' $PWD"
+print >>sys.stderr, "Example: par_ana ARISA20.txt ARISA20.la 'la_compute %s ARISA20.laq %s -s 127 -r 1 -p 1000' $PWD"
 
 def get_content(file, hasHeader=False):
   i=0
   header=None
   content=[]
-  pline=None
+  pline=None #last line that start with #
   for line in file:
-    if line[0] == '#':
+    if line[0] == '#': 
       i+=1
-      pline=line #keep previous line
-    elif (i==0) & hasHeader: #keep header
+      pline=line #keep track of the last # line
+    elif (i==0) & hasHeader: #keep header, which could be non # line but only one line
       pline=line
       i+=1
     else:   #not empty, to something
-      if (hasHeader==True) & (pline!=None):
-        header=pline.rstrip('\n') #use last comment line or first line header
+      if pline != None:
+        header=pline.rstrip('\n') #use last comment line or first line as header if hasHeader==True
       #print line.rstrip('\n')
       content.append(line.rstrip('\n'))
   return (header, content)
 
 def gen_singles(multiInput, multiOutput, workDir):
   header, content=get_content(multiInput)
-  #print header, content
+  #print header
   multiname=multiInput.name
   i=1
   singles=[]
@@ -112,8 +112,8 @@ def gen_singles(multiInput, multiOutput, workDir):
   for line in content:
     singlename=multiname+".%d" % i
     tmp=open(os.path.join(workDir, singlename), "w")
-    print >>tmp, header.rstrip('\n')
-    print >>tmp, line.rstrip('\n')
+    #print >>tmp, header.rstrip('\n')
+    #print >>tmp, line.rstrip('\n')
     tmp.close()
     singles.append(tmp.name) 
     results.append(tmp.name+".tmp") 
