@@ -296,7 +296,7 @@ def bootstrapCI(series1, series2, Smax, delayLimit, bootCI, bootNum, \
   lsad = compcore.LSA_Data()
   BS_set = np.zeros(bootNum, dtype='float')
   for i in range(0, bootNum):
-    if trendTresh == None:
+    if trendThresh == None:
       Xb = zNormalize(fTransform(np.ma.array(\
           [ sample_wr(series1[:,j], series1.shape[0]) \
             for j in xrange(0,series1.shape[1]) ]).T))
@@ -1045,7 +1045,7 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
         #print >>sys.stderr, "can get here?"
         #else:
         #  LSA_result = singleLTA(Xz, Yz, delayLimit, fTransform, ZNormalize, \
-        #      trendTresh, True) 
+        #      trendThresh, True) 
         #except NotImplementedError:
         #  print "Xz=", Xz
         #  print "Yz=", Yz
