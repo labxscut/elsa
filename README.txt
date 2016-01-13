@@ -120,4 +120,4 @@ USAGE HELP:
     (ii) A simple test example is available at 'lsa/test.sh' and explained within.
 
 CONTACT:
-    lxia at usc dot edu
+    lixia at stanford dot edu
