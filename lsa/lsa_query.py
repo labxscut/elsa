@@ -62,7 +62,7 @@ rpy_import=False
 def main():
 
   __script__ = "lsa_query"
-  version_desc = "%s (rev: %s) - copyright Li Charlie Xia, lxia@usc.edu" \
+  version_desc = "%s (rev: %s) - copyright Li Charlie Xia, lixia@stanford.edu" \
             % (__script__, open(os.path.join(os.path.dirname(os.path.dirname(lsa.__file__)), 'VERSION.txt')).read().strip())
   print >>sys.stderr, version_desc
   
@@ -85,7 +85,7 @@ def main():
   arg_namespace = parser.parse_args()
 
   #get the arguments
-  print >>sys.stderr, "lsa_query ($Revision$) - copyright Li Charlie Xia, lxia@usc.edu"
+  print >>sys.stderr, "lsa_query ($Revision$) - copyright Li Charlie Xia, lixia@stanford.edu"
   print >>sys.stderr, "learning arguments..."
   
   rawFile = vars(arg_namespace)['rawFile']

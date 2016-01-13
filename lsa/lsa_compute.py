@@ -49,11 +49,11 @@ import lsa
 def main():  
   __script__ = "lsa_compute"
   version_desc = os.popen("lsa_version").read().rstrip()
-  version_print = "%s (rev: %s) - copyright Li Charlie Xia, lxia@usc.edu" \
+  version_print = "%s (rev: %s) - copyright Li Charlie Xia, lixia@stanford.edu" \
     % (__script__, version_desc) 
   print >>sys.stderr, version_print
 
-  #version_desc = "lsa_compute (rev: %s) - copyright Li Charlie Xia, lxia@usc.edu" \
+  #version_desc = "lsa_compute (rev: %s) - copyright Li Charlie Xia, lixia@stanford.edu" \
   #    % open(os.path.join(os.path.dirname(os.path.dirname(lsa.__file__)), 'VERSION.txt')).read().strip()
   #lsa.__version__
   #print >>sys.stderr, version_desc

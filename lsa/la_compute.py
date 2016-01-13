@@ -48,7 +48,7 @@ except ImportError:
 def main():  
 
   __script__ = "la_compute"
-  version_desc = "%s (rev: %s) - copyright Li Charlie Xia, lxia@usc.edu" \
+  version_desc = "%s (rev: %s) - copyright Li Charlie Xia, lixia@stanford.edu" \
             % (__script__, open(os.path.join(os.path.dirname(os.path.dirname(lsa.__file__)), 'VERSION.txt')).read().strip())
   print >>sys.stderr, version_desc
 
@@ -119,7 +119,7 @@ def main():
   arg_namespace = parser.parse_args()
 
   #get arguments
-  #print >>sys.stderr, "la_compute ($Revision$) - copyright Li Charlie Xia, lxia@usc.edu"
+  #print >>sys.stderr, "la_compute ($Revision$) - copyright Li Charlie Xia, lixia@stanford.edu"
   
   dataFile = vars(arg_namespace)['dataFile']				#dataFile
   scoutFile = vars(arg_namespace)['scoutFile']				#extraFile

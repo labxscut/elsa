@@ -42,7 +42,7 @@
     for more developement information run:
         "pydoc lsa.lsalib" and "pydoc lsa.lsaio"
 
-    contact: lxia@usc.edu
+    contact: lixia@stanford.edu
 """
 
 __version__ = "$Revision$"

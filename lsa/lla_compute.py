@@ -102,7 +102,7 @@ def main():
   arg_namespace = parser.parse_args()
 
   #get arguments
-  print >>sys.stderr, "lsa-compute - copyright Li Charlie Xia, lxia@usc.edu"
+  print >>sys.stderr, "lsa-compute - copyright Li Charlie Xia, lixia@stanford.edu"
   
   delayLimit = vars(arg_namespace)['delayLimit']
   fillMethod = vars(arg_namespace)['fillMethod']

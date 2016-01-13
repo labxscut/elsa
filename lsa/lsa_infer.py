@@ -66,7 +66,7 @@ def main():
 
   #get the arguments
   print >>sys.stderr, "lsa-infer"
-  print >>sys.stderr, "copyright Li Xia, lxia@usc.edu"
+  print >>sys.stderr, "copyright Li Xia, lixia@stanford.edu"
   print >>sys.stderr, "learning arguments..."
 
   normalLize = options.normalLize
