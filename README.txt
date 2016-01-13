@@ -35,7 +35,42 @@ FILES:
 
 INSTALL:
 
-    [VirtualBox]
+
+    [Prerequisites]
+
+    Please fullfill the prerequisites of C++, Python (with development and setuptools),
+    numpy, scipy and biopython as described in README.txt before installing eLSA.
+    
+    [Linux] (Ubuntu)
+
+    Download the latest release of eLSA from http://meta.usc.edu/softs/lsa.
+    Follow standard python module setup to install:
+        $tar -zxvf charade-elsa-release.tar.gz
+        $cd charade-elsa-release
+        $python setup.py install
+        $cd test      #test the scripts are workable
+        $. test.sh    #ad hoc test of the script on test data
+
+    [MAC] (Snow Leopard)
+
+    Download the latest release of eLSA from http://meta.usc.edu/softs/lsa.
+    Follow standard python module setup to install:
+        $tar -zxvf charade-elsa-release.tar.gz
+        $cd charade-elsa-release
+        $python setup.py install
+
+    [Development]
+
+    eLSA is open source and the version controlled repository is @:
+    	  https://bitbucket.org/charade/elsa.
+    Use mercurial tools (http://mercurial.selenic.com) to download a local copy:
+        $hg clone ssh://hg@bitbucket.org/charade/elsa elsa-tip
+
+    Follow standard python module setup to install:
+        $cd elsa-tip
+        $python setup.py install
+
+    [VirtualBox (Deprecated)]
     The procedure is similar to QIIME VirtualBox install,
         see http://qiime.org/install/virtual_box.html.
 
@@ -74,40 +109,6 @@ INSTALL:
 
     5. Review any messages that are shown, and select whatever options are best
         for you.
-
-    [Prerequisites]
-
-    Please fullfill the prerequisites of C++, Python (with development and setuptools),
-    numpy, scipy and biopython as described in README.txt before installing eLSA.
-    
-    [Linux] (Ubuntu)
-
-    Download the latest release of eLSA from http://meta.usc.edu/softs/lsa.
-    Follow standard python module setup to install:
-        $tar -zxvf charade-elsa-release.tar.gz
-        $cd charade-elsa-release
-        $python setup.py install
-        $cd test      #test the scripts are workable
-        $. test.sh    #ad hoc test of the script on test data
-
-    [MAC] (Snow Leopard)
-
-    Download the latest release of GRAMMy from http://meta.usc.edu/softs/lsa.
-    Follow standard python module setup to install:
-        $tar -zxvf charade-elsa-release.tar.gz
-        $cd charade-elsa-release
-        $python setup.py install
-
-    [Development]
-
-    eLSA is open source and the version controlled repository is @:
-    	  https://bitbucket.org/charade/elsa.
-    Use mercurial tools (http://mercurial.selenic.com) to download a local copy:
-        $hg clone ssh://hg@bitbucket.org/charade/elsa elsa-tip
-
-    Follow standard python module setup to install:
-        $cd elsa-tip
-        $python setup.py install
 
 EXECUTABLES:
     lsa_compute
