@@ -38,17 +38,17 @@ import os, sys, csv
 import xml.etree.ElementTree as etree
 import xml.dom.minidom
 
-rpy_import=True
-try:
-  import rpy2
-  import rpy2.rlike.container as rlc
-  import rpy2.robjects as ro
-  from rpy2.robjects.numpy2ri import numpy2ri
-  ro.conversion.py2ri = numpy2ri
-  r = ro.r
-except ImportError:
-  print >>sys.stderr, "IMPORTANT!!!: R and rpy2 are not working on this system"
-  rpy_import=False
+rpy_import=False
+#try:
+#  import rpy2
+#  import rpy2.rlike.container as rlc
+#  import rpy2.robjects as ro
+#  from rpy2.robjects.numpy2ri import numpy2ri
+#  ro.conversion.py2ri = numpy2ri
+#  r = ro.r
+#except ImportError:
+#  print >>sys.stderr, "IMPORTANT!!!: R and rpy2 are not working on this system"
+#  rpy_import=False
 
 def tryIO( file, mode ):
   """ Test the IO file before using it.

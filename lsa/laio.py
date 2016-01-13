@@ -3,15 +3,16 @@ import xml.etree.ElementTree as etree
 import xml.dom.minidom
 import math
 
-try:
-  import rpy2.rlike.container as rlc
-  import rpy2.robjects as ro
-  from rpy2.robjects.numpy2ri import numpy2ri
-  ro.conversion.py2ri = numpy2ri
-  r = ro.r
-except ImportError:
-  rpy_import = False
-  print >>sys.stderr, "IMPORTANT!!!: R and rpy2 are not working on this system"
+rpy_import = False
+#try:
+#  import rpy2.rlike.container as rlc
+#  import rpy2.robjects as ro
+#  from rpy2.robjects.numpy2ri import numpy2ri
+#  ro.conversion.py2ri = numpy2ri
+#  r = ro.r
+#except ImportError:
+#  rpy_import = False
+#  print >>sys.stderr, "IMPORTANT!!!: R and rpy2 are not working on this system"
 
 def tolaq(la_table, la_size, title):
   la_cols = list(r['colnames'](la_table))
