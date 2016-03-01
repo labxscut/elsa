@@ -73,7 +73,7 @@ class my_build(build.build):
         ('build_scripts', build.build.has_scripts), ] 
 
 setup(name="lsa",
-    version="1.0.0",
+    version="1.0.2",
     description=doclines[0],
     long_description="\n".join(doclines[2:]),
     author="Li Charlie Xia",
