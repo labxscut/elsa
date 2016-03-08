@@ -22,8 +22,8 @@ DEPENDENCIES:
 	introduction @ http://en.wikipedia.org/wiki/Mercurial
     
     For setting up the dependencies, users may refer to the author's development document @
-		http://dl.dropbox.com/u/35182955/Mac_development_environment.html
 		http://dl.dropbox.com/u/35182955/Ubuntu_development_environment.html
+		(Mainly Linux based with notes for Mac users)
 
 FILES:
     LICENSE.txt
