@@ -19,12 +19,10 @@ DEPENDENCIES:
         download @ http://www.scipy.org/
     Scipy(>=0.6)
         download @ http://www.scipy.org/
-    Mercurial(optional, required for displaying version number in commandline tools)
-	introduction @ http://en.wikipedia.org/wiki/Mercurial
     
     For setting up the dependencies, users may refer to the author's development document @
 		http://dl.dropbox.com/u/35182955/Ubuntu_development_environment.html
-		(Mainly Linux based with notes for Mac users)
+	  (Mainly Linux based with notes for Mac users)
 
 FILES:
     LICENSE.txt
@@ -42,7 +40,7 @@ INSTALL:
     Please fullfill the prerequisites of C++, Python (with development and setuptools),
     numpy, scipy and biopython as described in README.txt before installing eLSA.
     
-    [Linux] (Ubuntu)
+    [Linux and Mac] (e.g. Ubuntu)
 
     Download the latest master branch of eLSA from https://bitbucket.org/charade/elsa/get/master.tar.gz .
     Follow standard python module setup to install:
@@ -52,19 +50,11 @@ INSTALL:
         $cd test      #test the scripts are workable
         $. test.sh    #ad hoc test of the script on test data
 
-    [MAC] (Snow Leopard)
-
-    Download the latest release of eLSA from http://meta.usc.edu/softs/lsa.
-    Follow standard python module setup to install:
-        $tar -zxvf charade-elsa-release.tar.gz
-        $cd charade-elsa-release
-        $python setup.py install
-
     [Development]
 
     eLSA is open source and the version controlled repository is @:
     	  https://bitbucket.org/charade/elsa.
-    Use git (http://github.org) to download a local copy:
+    Use git (http://github.org) to clone a local copy:
         $git clone ssh://git@bitbucket.org/charade/elsa elsa
 
     Follow standard python module setup to install:
@@ -112,13 +102,16 @@ INSTALL:
         for you.
 
 EXECUTABLES:
+
     lsa_compute
     lsa_query
 
 USAGE HELP:
+
     (i) Above executables will be available from your python scripts directory.
     	Use '-h' to read individual script usage.
     (ii) A simple test example is available at 'lsa/test.sh' and explained within.
 
 CONTACT:
+
     lixia at stanford dot edu
