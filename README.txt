@@ -5,7 +5,7 @@ INSTRODUCTION:
     Currently the package works for Linux (Ubuntu) and Mac (Snow Leopard) platforms.
     It might work for Windows with Cygwin (not tested).
     More current information of this package is available @
-		http://meta.usc.edu/softs/lsa
+		http://bitbucket.org/charade/elsa
     eLSA Wiki (must read and welcome to contribute) is available @
 		http://bitbucket.org/charade/elsa/wiki/Home
 
