@@ -44,10 +44,10 @@ INSTALL:
     
     [Linux] (Ubuntu)
 
-    Download the latest release of eLSA from http://meta.usc.edu/softs/lsa.
+    Download the latest master branch of eLSA from https://bitbucket.org/charade/elsa/get/master.tar.gz .
     Follow standard python module setup to install:
-        $tar -zxvf charade-elsa-release.tar.gz
-        $cd charade-elsa-release
+        $tar -zxvf charade-elsa-master.tar.gz
+        $cd charade-elsa-$your_master_commit_id
         $python setup.py install
         $cd test      #test the scripts are workable
         $. test.sh    #ad hoc test of the script on test data
@@ -64,11 +64,11 @@ INSTALL:
 
     eLSA is open source and the version controlled repository is @:
     	  https://bitbucket.org/charade/elsa.
-    Use mercurial tools (http://mercurial.selenic.com) to download a local copy:
-        $hg clone ssh://hg@bitbucket.org/charade/elsa elsa-tip
+    Use git (http://github.org) to download a local copy:
+        $git clone ssh://git@bitbucket.org/charade/elsa elsa
 
     Follow standard python module setup to install:
-        $cd elsa-tip
+        $cd elsa
         $python setup.py install
 
     [VirtualBox (Deprecated)]
