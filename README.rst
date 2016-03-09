@@ -1,6 +1,9 @@
-README.txt
+README.rst
+------------
 
-INSTRODUCTION:
+INSTRODUCTION
+==============
+
     Extended Local Similarity Analysis(eLSA)
     Currently the package works for Linux (Ubuntu) and Mac (Snow Leopard) platforms.
     It might work for Windows with Cygwin (not tested).
@@ -10,7 +13,9 @@ INSTRODUCTION:
     eLSA Wiki (must read and welcome to contribute) is available @
 		http://bitbucket.org/charade/elsa/wiki/Home
 
-DEPENDENCIES:
+DEPENDENCIES
+=============
+
     C++ build environment
         e.g. build-essential and libstdc++6 in Ubuntu and Xcode in Mac 
     Python(>=2.7) 
@@ -24,15 +29,8 @@ DEPENDENCIES:
 		http://dl.dropbox.com/u/35182955/Ubuntu_development_environment.html
 	  (Mainly Linux based with notes for Mac users)
 
-FILES:
-    LICENSE.txt
-    README.txt
-    MANIFEST.in
-    setup.py
-    lsa/*
-    test/*
-
-INSTALL:
+INSTALL
+============
 
 
     [Prerequisites]
@@ -101,17 +99,19 @@ INSTALL:
     5. Review any messages that are shown, and select whatever options are best
         for you.
 
-EXECUTABLES:
+EXECUTABLES
+=============
 
     lsa_compute
-    lsa_query
 
-USAGE HELP:
+USAGE HELP
+=============
 
     (i) Above executables will be available from your python scripts directory.
     	Use '-h' to read individual script usage.
-    (ii) A simple test example is available at 'lsa/test.sh' and explained within.
+    (ii) A simple test example is available at 'test/test.sh' and explained within.
 
-CONTACT:
+CONTACT
+=============
 
     lixia at stanford dot edu
