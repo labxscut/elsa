@@ -96,7 +96,7 @@ setup(name="lsa",
     #                               swig_opts=['-c++', '-nomodern', '-classic', '-nomodernargs'])],
     py_modules = ['lsa.compcore', 'lsa.lsalib', 'lsa.lsaio', 'lsa.laio'],
     cmdclass = {'build': my_build},
-    data_files = [('',['README.txt','LICENSE.txt','VERSION.txt'])],
+    data_files = [('',['README.rst','LICENSE.txt','VERSION.txt'])],
     entry_points = { 
         'console_scripts': [
             'lsa_compute = lsa.lsa_compute:main',
