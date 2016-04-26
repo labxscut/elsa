@@ -128,13 +128,14 @@ def main():
             cubic: fill up with cubic spline;                \n \
             nearest: fill up with nearest neighbor") 
   parser.add_argument("-n", "--normMethod", dest="normMethod", default='robustZ', \
-      choices=['percentile', 'percentileZ', 'pnz', 'robustZ', 'none'], \
+      choices=['percentile', 'percentileZ', 'pnz', 'robustZ', 'rnz', 'none'], \
       help="must specify the method to normalize data, default: robustZ, \n \
             choices: percentile, none, pnz, percentileZ, robustZ or a float  \n \
             NOTE:                                                   \n \
             percentile: percentile normalization, including zeros (only with perm)\n \
             pnz: percentile normalization, excluding zeros (only with perm) \n  \
             percentileZ: percentile normalization + Z-normalization \n \
+            rnz: percentileZ normalization + excluding zeros + robust estimates (theo, mix, perm OK) \n \
             robustZ: percentileZ normalization + robust estimates \n \
             (with perm, mix and theo, and must use this for theo and mix, default) \n")
   parser.add_argument("-q", "--qvalueMethod", dest="qvalueMethod", \
@@ -215,6 +216,8 @@ def main():
     zNormalize = lsalib.robustZNormalize
   elif normMethod == 'pnz':
     zNormalize = lsalib.noZeroNormalize  
+	elif normMethod == 'rnz':
+    zNormalize = lsalib.robustNoZeroNormalize
   else:
     zNormalize = lsalib.percentileZNormalize # fallback to default
 
