@@ -139,10 +139,11 @@ def main():
             robustZ: percentileZ normalization + robust estimates \n \
             (with perm, mix and theo, and must use this for theo and mix, default) \n")
   parser.add_argument("-q", "--qvalueMethod", dest="qvalueMethod", \
-      default='scipy', choices=['R', 'scipy'],
+      default='scipy', choices=['scipy'],
       help="specify the qvalue calculation method, \n \
             scipy: use scipy and storeyQvalue function, default \n \
-            R: use R's qvalue package, require X connection")
+            ")
+            #R: use R's qvalue package, require X connection")
   parser.add_argument("-T", "--trendThresh", dest="trendThresh", default=None, \
       type=float, \
       help="if trend series based analysis is desired, use this option \n \
@@ -215,8 +216,8 @@ def main():
   elif normMethod == 'robustZ':
     zNormalize = lsalib.robustZNormalize
   elif normMethod == 'pnz':
-    zNormalize = lsalib.noZeroNormalize  
-	elif normMethod == 'rnz':
+    zNormalize = lsalib.noZeroNormalize
+  elif normMethod == 'rnz':
     zNormalize = lsalib.robustNoZeroNormalize
   else:
     zNormalize = lsalib.percentileZNormalize # fallback to default
@@ -325,7 +326,7 @@ or use -e to specify another input file"""
   print >>sys.stderr, \
       "secondData factorNum, repNum, spotNum = %s, %s, %s" \
       % (cleanData[1].shape[0], cleanData[1].shape[1], cleanData[1].shape[2])
-  #print >>sys.stderr, "calculating ..."
+  print >>sys.stderr, "calculating ", cleanData[0].shape[0]*cleanData[1].shape[0], "pairwise local similarity scores..."
   lsalib.applyAnalysis(cleanData[0], cleanData[1], onDiag=onDiag, \
       delayLimit=delayLimit, bootNum=bootNum, minOccur=minOccur/100.,\
       pvalueMethod=pvalueMethod, precisionP=precision, fTransform=fTransform,\
