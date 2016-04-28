@@ -130,10 +130,9 @@ PBS_PREAMBLE = """#!/bin/bash
 #PBS -o %s
 #PBS -l walltime=299:00:00
 #PBS -l nodes=1:ppn=1,mem=%d000mb,vmem=%d000mb,pmem=%d000mb"""
-vmem=2
-print >>sys.stderr, "vmem=", str(vmem)+"000mb"
+vmem=12
 
-def gen_pbs(singleFile, singleCmd, workDir, singleEnd):
+def gen_pbs(singleFile, singleCmd, workDir, singleEnd, vmem):
   singleResult=singleFile+".tmp"
   singlePBS=open(singleFile+".pbs", "w")
   print >>singlePBS, PBS_PREAMBLE % (os.path.basename(singleFile), os.path.basename(singleFile)+".log", vmem, vmem, vmem)
@@ -171,6 +170,7 @@ def main():
   parser.add_argument("multiOutput", metavar="multiOutput", type=argparse.FileType('w'), help="the multiline output file")
   parser.add_argument("singleCmd", metavar="singleCmd", help="single line command line in quotes")
   parser.add_argument("workDir", metavar="workDir", help="set current working directory")
+  parser.add_argument("-m", "--maxMem", dest="maxMem", default=12, type=int, help="max memory per process in MB")
   parser.add_argument("-d", "--dryRun", dest="dryRun", default="", help="generate pbs only")
 
 #  """par_ana ARISA.txt ARISA.la 'la_compute %s ARISA.laq %s -s 114 -r 1 -p 1000'"""
@@ -181,7 +181,9 @@ def main():
   singleCmd=vars(arg_namespace)['singleCmd']
   workDir=vars(arg_namespace)['workDir']
   dryRun=vars(arg_namespace)['dryRun']
+  vmem=vars(arg_namespace)['maxMem']
   
+  print >>sys.stderr, "vmem=", str(vmem)+"000mb"
   #ws=os.path.join(os.environ.get("HOME"),'tmp','multi')
   print >>sys.stderr, "workDir=", workDir
   print >>sys.stderr, """Note: if deadlocked with unfinished jobs finally, manually collect the corresponding pbs files in above path and run"""
@@ -197,7 +199,7 @@ def main():
   while(len(singleFiles)!=0):
     singleFile=singleFiles.pop()
     endFile=endFiles.pop()
-    pbsFile=gen_pbs(singleFile, singleCmd, workDir, endFile)
+    pbsFile=gen_pbs(singleFile, singleCmd, workDir, endFile, vmem)
     inProgress.add(endFile)
     print >>sys.stderr, pbsFile
     if dryRun=='':
