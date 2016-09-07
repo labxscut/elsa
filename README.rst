@@ -8,10 +8,10 @@ INSTRODUCTION
     Currently the package works for Linux (Ubuntu). 
     It might work for Windows with Cygwin (not tested).
     More current information of this package is available @
-		http://bitbucket.org/charade/elsa
+    http://bitbucket.org/charade/elsa
     
     eLSA Wiki (must read and welcome to contribute) is available @
-		http://bitbucket.org/charade/elsa/wiki/Home
+    http://bitbucket.org/charade/elsa/wiki/Home
 
 DEPENDENCIES
 =============
@@ -26,7 +26,7 @@ DEPENDENCIES
         download @ http://www.scipy.org/
     
     For setting up the dependencies, users may refer to the author's development document @
-		http://dl.dropbox.com/u/35182955/Ubuntu_development_environment.html
+    http://dl.dropbox.com/u/35182955/Ubuntu_development_environment.html
 
 INSTALL
 ============
@@ -47,9 +47,9 @@ INSTALL
         $cd test      #test the scripts are workable
         $. test.sh    #ad hoc test of the script on test data
 
-  	[Linux] (virtualenv)
+    [Linux] (virtualenv)
 
-		Install ELSA through system/site python and virtualenv
+    Install ELSA through system/site python and virtualenv
 
       **This is the MOST RECOMMENDED WAY for installation**
 
@@ -73,8 +73,8 @@ INSTALL
       ::
 
         >source vpy27/bin/activate
-				>pip install numpy
-				>pip install scipy
+        >pip install numpy
+        >pip install scipy
 
       (1.4) Now under your virtualenv, the dependencies will be automatically setup:
 
@@ -87,7 +87,7 @@ INSTALL
     [Development]
 
     eLSA is open source and the version controlled repository is @:
-    	  https://bitbucket.org/charade/elsa.
+        https://bitbucket.org/charade/elsa.
     Use git (http://github.org) to clone a local copy:
         $git clone ssh://git@bitbucket.org/charade/elsa elsa
 
@@ -106,7 +106,7 @@ INSTALL
         at http://meta.usc.edu/softs/vbox/SunLab.vdi.tgz
         This file is large so it may take
         between a few minutes and a few hours depending on your Internet
-	connection speed. You will need to unzip this file, which you can typically do by
+  connection speed. You will need to unzip this file, which you can typically do by
         double-clicking on it.
 
     3. Create a new virtual machine:
@@ -130,7 +130,7 @@ INSTALL
 
     4. Double click on the new virtual machine created – it will be called SunLab
         – to boot it for the first time. The default username and password is:
-	user
+  user
 
     5. Review any messages that are shown, and select whatever options are best
         for you.
@@ -144,7 +144,7 @@ USAGE HELP
 =============
 
     (i) Above executables will be available from your python scripts directory.
-    	Use '-h' to read individual script usage.
+      Use '-h' to read individual script usage.
     (ii) A simple test example is available at 'test/test.sh' and explained within.
 
 CONTACT
