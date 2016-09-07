@@ -5,7 +5,7 @@ INSTRODUCTION
 ==============
 
     Extended Local Similarity Analysis(eLSA)
-    Currently the package works for Linux (Ubuntu) and Mac (Snow Leopard) platforms.
+    Currently the package works for Linux (Ubuntu). 
     It might work for Windows with Cygwin (not tested).
     More current information of this package is available @
 		http://bitbucket.org/charade/elsa
@@ -17,7 +17,7 @@ DEPENDENCIES
 =============
 
     C++ build environment
-        e.g. build-essential and libstdc++6 in Ubuntu and Xcode in Mac 
+        e.g. build-essential and libstdc++6 in Ubuntu
     Python(>=2.7) 
         download @ http://www.python.org/
     Numpy(>=1.0)
@@ -27,7 +27,6 @@ DEPENDENCIES
     
     For setting up the dependencies, users may refer to the author's development document @
 		http://dl.dropbox.com/u/35182955/Ubuntu_development_environment.html
-	  (Mainly Linux based with notes for Mac users)
 
 INSTALL
 ============
@@ -38,7 +37,7 @@ INSTALL
     Please fullfill the prerequisites of C++, Python (with development and setuptools),
     numpy, scipy and biopython as described in README.txt before installing eLSA.
     
-    [Linux and Mac] (e.g. Ubuntu)
+    [Linux] (e.g. Ubuntu)
 
     Download the latest master branch of eLSA from https://bitbucket.org/charade/elsa/get/master.tar.gz .
     Follow standard python module setup to install:
@@ -47,6 +46,43 @@ INSTALL
         $python setup.py install
         $cd test      #test the scripts are workable
         $. test.sh    #ad hoc test of the script on test data
+
+  	[Linux] (virtualenv)
+
+		Install ELSA through system/site python and virtualenv
+
+      **This is the MOST RECOMMENDED WAY for installation**
+
+     (1.1) virtualenv command is standard with Python 2.7 or later. If it is not present, please see https://virtualenv.pypa.io for details to install virtualenv for your python. Possibly as simple as:
+
+      ::
+
+        sudo easy_install pip
+        sudo pip install virtualenv
+
+      Ask your IT manager to help install it for you if you have permission difficulties.
+
+      (1.2) When your system python has virtualenv, make sure your $PYTHONPATH is set to empty and follow steps below:
+
+      ::
+
+        >virtualenv-2.7 vpy27 --no-site-packages
+
+      (1.3) Then you can activate this virtual python:
+
+      ::
+
+        >source vpy27/bin/activate
+				>pip install numpy
+				>pip install scipy
+
+      (1.4) Now under your virtualenv, the dependencies will be automatically setup:
+
+      ::
+
+        sve_vpy> python setup.py install
+
+      (1.5) Now the ELSA executables will be available from "$PWD/sve_vpy/bin". Because you installed ELSA via virtualenv, remember to activate the virtualenv first every time you use ELSA. Also export the environmental variable $ELSA_BIN=$PWD/sve_vpy/bin
 
     [Development]
 
