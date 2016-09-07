@@ -80,9 +80,9 @@ INSTALL
 
       ::
 
-        sve_vpy> python setup.py install
+        vpy27> python setup.py install
 
-      (1.5) Now the ELSA executables will be available from "$PWD/sve_vpy/bin". Because you installed ELSA via virtualenv, remember to activate the virtualenv first every time you use ELSA. Also export the environmental variable $ELSA_BIN=$PWD/sve_vpy/bin
+      (1.5) Now the ELSA executables will be available from "$PWD/vpy27/bin". Because you installed ELSA via virtualenv, remember to activate the virtualenv first every time you use ELSA. Also export the environmental variable $ELSA_BIN=$PWD/vpy27/bin
 
     [Development]
 
