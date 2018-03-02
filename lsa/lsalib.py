@@ -700,7 +700,7 @@ def tied_rank(values):
     #print "V=", V
     #print "V.mask=", V.mask
   nans = (np.nonzero(V.mask)[0]).tolist()      #record indecies
-  V = V[-V.mask]                               #remove nan's
+  V = V[~V.mask]                               #remove nan's
   #print "V=", V
 
   v_num = {}  #values and counts
@@ -816,35 +816,6 @@ def robustZNormalize(tseries):
   #print "nt=", nt
   #nt = np.nan_to_num(nt)              #filling zeros to nan, shall be no na's from here on
   zt = zt.filled(fill_value=0)         #filling zeros to nan, shall be no na's from here on
-  return zt
-
-def robustNoZeroNormalize(tseries):
-  """ score normalizing excluding zeros
-
-    Args:
-      tseries(np.array): 1-d time series
-    
-    Returns:
-      score normalized time series
-  """
-  nt = np.ma.masked_equal(tseries, 0)
-  if type(nt.mask) == np.bool_:       #fix broken ma.mean, mask=False instead of [False, ...] for all mask
-    nt.mask = [nt.mask] * nt.shape[0]
-  ranks = tied_rank(nt)
-  #ranks = tied_rank(tseries)
-  #print "tseries=", tseries
-  #print "ranks=", ranks
-  #print "ranks.mask", ranks.mask
-  nt = np.ma.masked_invalid(sp.stats.distributions.norm.ppf( ranks/(len(ranks)-np.sum(ranks.mask)+1) ),copy=True)
-  mad_sd = 1.4826 * np.ma.median( np.ma.abs(nt - np.ma.median(nt)))
-  range_sd = (np.ma.max(nt) - np.ma.min(nt))/4
-  sd_est = range_sd if mad_sd == 0 else mad_sd 
-  try:
-    zt = (nt - np.ma.median(nt))/sd_est
-  except FloatingPointError:
-    zt = nt - np.ma.median(nt)
-  #print "nt=", nt
-  zt = zt.filled(fill_value=0)         #filling zeros to nan (masked), shall be no na's from here on
   return zt
 
 def noZeroNormalize(tseries):
