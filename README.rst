@@ -32,6 +32,9 @@ DOCKER
 ============
 
     An ELSA docker image is now available. To use it:
+
+    ::
+
       sudo docker pull panhongfei/elsa:1.0
       sudo docker run -it panhongfei/elsa:1.0
       cd charade-elsa-7bed46b84456
@@ -39,9 +42,15 @@ DOCKER
       sh test.sh
 
     How to mount to local file:
+
+    ::
+
       sudo docker run -it -v `pwd`:/var/data/ test:1.0
 
     For example:
+
+    ::
+
       sudo docker run -it -v /media/d102/disk/panhongfei/charade-elsa-7bed46b84456/test:/install_soft panhongfei/elsa:1.0
 
 INSTALL
