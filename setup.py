@@ -47,7 +47,7 @@ doclines=__doc__.splitlines()
 #version_desc = ','.join([lines[1].strip(), lines[0].strip()])
 
 print >>sys.stderr, "testing git availability ..."
-hg_on=subprocess.call("echo 'def main():\n\tprint \"'$(git log --pretty=format:'%h' | head -n 1)'\"' > lsa/lsa_version.py", shell=True)
+hg_on=subprocess.call("echo 'def main():\n\tprint \"'$(cat VERSION.txt' '$(git log --pretty=format:'%h' | head -n 1)'\"' > lsa/lsa_version.py", shell=True)
 #hg_on=subprocess.call("git log --pretty=format:'%h' | head -n 1 | > lsa/VERSION.py", shell=True)
 if hg_on != 0:
   print >>sys.stderr, "warning: git is required to include revision number in binary" 
