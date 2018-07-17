@@ -28,11 +28,11 @@ DEPENDENCIES
     For setting up the dependencies, users may refer to the author's development document @
     http://dl.dropbox.com/u/35182955/Ubuntu_development_environment.html
 
-DOCKER (Platform Independent)
+DOCKER (Platform Independent and Preferred)
 -------------------------------
 
   A Dockerfile is provided to build elsa enabled docker image from a standard Ubuntu docker image. 
-  To build a docker image using 'docker build $ZOOMXPKG', where $ZOOMXPKG is the unzipped path of Zoomx.
+  To build a docker image using 'docker build $ELSAPKG', where $ELSAPKG is the unzipped path of elsa.
   Or download the Dockerfile directly at:
 
     https://bitbucket.org/charade/elsa/raw/master/Dockerfile
