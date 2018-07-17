@@ -28,30 +28,21 @@ DEPENDENCIES
     For setting up the dependencies, users may refer to the author's development document @
     http://dl.dropbox.com/u/35182955/Ubuntu_development_environment.html
 
-DOCKER
-============
+DOCKER (Platform Independent)
+-------------------------------
 
-    An ELSA docker image is now available. To use it:
+  A Dockerfile is provided to build elsa enabled docker image from a standard Ubuntu docker image. 
+  To build a docker image using 'docker build $ZOOMXPKG', where $ZOOMXPKG is the unzipped path of Zoomx.
+  Or download the Dockerfile directly at:
 
-    ::
+    https://bitbucket.org/charade/elsa/raw/master/Dockerfile
 
-      sudo docker pull panhongfei/elsa:1.0
-      sudo docker run -it panhongfei/elsa:1.0
-      cd charade-elsa-7bed46b84456
-      cd test/
-      sh test.sh
-
-    How to mount to local file:
+  Name the built container as your:container; Then mount current data directory to /var/data accessible by docker:
 
     ::
 
-      sudo docker run -it -v `pwd`:/var/data/ test:1.0
-
-    For example:
-
-    ::
-
-      sudo docker run -it -v /media/d102/disk/panhongfei/charade-elsa-7bed46b84456/test:/install_soft panhongfei/elsa:1.0
+      sudo docker run -it -v `pwd`:/var/data/ your:container
+      sudo docker run cd /var/data/ && lsa_compute ...
 
 INSTALL
 ============
