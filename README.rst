@@ -19,14 +19,24 @@ QUICK LINKS
 `FAQ <https://bitbucket.org/charade/elsa/wiki/FAQ>`__
 
 INSTRODUCTION
-==============
+--------------
 
-    In recent years, advances in molecular technologies have empowered researchers with the ability to spatially and temporally characterize natural microbial communities without lab cultivation (Fuhrman, 2009). Mining and analyzing co-occurrence patterns in these new datasets are fundamental to revealing existing symbiosis relations and microbe-environment interactions (Chaffron et al., 2010; Steele et al., 2011). Time series data, in particular, are receiving more and more attention, since not only undirected but also directed associations can be inferred from these datasets.
+In recent years, advances in molecular technologies have empowered researchers with the ability to spatially and temporally characterize natural microbial communities without lab cultivation (Fuhrman, 2009). Mining and analyzing co-occurrence patterns in these new datasets are fundamental to revealing existing symbiosis relations and microbe-environment interactions (Chaffron et al., 2010; Steele et al., 2011). Time series data, in particular, are receiving more and more attention, since not only undirected but also directed associations can be inferred from these datasets.
 
-    Researchers typically use techniques like principal component analysis (PCA), multidimensional scaling (MDS), discriminant function analysis (DFA) and canonical correlation analysis (CCA)) to analyze microbial community data under various conditions. Different from these methods, the Local Similarity Analysis (LSA) technique is unique to capture the time-dependent associations (possibly time-shifted) between microbes and between microbe and environmental factors (Ruan et al., 2006). Significant LSA associations can be interpreted as a partially directed association network for further network-based analysis.
+Researchers typically use techniques like principal component analysis (PCA), multidimensional scaling (MDS), discriminant function analysis (DFA) and canonical correlation analysis (CCA)) to analyze microbial community data under various conditions. Different from these methods, the Local Similarity Analysis (LSA) technique is unique to capture the time-dependent associations (possibly time-shifted) between microbes and between microbe and environmental factors (Ruan et al., 2006). Significant LSA associations can be interpreted as a partially directed association network for further network-based analysis.
 
-    Studies adopting the LSA technique have shown interesting and novel discoveries for microbial communities (Paver et al., 2010; Shade et al., 2010; Beman et al., 2011; Steele et al., 2011). However current dataset scale has outdated the old script. To improve computation efficiency, incorporate new features, such as time series data with replicates, and make the analysis technique more accessible to users, we have re-implemented the LSA algorithm as a C++ extension to Python. We also integrated the new LSA tool set with the popular Galaxy framework (Goecks et al., 2010) for web based pipeline analysis.
+Studies adopting the LSA technique have shown interesting and novel discoveries for microbial communities (Paver et al., 2010; Shade et al., 2010; Beman et al., 2011; Steele et al., 2011). However current dataset scale has outdated the old script. To improve computation efficiency, incorporate new features, such as time series data with replicates, and make the analysis technique more accessible to users, we have re-implemented the LSA algorithm as a C++ extension to Python. We also integrated the new LSA tool set with the popular Galaxy framework (Goecks et al., 2010) for web based pipeline analysis.
 
+
+METHODS
+-------------
+
+|Pipeline|
+
+Figure 1. The analysis workflow of Local Similarity Analysis (LSA) tools. Users start with raw data (matrices of time series) as input and specify their requirements as parameters. The LSA tools subsequently F-transform and normalize the raw data and then calculate the Local Similarity (LS) Scores and the Pearson’s Correlation Coefficients. The tools then assess the statistical significance (P-values) of these correlation statistics using permutation test and filter out insignificant results. Finally, the tools construct a partially directed association network from significant associations. 
+
+SOFTWARE
+-------------
     Extended Local Similarity Analysis(eLSA)
     Currently the package works for Linux (Ubuntu). 
     It might work for Windows with Cygwin (not tested).
@@ -36,15 +46,7 @@ INSTRODUCTION
     eLSA Wiki (must read and welcome to contribute) is available @
     http://bitbucket.org/charade/elsa/wiki/Home
 
-METHODS
-==============
-
-|Pipeline|
-
-Figure 1. The analysis workflow of Local Similarity Analysis (LSA) tools. Users start with raw data (matrices of time series) as input and specify their requirements as parameters. The LSA tools subsequently F-transform and normalize the raw data and then calculate the Local Similarity (LS) Scores and the Pearson’s Correlation Coefficients. The tools then assess the statistical significance (P-values) of these correlation statistics using permutation test and filter out insignificant results. Finally, the tools construct a partially directed association network from significant associations. 
-
-DEPENDENCIES
-=============
+    Use of resources:
 
     C++ build environment
         e.g. build-essential and libstdc++6 in Ubuntu
@@ -54,12 +56,9 @@ DEPENDENCIES
         download @ http://www.scipy.org/
     Scipy(>=0.6)
         download @ http://www.scipy.org/
-    
-    For setting up the dependencies, users may refer to the author's development document @
-    http://dl.dropbox.com/u/35182955/Ubuntu_development_environment.html
 
 DOCKER (Platform Independent and Preferred)
-=============================================
+---------------------------------------------
 
   A Dockerfile is provided to build elsa enabled docker image from a standard Ubuntu docker image. 
   To build a docker image using 'docker build $ELSAPKG', where $ELSAPKG is the unzipped path of elsa.
@@ -75,10 +74,10 @@ DOCKER (Platform Independent and Preferred)
       sudo docker run cd /var/data/ && lsa_compute ...
 
 INSTALL
-============
+-----------------
 
 
-    [Prerequisites]
+    1. Install Prerequisites
 
     Please fullfill the prerequisites of C++, Python (with development and setuptools),
     numpy, scipy and biopython as described in README.txt before installing eLSA.
@@ -130,7 +129,7 @@ INSTALL
 
       (1.5) Now the ELSA executables will be available from "$PWD/vpy27/bin". Because you installed ELSA via virtualenv, remember to activate the virtualenv first every time you use ELSA. Also export the environmental variable $ELSA_BIN=$PWD/vpy27/bin
 
-    [Development]
+    2. Development
 
     eLSA is open source and the version controlled repository is @:
         https://bitbucket.org/charade/elsa.
@@ -141,72 +140,33 @@ INSTALL
         $cd elsa
         $python setup.py install
 
-    [VirtualBox (Deprecated)]
-    The procedure is similar to QIIME VirtualBox install,
-        see http://qiime.org/install/virtual_box.html.
-
-    1. Download and install the VirtualBox (VB) version for your machine,
-        at http://www.virtualbox.org
-
-    2. Download the SunLab Virtual Box,
-        at http://meta.usc.edu/softs/vbox/SunLab.vdi.tgz
-        This file is large so it may take
-        between a few minutes and a few hours depending on your Internet
-  connection speed. You will need to unzip this file, which you can typically do by
-        double-clicking on it.
-
-    3. Create a new virtual machine:
-        Launch VirtualBox, and create a new machine (press the New button).
-        A new window will show up. Click ‘Next’.
-
-        In this screen type SunLab as the name for the virtual machine. Then
-        select Linux as the Operating System, and Ubuntu as the version.
-        Click Next.
-
-        Select the amount of RAM (memory). You will need at least 512MB, but
-        the best option is based on your machine. After selecting the amount of RAM,
-        click Next.
-
-        Select “Use existing hard drive”, and click the folder icon next to
-        the selector (it has a green up arrow). In the new window click ‘Add’, and
-        locate the virtual hard drive that was downloaded in step 2. Click Select and
-        then click Next.
-
-        In the new window click Finish.
-
-    4. Double click on the new virtual machine created – it will be called SunLab
-        – to boot it for the first time. The default username and password is:
-  user
-
-    5. Review any messages that are shown, and select whatever options are best
-        for you.
-
 EXECUTABLES
-=============
+--------------------
 
     lsa_compute
+    lsa_version
 
-USAGE HELP
-=============
+USAGE
+---------------------
 
     (i) Above executables will be available from your python scripts directory.
       Use '-h' to read individual script usage.
     (ii) A simple test example is available at 'test/test.sh' and explained within.
 
 NOTES
-=============
+----------------------
     
     A historical R version is available through Prof. Fengzhu Sun's page and is not supported any longer.
     In case the integrated q-value does not work for you, there are many other independent false discovery rate calculation packages, such as locfdr, mixfdr, fuzzyFDR, pi0, fdrci, nFDR.
 
 
 CONTACT
-=============
+----------------------
 
     fsun at usc dot edu and/or lixia at stanford dot edu
 
 CITATIONS
-=============
+----------------------
 
 Please cite the references 1 and 2 if the eLSA python package was used in your study. Please also cite 3 if local trend analysis was used in your study. Please also cite the reference 4 if you used the old R script, which is no loger maintained.
 
