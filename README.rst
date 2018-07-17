@@ -1,8 +1,31 @@
-README.rst
-------------
+.. |Logo| image:: https://bitbucket.org/charade/elsa/raw/master/doc/images/elsa_logo.png
+   :alt: logo.png
+   :height: 50px
+   :width: 100px
+
+.. |Pipeline| image:: https://bitbucket.org/charade/elsa/raw/master/doc/images/elsa_pipeline.png
+   :alt: pipeline.png
+   :height: 450px
+   :width: 540px
+
+|Logo| ELSA - Finding Time-Dependent Associations in Time Series Datasets 
+==========================================================================================
+
+QUICK LINKS
+-----------
+
+`Manuals <https://bitbucket.org/charade/elsa/wiki/Manual>`__
+
+`FAQ <https://bitbucket.org/charade/elsa/wiki/FAQ>`__
 
 INSTRODUCTION
 ==============
+
+     In recent years, advances in molecular technologies have empowered researchers with the ability to spatially and temporally characterize natural microbial communities without lab cultivation (Fuhrman, 2009). Mining and analyzing co-occurrence patterns in these new datasets are fundamental to revealing existing symbiosis relations and microbe-environment interactions (Chaffron et al., 2010; Steele et al., 2011). Time series data, in particular, are receiving more and more attention, since not only undirected but also directed associations can be inferred from these datasets.
+
+Researchers typically use techniques like principal component analysis (PCA), multidimensional scaling (MDS), discriminant function analysis (DFA) and canonical correlation analysis (CCA)) to analyze microbial community data under various conditions. Different from these methods, the Local Similarity Analysis (LSA) technique is unique to capture the time-dependent associations (possibly time-shifted) between microbes and between microbe and environmental factors (Ruan et al., 2006). Significant LSA associations can be interpreted as a partially directed association network for further network-based analysis.
+
+Studies adopting the LSA technique have shown interesting and novel discoveries for microbial communities (Paver et al., 2010; Shade et al., 2010; Beman et al., 2011; Steele et al., 2011). However current dataset scale has outdated the old script. To improve computation efficiency, incorporate new features, such as time series data with replicates, and make the analysis technique more accessible to users, we have re-implemented the LSA algorithm as a C++ extension to Python. We also integrated the new LSA tool set with the popular Galaxy framework (Goecks et al., 2010) for web based pipeline analysis.
 
     Extended Local Similarity Analysis(eLSA)
     Currently the package works for Linux (Ubuntu). 
@@ -12,6 +35,13 @@ INSTRODUCTION
     
     eLSA Wiki (must read and welcome to contribute) is available @
     http://bitbucket.org/charade/elsa/wiki/Home
+
+METHODS
+==============
+
+|Pipeline|
+
+Figure 1. The analysis workflow of Local Similarity Analysis (LSA) tools. Users start with raw data (matrices of time series) as input and specify their requirements as parameters. The LSA tools subsequently F-transform and normalize the raw data and then calculate the Local Similarity (LS) Scores and the Pearson’s Correlation Coefficients. The tools then assess the statistical significance (P-values) of these correlation statistics using permutation test and filter out insignificant results. Finally, the tools construct a partially directed association network from significant associations. 
 
 DEPENDENCIES
 =============
@@ -163,7 +193,25 @@ USAGE HELP
       Use '-h' to read individual script usage.
     (ii) A simple test example is available at 'test/test.sh' and explained within.
 
+NOTES
+=============
+    
+    A historical R version is available through Prof. Fengzhu Sun's page and is not supported any longer.
+    In case the integrated q-value does not work for you, there are many other independent false discovery rate calculation packages, such as locfdr, mixfdr, fuzzyFDR, pi0, fdrci, nFDR.
+
+
 CONTACT
 =============
 
-    lixia at stanford dot edu
+    fsun at usc dot edu and/or lixia at stanford dot edu
+
+CITATIONS
+=============
+
+Please cite the references 1 and 2 if the eLSA python package was used in your study. Please also cite 3 if local trend analysis was used in your study. Please also cite the reference 4 if you used the old R script, which is no loger maintained.
+
+    1. Li C Xia, Dongmei Ai, Jacob Cram, Jed A Fuhrman, Fengzhu Sun. Efficient Statistical Significance Approximation for Local Association Analysis of High-Throughput Time Series Data. Bioinformatics 2013, 29(2):230-237. (https://doi.org/10.1093/bioinformatics/bts668)
+    2. Li C Xia, Joshua A Steele, Jacob A Cram, Zoe G Cardon, Sheri L Simmons, Joseph J Vallino, Jed A Fuhrman and Fengzhu Sun. Extended local similarity analysis (eLSA) of microbial community and other time series data with replicates. BMC Systems Biology 2011, 5(S2):S15 (https://doi.org/10.1186/1752-0509-5-S2-S15)
+    3. Li C Xia, Dongmei Ai, Jacob Cram, Xiaoyi Liang, Jed Fuhrman, Fengzhu Sun. Statistical significance approximation in local trend analysis of high-throughput time-series data using the theory of Markov chains. BMC Bioinformatics 2015, 16, 301 (https://doi.org/10.1186/s12859-015-0732-8)
+    4. Joshua A Steele, Peter D Countway, Li Xia, Patrick D Vigil, J Michael Beman, Diane Y Kim, Cheryl-Emiliane T Chow, Rohan Sachdeva, Adriane C Jones, Michael S Schwalbach, Julie M Rose, Ian Hewson, Anand Patel, Fengzhu Sun, David A Caron, Jed A Fuhrman. Marine bacterial, archaeal and protistan association networks reveal ecological linkages The ISME Journal 2011, 51414–1425
+    5. Quansong Ruan, Debojyoti Dutta, Michael S. Schwalbach, Joshua A. Steele, Jed A. Fuhrman and Fengzhu Sun Local similarity analysis reveals unique associations among marine bacterioplankton species and environmental factors Bioinformatics 2006, 22(20):2532-2538
