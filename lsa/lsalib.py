@@ -331,7 +331,7 @@ def bootstrapCI(series1, series2, Smax, delayLimit, bootCI, bootNum, \
     a1 = sp.stats.distributions.norm.cdf(2*z0+sp.stats.distributions.norm.ppf(a1))
     a2 = sp.stats.distributions.norm.cdf(2*z0+sp.stats.distributions.norm.ppf(a2))
     #print "z0=", z0, "a1=", a1, "a2=", a2
-  return ( BS_mean, BS_set[np.floor(bootNum*a1)-1], BS_set[np.ceil(bootNum*a2)-1] )
+  return ( BS_mean, BS_set[int(np.floor(bootNum*a1))-1], BS_set[int(np.ceil(bootNum*a2))-1] )
 
 def readPvalue(P_table, R, N, x_sd=1., M=1., alpha=1., beta=1., x_decimal=my_decimal):
   # R=observed range, N=timepoints, x_sd=std.dev of single series, M=replicates, alpha=1-portion of zero in X, beta=1-portion of zero in Y

@@ -29,7 +29,7 @@ DEPENDENCIES
     http://dl.dropbox.com/u/35182955/Ubuntu_development_environment.html
 
 DOCKER (Platform Independent and Preferred)
--------------------------------
+=============================================
 
   A Dockerfile is provided to build elsa enabled docker image from a standard Ubuntu docker image. 
   To build a docker image using 'docker build $ELSAPKG', where $ELSAPKG is the unzipped path of elsa.
