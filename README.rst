@@ -8,7 +8,9 @@
    :height: 450px
    :width: 540px
 
-|Logo| ELSA - Finding Time-Dependent Associations (Now Augmented with Liquid Associaiton)
+|Logo| 
+
+ELSA - Finding Time-Dependent Associations (Now Augmented with Liquid Associaiton)
 ==========================================================================================
 
 QUICK LINKS
