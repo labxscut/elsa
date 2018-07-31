@@ -14,9 +14,9 @@
 QUICK LINKS
 -----------
 
-`ELSA Manuals <https://bitbucket.org/charade/elsa/wiki/Manual>`__
+`Extended Local Similarity Analysis (ELSA) Manuals <https://bitbucket.org/charade/elsa/wiki/Manual>`__
 
-`ELA Manuals <https://bitbucket.org/charade/elsa/wiki/Manual_ela>`__
+`Extended Liquid Associaiton Analysis (ELA) Manuals <https://bitbucket.org/charade/elsa/wiki/Manual_ela>`__
 
 `FAQ <https://bitbucket.org/charade/elsa/wiki/FAQ>`__
 
