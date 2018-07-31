@@ -54,7 +54,7 @@ RUN git config --global http.sslVerify false
 RUN git config --global http.postBuffer 1048576000
 
 ### install elsa ###
-RUN cd $HOME/setup && git clone --verbose https://charade@bitbucket.org/charade/elsa.git
+RUN cd $HOME/setup && git lfs clone --verbose https://bitbucket.org/charade/elsa.git
 RUN cd $HOME/setup/elsa && python setup.py install --force
 
 ### run test scripts ###

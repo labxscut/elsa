@@ -14,7 +14,9 @@
 QUICK LINKS
 -----------
 
-`Manuals <https://bitbucket.org/charade/elsa/wiki/Manual>`__
+`ELSA Manuals <https://bitbucket.org/charade/elsa/wiki/Manual>`__
+
+`ELA Manuals <https://bitbucket.org/charade/elsa/wiki/Manual_ela>`__
 
 `FAQ <https://bitbucket.org/charade/elsa/wiki/FAQ>`__
 
