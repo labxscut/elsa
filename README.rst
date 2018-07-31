@@ -23,11 +23,11 @@ QUICK LINKS
 INSTRODUCTION
 --------------
 
-In recent years, advances in molecular technologies have empowered researchers with the ability to spatially and temporally characterize natural microbial communities without lab cultivation (Fuhrman, 2009). Mining and analyzing co-occurrence patterns in these new datasets are fundamental to revealing existing symbiosis relations and microbe-environment interactions (Chaffron et al., 2010; Steele et al., 2011). Time series data, in particular, are receiving more and more attention, since not only undirected but also directed associations can be inferred from these datasets.
+In recent years, advances in molecular technologies have empowered researchers with the ability to spatially and temporally characterize natural microbial communities without lab cultivation. Mining and analyzing co-occurrence patterns in these new datasets are fundamental to revealing existing symbiosis relations and microbe-environment interactions. Time series data, in particular, are receiving more and more attention, since not only undirected but also directed associations can be inferred from these datasets.
 
-Researchers typically use techniques like principal component analysis (PCA), multidimensional scaling (MDS), discriminant function analysis (DFA) and canonical correlation analysis (CCA)) to analyze microbial community data under various conditions. Different from these methods, the Local Similarity Analysis (LSA) technique is unique to capture the time-dependent associations (possibly time-shifted) between microbes and between microbe and environmental factors (Ruan et al., 2006). Significant LSA associations can be interpreted as a partially directed association network for further network-based analysis.
+Researchers typically use techniques like principal component analysis (PCA), multidimensional scaling (MDS), discriminant function analysis (DFA) and canonical correlation analysis (CCA)) to analyze microbial community data under various conditions. Different from these methods, the Local Similarity Analysis (LSA) technique is unique to capture the time-dependent associations (possibly time-shifted) between microbes and between microbe and environmental factors. Significant LSA associations can be interpreted as a partially directed association network for further network-based analysis.
 
-Studies adopting the LSA technique have shown interesting and novel discoveries for microbial communities (Paver et al., 2010; Shade et al., 2010; Beman et al., 2011; Steele et al., 2011). However current dataset scale has outdated the old script. To improve computation efficiency, incorporate new features, such as time series data with replicates, and make the analysis technique more accessible to users, we have re-implemented the LSA algorithm as a C++ extension to Python. We also integrated the new LSA tool set with the popular Galaxy framework (Goecks et al., 2010) for web based pipeline analysis.
+ALso, another limitation of previous investigations was their restriction toward pairwise relationships, while there was no lack of abundance of third-party mediated functionalities in microbial community. Liquid Association analysis was originally developed by K.C. Li for characterizing the internal evolution of expression pattern of a pair of genes (𝑋, 𝑌) depending on a ‘scouting’ (mediator) gene Z. In the newly implemented ELSA, we extended Liquid Association and combined it with LSA to explore the mediated co-varying microbial dynamics, which provides a novel perspective and a useful toolkit to analyze and interpret microbial community time series data. 
 
 
 METHODS
@@ -35,20 +35,25 @@ METHODS
 
 |Pipeline|
 
-Figure 1. The analysis workflow of Local Similarity Analysis (LSA) tools. Users start with raw data (matrices of time series) as input and specify their requirements as parameters. The LSA tools subsequently F-transform and normalize the raw data and then calculate the Local Similarity (LS) Scores and the Pearson’s Correlation Coefficients. The tools then assess the statistical significance (P-values) of these correlation statistics using permutation test and filter out insignificant results. Finally, the tools construct a partially directed association network from significant associations. 
+Figure 1. The analysis workflow of Local Similarity Analysis (LSA) tools. Users start with raw data (matrices of time series) as input and specify their requirements as parameters. The LSA tools subsequently F-transform and normalize the raw data and then calculate the Local Similarity (LS) Scores and the Pearson’s Correlation Coefficients. The tools then assess the statistical significance (P-values) of these correlation statistics using permutation test and filter out insignificant results. Finally, the tools construct a partially directed association network from significant associations.
+
+|elaPipeline|
+
+
 
 SOFTWARE
 -------------
-    Extended Local Similarity Analysis(eLSA)
-    Currently the package works for Linux (Ubuntu). 
-    It might work for Windows with Cygwin (not tested).
+    Extended Local Similarity Analysis(ELSA)
+    Currently the package was developed for Linux (Ubuntu). 
+    For other platforms, see the DOCKER section for help.
+
     More current information of this package is available @
     http://bitbucket.org/charade/elsa
     
-    eLSA Wiki (must read and welcome to contribute) is available @
+    ELSA Wiki (a must read and welcome to contribute) is available @
     http://bitbucket.org/charade/elsa/wiki/Home
 
-    Use of resources:
+    Use of external resources:
 
     C++ build environment
         e.g. build-essential and libstdc++6 in Ubuntu
@@ -145,8 +150,8 @@ INSTALL
 EXECUTABLES
 --------------------
 
-    lsa_compute
-    lsa_version
+    lsa_compute                       # for LSA/LTA computation
+    la_compute                        # for LA computation
 
 USAGE
 ---------------------
@@ -170,10 +175,11 @@ CONTACT
 CITATIONS
 ----------------------
 
-Please cite the references 1 and 2 if the eLSA python package was used in your study. Please also cite 3 if local trend analysis was used in your study. Please also cite the reference 4 if you used the old R script, which is no loger maintained.
+Please cite the references 1 and 2 if any part of the ELSA python package was used in your study. Please also cite 3 if local trend analysis (LTA) was used in your study. Please also cite reference 6 if extended liquid association analysis (ELA) was used in your study. Please also cite the reference 4 and 5 if you used the old LSA R script, which is no loger maintained. 
 
     1. Li C Xia, Dongmei Ai, Jacob Cram, Jed A Fuhrman, Fengzhu Sun. Efficient Statistical Significance Approximation for Local Association Analysis of High-Throughput Time Series Data. Bioinformatics 2013, 29(2):230-237. (https://doi.org/10.1093/bioinformatics/bts668)
     2. Li C Xia, Joshua A Steele, Jacob A Cram, Zoe G Cardon, Sheri L Simmons, Joseph J Vallino, Jed A Fuhrman and Fengzhu Sun. Extended local similarity analysis (eLSA) of microbial community and other time series data with replicates. BMC Systems Biology 2011, 5(S2):S15 (https://doi.org/10.1186/1752-0509-5-S2-S15)
     3. Li C Xia, Dongmei Ai, Jacob Cram, Xiaoyi Liang, Jed Fuhrman, Fengzhu Sun. Statistical significance approximation in local trend analysis of high-throughput time-series data using the theory of Markov chains. BMC Bioinformatics 2015, 16, 301 (https://doi.org/10.1186/s12859-015-0732-8)
     4. Joshua A Steele, Peter D Countway, Li Xia, Patrick D Vigil, J Michael Beman, Diane Y Kim, Cheryl-Emiliane T Chow, Rohan Sachdeva, Adriane C Jones, Michael S Schwalbach, Julie M Rose, Ian Hewson, Anand Patel, Fengzhu Sun, David A Caron, Jed A Fuhrman. Marine bacterial, archaeal and protistan association networks reveal ecological linkages The ISME Journal 2011, 51414–1425
     5. Quansong Ruan, Debojyoti Dutta, Michael S. Schwalbach, Joshua A. Steele, Jed A. Fuhrman and Fengzhu Sun Local similarity analysis reveals unique associations among marine bacterioplankton species and environmental factors Bioinformatics 2006, 22(20):2532-2538
+    6. Dongmei Ai, Xiaoxin Li, Hongfei Pan, Li Charlie Xia*. Extending Liquid Association to Explore Mediated Co- varying Dynamics in Marine Microbial Community. Manuscript under review (2018).
