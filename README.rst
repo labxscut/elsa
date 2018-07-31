@@ -8,7 +8,7 @@
    :height: 450px
    :width: 540px
 
-|Logo| ELSA - Finding Time-Dependent Associations in Time Series Datasets 
+|Logo| ELSA - Finding Time-Dependent Associations (Now Augmented with Liquid Associaiton)
 ==========================================================================================
 
 QUICK LINKS
@@ -149,6 +149,8 @@ INSTALL
 
 EXECUTABLES
 --------------------
+
+  ::
 
     lsa_compute                       # for LSA/LTA computation
     la_compute                        # for LA computation
