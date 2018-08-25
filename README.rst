@@ -4,7 +4,12 @@
    :width: 100px
 
 .. |Pipeline| image:: https://bitbucket.org/charade/elsa/raw/master/doc/images/elsa_pipeline.png
-   :alt: pipeline.png
+   :alt: lsa_pipeline.png
+   :height: 450px
+   :width: 540px
+
+.. |elaPipeline| image:: https://bitbucket.org/charade/elsa/raw/master/doc/images/ela_pipeline.png
+   :alt: ela_pipeline.png
    :height: 450px
    :width: 540px
 
@@ -41,7 +46,7 @@ Figure 1. The analysis workflow of Local Similarity Analysis (LSA) tools. Users 
 
 |elaPipeline|
 
-
+Figure 2. Liquid Association / Mediated correlation and example Cytoscape diagrams for all liquid association types of factors X, Y and Z: (A) High Z level enhances the positive correlation between X and Y; (B) Low Z level enhances the negative correlation between X and Y; (C) Low Z level enhances the positive correlation between X and Y; (D) High Z level enhances the negative correlation between X and Y. And (E) A flowchart for incorporating Liquid Association (LA) with Local Similarity (LS) Analysis (LSA). First we use LSA to find candidate local and without time-delayed associations between factors X and Y. The results were filtered based on p-values, q-values and effect (LS score). Then, given the significant LSA factors X and Y, we compute LA score to scout any environmental/OTU factors to discover potential mediating factor Z. Next, a permutation test for liquid association is performed and the results were filtered based on p-values, q-values and effect (LA score) to remove insignificant triplets. Finally, we use the software Cytoscape to visualize the results.
 
 SOFTWARE
 -------------
