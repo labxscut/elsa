@@ -82,7 +82,7 @@ DOCKER (Platform Independent and Preferred)
 
     ::
       
-      docker build --no-cache -t charade/xlibbox:swan .
+      docker build --no-cache -t charade/xlibbox:elsa .
 
   Name the built container as your:container; Then mount current data directory to /var/data accessible by docker:
 
