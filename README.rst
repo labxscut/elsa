@@ -76,9 +76,13 @@ DOCKER (Platform Independent and Preferred)
 
   A Dockerfile is provided to build elsa enabled docker image from a standard Ubuntu docker image. 
   To build a docker image using 'docker build $ELSAPKG', where $ELSAPKG is the unzipped path of elsa.
-  Or download the Dockerfile directly at:
+  Or directly download the Dockerfile directly at:
 
     https://bitbucket.org/charade/elsa/raw/master/Dockerfile
+
+    ::
+      
+      docker build --no-cache -t charade/xlibbox:swan .
 
   Name the built container as your:container; Then mount current data directory to /var/data accessible by docker:
 
