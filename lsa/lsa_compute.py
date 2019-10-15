@@ -63,6 +63,9 @@ def main():
   # define arguments: delayLimit, fillMethod, pvalueMethod
   parser = argparse.ArgumentParser()
 
+  arg_precision_default=1000
+  arg_delayLimit_default=0
+
   parser.add_argument("dataFile", metavar="dataFile", type=argparse.FileType('rU'), \
       help="the input data file,\n \
       m by (r * s)tab delimited text; top left cell start with \
@@ -77,8 +80,9 @@ def main():
       type=argparse.FileType('rU'),
       help="specify an extra datafile, otherwise the first datafile will be used \n \
             and only lower triangle entries of pairwise matrix will be computed")
-  parser.add_argument("-d", "--delayLimit", dest="delayLimit", default=0, type=int, 
-      help="specify the maximum delay possible, default: 3,\n must be integer >0 and <spotNum")
+  parser.add_argument("-d", "--delayLimit", dest="delayLimit", default=arg_delayLimit_default, type=int,\
+      help="specify the maximum delay possible, default: {},\n \
+            must be an integer >=0 and <spotNum".format(arg_delayLimit_default))
   parser.add_argument("-m", "--minOccur", dest="minOccur", default=50, type=int, 
       help="specify the minimum occurence percentile of all times, default: 50,\n")
   parser.add_argument("-p", "--pvalueMethod", dest="pvalueMethod", default="perm", \
@@ -88,10 +92,10 @@ def main():
             theo: theoretical approximaton; if used also set -a value. \n \
             mix: use theoretical approximation for pre-screening \
             if promising (<0.05) then use permutation. ")
-  parser.add_argument("-x", "--precision", dest="precision", default=1000, type=int,\
-      help="permutation/precision, specify the permutation \
+  parser.add_argument("-x", "--precision", dest="precision", default=arg_precision_default, type=int,\
+      help="permutation/precision, specify the permutation \n \
             number or precision=1/permutation for p-value estimation. \n \
-            must be integer >0")
+            default is {}, must be an integer >0 ".format(arg_precision_default) )
   parser.add_argument("-b", "--bootNum", dest="bootNum", default=0, type=int, \
       choices=[0, 100, 200, 500, 1000, 2000],
       help="specify the number of bootstraps for 95%% confidence \
