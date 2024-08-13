@@ -35,7 +35,7 @@ import numpy as np
 import scipy as sp
 try:
   #debug import
-  import lsalib
+  from . import lsalib
 except ImportError:
   #install import
   from lsa import lsalib
@@ -47,7 +47,7 @@ except ImportError:
 #raw_file, fixed_file, Pi, Qi
 
 ws=os.path.join(os.environ.get("HOME"),'tmp','multi')
-print "tmpDir=",ws
+print("tmpDir=",ws)
 
 def main():  
 

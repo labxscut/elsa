@@ -5,7 +5,7 @@ import numpy as np
 
 try:
   #debug import
-  import lsalib
+  from . import lsalib
   #np.seterr(all='raise')
 except ImportError:
   #installed import
@@ -38,10 +38,10 @@ def main():
 
   realData=np.genfromtxt( dataFile, comments='#', delimiter='\t', \
       missing_values=['na',''], filling_values=np.nan, \
-      usecols=range(1,spotNum+1) )
+      usecols=list(range(1,spotNum+1)) )
   dataFile.seek(0)  #rewind
   factorLabels=list(np.genfromtxt( dataFile, comments='#', delimiter='\t', \
-      usecols=xrange(0,1), dtype='string' ))
+      usecols=range(0,1), dtype='string' ))
 
   start_time = time.time()
 
@@ -63,7 +63,7 @@ def main():
     # rightEigenVec 3 by 1, leftEigenVec 1 by 3, r1 = 1, 
     # l1 = stationary distribution, lambda1=1
     # sigma_square = lsalib.calc_sigma_square(w, vl, vr)
-  print >>sys.stderr, "sigma=", sigma_square
+  print("sigma=", sigma_square, file=sys.stderr)
 
   trendData = []
   for j in range(0,rows):
@@ -81,16 +81,16 @@ def main():
     trendData.append(TSeries)
 
   #print len(trendData), len(trendData[1])
-  print >>resultFile, '\t'.join(['#V=%.2f' % sigma_square] \
-      + [str(v) for v in range(1,cols)])
+  print('\t'.join(['#V=%.2f' % sigma_square] \
+      + [str(v) for v in range(1,cols)]), file=resultFile)
   for j in range(0, rows):
-    print >>resultFile, '\t'.join([factorLabels[j]] + \
-      ["na" if np.isnan(v) else "%d" % v for v in trendData[j]])
+    print('\t'.join([factorLabels[j]] + \
+      ["na" if np.isnan(v) else "%d" % v for v in trendData[j]]), file=resultFile)
 
   end_time = time.time()
   elapse_time = end_time - start_time
 
-  print >>sys.stderr, "finished in %d seconds" % elapse_time
+  print("finished in %d seconds" % elapse_time, file=sys.stderr)
 
 if __name__=="__main__":
   main()

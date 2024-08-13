@@ -35,7 +35,7 @@ import numpy as np
 import scipy as sp
 try:
   #debug import
-  import lsalib
+  from . import lsalib
 except ImportError:
   #install import
   from lsa import lsalib
@@ -79,8 +79,8 @@ except ImportError:
 #input arguments:
 #multiInput, multiOutput, singleCmd
 
-print >>sys.stderr, "Example: par_ana ARISA20.txt ARISA20.lsa 'lsa_compute %s %s -e ARISA20.txt -s 127 -r 1 -p theo' $PWD"
-print >>sys.stderr, "Example: par_ana ARISA20.txt ARISA20.la 'la_compute %s ARISA20.laq %s -s 127 -r 1 -p 1000' $PWD"
+print("Example: par_ana ARISA20.txt ARISA20.lsa 'lsa_compute %s %s -e ARISA20.txt -s 127 -r 1 -p theo' $PWD", file=sys.stderr)
+print("Example: par_ana ARISA20.txt ARISA20.la 'la_compute %s ARISA20.laq %s -s 127 -r 1 -p 1000' $PWD", file=sys.stderr)
 
 def get_content(file, hasHeader=False):
   i=0
@@ -113,8 +113,8 @@ def gen_singles(multiInput, multiOutput, workDir):
   for line in content:
     singlename=multiname+".%d" % i
     tmp=open(os.path.join(workDir, singlename), "w")
-    print >>tmp, header.rstrip('\n')
-    print >>tmp, line.rstrip('\n')
+    print(header.rstrip('\n'), file=tmp)
+    print(line.rstrip('\n'), file=tmp)
     tmp.close()
     singles.append(tmp.name) 
     results.append(tmp.name+".tmp") 
@@ -135,11 +135,11 @@ vmem=12
 def gen_pbs(singleFile, singleCmd, workDir, singleEnd, vmem):
   singleResult=singleFile+".tmp"
   singlePBS=open(singleFile+".pbs", "w")
-  print >>singlePBS, PBS_PREAMBLE % (os.path.basename(singleFile), os.path.basename(singleFile)+".log", vmem, vmem, vmem)
-  print >>singlePBS, "cd %s" % workDir
-  print >>singlePBS, singleCmd % (singleFile, singleResult)
-  print >>singlePBS, "touch %s" % singleEnd
-  print >>singlePBS, "rm -f %s %s" % (singleFile, singlePBS.name)
+  print(PBS_PREAMBLE % (os.path.basename(singleFile), os.path.basename(singleFile)+".log", vmem, vmem, vmem), file=singlePBS)
+  print("cd %s" % workDir, file=singlePBS)
+  print(singleCmd % (singleFile, singleResult), file=singlePBS)
+  print("touch %s" % singleEnd, file=singlePBS)
+  print("rm -f %s %s" % (singleFile, singlePBS.name), file=singlePBS)
   singlePBS.close()
   return singlePBS.name
 
@@ -148,16 +148,16 @@ def gen_output(multiOutput, resultFiles):
   for resultFile in resultFiles:
     header, content = get_content(resultFile, hasHeader=True)
     if i==0:
-      print >>multiOutput, "\n".join([header]+content)
+      print("\n".join([header]+content), file=multiOutput)
       i+=1
     else:
-      print >>multiOutput, "\n".join(content)
+      print("\n".join(content), file=multiOutput)
   return
 
 def ssa_pbs(singlePBS):
   try:
     tmp=subprocess.Popen("ssa.py %s" % singlePBS, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
-    print >>sys.stderr, "submitted", singlePBS
+    print("submitted", singlePBS, file=sys.stderr)
   except ValueError:
     quit()
   return tmp[0]
@@ -183,10 +183,10 @@ def main():
   dryRun=vars(arg_namespace)['dryRun']
   vmem=vars(arg_namespace)['maxMem']
   
-  print >>sys.stderr, "vmem=", str(vmem)+"000mb"
+  print("vmem=", str(vmem)+"000mb", file=sys.stderr)
   #ws=os.path.join(os.environ.get("HOME"),'tmp','multi')
-  print >>sys.stderr, "workDir=", workDir
-  print >>sys.stderr, """Note: if deadlocked with unfinished jobs finally, manually collect the corresponding pbs files in above path and run"""
+  print("workDir=", workDir, file=sys.stderr)
+  print("""Note: if deadlocked with unfinished jobs finally, manually collect the corresponding pbs files in above path and run""", file=sys.stderr)
 
   singleFiles,resultFiles,endFiles=gen_singles(multiInput,multiOutput,workDir)
   #print >>sys.stderr, singleFiles,resultFiles,endFiles
@@ -201,11 +201,11 @@ def main():
     endFile=endFiles.pop()
     pbsFile=gen_pbs(singleFile, singleCmd, workDir, endFile, vmem)
     inProgress.add(endFile)
-    print >>sys.stderr, pbsFile
+    print(pbsFile, file=sys.stderr)
     if dryRun=='':
       ssa_pbs(pbsFile)
   if dryRun!='':
-    print >>sys.stderr, "finish dryRun"
+    print("finish dryRun", file=sys.stderr)
     quit()
 
   #print >>sys.stderr, "inProgress=", inProgress
@@ -217,13 +217,13 @@ def main():
       if os.path.exists(job):
         header, content = get_content(open(job[:-4]+".tmp",'r'),hasHeader=True)
         if len(endJob)==0:
-          print >>multiOutput, "\n".join([header]+content)
+          print("\n".join([header]+content), file=multiOutput)
         else:
-          print >>multiOutput, "\n".join(content)
+          print("\n".join(content), file=multiOutput)
         os.remove(job)
         endJob.add(job)
-        print >>sys.stderr, "ended", job
-        print >>sys.stderr, "remaining jobs", inProgress.difference(endJob), "total", len(inProgress.difference(endJob))
+        print("ended", job, file=sys.stderr)
+        print("remaining jobs", inProgress.difference(endJob), "total", len(inProgress.difference(endJob)), file=sys.stderr)
 
   #gen_output(multiOutput, resultFiles)
 

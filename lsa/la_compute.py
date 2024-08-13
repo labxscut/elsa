@@ -35,8 +35,8 @@ import numpy as np
 import scipy as sp
 try:
   #debug import
-  import lalib
-  import lsalib
+  from . import lalib
+  from . import lsalib
   import lsa
 except ImportError:
   #install import
@@ -50,7 +50,7 @@ def main():
   __script__ = "la_compute"
   version_desc = "%s (rev: %s) - copyright Li Charlie Xia, lixia@stanford.edu" \
             % (__script__, open(os.path.join(os.path.dirname(os.path.dirname(lsa.__file__)), 'VERSION.txt')).read().strip())
-  print >>sys.stderr, version_desc
+  print(version_desc, file=sys.stderr)
 
   # define arguments: delayLimit, fillMethod, pvalueMethod
   parser = argparse.ArgumentParser(description="New Liquid Association Analysis Tools")
@@ -148,11 +148,11 @@ def main():
   
   #check transFunc and repNum compatibility
   if repNum < 5 and ( transFunc == 'SD' ):
-    print >>sys.stderr, "Not enough replicates for SD-weighted averaging, fall back to simpleAverage"
+    print("Not enough replicates for SD-weighted averaging, fall back to simpleAverage", file=sys.stderr)
     transFunc = 'simple'
 
   if repNum < 5 and ( transFunc == 'MAD' ):
-    print >>sys.stderr, "Not enough replicates for Median Absolute Deviation, fall back to simpleMedian"
+    print("Not enough replicates for Median Absolute Deviation, fall back to simpleMedian", file=sys.stderr)
     transFunc = 'Med'
 
   #check normMethod
@@ -168,9 +168,9 @@ def main():
     zNormalize = lsalib.percentileZNormalize # fallback to default
   
   pars = ['fillMethod','minOccur', 'pvalueMethod','precision','dataFile','scoutFile','resultFile','repNum','spotNum','bootNum','transFunc','normMethod']
-  print "\t".join(pars)
-  print "\t".join(['%s']*len(pars)) \
-      % (fillMethod,minOccur,pvalueMethod,precision,dataFile.name,scoutFile.name,resultFile.name,repNum,spotNum,bootNum,transFunc,normMethod)
+  print("\t".join(pars))
+  print("\t".join(['%s']*len(pars)) \
+      % (fillMethod,minOccur,pvalueMethod,precision,dataFile.name,scoutFile.name,resultFile.name,repNum,spotNum,bootNum,transFunc,normMethod))
   
   #start timing main
   start_time = time.time()
@@ -178,9 +178,9 @@ def main():
   #datafile handling
   try:
     inputData=np.genfromtxt( dataFile, comments='#', delimiter='\t', missing_values=['na','','NA'], \
-        filling_values=np.nan, usecols=range(1,spotNum*repNum+1) )
+        filling_values=np.nan, usecols=list(range(1,spotNum*repNum+1)) )
     dataFile.seek(0)  #rewind
-    factorLabels=np.genfromtxt( dataFile, comments='#', delimiter='\t', usecols=xrange(0,1), dtype='string' )
+    factorLabels=np.genfromtxt( dataFile, comments='#', delimiter='\t', usecols=range(0,1), dtype='string' )
     if factorLabels.shape != ():
       factorLabels=list(factorLabels)
     else: #in case of single row
@@ -188,22 +188,22 @@ def main():
       inputData.shape=(1,inputData.shape[0])
   except:
     dataFile.seek(0)
-    print >>sys.stderr, [str(np.genfromtxt( dataFile, comments='#', delimiter='\t', usecols=xrange(0,1), dtype='string' ))]
-    print >>sys.stderr, spotNum*repNum+1
-    print >>sys.stderr, "unexpected error:", sys.exc_info()[0]
-    print >>sys.stderr, "error reading dataFile, please check the input format, spotNum and repNum \n \
+    print([str(np.genfromtxt( dataFile, comments='#', delimiter='\t', usecols=range(0,1), dtype='string' ))], file=sys.stderr)
+    print(spotNum*repNum+1, file=sys.stderr)
+    print("unexpected error:", sys.exc_info()[0], file=sys.stderr)
+    print("error reading dataFile, please check the input format, spotNum and repNum \n \
                          input shall be a tab delimited txt file with first line starts with '#' as column names and first column as factor labeles. \n \
                          it allows other rows start with '#' to be comment lines \n \
-                         An in total, it shall have spotNum * repNum numeric cells for repNum-replicated spotNum-timepoint series data. "
+                         An in total, it shall have spotNum * repNum numeric cells for repNum-replicated spotNum-timepoint series data. ", file=sys.stderr)
     exit(0)
 
   #print inputData.shape
   factorNum = inputData.shape[0]
   tempData=np.zeros( (factorNum, repNum, spotNum), dtype='float' ) # (num_rows-1) x (num_cols/repNum) x (repNum)
-  for i in xrange(0, factorNum):
-    for j in xrange(0, repNum):
+  for i in range(0, factorNum):
+    for j in range(0, repNum):
       tempData[i,j] = inputData[i][np.arange(j,spotNum*repNum,repNum)]
-  for i in xrange(0, factorNum):
+  for i in range(0, factorNum):
     for j in range(0, repNum):
       tempData[i,j] = lsalib.fillMissing( tempData[i,j], fillMethod )
     
@@ -222,10 +222,10 @@ def main():
   lalib.applyLA(tempData, scoutVars, factorLabels, bootNum=bootNum, minOccur=minOccur/100.,\
       pvalueMethod=pvalueMethod, precision=precision, fTransform=fTransform, zNormalize=zNormalize, resultFile=resultFile)
 
-  print >>sys.stderr, "finishing up..."
+  print("finishing up...", file=sys.stderr)
   resultFile.close()
   end_time=time.time()
-  print >>sys.stderr, "time elapsed %f seconds" % (end_time-start_time)
+  print("time elapsed %f seconds" % (end_time-start_time), file=sys.stderr)
 
 if __name__=="__main__":
   main()

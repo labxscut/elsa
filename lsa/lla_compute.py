@@ -35,7 +35,7 @@ import numpy as np
 import scipy as sp
 try:
   #debug import
-  import lsalib
+  from . import lsalib
 except ImportError:
   #install import
   from lsa import lsalib
@@ -102,7 +102,7 @@ def main():
   arg_namespace = parser.parse_args()
 
   #get arguments
-  print >>sys.stderr, "lsa-compute - copyright Li Charlie Xia, lixia@stanford.edu"
+  print("lsa-compute - copyright Li Charlie Xia, lixia@stanford.edu", file=sys.stderr)
   
   delayLimit = vars(arg_namespace)['delayLimit']
   fillMethod = vars(arg_namespace)['fillMethod']
@@ -128,11 +128,11 @@ def main():
   
   #check transFunc and repNum compatibility
   if repNum < 5 and ( transFunc == 'SD' ):
-    print >>sys.stderr, "Not enough replicates for SD-weighted averaging, fall back to simpleAverage"
+    print("Not enough replicates for SD-weighted averaging, fall back to simpleAverage", file=sys.stderr)
     transFunc = 'simple'
 
   if repNum < 5 and ( transFunc == 'MAD' ):
-    print >>sys.stderr, "Not enough replicates for Median Absolute Deviation, fall back to simpleMedian"
+    print("Not enough replicates for Median Absolute Deviation, fall back to simpleMedian", file=sys.stderr)
     transFunc = 'Med'
 
   #check normMethod
@@ -149,8 +149,8 @@ def main():
   else:
     zNormalize = lsalib.noZeroNormalize # fallback to default
   
-  print "\t".join(['delayLimit','fillMethod','pvalueMethod','dataFile','resultFile','repNum','spotNum','bootNum','transFunc','normMethod','xVariance'])
-  print "\t".join(['%s']*11) % (delayLimit,fillMethod,pvalueMethod,dataFile.name,resultFile.name,repNum,spotNum,bootNum,transFunc,normMethod,str(varianceX))
+  print("\t".join(['delayLimit','fillMethod','pvalueMethod','dataFile','resultFile','repNum','spotNum','bootNum','transFunc','normMethod','xVariance']))
+  print("\t".join(['%s']*11) % (delayLimit,fillMethod,pvalueMethod,dataFile.name,resultFile.name,repNum,spotNum,bootNum,transFunc,normMethod,str(varianceX)))
   
   #start timing main
   start_time = time.time()
@@ -159,29 +159,29 @@ def main():
   onDiag = False
   try:
     firstData=np.genfromtxt( dataFile, comments='#', delimiter='\t', missing_values=['na','','NA'], \
-        filling_values=np.nan, usecols=range(1,spotNum*repNum+1) )
+        filling_values=np.nan, usecols=list(range(1,spotNum*repNum+1)) )
     dataFile.seek(0)  #rewind
-    firstFactorLabels=list(np.genfromtxt( dataFile, comments='#', delimiter='\t', usecols=xrange(0,1), dtype='string' ))
+    firstFactorLabels=list(np.genfromtxt( dataFile, comments='#', delimiter='\t', usecols=range(0,1), dtype='string' ))
     if not extraFile:
       onDiag = True
       #print >>sys.stderr, "reading raw data from dataFile..."
       dataFile.seek(0)  #rewind
       secondData=np.genfromtxt( dataFile, comments='#', delimiter='\t', missing_values=['na','','NA'], \
-          filling_values=np.nan, usecols=range(1,spotNum*repNum+1) )
+          filling_values=np.nan, usecols=list(range(1,spotNum*repNum+1)) )
       dataFile.seek(0)  #rewind
-      secondFactorLabels=list(np.genfromtxt( dataFile, comments='#', delimiter='\t', usecols=xrange(0,1), dtype='string' ))
+      secondFactorLabels=list(np.genfromtxt( dataFile, comments='#', delimiter='\t', usecols=range(0,1), dtype='string' ))
     else:
       extraData=lsaio.tryIO(extraFile,'w')
       secondData=np.genfromtxt( extraData, comments='#', delimiter='\t', missing_values=['na','','NA'], \
-          filling_values=np.nan, usecols=range(1,spotNum*repNum+1) )
+          filling_values=np.nan, usecols=list(range(1,spotNum*repNum+1)) )
       dataFile.seek(0)  #rewind
-      secondFactorLabels=list(np.genfromtxt( extraData, comments='#', delimiter='\t', usecols=xrange(0,1), dtype='string' ))
+      secondFactorLabels=list(np.genfromtxt( extraData, comments='#', delimiter='\t', usecols=range(0,1), dtype='string' ))
   except:
-    print >>sys.stderr, "unexpected error:", sys.exc_info()[0]
-    print >>sys.stderr, "error reading dataFile, please check the input format, spotNum and repNum \n \
+    print("unexpected error:", sys.exc_info()[0], file=sys.stderr)
+    print("error reading dataFile, please check the input format, spotNum and repNum \n \
                          input shall be a tab delimited txt file with first line starts with '#' as column names and first column as factor labeles. \n \
                          it allows other rows start with '#' to be comment lines \n \
-                         An in total, it shall have spotNum * repNum numeric cells for repNum-replicated spotNum-timepoint series data. "
+                         An in total, it shall have spotNum * repNum numeric cells for repNum-replicated spotNum-timepoint series data. ", file=sys.stderr)
     exit(0)
 
   ###print rawData, factorLabels
@@ -189,11 +189,11 @@ def main():
   for rawData in [firstData, secondData]:
     factorNum = rawData.shape[0]
     tempData=np.zeros( ( factorNum, repNum, spotNum), dtype='float' ) # (num_rows-1) x (num_cols/repNum) x (repNum)
-    for i in xrange(0, factorNum):
-      for j in xrange(0, repNum):
+    for i in range(0, factorNum):
+      for j in range(0, repNum):
         #print rawData[i], j, spotNum*repNum, repNum, np.arange(j,spotNum*repNum, repNum)
         tempData[i,j] = rawData[i][np.arange(j,spotNum*repNum,repNum)]
-    for i in xrange(0, factorNum):
+    for i in range(0, factorNum):
       for j in range(0, repNum):
         tempData[i,j] = lsalib.fillMissing( tempData[i,j], fillMethod )
     cleanData.append(tempData)
@@ -218,10 +218,10 @@ def main():
   #  print >>resultFile, "\t".join(['%s']*len(col_labels)) % \
   #    tuple([firstFactorLabels[row[0]], secondFactorLabels[row[1]] ] + ["%.4f" % np.round(v, decimals=4) if isinstance(v, float) else v for v in row[2:]])
 
-  print >>sys.stderr, "finishing up..."
+  print("finishing up...", file=sys.stderr)
   resultFile.close()
   end_time=time.time()
-  print >>sys.stderr, "time elapsed %f seconds" % (end_time-start_time)
+  print("time elapsed %f seconds" % (end_time-start_time), file=sys.stderr)
   #print >>sys.stderr, "Thank you for using lsa-compute, byebye"
 
 if __name__=="__main__":

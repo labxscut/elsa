@@ -70,7 +70,7 @@ class SwigPyIterator:
     def distance(self, *args): return _compcore.SwigPyIterator_distance(self, *args)
     def equal(self, *args): return _compcore.SwigPyIterator_equal(self, *args)
     def copy(self): return _compcore.SwigPyIterator_copy(self)
-    def next(self): return _compcore.SwigPyIterator_next(self)
+    def __next__(self): return _compcore.SwigPyIterator_next(self)
     def __next__(self): return _compcore.SwigPyIterator___next__(self)
     def previous(self): return _compcore.SwigPyIterator_previous(self)
     def advance(self, *args): return _compcore.SwigPyIterator_advance(self, *args)
@@ -92,7 +92,7 @@ class VectorDouble:
     __repr__ = _swig_repr
     def iterator(self): return _compcore.VectorDouble_iterator(self)
     def __iter__(self): return self.iterator()
-    def __nonzero__(self): return _compcore.VectorDouble___nonzero__(self)
+    def __bool__(self): return _compcore.VectorDouble___nonzero__(self)
     def __bool__(self): return _compcore.VectorDouble___bool__(self)
     def __len__(self): return _compcore.VectorDouble___len__(self)
     def pop(self): return _compcore.VectorDouble_pop(self)
@@ -139,7 +139,7 @@ class VectorInt:
     __repr__ = _swig_repr
     def iterator(self): return _compcore.VectorInt_iterator(self)
     def __iter__(self): return self.iterator()
-    def __nonzero__(self): return _compcore.VectorInt___nonzero__(self)
+    def __bool__(self): return _compcore.VectorInt___nonzero__(self)
     def __bool__(self): return _compcore.VectorInt___bool__(self)
     def __len__(self): return _compcore.VectorInt___len__(self)
     def pop(self): return _compcore.VectorInt_pop(self)
@@ -186,7 +186,7 @@ class MatrixDouble:
     __repr__ = _swig_repr
     def iterator(self): return _compcore.MatrixDouble_iterator(self)
     def __iter__(self): return self.iterator()
-    def __nonzero__(self): return _compcore.MatrixDouble___nonzero__(self)
+    def __bool__(self): return _compcore.MatrixDouble___nonzero__(self)
     def __bool__(self): return _compcore.MatrixDouble___bool__(self)
     def __len__(self): return _compcore.MatrixDouble___len__(self)
     def pop(self): return _compcore.MatrixDouble_pop(self)
@@ -233,7 +233,7 @@ class MatrixInt:
     __repr__ = _swig_repr
     def iterator(self): return _compcore.MatrixInt_iterator(self)
     def __iter__(self): return self.iterator()
-    def __nonzero__(self): return _compcore.MatrixInt___nonzero__(self)
+    def __bool__(self): return _compcore.MatrixInt___nonzero__(self)
     def __bool__(self): return _compcore.MatrixInt___bool__(self)
     def __len__(self): return _compcore.MatrixInt___len__(self)
     def pop(self): return _compcore.MatrixInt_pop(self)

@@ -9,7 +9,7 @@ my_decimal = 1    # preset x.? step size 0.1 for P_table, for paper tables
 
 try:
   #debug import
-  import lsalib
+  from . import lsalib
   #np.seterr(all='raise')
 except ImportError:
   #installed import
@@ -93,7 +93,7 @@ def main():
   #  x_var = approxVar
   #  trend_threshold = int(vars(arg_namespace)['trendSeries'])
 
-  print >>sys.stderr, "simulating..."
+  print("simulating...", file=sys.stderr)
   assert trendThresh == None or trendThresh >= 0
   start_time = time.time()
 
@@ -112,7 +112,7 @@ def main():
   beta = np.zeros(simTimes, dtype='float')
   P_table = lsalib.theoPvalue(Rmax=lengthSeries, Dmax=delayLimit, \
       precision=theo_precision, x_decimal=my_decimal)
-  print >>sys.stderr, "P table generated"
+  print("P table generated", file=sys.stderr)
 
   for j in range(0, simTimes):
     #generate series
@@ -142,7 +142,7 @@ def main():
     #  OxSeries = sin_x[:nnz_x+1]
     #  OySeries = sin_x[simDelay:nnz_x+simDelay+1] + np.random.randn(1,nnz_x)
     else: # to implement
-      print >>sys.stderr, "simMethod not implemented"
+      print("simMethod not implemented", file=sys.stderr)
 
     #if nullDistribution == 'yes':
     #  xSeries = np.array([np.random.permutation\
@@ -207,16 +207,16 @@ def main():
         x_sd=np.sqrt(approxVar), M=1., alpha=1., beta=1., x_decimal=my_decimal)
     Al[j]=Al_tmp
 
-  print >>resultFile, "R\tP_theo\tP_perm\talpha\tbeta\tu1\tu2\tv1\tv2\tXs\tYs\tD\tAl"
-  print >>resultFile, '\n'.join(['\t'.join( \
+  print("R\tP_theo\tP_perm\talpha\tbeta\tu1\tu2\tv1\tv2\tXs\tYs\tD\tAl", file=resultFile)
+  print('\n'.join(['\t'.join( \
     [str(LS_values[i]),str(P_theo[i]),str(P_perm[i]),str(alpha[i]),str(beta[i]),\
     str(u1[i]),str(u2[i]),str(v1[i]),str(v2[i]),\
     str(Xs[i]),str(Ys[i]),str(D[i]),str(Al[i])]\
-    ) for i in xrange(0,simTimes)])
+    ) for i in range(0,simTimes)]), file=resultFile)
 
   end_time = time.time()
   elapse_time = end_time - start_time
-  print >>sys.stderr, "finished in %d seconds" % elapse_time
+  print("finished in %d seconds" % elapse_time, file=sys.stderr)
 
 if __name__=="__main__":
   main()

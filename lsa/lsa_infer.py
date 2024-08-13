@@ -65,9 +65,9 @@ def main():
     parser.error("incorrect number of arguments, use -h for more help")
 
   #get the arguments
-  print >>sys.stderr, "lsa-infer"
-  print >>sys.stderr, "copyright Li Xia, lixia@stanford.edu"
-  print >>sys.stderr, "learning arguments..."
+  print("lsa-infer", file=sys.stderr)
+  print("copyright Li Xia, lixia@stanford.edu", file=sys.stderr)
+  print("learning arguments...", file=sys.stderr)
 
   normalLize = options.normalLize
   lag = options.lag
@@ -76,12 +76,12 @@ def main():
   fLabel2 = args[2]
   outFile = args[3]
   
-  print >>sys.stderr,  "testing referFile and outputFile..."
+  print("testing referFile and outputFile...", file=sys.stderr)
   dataTable = lsaio.tryIO(referFile, "rU")
   outFig = lsaio.tryIO(outFile, "w")
   lsaio.closeIO(outFig)
   
-  print >>sys.stderr, "reading raw data from referFile..."
+  print("reading raw data from referFile...", file=sys.stderr)
   global rawData
   rawData = []
   try:
@@ -105,7 +105,7 @@ def main():
     del csvReader
     #csvReader.close()
   except IOError:
-    print >>sys.stderr, "Error: can't read dataFile"
+    print("Error: can't read dataFile", file=sys.stderr)
     exit(11)
   rawData=array(rawData, float)
   rawData = rawData.transpose() # accomodate for new file format
@@ -115,13 +115,13 @@ def main():
   #noraData = lsalib.dataNormalize(lsalib.normalTransform(normData))
   #print noraData
 
-  print >>sys.stderr, "identifying querying factors..."
+  print("identifying querying factors...", file=sys.stderr)
   factorLabels = lsaio.readFirstCol(dataTable)
   firstIndex = -1
   try:
     firstIndex = factorLabels.index(fLabel1)
   except ValueError:
-    print >>sys.stderr, "first factor label"+fLabel1+" not found!!!"
+    print("first factor label"+fLabel1+" not found!!!", file=sys.stderr)
     exit(12)
   #print firstIndex
   #print rawData.shape[1]
@@ -129,13 +129,13 @@ def main():
   try:
     secondIndex = factorLabels.index(fLabel2)
   except ValueError:
-    print >>sys.stderr, "first factor label"+fLabel2+" not found!!!"
+    print("first factor label"+fLabel2+" not found!!!", file=sys.stderr)
     exit(13)
   #print secondIndex
   #print rawData.shape[1]
   #print rawData[:,0]
 
-  print >>sys.stderr, "plotting..."
+  print("plotting...", file=sys.stderr)
   data = rawData
   if normalLize != "":
     factor1_data = lsalib.dataNormalize(data[:,firstIndex])
@@ -146,8 +146,8 @@ def main():
   spots = data.shape[0]
   #print len(range(1,spots+1))
   #print len(data[:,firstIndex])
-  line1 = pylab.plot(range(1,spots+1), factor1_data, label=fLabel1)
-  line2 = pylab.plot(range(1,spots+1), factor2_data, label=fLabel2)
+  line1 = pylab.plot(list(range(1,spots+1)), factor1_data, label=fLabel1)
+  line2 = pylab.plot(list(range(1,spots+1)), factor2_data, label=fLabel2)
   pylab.legend()
   #line = Line2D(range(10), range(10), linestyle='-', marker='o')
   #pylab.legend([line1,line2], [fLabel1,fLabel2])
@@ -166,7 +166,7 @@ def main():
     #else:
     #  xticks = xticks + ["%s" % t]
   #print 'xticks=', xticks
-  pylab.xticks(range(0,spots), xticks, color='k')
+  pylab.xticks(list(range(0,spots)), xticks, color='k')
   pylab.setp( pylab.gca().get_xticklabels(), rotation=85, size=6, verticalalignment='top', horizontalalignment='left' )
   #pylab.ax.xaxis.set_minor_locator(IndexLocator)
   pylab.title('Covarying of '+fLabel1+' and '+fLabel2)
@@ -175,11 +175,11 @@ def main():
   else:
     pylab.ylabel('Relative Abundance in Percentage')
   pylab.draw()
-  print >>sys.stderr, "saving figs..."
+  print("saving figs...", file=sys.stderr)
   pylab.savefig( outFile, format='png', bbox_inches='tight' )
-  print >>sys.stderr, "finishing up..."
+  print("finishing up...", file=sys.stderr)
   lsaio.closeIO(dataTable)
-  print >>sys.stderr, "Thank you for using lsa-infer, byebye!"
+  print("Thank you for using lsa-infer, byebye!", file=sys.stderr)
 
 if __name__=="__main__":
   main()

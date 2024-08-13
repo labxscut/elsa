@@ -64,8 +64,8 @@ try:
   np.seterr(all='ignore')                             #ignore RuntimeWarning of abs in installed mode
 except ImportError:
   #try for debug
-  import compcore
-  import lsalib
+  from . import compcore
+  from . import lsalib
   np.seterr(all='warn')
 
 #global variable, stores calculated p-values.
@@ -86,7 +86,7 @@ def applyLA(inputData, scoutVars, factorLabels, bootCI=.95, bootNum=1000, minOcc
     fTransform=lsalib.simpleAverage, zNormalize=lsalib.noZeroNormalize, resultFile=None, qvalue_func=lsalib.storeyQvalue):
 
   col_labels = ['X','Y','Z','LA','lowCI','upCI','P','Q','Xi','Yi','Zi']
-  print >>resultFile,  "\t".join(col_labels)
+  print("\t".join(col_labels), file=resultFile)
 
   #print(inputData.shape)
   inputFactorNum = inputData.shape[0]
@@ -100,13 +100,13 @@ def applyLA(inputData, scoutVars, factorLabels, bootCI=.95, bootNum=1000, minOcc
   timespots = inputSpotNum #same length already assumed
   replicates = inputRepNum
   ti = 0
-  for i in xrange(0, scoutNum):
+  for i in range(0, scoutNum):
     Xi = scoutVars[i][0] - 1
     Yi = scoutVars[i][1] - 1
     #print Xi, Yi
     Xo = np.ma.masked_invalid(inputData[Xi], copy=True) #need to convert to masked array with na's, not F-normalized
     Yo = np.ma.masked_invalid(inputData[Yi], copy=True) #need to convert to masked array with na's, not F-normalized
-    for j in xrange(0, inputFactorNum):
+    for j in range(0, inputFactorNum):
       Zi = j
       if Xi == Yi or Xi == Zi or Zi == Yi:
         continue   #ignore invalid entries
@@ -124,7 +124,7 @@ def applyLA(inputData, scoutVars, factorLabels, bootCI=.95, bootNum=1000, minOcc
       LA_score = singleLA(Xo, Yo, Zo, fTransform, zNormalize)                          # do LA computation
 
       if np.isnan(LA_score):
-        print >>sys.stderr, "found na in LA score, to be fixed"
+        print("found na in LA score, to be fixed", file=sys.stderr)
         #print >>sys.stderr, Xo, zNormalize(fTransform(Xo))
         #print >>sys.stderr, Yo, zNormalize(fTransform(Yo))
         #print >>sys.stderr, Zo, zNormalize(fTransform(Zo))
@@ -141,7 +141,7 @@ def applyLA(inputData, scoutVars, factorLabels, bootCI=.95, bootNum=1000, minOcc
         Zp = np.ma.array(Zo,copy=True)
         laP = LApermuPvalue(Xp, Yp, Zp, precision, np.abs(LA_score), fTransform, zNormalize)          # do Permutation Test
       else: #reserved 
-        print >>sys.stderr, "this branch should not be receahed by now"
+        print("this branch should not be receahed by now", file=sys.stderr)
 
       pvalues[ti] = laP
       #print "bootstrap computing..."
@@ -159,14 +159,14 @@ def applyLA(inputData, scoutVars, factorLabels, bootCI=.95, bootNum=1000, minOcc
   pvalues = pvalues[:ti]
   laTable = laTable[:ti]
   qvalues = qvalue_func( pvalues )
-  for k in xrange(0, len(qvalues)):
+  for k in range(0, len(qvalues)):
     laTable[k] = laTable[k] + [ qvalues[k], laTable[k][0]+1, laTable[k][1]+1, laTable[k][2]+1 ]
 
   #print laTable
   for row in laTable:
-    print >>resultFile, "\t".join( ['%s']*len(col_labels) ) % \
+    print("\t".join( ['%s']*len(col_labels) ) % \
       tuple( [factorLabels[row[0]], factorLabels[row[1]], factorLabels[row[2]]] \
-          + ["%f" % np.round(v, decimals=disp_decimal) if isinstance(v, float) else v for v in row[3:]] )
+          + ["%f" % np.round(v, decimals=disp_decimal) if isinstance(v, float) else v for v in row[3:]] ), file=resultFile)
 
 def singleLA(series1, series2, series3, fTransform, zNormalize):
   return compcore.calc_LA(zNormalize(fTransform(series1)),zNormalize(fTransform(series2)),zNormalize(fTransform(series3)))
@@ -185,9 +185,9 @@ def LAbootstrapCI(series1, series2, series3, LA_score, bootCI, bootNum, fTransfo
 
   BS_set = np.zeros(bootNum, dtype='float')
   for i in range(0, bootNum):
-    Xb = np.ma.array([ sample_wr(series1[:,j], series1.shape[0]) for j in xrange(0,series1.shape[1]) ]).T
-    Yb = np.ma.array([ sample_wr(series2[:,j], series2.shape[0]) for j in xrange(0,series2.shape[1]) ]).T
-    Zb = np.ma.array([ sample_wr(series3[:,j], series3.shape[0]) for j in xrange(0,series3.shape[1]) ]).T
+    Xb = np.ma.array([ sample_wr(series1[:,j], series1.shape[0]) for j in range(0,series1.shape[1]) ]).T
+    Yb = np.ma.array([ sample_wr(series2[:,j], series2.shape[0]) for j in range(0,series2.shape[1]) ]).T
+    Zb = np.ma.array([ sample_wr(series3[:,j], series3.shape[0]) for j in range(0,series3.shape[1]) ]).T
     BS_set[i] = compcore.calc_LA(Xb, Yb, Zb)
   BS_set.sort()                                 #from smallest to largest
   BS_mean = np.mean(BS_set)
@@ -198,7 +198,7 @@ def LApermuPvalue(series1, series2, series3, precision, LA_score, fTransform, zN
   X = zNormalize(fTransform(series1))
   Y = zNormalize(fTransform(series2))
   Z = np.ma.array(series3)                                               #use = only assigns reference, must use a constructor
-  for i in xrange(0, precision):
+  for i in range(0, precision):
     np.random.shuffle(Z.T)
     PP_set[i] = compcore.calc_LA(X, Y, zNormalize(fTransform(Z)))
   if LA_score >= 0:

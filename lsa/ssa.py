@@ -58,11 +58,11 @@ def submit( pbsFile ):
   tmp=subprocess.Popen("qsub -q %s %s" % (qname, pbsFile), shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
   submitted=True
   if tmp[1] == '':
-    print tmp[0]
-    print pbsFile, "submitted"
+    print(tmp[0])
+    print(pbsFile, "submitted")
   else:
-    print tmp[1]
-    print pbsFile, "error"
+    print(tmp[1])
+    print(pbsFile, "error")
     submitted=False
   return submitted
 

@@ -37,7 +37,7 @@ try:
   from lsa import lsaio
 except ImportError:
   # debug
-  import lsaio
+  from . import lsaio
 import lsa
 
 rpy_import=False
@@ -64,7 +64,7 @@ def main():
   __script__ = "lsa_query"
   version_desc = "%s (rev: %s) - copyright Li Charlie Xia, lixia@stanford.edu" \
             % (__script__, open(os.path.join(os.path.dirname(os.path.dirname(lsa.__file__)), 'VERSION.txt')).read().strip())
-  print >>sys.stderr, version_desc
+  print(version_desc, file=sys.stderr)
   
   # define arguments: delayLimit, fillMethod, permuNum
   parser = argparse.ArgumentParser(description="Auxillary tool to new LSA package for querying lsa results")
@@ -85,33 +85,33 @@ def main():
   arg_namespace = parser.parse_args()
 
   #get the arguments
-  print >>sys.stderr, "lsa_query ($Revision$) - copyright Li Charlie Xia, lixia@stanford.edu"
-  print >>sys.stderr, "learning arguments..."
+  print("lsa_query ($Revision$) - copyright Li Charlie Xia, lixia@stanford.edu", file=sys.stderr)
+  print("learning arguments...", file=sys.stderr)
   
   rawFile = vars(arg_namespace)['rawFile']
   entryFile = vars(arg_namespace)['entryFile']
   queryLine = vars(arg_namespace)['queryLine']
-  print "q=", queryLine
+  print("q=", queryLine)
   xgmmlFile = vars(arg_namespace)['xgmmlFile']
   sifFile = vars(arg_namespace)['sifFile']
   analysisTitle = os.path.basename(rawFile.name)
   rawFile.close()
   entryFile.close()
 
-  print >>sys.stderr, "reading the lsatable..."
+  print("reading the lsatable...", file=sys.stderr)
   r('''lsa <- read.delim("%s")''' % rawFile.name)
 
   try:
-    print >>sys.stderr, "querying the lsatable..."
+    print("querying the lsatable...", file=sys.stderr)
     r('''lsa_select <- lsa[%s,]''' % queryLine)
   except ValueError:
-    print >>sys.stderr, "error query formatting, try again"
+    print("error query formatting, try again", file=sys.stderr)
     quit()
   try:
-    print >>sys.stderr, "writing up result file..."
+    print("writing up result file...", file=sys.stderr)
     r('''write.table( lsa_select, file="%s", quote=FALSE, row.names=FALSE, sep='\t' )''' % entryFile.name)
   except ValueError:
-    print >>sys.stderr, "no entry selected, try again"
+    print("no entry selected, try again", file=sys.stderr)
     quit()
 
   
@@ -127,15 +127,15 @@ def main():
   #print tuple(r.lsa_select.rx(1, True)[0])
 
   if xgmmlFile != "":
-    print >>sys.stderr, "filtering result as a XGMML file for visualization such as cytoscape..."
-    print >>lsaio.tryIO(xgmmlFile,'w'), lsaio.toXgmml(r.lsa_select, lsa_size, analysisTitle)
+    print("filtering result as a XGMML file for visualization such as cytoscape...", file=sys.stderr)
+    print(lsaio.toXgmml(r.lsa_select, lsa_size, analysisTitle), file=lsaio.tryIO(xgmmlFile,'w'))
 
   if sifFile != "":
-    print >>sys.stderr, "filtering result as a SIF file for visualization such as cytoscape..."
+    print("filtering result as a SIF file for visualization such as cytoscape...", file=sys.stderr)
     lsaio.writeTable(lsaio.tryIO(sifFile,'w'), lsaio.toSif(r.lsa_select, lsa_size))
 
-  print >>sys.stderr, "finishing up..."
-  print >>sys.stderr, "Thank you for using lsa-query, byebye!"
+  print("finishing up...", file=sys.stderr)
+  print("Thank you for using lsa-query, byebye!", file=sys.stderr)
 
 if __name__=="__main__":
   main()

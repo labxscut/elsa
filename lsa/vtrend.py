@@ -14,9 +14,9 @@ for t in t_set:
     sigma_square = lsalib.calc_sigma_square(w, vl, vr)
     v_set.append(sigma_square)
     nv_set.append(lsalib.calc_markov_var(P))
-print "old method"
+print("old method")
 for i in range(0,4):
-  print "t=", t_set[i], "v=", v_set[i]
-print "new method"
+  print("t=", t_set[i], "v=", v_set[i])
+print("new method")
 for i in range(0,4):
-  print "t=", t_set[i], "v=", nv_set[i]
+  print("t=", t_set[i], "v=", nv_set[i])

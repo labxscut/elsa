@@ -46,12 +46,12 @@ doclines=__doc__.splitlines()
 #lines = open("VERSION.txt", 'rU').readlines()
 #version_desc = ','.join([lines[1].strip(), lines[0].strip()])
 
-print >>sys.stderr, "testing git availability ..."
+print("testing git availability ...", file=sys.stderr)
 git_on_cmd="echo 'def main():\n\t print' \"'$(cat VERSION.txt)' '@GIT: $(git log --pretty=format:'%h' | head -n 1)'\" > lsa/lsa_version.py" #lsa_version requires main() as an entry_point
 git_on=subprocess.call(git_on_cmd, shell=True)
 if git_on != 0:
-  print >>sys.stderr, "warning: git is required to include revision number in binary" 
-  nohg_confirm = raw_input("do you want to continue without revision (type yes to continue) ? ")
+  print("warning: git is required to include revision number in binary", file=sys.stderr) 
+  nohg_confirm = input("do you want to continue without revision (type yes to continue) ? ")
   if nohg_confirm not in ['y','Y','yes','Yes']:
     quit("Abort setup. Try to install git first")
 

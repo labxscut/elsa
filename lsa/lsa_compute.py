@@ -35,7 +35,7 @@ import numpy as np
 import scipy as sp
 try:
   #debug import
-  import lsalib
+  from . import lsalib
 except ImportError:
   #install import
   from lsa import lsalib
@@ -51,7 +51,7 @@ def main():
   version_desc = os.popen("lsa_version").read().rstrip()
   version_print = "%s (rev: %s) - copyright Li Charlie Xia, lixia@stanford.edu" \
     % (__script__, version_desc) 
-  print >>sys.stderr, version_print
+  print(version_print, file=sys.stderr)
 
   #version_desc = "lsa_compute (rev: %s) - copyright Li Charlie Xia, lixia@stanford.edu" \
   #    % open(os.path.join(os.path.dirname(os.path.dirname(lsa.__file__)), 'VERSION.txt')).read().strip()
@@ -201,13 +201,11 @@ def main():
   
   #check transFunc and repNum compatibility
   if repNum < 5 and ( transFunc == 'SD' ):
-    print >>sys.stderr, \
-      "Not enough replicates for SD-weighted averaging, fall back to simpleAverage"
+    print("Not enough replicates for SD-weighted averaging, fall back to simpleAverage", file=sys.stderr)
     transFunc = 'simple'
 
   if repNum < 5 and ( transFunc == 'MAD' ):
-    print >>sys.stderr, \
-      "Not enough replicates for Median Absolute Deviation, fall back to simpleMedian"
+    print("Not enough replicates for Median Absolute Deviation, fall back to simpleMedian", file=sys.stderr)
     transFunc = 'Med'
 
   #check normMethod
@@ -228,12 +226,12 @@ def main():
 
   assert precision>0, "precision %s is not positive" % str(precision) 
   
-  print "\t".join(['delayLimit','minOccur','fillMethod','pvalueMethod',\
+  print("\t".join(['delayLimit','minOccur','fillMethod','pvalueMethod',\
       'precision','dataFile','extraFile','resultFile','repNum','spotNum',\
-      'bootNum','transFunc','normMethod','approxVar','trendThresh'])
-  print "\t".join(['%s']*15) % (delayLimit,minOccur,fillMethod,pvalueMethod,\
+      'bootNum','transFunc','normMethod','approxVar','trendThresh']))
+  print("\t".join(['%s']*15) % (delayLimit,minOccur,fillMethod,pvalueMethod,\
       precision,dataFile.name,extraFile_name,resultFile.name,repNum,spotNum,\
-      bootNum,transFunc,normMethod,str(approxVar),str(trendThresh))
+      bootNum,transFunc,normMethod,str(approxVar),str(trendThresh)))
   
   #start timing main
   start_time = time.time()
@@ -243,14 +241,14 @@ def main():
   try:
     firstData=np.genfromtxt( \
         dataFile, comments='#', delimiter='\t', missing_values=['na','','NA'], \
-        filling_values=np.nan, usecols=range(1,spotNum*repNum+1) )
+        filling_values=np.nan, usecols=list(range(1,spotNum*repNum+1)) )
     if len(firstData.shape)==1:
       firstData=np.array([firstData])
     #print firstData.shape
     dataFile.seek(0)  #rewind
     #print "we can get here"
     firstFactorLabels=np.genfromtxt( dataFile, comments='#', delimiter='\t', \
-        usecols=xrange(0,1), dtype='string' ).tolist()
+        usecols=range(0,1), dtype='string' ).tolist()
     if type(firstFactorLabels)==str:
       firstFactorLabels=[firstFactorLabels]
     #print "but we cann't get here"
@@ -260,12 +258,12 @@ def main():
       dataFile.seek(0)  #rewind
       secondData=np.genfromtxt( dataFile, comments='#', delimiter='\t', \
           missing_values=['na','','NA'], \
-          filling_values=np.nan, usecols=range(1,spotNum*repNum+1) )
+          filling_values=np.nan, usecols=list(range(1,spotNum*repNum+1)) )
       if len(secondData.shape)==1:
         secondData=np.array([secondData.shape])
       dataFile.seek(0)  #rewind
       secondFactorLabels=np.genfromtxt( dataFile, comments='#', delimiter='\t', \
-          usecols=xrange(0,1), dtype='string' ).tolist()
+          usecols=range(0,1), dtype='string' ).tolist()
       if type(secondFactorLabels)==str:
         secondFactorLabels=[secondFactorLabels]
     else:
@@ -274,30 +272,30 @@ def main():
       extraFile.seek(0)
       secondData=np.genfromtxt( \
           extraFile, comments='#', delimiter='\t', missing_values=['na','','NA'], \
-          filling_values=np.nan, usecols=range(1,spotNum*repNum+1) )
+          filling_values=np.nan, usecols=list(range(1,spotNum*repNum+1)) )
       if len(secondData.shape)==1:
         secondData=np.array([secondData.shape])
-      print secondData.shape
+      print(secondData.shape)
       extraFile.seek(0)  #rewind
       secondFactorLabels=np.genfromtxt( extraFile, comments='#', delimiter='\t', \
-          usecols=xrange(0,1), dtype='string' ).tolist()
+          usecols=range(0,1), dtype='string' ).tolist()
       if type(secondFactorLabels)==str:
         secondFactorLabels=[secondFactorLabels]
   except ValueError:
-    print >>sys.stderr, "ValueError:", str(ValueError)
+    print("ValueError:", str(ValueError), file=sys.stderr)
     exit(0)
   except TypeError:
-    print >>sys.stderr, "TypeError:", str(TypeError)
+    print("TypeError:", str(TypeError), file=sys.stderr)
     exit(0)
   except:
-    print >>sys.stderr, "unexpected error:", sys.exc_info()[0]
-    print >>sys.stderr, "error reading dataFile, \n \
+    print("unexpected error:", sys.exc_info()[0], file=sys.stderr)
+    print("error reading dataFile, \n \
     please check the input format, spotNum and repNum \n \
     input shall be a tab delimited txt file with first \n \
     line starts with '#' as column names and first column as factor labeles. \n \
     it allows other rows start with '#' to be comment lines \n \
     An in total, it shall have spotNum * repNum numeric cells \n \
-    for repNum-replicated spotNum-timepoint series data. "
+    for repNum-replicated spotNum-timepoint series data. ", file=sys.stderr)
     exit(0)
 
   ###print rawData, factorLabels
@@ -306,15 +304,15 @@ def main():
     factorNum = rawData.shape[0]
     tempData=np.zeros( ( factorNum, repNum, spotNum), dtype='float' ) 
     # (num_rows-1) x (num_cols/repNum) x (repNum)
-    for i in xrange(0, factorNum):
-      for j in xrange(0, repNum):
+    for i in range(0, factorNum):
+      for j in range(0, repNum):
         try:
           tempData[i,j] = rawData[i][np.arange(j,spotNum*repNum,repNum)]
         except IndexError:
-          print >>sys.stderr, """Error: one input file need more than two data row
-or use -e to specify another input file"""
+          print("""Error: one input file need more than two data row
+or use -e to specify another input file""", file=sys.stderr)
           quit()
-    for i in xrange(0, factorNum):
+    for i in range(0, factorNum):
       for j in range(0, repNum):
         tempData[i,j] = lsalib.fillMissing( tempData[i,j], fillMethod )
     cleanData.append(tempData)
@@ -324,13 +322,11 @@ or use -e to specify another input file"""
   #[ Seq X's Idx, Seq Y's Idx, LS Score, CI_low, CI_high, X's Start Position, 
   #        Y's Start Position, Alignment Length, X delay to Y,
   #        P-value, Pearson' Correlation, P-value of PCC, Q-value ]
-  print >>sys.stderr, \
-      "firstData factorNum, repNum, spotNum = %s, %s, %s" \
-      % (cleanData[0].shape[0], cleanData[0].shape[1], cleanData[0].shape[2])
-  print >>sys.stderr, \
-      "secondData factorNum, repNum, spotNum = %s, %s, %s" \
-      % (cleanData[1].shape[0], cleanData[1].shape[1], cleanData[1].shape[2])
-  print >>sys.stderr, "calculating ", cleanData[0].shape[0]*cleanData[1].shape[0], "pairwise local similarity scores..."
+  print("firstData factorNum, repNum, spotNum = %s, %s, %s" \
+      % (cleanData[0].shape[0], cleanData[0].shape[1], cleanData[0].shape[2]), file=sys.stderr)
+  print("secondData factorNum, repNum, spotNum = %s, %s, %s" \
+      % (cleanData[1].shape[0], cleanData[1].shape[1], cleanData[1].shape[2]), file=sys.stderr)
+  print("calculating ", cleanData[0].shape[0]*cleanData[1].shape[0], "pairwise local similarity scores...", file=sys.stderr)
   lsalib.applyAnalysis(cleanData[0], cleanData[1], onDiag=onDiag, \
       delayLimit=delayLimit, bootNum=bootNum, minOccur=minOccur/100.,\
       pvalueMethod=pvalueMethod, precisionP=precision, fTransform=fTransform,\
@@ -349,10 +345,10 @@ or use -e to specify another input file"""
   #  print >>resultFile, "\t".join(['%s']*len(col_labels)) % \
   #    tuple([firstFactorLabels[row[0]], secondFactorLabels[row[1]] ] + ["%.4f" % np.round(v, decimals=4) if isinstance(v, float) else v for v in row[2:]])
 
-  print >>sys.stderr, "finishing up..."
+  print("finishing up...", file=sys.stderr)
   resultFile.close()
   end_time=time.time()
-  print >>sys.stderr, "time elapsed %f seconds" % (end_time-start_time)
+  print("time elapsed %f seconds" % (end_time-start_time), file=sys.stderr)
   #print >>sys.stderr, "Thank you for using lsa-compute, byebye"
 
 if __name__=="__main__":

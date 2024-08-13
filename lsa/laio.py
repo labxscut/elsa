@@ -17,7 +17,7 @@ rpy_import = False
 def tolaq(la_table, la_size, title):
   la_cols = list(r['colnames'](la_table))
   laqTable = []
-  for i in xrange(0,la_size+1): 
+  for i in range(0,la_size+1): 
     if i < 1:
       laqTable.append( la_cols[0:] + ["tag"])
       continue
@@ -46,7 +46,7 @@ def tryIO( file, mode ):
   try:
     handle = open( file, mode )
   except IOError:
-    print "Error: can't open " + file +" file for " + mode
+    print("Error: can't open " + file +" file for " + mode)
     sys.exit(2)
   return handle
 
@@ -79,7 +79,7 @@ def LA_Xgmml2(la_table, la_size, lsaq_table, lsaq_size, nodeinfor_table, nodeinf
   lsaq_edges=dict()
   missnode=set()
   nodelist_name=set()
-  for i in xrange(1, nodelist_size+1):
+  for i in range(1, nodelist_size+1):
     # s=0
     # for k in xrange(1,115):
     #   y=r['''as.character''']((nodelist_table.rx(i,True)[k]))[0]
@@ -91,7 +91,7 @@ def LA_Xgmml2(la_table, la_size, lsaq_table, lsaq_size, nodeinfor_table, nodeinf
     # if s>=58: 
     n_name=r['''as.character''']((nodelist_table.rx(i,True)[0]))[0]
     nodelist_name.add(n_name)
-  for i in xrange(1, nodeinfor_size+1):
+  for i in range(1, nodeinfor_size+1):
     nodename=r['''as.character''']((nodeinfor_table.rx(i,True)[0]))[0]
     nodetype=r['''as.character''']((nodeinfor_table.rx(i,True)[1]))[0]
     Do=r['''as.character''']((nodeinfor_table.rx(i,True)[19]))[0]
@@ -115,7 +115,7 @@ def LA_Xgmml2(la_table, la_size, lsaq_table, lsaq_size, nodeinfor_table, nodeinf
   lai = LA_idx-1 #4-1
   di = Delay_idx-1 #9-1
   li = LS_idx-1 #3-1
-  for i in xrange(1, lsaq_size+1):  
+  for i in range(1, lsaq_size+1):  
     node_x = r['''as.character''']((lsaq_table.rx(i,True)[0]))[0]
     node_y = r['''as.character''']((lsaq_table.rx(i,True)[1]))[0]
     if node_x in node_infor:
@@ -148,7 +148,7 @@ def LA_Xgmml2(la_table, la_size, lsaq_table, lsaq_size, nodeinfor_table, nodeinf
   laq_nodes=lsaq_nodes
   laq_edges=lsaq_edges
 
-  for i in xrange(1, la_size+1):
+  for i in range(1, la_size+1):
     node_x = r['''as.character''']((la_table.rx(i,True)[0]))[0]
     node_y = r['''as.character''']((la_table.rx(i,True)[1]))[0]
     node_z = r['''as.character''']((la_table.rx(i,True)[2]))[0]
@@ -201,8 +201,8 @@ def LA_Xgmml2(la_table, la_size, lsaq_table, lsaq_size, nodeinfor_table, nodeinf
             laq_edges[(node_x, node_m_x_y)]=(-1,{'Lp':'Lsp','L_p':LS_P,'Lq':'Lsq','L_q':LS_Q,'score':LS_score,'L_name':'LS','interaction':interaction_type1,'source':node_x,'target':node_m_x_y,'edgetype':'LA'})
             laq_edges[(node_y, node_m_x_y)]=(-1,{'Lp':'Lsp','L_p':LS_P,'Lq':'Lsq','L_q':LS_Q,'score':LS_score,'L_name':'LS','interaction':interaction_type2,'source':node_y,'target':node_m_x_y,'edgetype':'LA'})
             laq_edges[(node_z, node_m_x_y)]=(-1,{'Lp':'Lap','L_p':LA_P,'Lq':'Laq','L_q':LA_Q,'score':LA_score,'L_name':'LA', 'interaction':interaction_type3,'source':node_z,'target':node_m_x_y,'edgetype':'Z'})
-  print "miss node_z in nodeinfor"
-  print missnode
+  print("miss node_z in nodeinfor")
+  print(missnode)
   xgmml_element=etree.Element('graph')
   xgmml_element.set('xmlns:dc', "http://purl.org/dc/elements/1.1/")
   xgmml_element.set('xmlns:xlink', "http://www.w3.org/1999/xlink")
@@ -306,13 +306,13 @@ def LA_Xgmml2(la_table, la_size, lsaq_table, lsaq_size, nodeinfor_table, nodeinf
 def LA_Xgmml(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=3, Delay_idx=9):
 
   nodes = set()
-  for i in xrange(1, lsaq_size+1):  
+  for i in range(1, lsaq_size+1):  
     node_x = r['''as.character''']((lsaq_table.rx(i,True)[0]))[0]
     node_y = r['''as.character''']((lsaq_table.rx(i,True)[1]))[0]
     node_m_x_y = '_'.join( ['m', node_x, node_y] )
     nodes.add(node_x)
     nodes.add(node_y)
-    for a in xrange(1, la_size+1):
+    for a in range(1, la_size+1):
       node_v = r['''as.character''']((la_table.rx(a,True)[0]))[0]
       node_e = r['''as.character''']((la_table.rx(a,True)[1]))[0]
       node_z = r['''as.character''']((la_table.rx(a,True)[2]))[0]
@@ -343,7 +343,7 @@ def LA_Xgmml(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=3
   di = Delay_idx-1 #9-1
   li = LS_idx-1 #3-1
 
-  for i in xrange(1, lsaq_size+1):
+  for i in range(1, lsaq_size+1):
     node_x = r['''as.character''']((lsaq_table.rx(i,True)[0]))[0]
     node_y = r['''as.character''']((lsaq_table.rx(i,True)[1]))[0]
     node_m_x_y = '_'.join( ['m', node_x, node_y] )
@@ -380,7 +380,7 @@ def LA_Xgmml(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=3
          interaction1 = 'nu'
          interaction2 = 'nu'
 
-    for a in xrange(1, la_size+1):
+    for a in range(1, la_size+1):
       node_v = r['''as.character''']((la_table.rx(a,True)[0]))[0]
       node_e = r['''as.character''']((la_table.rx(a,True)[1]))[0]
       node_z = r['''as.character''']((la_table.rx(a,True)[2]))[0]
@@ -463,14 +463,14 @@ def toSif( la_table, la_size, lsaq_table, lsaq_size, nodelist_table, nodelist_si
   sifTable.append( ["X", "interaction", "Y", "LS or LA", "score", "edgetype", "P", "Q"]  )
   lsaq_edges=dict()
   nodelist_name=set()
-  for i in xrange(1, nodelist_size+1):
+  for i in range(1, nodelist_size+1):
     n_name=r['''as.character''']((nodelist_table.rx(i,True)[0]))[0]
     nodelist_name.add(n_name)
      
   lai = LA_idx-1 #4-1
   di = Delay_idx-1 #9-1
   li = LS_idx-1 #3-1
-  for i in xrange(1, lsaq_size+1):  
+  for i in range(1, lsaq_size+1):  
     node_x = r['''as.character''']((lsaq_table.rx(i,True)[0]))[0]
     node_y = r['''as.character''']((lsaq_table.rx(i,True)[1]))[0]
     if tuple(lsaq_table.rx(i,True)[di])[0] > 0:
@@ -491,7 +491,7 @@ def toSif( la_table, la_size, lsaq_table, lsaq_size, nodelist_table, nodelist_si
     lsaq_edges[(node_x, node_y)]=(1, {'score':LS_score, 'L_name':'LS', 'interaction':interaction, 'source':node_x, 'target':node_y, 'edgetype':'LS', 'L_p':LS_P, 'L_q':LS_Q})
   laq_edges=lsaq_edges
 
-  for i in xrange(1, la_size+1):
+  for i in range(1, la_size+1):
     node_x = r['''as.character''']((la_table.rx(i,True)[0]))[0]
     node_y = r['''as.character''']((la_table.rx(i,True)[1]))[0]
     node_z = r['''as.character''']((la_table.rx(i,True)[2]))[0]
@@ -542,7 +542,7 @@ def tonewnode(la_table, la_size, lsaq_table, lsaq_size, nodeinfor_table, nodeinf
   node_cols = list(r['colnames'](nodeinfor_table))
   nodedepth = r['''as.character''']((nodeinfor_table.rx(1,True)[2]))[0]
   nodeTable = []
-  for i in xrange(0,nodeinfor_size+1):
+  for i in range(0,nodeinfor_size+1):
     if i<1:
       nodeTable.append( node_cols[0:] + ["tag"]  )
       #print row[li], row[di]
@@ -590,14 +590,14 @@ def tonewnode(la_table, la_size, lsaq_table, lsaq_size, nodeinfor_table, nodeinf
       nodeTable.append( [nodeID,nodetype,nodedepth,aa,ab,ac,ad,ae,af,ag,ah,ai,aj,ak,al,am,an,ao,ap,aq,ar,aS,at,au,av,aw,ax,ay,az,ba,bb,bc,bd,be,bf,bg,bh,bi,bj,bk," "] )
   lsaq_edges=dict()
   nodelist_name=set()
-  for i in xrange(1, nodelist_size+1):
+  for i in range(1, nodelist_size+1):
     n_name=r['''as.character''']((nodelist_table.rx(i,True)[0]))[0]
     nodelist_name.add(n_name)
-  for i in xrange(1, lsaq_size+1):  
+  for i in range(1, lsaq_size+1):  
     node_x = r['''as.character''']((lsaq_table.rx(i,True)[0]))[0]
     node_y = r['''as.character''']((lsaq_table.rx(i,True)[1]))[0]
     lsaq_edges[(node_x, node_y)]=(1) 
-  for i in xrange(1, la_size+1):
+  for i in range(1, la_size+1):
     node_x = r['''as.character''']((la_table.rx(i,True)[0]))[0]
     node_y = r['''as.character''']((la_table.rx(i,True)[1]))[0]
     node_z = r['''as.character''']((la_table.rx(i,True)[2]))[0]

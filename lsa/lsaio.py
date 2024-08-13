@@ -59,7 +59,7 @@ def tryIO( file, mode ):
   try:
     handle = open( file, mode )
   except IOError:
-    print "Error: can't open " + file +" file for " + mode
+    print("Error: can't open " + file +" file for " + mode)
     sys.exit(2)
   return handle
 
@@ -70,7 +70,7 @@ def closeIO( handle ):
   try:
     handle.close()
   except IOError:
-    print "Error: can't close " + handle + " , but ignored"
+    print("Error: can't close " + handle + " , but ignored")
     
 def readTable( handle, sep='\t' ):
   """ read a delimited file of a table and return a list of list 
@@ -91,7 +91,7 @@ def readFirstLine( handle, sep='\t', startcol=1 ):
   startcol - which column to start with, default: 1, the first line
   """
   csvReader = csv.reader(handle, delimiter=sep, escapechar='"')
-  line = csvReader.next() 
+  line = next(csvReader) 
   return line[skipcols:]
 
 def readFirstCol( handle, sep='\t', startrow=2 ):
@@ -241,7 +241,7 @@ def toXgmml( lsa_table, lsa_size, title, LS_idx=3, Delay_idx=9):
   """
   
   nodes = set()
-  for i in xrange(1, lsa_size+1):
+  for i in range(1, lsa_size+1):
     node_x = r['''as.character''']((lsa_table.rx(i,True)[0]))[0]
     node_y = r['''as.character''']((lsa_table.rx(i,True)[1]))[0]
     nodes.add(node_x)
@@ -272,7 +272,7 @@ def toXgmml( lsa_table, lsa_size, title, LS_idx=3, Delay_idx=9):
   di = Delay_idx-1 #9-1
   li = LS_idx-1 #3-1
 
-  for i in xrange(1, lsa_size+1):
+  for i in range(1, lsa_size+1):
     node_x = r['''as.character''']((lsa_table.rx(i,True)[0]))[0]
     node_y = r['''as.character''']((lsa_table.rx(i,True)[1]))[0]
     #c_code=''
@@ -319,12 +319,12 @@ def toXgmml( lsa_table, lsa_size, title, LS_idx=3, Delay_idx=9):
 def laxgmml(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=3, Delay_idx=9):
 
   nodes = set()
-  for i in xrange(1, lsaq_size+1):  
+  for i in range(1, lsaq_size+1):  
     node_x = r['''as.character''']((lsaq_table.rx(i,True)[0]))[0]
     node_y = r['''as.character''']((lsaq_table.rx(i,True)[1]))[0]
     nodes.add(node_x)
     nodes.add(node_y)
-    for a in xrange(1, la_size+1):
+    for a in range(1, la_size+1):
       node_v = r['''as.character''']((la_table.rx(a,True)[0]))[0]
       node_e = r['''as.character''']((la_table.rx(a,True)[1]))[0]
       node_z = r['''as.character''']((la_table.rx(a,True)[2]))[0]
@@ -356,7 +356,7 @@ def laxgmml(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=3,
   di = Delay_idx-1 #9-1
   li = LS_idx-1 #3-1
 
-  for i in xrange(1, lsaq_size+1):
+  for i in range(1, lsaq_size+1):
     node_x = r['''as.character''']((lsa_table.rx(i,True)[0]))[0]
     node_y = r['''as.character''']((lsa_table.rx(i,True)[1]))[0]
     same = 0
@@ -373,7 +373,7 @@ def laxgmml(la_table, la_size, lsaq_table, lsaq_size, title, LA_idx=4, LS_idx=3,
          c_code = 'n'
     interaction = c_code+d_code
 
-    for a in xrange(1, la_size+1):
+    for a in range(1, la_size+1):
       node_v = r['''as.character''']((la_table.rx(a,True)[0]))[0]
       node_e = r['''as.character''']((la_table.rx(a,True)[1]))[0]
       node_z = r['''as.character''']((la_table.rx(a,True)[2]))[0]
@@ -488,7 +488,7 @@ def toSif( lsa_table, lsa_size, LS_idx=3, Delay_idx=9):
   li = LS_idx-1
   di = Delay_idx-1
   #(li, di) = (LS_idx-1, Delay_idx-1)
-  for i in xrange(0,lsa_size+1): 
+  for i in range(0,lsa_size+1): 
     if i < 1:
       sifTable.append( ["X", "interaction", "Y"] + lsa_cols[2:]  )
       #print row[li], row[di]

@@ -27,24 +27,24 @@ def main():
       try:
         assert len(cells) == colNum + 1
       except AssertionError:
-        print "Format error:", index, "-th row has",len(cells),"cells instead of expected number:", colNum+1
+        print("Format error:", index, "-th row has",len(cells),"cells instead of expected number:", colNum+1)
         quit(0)
-      for i in xrange(1, colNum+1):
+      for i in range(1, colNum+1):
         try:
           float(cells[i])
         except:
           try:
             assert cells[i] in ['na','NA','']
           except AssertionError:
-            print
+            print()
       index += 1
   dataFile.seek(0)
   try:
     np.genfromtxt( \
         dataFile, comments='#', delimiter='\t', missing_values=['na','','NA'], \
-        filling_values=np.nan, usecols=range(1,spotNum*repNum+1) )
+        filling_values=np.nan, usecols=list(range(1,spotNum*repNum+1)) )
   except ValueError:
-    print "Numpy cann't read", str(ValueError)
+    print("Numpy cann't read", str(ValueError))
 
 if __name__=="__main__":
   main()

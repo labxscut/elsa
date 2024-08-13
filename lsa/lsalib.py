@@ -76,7 +76,7 @@ try:
   np.seterr(all='ignore')                             #ignore RuntimeWarning of abs in installed mode
 except ImportError:
   #try for debug
-  import compcore
+  from . import compcore
   np.seterr(all='warn')
 
 
@@ -238,7 +238,7 @@ def sample_wr(population, k):
   n = len(population)
   _random, _int = random.random, int  # speed hack 
   result = np.array([np.nan] * k)
-  for i in xrange(k):
+  for i in range(k):
     j = _int(_random() * n)
     if type(population) == np.ma.MaskedArray:
       if population.mask[j]:
@@ -299,18 +299,18 @@ def bootstrapCI(series1, series2, Smax, delayLimit, bootCI, bootNum, \
     if trendThresh == None:
       Xb = zNormalize(fTransform(np.ma.array(\
           [ sample_wr(series1[:,j], series1.shape[0]) \
-            for j in xrange(0,series1.shape[1]) ]).T))
+            for j in range(0,series1.shape[1]) ]).T))
       Yb = zNormalize(fTransform(np.ma.array(\
           [ sample_wr(series2[:,j], series2.shape[0]) \
-            for j in xrange(0,series2.shape[1]) ]).T))
+            for j in range(0,series2.shape[1]) ]).T))
     else:
       Xb = ji_calc_trend( zNormalize(fTransform(np.ma.array(\
           [ sample_wr(series1[:,j], series1.shape[0]) \
-            for j in xrange(0,series1.shape[1]) ]).T)), \
+            for j in range(0,series1.shape[1]) ]).T)), \
             timespots, trendThresh )
       Yb = ji_calc_trend( zNormalize(fTransform(np.ma.array(\
           [ sample_wr(series2[:,j], series2.shape[0]) \
-            for j in xrange(0,series2.shape[1]) ]).T)), \
+            for j in range(0,series2.shape[1]) ]).T)), \
             timespots, trendThresh )
     #print "Xb=", Xb
     #print "Yb=", Yb
@@ -339,7 +339,7 @@ def readPvalue(P_table, R, N, x_sd=1., M=1., alpha=1., beta=1., x_decimal=my_dec
   # has to ceil the x value to avoid round to 0, which is not amenable to calculation
   try:
     xi = int(np.around(R*M/(x_sd*np.sqrt(alpha*beta*N))*(10**x_decimal)))    #
-  except OverflowError, ValueError:
+  except OverflowError as ValueError:
     #print alpha, beta
     #print "x=", np.around(R*M/np.sqrt(alpha*beta*N)*(10**x_decimal))
     #quit()
@@ -362,9 +362,9 @@ def theoPvalue(Rmax, Dmax=0, precision=.001, x_decimal=my_decimal):
   # x_decimal is for augment x_index
   Rmax = np.max((Rmax, Rmax_min))
   Rmax = np.min((Rmax, Rmax_max)) #avoid extreme time consuming for long series
-  print >>sys.stderr, "computing p_table with Rmax=", Rmax
+  print("computing p_table with Rmax=", Rmax, file=sys.stderr)
   P_table = dict()
-  for xi in xrange(0,Rmax*10**(x_decimal)+1): 
+  for xi in range(0,Rmax*10**(x_decimal)+1): 
     if xi == 0:
       P_table[xi] = 1
       continue
@@ -386,7 +386,7 @@ def theoPvalue(Rmax, Dmax=0, precision=.001, x_decimal=my_decimal):
     A = 1/xx
     Rcdf = 0     # root of cdf
     P_two_tail = 1.
-    for k in xrange(1,Kcut+1):
+    for k in range(1,Kcut+1):
       C = (2*k-1)**2
       Rcdf = Rcdf + (A+pipi_inv/C)*np.exp(-C*pipi_over_xx/2)
       P_current = 1 - (8**B)*(Rcdf**B)
@@ -430,7 +430,7 @@ def permuPvalue(series1, series2, delayLimit, precisionP, \
         zNormalize(fTransform(series1)), timespots, trendThresh)
   Y = np.ma.array(series2)  #use = only assigns reference, must use a constructor
 
-  for i in xrange(0, precisionP):
+  for i in range(0, precisionP):
     np.random.shuffle(Y.T)  #shuffle is in place
     if trendThresh == None:
       Yz = zNormalize(fTransform(Y)) 
@@ -464,13 +464,13 @@ def R_Qvalue(pvalues, lam=np.arange(0,Q_lam_max,Q_lam_step), method='smoother', 
     #print len(qvalues)
     #print qvalues[2] -- this is $qvalues
     j = 0
-    for i in xrange(0, len(pvalues)):
+    for i in range(0, len(pvalues)):
       if not np.isnan(pvalues[i]):
         qvalues_return[i]=qvalues[2][j]   #second item is calculated qvalues
         j = j+1
   except:
     #print >>sys.stderr, "caution: q-value estimation error"
-    print >>sys.stderr, "from R: unusable pvalues -> ", pvalues_input
+    print("from R: unusable pvalues -> ", pvalues_input, file=sys.stderr)
     qvalues_return=[np.nan]*len(pvalues)
   #print "qvalues_return=", qvalues_return
   return qvalues_return
@@ -507,12 +507,12 @@ def storeyQvalue(pvalues, lam=np.arange(0,Q_lam_max,Q_lam_step), method='smoothe
     rp_lam = lam[lam<rp_max]
 
     if len(rp_lam) <= 1:
-      return np.array( [np.nan if np.isnan(pvalues[i]) else 0 for i in xrange(0,p_num)],  dtype='float')
+      return np.array( [np.nan if np.isnan(pvalues[i]) else 0 for i in range(0,p_num)],  dtype='float')
 
     #print "rpvalues=", rpvalues, rp_num, rp_lam
 
     pi_set = np.zeros(len(rp_lam), dtype='float')
-    for i in xrange(0, len(rp_lam)): 
+    for i in range(0, len(rp_lam)): 
       pi_set[i] = np.mean(rpvalues>=rp_lam[i])/(1-rp_lam[i])
 
     #print "p=",pvalues
@@ -536,9 +536,9 @@ def storeyQvalue(pvalues, lam=np.arange(0,Q_lam_max,Q_lam_step), method='smoothe
       pi_min = np.min(pi_set)
       mse = np.zeros((100, len(rp_lam)), dtype='float')
       pi_set_boot = np.zeros((100, len(rp_lam)), dtype='float')
-      for j in xrange(0, 100):
+      for j in range(0, 100):
         p_boot = sample_wr(rpvalues, rp_num)
-        for i in xrange(0, len(rp_lam)):
+        for i in range(0, len(rp_lam)):
           pi_set_boot[j][i] = np.mean(p_boot>=rp_lam[i])/(1-rp_lam[i]) 
         mse[j] = (pi_set_boot[j]-pi_min)**2
       min_mse_j = np.argmin(mse)
@@ -563,7 +563,7 @@ def storeyQvalue(pvalues, lam=np.arange(0,Q_lam_max,Q_lam_step), method='smoothe
       rqvalues = pi_0*rp_num*rpvalues*(1/rp_ranks) 
     #print "rqs=", rqvalues
     rqvalues[rp_argsort[rp_num-1]] = np.min( [rqvalues[rp_argsort[rp_num-1]], 1] ) # argsort in asscending order
-    for i in reversed(range(0,rp_num-1)): #don't know why it is so complicated here, why not just use qvalues; to enssure desencing order!!!
+    for i in reversed(list(range(0,rp_num-1))): #don't know why it is so complicated here, why not just use qvalues; to enssure desencing order!!!
       rqvalues[rp_argsort[i]] = np.min( [rqvalues[rp_argsort[i]], rqvalues[rp_argsort[i+1]], 1] )
 
     qvalues=np.array([np.nan]*p_num)
@@ -580,8 +580,8 @@ def storeyQvalue(pvalues, lam=np.arange(0,Q_lam_max,Q_lam_step), method='smoothe
     #print "rp_rank",rp_ranks
     #print "qs=", qvalues
   except:
-    print >>sys.stderr, "caution: q-value estimation error"
-    print >>sys.stderr, "from scipy: unusable pvalues -> ", rpvalues
+    print("caution: q-value estimation error", file=sys.stderr)
+    print("from scipy: unusable pvalues -> ", rpvalues, file=sys.stderr)
     qvalues=np.array( [np.nan] * p_num, dtype='float')
 
   return qvalues
@@ -707,7 +707,7 @@ def tied_rank(values):
   v_cum = {}  #cumulated rank, take largest for tie
   for v in V:
     v_num[v] = v_num.get(v,0) + 1
-  suvs = v_num.keys()  #sorted unique pvaludes
+  suvs = list(v_num.keys())  #sorted unique pvaludes
   suvs.sort() 
   c = 0
   for v in suvs:
@@ -716,7 +716,7 @@ def tied_rank(values):
   #print "sorted unique values=", suvs
   #print "cumulative number=", v_cum
   #print [ v_cum[values[i]] for i in xrange(0, len(values)) ]
-  sV = np.array( [ (2*v_cum[V[i]]-v_num[V[i]]+1)/2 for i in xrange(0, len(V)) ], dtype='float' ) #sorted V, break tie by average
+  sV = np.array( [ (2*v_cum[V[i]]-v_num[V[i]]+1)/2 for i in range(0, len(V)) ], dtype='float' ) #sorted V, break tie by average
   #print "sV=", sV
   #print "nans=", nans
   
@@ -878,7 +878,7 @@ def fillMissing(tseries, method): #teseries is 2d matrix unmasked
     return tseries                #return with nans
   else:
     y = tseries[np.logical_not(np.isnan(tseries))]
-    x = np.array(range(0, len(tseries)), dtype='float')[np.logical_not(np.isnan(tseries))]
+    x = np.array(list(range(0, len(tseries))), dtype='float')[np.logical_not(np.isnan(tseries))]
     try:
       spline_fit = sp.interpolate.interp1d( x, y, method )
     except:
@@ -929,12 +929,12 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
   #        whenever do singleLSA, convert to trend first then do
   #        otherwise the same
 
-  print >>sys.stderr, "inside applyAnalysis..."
+  print("inside applyAnalysis...", file=sys.stderr)
 
   col_labels= ['X','Y','LS','lowCI','upCI','Xs','Ys','Len','Delay',\
       'P','PCC','Ppcc','SPCC','Pspcc','Dspcc','SCC','Pscc','SSCC',\
       'Psscc','Dsscc','Q','Qpcc','Qspcc','Qscc','Qsscc','Xi','Yi']
-  print >>resultFile,  "\t".join(col_labels)
+  print("\t".join(col_labels), file=resultFile)
 
   firstFactorNum = firstData.shape[0]
   firstRepNum = firstData.shape[1]
@@ -985,7 +985,7 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
         precision=1./precisionP, x_decimal=my_decimal)
     #print P_table
   
-  print >>sys.stderr, "pairwise calculation..."
+  print("pairwise calculation...", file=sys.stderr)
   start_time = time.time()
 
   ti = 0
@@ -994,14 +994,14 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
   else:
     lsaTable = [None]*pairwiseNum
 
-  for i in xrange(0, firstFactorNum):
+  for i in range(0, firstFactorNum):
     Xz = np.ma.masked_invalid(firstData[i], copy=True) 
     #need to convert to masked array with na's, not F-normalized
     Xz_badOccur = np.sum(np.logical_not(np.isnan(ma_average(Xz)), \
         ma_average(Xz)==0))/float(timespots) < minOccur
     if Xz.shape[1] == None: #For 1-d array, convert to 2-d
       Xz.shape = (1, Xz.shape[0])
-    for j in xrange(0, secondFactorNum):
+    for j in range(0, secondFactorNum):
       if onDiag and i>=j:
         continue   #only care lower triangle entries, ignore i=j entries
       Yz = np.ma.masked_invalid(secondData[j], copy=True)    
@@ -1172,16 +1172,16 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
       if progressive>0 and (ti+1)%progressive == 0: #print every 0:porgressive-1 terms and reset lsaTable and ti
         elapsed_time = time.time() - start_time
         pct = float(i*secondFactorNum+j+1)/(firstFactorNum*secondFactorNum)
-        print >>sys.stderr, i*secondFactorNum+j+1, " of ", (onDiag)*firstFactorNum*(firstFactorNum-1)/2+(not onDiag)*firstFactorNum*secondFactorNum, ", ", \
-          pct*100, "%", "estimated remaining time", round(elapsed_time/pct*(1-pct)), "s"
+        print(i*secondFactorNum+j+1, " of ", (onDiag)*firstFactorNum*(firstFactorNum-1)/2+(not onDiag)*firstFactorNum*secondFactorNum, ", ", \
+          pct*100, "%", "estimated remaining time", round(elapsed_time/pct*(1-pct)), "s", file=sys.stderr)
         for row in lsaTable:
           if row != None:
             row=row+[np.nan,np.nan,np.nan,np.nan,np.nan] # shorter than labels, make up
-            print >>resultFile, "\t".join(['%s']*len(col_labels)) % \
+            print("\t".join(['%s']*len(col_labels)) % \
               tuple( [firstFactorLabels[row[0]], secondFactorLabels[row[1]]] \
               + ["%f" % np.round(v, decimals=disp_decimal) \
               if isinstance(v, float) else v for v in row[2:]] \
-              + [row[0]+1, row[1]+1] )
+              + [row[0]+1, row[1]+1] ), file=resultFile)
         lsaTable = [None]*progressive
         ti=0
       else:
@@ -1191,11 +1191,11 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
     for row in lsaTable:
       if row != None:
         row=row+[np.nan,np.nan,np.nan,np.nan,np.nan] # shorter than labels, make up
-        print >>resultFile, "\t".join(['%s']*len(col_labels)) % \
+        print("\t".join(['%s']*len(col_labels)) % \
           tuple( [firstFactorLabels[row[0]], secondFactorLabels[row[1]]] \
           + ["%f" % np.round(v, decimals=disp_decimal) \
           if isinstance(v, float) else v for v in row[2:]] \
-          + [row[0]+1, row[1]+1] )
+          + [row[0]+1, row[1]+1] ), file=resultFile)
   else:
     #print lsaTable
     #print "qvalues ..."
@@ -1205,26 +1205,26 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
     #print "pccpvalues", pccpvalues, np.isnan(np.sum(pccpvalues))
     #print "lsaP"
     #qvalues = storeyQvalue( pvalues )
-    print >>sys.stderr, "LS Qvalues..."
+    print("LS Qvalues...", file=sys.stderr)
     qvalues = qvalue_func( pvalues )
     #print "pccP"
     #pccqvalues = storeyQvalue( pccpvalues )
-    print >>sys.stderr, "PCC Qvalues..."
+    print("PCC Qvalues...", file=sys.stderr)
     pccqvalues = qvalue_func( pccpvalues )
     #print "sccP"
     #sccqvalues = storeyQvalue( sccpvalues )
-    print >>sys.stderr, "SCC Qvalues..."
+    print("SCC Qvalues...", file=sys.stderr)
     sccqvalues = qvalue_func( sccpvalues )
     #print "spccP"
     #spccqvalues = storeyQvalue( spccpvalues )
-    print >>sys.stderr, "SPCC Qvalues..."
+    print("SPCC Qvalues...", file=sys.stderr)
     spccqvalues = qvalue_func( spccpvalues )
     #print "ssccP"
     #ssccqvalues = storeyQvalue( ssccpvalues )
-    print >>sys.stderr, "SSCC Qvalues..."
+    print("SSCC Qvalues...", file=sys.stderr)
     ssccqvalues = qvalue_func( ssccpvalues )
 
-    for k in xrange(0, len(qvalues)):
+    for k in range(0, len(qvalues)):
       lsaTable[k].append( qvalues[k] )
       lsaTable[k].append( pccqvalues[k] )
       lsaTable[k].append( spccqvalues[k] )
@@ -1233,11 +1233,11 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
     
     #print lsaTable
     for row in lsaTable:
-      print >>resultFile, "\t".join(['%s']*len(col_labels)) % \
+      print("\t".join(['%s']*len(col_labels)) % \
       tuple( [firstFactorLabels[row[0]], secondFactorLabels[row[1]]] \
           + ["%f" % np.round(v, decimals=disp_decimal) \
               if isinstance(v, float) else v for v in row[2:]] \
-          + [row[0]+1, row[1]+1] )
+          + [row[0]+1, row[1]+1] ), file=resultFile)
 
 #### trend analysis functions ####
 def ji_calc_trend(oSeries, lengthSeries, thresh):
@@ -1245,7 +1245,7 @@ def ji_calc_trend(oSeries, lengthSeries, thresh):
   #print oSeries
   #print lengthSeries
   tSeries = np.zeros(lengthSeries-1, dtype='float')
-  for i in xrange(0, lengthSeries-1):
+  for i in range(0, lengthSeries-1):
     if oSeries[i] == 0 and oSeries[i+1] > 0:
       trend = 1
     elif oSeries[i] == 0 and oSeries[i+1] < 0:
@@ -1296,7 +1296,7 @@ def ji_calc_trend(oSeries, lengthSeries, thresh):
 def calc_tmatrix(bootNum, trend_threshold, timeNum=10000, randomFunc=np.random.normal):
   # return a 3 by 3 transition matrix
   Tm = np.zeros((bootNum,5)) #each row in order: a,b,c,d,t
-  for b in xrange(0, bootNum):
+  for b in range(0, bootNum):
     Tm[b,] = to_markov(trend_threshold, timeNum, randomFunc)
   #print(Tm)
   #print np.average(Tm, axis=0)
@@ -1329,14 +1329,14 @@ def calc_eigen(P):
   #print "vl=",vl
   #print "vr=",vr
   w_one = None
-  for i in xrange(0, len(w)):
+  for i in range(0, len(w)):
     try:
       np.testing.assert_almost_equal(w[i],1.0)
     except AssertionError:
       continue
     w_one = i
   if w_one == None:
-    print >>sys.stderr, "unexpected! reduce float_equal_tolerance"
+    print("unexpected! reduce float_equal_tolerance", file=sys.stderr)
     quit()
   #print "w_one=", w_one
   if w_one != 0: #switch lambda=1 to the first place
@@ -1359,7 +1359,7 @@ def calc_eigen(P):
   #normalize eigen vectors:
   vr[:,0]=np.array([1.0,1.0,1.0])
   vl[:,0]=vl[:,0]/np.sum(vl[:,0])
-  for i in xrange(1, len(w)):
+  for i in range(1, len(w)):
     scale = np.sum(np.inner(vl[:,i], vr[:,i]))
     vl[:,i] = vl[:,i]/scale
   #print "w_stand=", w 
@@ -1381,7 +1381,7 @@ def calc_eigen(P):
         else:
           np.testing.assert_almost_equal(tmp[i,j], 0.0)
   except AssertionError:
-    print >>sys.stderr, "eigen values, right eigen vectors and left eigen vectors not properly found!"
+    print("eigen values, right eigen vectors and left eigen vectors not properly found!", file=sys.stderr)
     quit()
   return w, vl, vr
                                            
@@ -1566,88 +1566,88 @@ def test():
   """ self test script
   """
   np.seterr(all='raise')
-  print >>sys.stderr, "###testing###"
+  print("###testing###", file=sys.stderr)
   test_data = np.array( [ [ [ 3, 2, 0, 4], [1, 6, 0, 3], [6, 4, 0, 8], [np.nan, np.nan, np.nan, np.nan] ], 
                           [ [np.nan, 2, np.nan, 3], [4, 5, 3, np.nan], [1, 1, 1, 1], [ np.nan, np.nan, np.nan, np.nan ] ] ], dtype='float' )
   test_fN = test_data.shape[0]
   test_rN = test_data.shape[1]
   test_tN = test_data.shape[2]
-  print >>sys.stderr, "fN, tN, rN", test_fN, test_tN, test_rN
-  print >>sys.stderr, "test_data", test_data
-  print >>sys.stderr, "---fillMissing---"
-  print >>sys.stderr, "none:", test_data[1][0], "->", fillMissing(test_data[1][0], 'none')
-  print >>sys.stderr, "zero (spline at zero order):", test_data[1][0], "->", fillMissing(test_data[1][0], 'zero')
-  print >>sys.stderr, "linear:", test_data[1][0], "->", fillMissing(test_data[1][0], 'linear')
-  print >>sys.stderr, "quadratic:", test_data[1][0], "->", fillMissing(test_data[1][0], 'quadratic')
-  print >>sys.stderr, "cubic:", test_data[1][0], "->", fillMissing(test_data[1][0], 'cubic')
-  print >>sys.stderr, "slinear:", test_data[1][0], "->", fillMissing(test_data[1][0], 'slinear')
-  print >>sys.stderr, "nearest:", test_data[1][0], "->", fillMissing(test_data[1][0], 'nearest')
-  print >>sys.stderr, "###use none as clean data###"
+  print("fN, tN, rN", test_fN, test_tN, test_rN, file=sys.stderr)
+  print("test_data", test_data, file=sys.stderr)
+  print("---fillMissing---", file=sys.stderr)
+  print("none:", test_data[1][0], "->", fillMissing(test_data[1][0], 'none'), file=sys.stderr)
+  print("zero (spline at zero order):", test_data[1][0], "->", fillMissing(test_data[1][0], 'zero'), file=sys.stderr)
+  print("linear:", test_data[1][0], "->", fillMissing(test_data[1][0], 'linear'), file=sys.stderr)
+  print("quadratic:", test_data[1][0], "->", fillMissing(test_data[1][0], 'quadratic'), file=sys.stderr)
+  print("cubic:", test_data[1][0], "->", fillMissing(test_data[1][0], 'cubic'), file=sys.stderr)
+  print("slinear:", test_data[1][0], "->", fillMissing(test_data[1][0], 'slinear'), file=sys.stderr)
+  print("nearest:", test_data[1][0], "->", fillMissing(test_data[1][0], 'nearest'), file=sys.stderr)
+  print("###use none as clean data###", file=sys.stderr)
   clean_data = test_data
-  for i in xrange(0, test_fN):
-    for j in xrange(0, test_rN):
+  for i in range(0, test_fN):
+    for j in range(0, test_rN):
       clean_data[i][j] = fillMissing(test_data[i][j], 'none')
-  print >>sys.stderr, "clean_data", clean_data
-  print >>sys.stderr, "---masked_array---"
+  print("clean_data", clean_data, file=sys.stderr)
+  print("---masked_array---", file=sys.stderr)
   masked_data = np.ma.masked_invalid(clean_data)
-  print >>sys.stderr, "masked_data", masked_data
-  print >>sys.stderr, "---tied-rank---"
-  print >>sys.stderr, "data:", masked_data[1][0], "->", tied_rank(masked_data[1][0])
-  print >>sys.stderr, "data:", masked_data[1][1], "->", tied_rank(masked_data[1][1])
+  print("masked_data", masked_data, file=sys.stderr)
+  print("---tied-rank---", file=sys.stderr)
+  print("data:", masked_data[1][0], "->", tied_rank(masked_data[1][0]), file=sys.stderr)
+  print("data:", masked_data[1][1], "->", tied_rank(masked_data[1][1]), file=sys.stderr)
   #print >>sys.stderr, "---wholeNormalize---"
   #print >>sys.stderr, wholeNormalize(clean_data[0])
   #print >>sys.stderr, wholeNormalize(clean_data[0])
-  print >>sys.stderr, "---simpleAverage---" 
-  print >>sys.stderr, simpleAverage(masked_data[1])
-  print >>sys.stderr, "---sdAverage---"
-  print >>sys.stderr, sdAverage(masked_data[1])
-  print >>sys.stderr, "---simpleMedian---" 
-  print >>sys.stderr, simpleMedian(masked_data[1])
-  print >>sys.stderr, "---madMedian---"
-  print >>sys.stderr, madMedian(masked_data[1])
-  print >>sys.stderr, "---noZeroNormalize---"
+  print("---simpleAverage---", file=sys.stderr) 
+  print(simpleAverage(masked_data[1]), file=sys.stderr)
+  print("---sdAverage---", file=sys.stderr)
+  print(sdAverage(masked_data[1]), file=sys.stderr)
+  print("---simpleMedian---", file=sys.stderr) 
+  print(simpleMedian(masked_data[1]), file=sys.stderr)
+  print("---madMedian---", file=sys.stderr)
+  print(madMedian(masked_data[1]), file=sys.stderr)
+  print("---noZeroNormalize---", file=sys.stderr)
   X=np.array( [1, 2, 3, np.nan, 0, 0], dtype='float')
   Xz=np.ma.masked_invalid(X)
-  print >>sys.stderr, Xz, "->", noZeroNormalize(Xz)
-  print >>sys.stderr, "---storeyQvalue---"
+  print(Xz, "->", noZeroNormalize(Xz), file=sys.stderr)
+  print("---storeyQvalue---", file=sys.stderr)
   pvalues = np.array([0.01, 0.2, 0.03, 0.4, 0.05, np.nan, 0.03, 0.4, 0.03, 0.3], dtype='float')
-  print >>sys.stderr, "pvalues:", pvalues 
-  print >>sys.stderr, "qvalues:", storeyQvalue(pvalues)
+  print("pvalues:", pvalues, file=sys.stderr) 
+  print("qvalues:", storeyQvalue(pvalues), file=sys.stderr)
   pvalues = np.array([0.01, 0.02, 0.03, 0.04, 0.05, 0.02, 0.03, 0.04, 0.03, 0.03], dtype='float')
-  print >>sys.stderr, "pvalues:", pvalues 
-  print >>sys.stderr, "qvalues:", storeyQvalue(pvalues)
-  print >>sys.stderr, "---singleLSA---"
-  print >>sys.stderr, "masked_data[0]:", masked_data[0]
+  print("pvalues:", pvalues, file=sys.stderr) 
+  print("qvalues:", storeyQvalue(pvalues), file=sys.stderr)
+  print("---singleLSA---", file=sys.stderr)
+  print("masked_data[0]:", masked_data[0], file=sys.stderr)
   sa0 = simpleAverage(masked_data[0])
-  print >>sys.stderr, "simpleAverage of masked_data[0]:", sa0, sa0.mask
-  print >>sys.stderr, "input data:", noZeroNormalize(simpleAverage(masked_data[0]))
-  print >>sys.stderr, "masked_data[1]:", masked_data[1]
+  print("simpleAverage of masked_data[0]:", sa0, sa0.mask, file=sys.stderr)
+  print("input data:", noZeroNormalize(simpleAverage(masked_data[0])), file=sys.stderr)
+  print("masked_data[1]:", masked_data[1], file=sys.stderr)
   sa1 = simpleAverage(masked_data[1])
-  print >>sys.stderr, "simpleAverage of masked_data[1]:", sa1, sa1.mask
-  print >>sys.stderr, "input data:", noZeroNormalize(simpleAverage(masked_data[1]))
+  print("simpleAverage of masked_data[1]:", sa1, sa1.mask, file=sys.stderr)
+  print("input data:", noZeroNormalize(simpleAverage(masked_data[1])), file=sys.stderr)
   lsar=singleLSA(masked_data[0], masked_data[1], delayLimit=1, fTransform=simpleAverage, zNormalize=noZeroNormalize, keepTrace=True)
-  print >>sys.stderr, "lsar.score=", lsar.score 
+  print("lsar.score=", lsar.score, file=sys.stderr) 
   Al=len(lsar.trace)
-  print >>sys.stderr, "lsar.align=",(lsar.trace[Al-1][0], lsar.trace[Al-1][1], len(lsar.trace)) 
-  print >>sys.stderr, "---bootstrapCI---"
-  print >>sys.stderr, "Bset=", bootstrapCI(masked_data[0], masked_data[1], lsar.score, 1, .95, 2, simpleAverage, noZeroNormalize)
-  print >>sys.stderr, "---permuPvalue---"
-  print >>sys.stderr, "P=", permuPvalue(masked_data[1], masked_data[0], 1, 2, np.abs(lsar.score), simpleAverage, noZeroNormalize)
-  print >>sys.stderr, "---PCC---"
+  print("lsar.align=",(lsar.trace[Al-1][0], lsar.trace[Al-1][1], len(lsar.trace)), file=sys.stderr) 
+  print("---bootstrapCI---", file=sys.stderr)
+  print("Bset=", bootstrapCI(masked_data[0], masked_data[1], lsar.score, 1, .95, 2, simpleAverage, noZeroNormalize), file=sys.stderr)
+  print("---permuPvalue---", file=sys.stderr)
+  print("P=", permuPvalue(masked_data[1], masked_data[0], 1, 2, np.abs(lsar.score), simpleAverage, noZeroNormalize), file=sys.stderr)
+  print("---PCC---", file=sys.stderr)
   (nPCC, nP_PCC) = sp.stats.pearsonr(np.mean(np.nan_to_num(test_data[0]), axis=0), np.mean(np.nan_to_num(test_data[1]), axis=0))
   oPCC = sp.corrcoef( np.mean(np.nan_to_num(test_data[0]),axis=0), np.mean(np.nan_to_num(test_data[1]),axis=0) )[0,1]
   otcdf = sp.stats.distributions.t.cdf(oPCC*np.sqrt((test_tN-2)/np.float(1.000000001-oPCC**2)), (test_tN-2))
   oP_PCC = .5 + np.sign(oPCC)*(.5 - otcdf) #addhoc for perfect correlation
-  print >>sys.stderr, "nPCC", "nP_PCC", "oPCC", "oP_PCC", "otcdf"
-  print >>sys.stderr, nPCC, nP_PCC, oPCC, oP_PCC, otcdf
-  print >>sys.stderr, "---applyAnalysis---"
-  print >>sys.stderr, applyAnalysis(clean_data, clean_data, True, 1, .95, 10, 10, sdAverage, noZeroNormalize)
-  print >>sys.stderr, "---applyAnalysis---"
-  print >>sys.stderr, applyAnalysis(clean_data, clean_data, True, 1, .95, 10, 10, simpleAverage, noZeroNormalize)
-  print >>sys.stderr, "---applyAnalysis---"
-  print >>sys.stderr, applyAnalysis(clean_data, clean_data, True, 1, .95, 10, 10, simpleMedian, noZeroNormalize)
-  print >>sys.stderr, "---applyAnalysis---"
-  print >>sys.stderr, applyAnalysis(clean_data, clean_data, True, 1, .95, 10, 10, madMedian, noZeroNormalize)
+  print("nPCC", "nP_PCC", "oPCC", "oP_PCC", "otcdf", file=sys.stderr)
+  print(nPCC, nP_PCC, oPCC, oP_PCC, otcdf, file=sys.stderr)
+  print("---applyAnalysis---", file=sys.stderr)
+  print(applyAnalysis(clean_data, clean_data, True, 1, .95, 10, 10, sdAverage, noZeroNormalize), file=sys.stderr)
+  print("---applyAnalysis---", file=sys.stderr)
+  print(applyAnalysis(clean_data, clean_data, True, 1, .95, 10, 10, simpleAverage, noZeroNormalize), file=sys.stderr)
+  print("---applyAnalysis---", file=sys.stderr)
+  print(applyAnalysis(clean_data, clean_data, True, 1, .95, 10, 10, simpleMedian, noZeroNormalize), file=sys.stderr)
+  print("---applyAnalysis---", file=sys.stderr)
+  print(applyAnalysis(clean_data, clean_data, True, 1, .95, 10, 10, madMedian, noZeroNormalize), file=sys.stderr)
   #print >>sys.stderr, "---theoPvalue--- d=3, xi=(0 to 100)*100, x=(xi/100)*x_var"
   #D3_table = theoPvalue(Rmax=10, Dmax=3, precision=.00001, x_decimal=my_decimal)   #let's produce 2 tail-ed p-value
   #D2_table = theoPvalue(Rmax=10, Dmax=2, precision=.00001, x_decimal=my_decimal)   #let's produce 2 tail-ed p-value
@@ -1664,7 +1664,7 @@ def test():
   #print >>sys.stderr, "theoP=", P
 
 if __name__=="__main__":
-  print "hello world!"
+  print("hello world!")
   test()
   exit(0)
 

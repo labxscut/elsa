@@ -37,7 +37,7 @@ try:
   from lsa import laio
 except ImportError:
   # debug
-  import laio
+  from . import laio
 import lsa
 
 rpy_import=False
@@ -63,7 +63,7 @@ def main():
   __script__ = "la_query"
   version_desc = "%s (rev: %s) - copyright Li Charlie Xia, lixia@stanford.edu" \
             % (__script__, open(os.path.join(os.path.dirname(os.path.dirname(lsa.__file__)), 'VERSION.txt')).read().strip())
-  print >>sys.stderr, version_desc
+  print(version_desc, file=sys.stderr)
 
   # define arguments: delayLimit, fillMethod, permuNum
   parser = argparse.ArgumentParser(description="Auxillary tool to new LSA package for querying la results")
@@ -89,8 +89,8 @@ def main():
   arg_namespace = parser.parse_args()
 
   #get the arguments
-  print >>sys.stderr, "la_query ($Revision$) - copyright Li Charlie Xia, lixia@stanford.edu"
-  print >>sys.stderr, "learning arguments..."
+  print("la_query ($Revision$) - copyright Li Charlie Xia, lixia@stanford.edu", file=sys.stderr)
+  print("learning arguments...", file=sys.stderr)
   
   rawFile1 = vars(arg_namespace)['rawFile1']
   rawFile2 = vars(arg_namespace)['rawFile2']
@@ -99,7 +99,7 @@ def main():
   newnodeFile = vars(arg_namespace)['newnodeFile']
   entryFile = vars(arg_namespace)['entryFile']
   queryLine = vars(arg_namespace)['queryLine']
-  print "q=", queryLine
+  print("q=", queryLine)
   xgmmlFile = vars(arg_namespace)['xgmmlFile']
   sifFile = vars(arg_namespace)['sifFile']
   analysisTitle = os.path.basename(rawFile4.name)
@@ -111,25 +111,25 @@ def main():
   dsTitle = '.'.join(ds[0:3]) 
 
 
-  print dsTitle
-  print >>sys.stderr, "reading the lsatable..."
+  print(dsTitle)
+  print("reading the lsatable...", file=sys.stderr)
   r('''lsaq <- read.delim("%s")''' % (rawFile1.name))
   r('''la <- read.delim("%s")''' % (rawFile2.name))
   r('''nodeinfor <- read.delim("%s")''' % (rawFile3.name))  
   r('''nodelist <- read.delim("%s")''' % (rawFile4.name))
   try:
-    print >>sys.stderr, "querying the lsatable..."
+    print("querying the lsatable...", file=sys.stderr)
     r('''la_select <- la[%s,]''' % queryLine)
   except ValueError:
-    print >>sys.stderr, "error query formatting, try again"
+    print("error query formatting, try again", file=sys.stderr)
     quit()
   la_size=r('''dim(la_select)''')[0]
   lsaq_size=r('''dim(lsaq)''')[0]
   nodeinfor_size=r('''dim(nodeinfor)''')[0]
   nodelist_size=r('''dim(nodelist)''')[0]
-  print "writing up result file..."
+  print("writing up result file...")
   laio.writeTable(laio.tryIO(entryFile,'w'), laio.tolaq(r.la_select, la_size, dsTitle))
-  print "writing up new node information file..."
+  print("writing up new node information file...")
   laio.writeTable(laio.tryIO(newnodeFile,'w'), laio.tonewnode(r.la_select, la_size, r.lsaq, lsaq_size, r.nodeinfor, nodeinfor_size, r.nodelist, nodelist_size, dsTitle))
   # try:
   #  print >>sys.stderr, "writing up result file..."
@@ -149,16 +149,16 @@ def main():
   #print tuple(r.lsa_select.rx(1, True)[0])
 
   if xgmmlFile != "":
-    print >>sys.stderr, "filtering result as a XGMML file for visualization such as cytoscape..."
-    print >>laio.tryIO(xgmmlFile,'w'), laio.LA_Xgmml2(r.la_select, la_size, r.lsaq, lsaq_size, r.nodeinfor, nodeinfor_size, r.nodelist, nodelist_size, dsTitle)
+    print("filtering result as a XGMML file for visualization such as cytoscape...", file=sys.stderr)
+    print(laio.LA_Xgmml2(r.la_select, la_size, r.lsaq, lsaq_size, r.nodeinfor, nodeinfor_size, r.nodelist, nodelist_size, dsTitle), file=laio.tryIO(xgmmlFile,'w'))
 
   if sifFile != "":
-    print >>sys.stderr, "filtering result as a SIF file for visualization such as cytoscape..."
+    print("filtering result as a SIF file for visualization such as cytoscape...", file=sys.stderr)
     laio.writeTable(laio.tryIO(sifFile,'w'), laio.toSif(r.la_select, la_size, r.lsaq, lsaq_size, r.nodelist, nodelist_size, analysisTitle))
 
 
-  print >>sys.stderr, "finishing up..."
-  print >>sys.stderr, "Thank you for using lsa-query, byebye!"
+  print("finishing up...", file=sys.stderr)
+  print("Thank you for using lsa-query, byebye!", file=sys.stderr)
 
 if __name__=="__main__":
   main()
