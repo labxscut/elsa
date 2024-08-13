@@ -45,9 +45,12 @@ doclines=__doc__.splitlines()
 #os.environ['CC'] = 'g++'  #temporary measure to trick distutils use g++, need update to distutils2
 #lines = open("VERSION.txt", 'rU').readlines()
 #version_desc = ','.join([lines[1].strip(), lines[0].strip()])
+print("pls install using pip install .", file=sys.stderr)
 
 print("testing git availability ...", file=sys.stderr)
-git_on_cmd="echo 'def main():\n\t print('\"'$(cat VERSION.txt)' : '@GIT: $(git log --pretty=format:'%h' | head -n 1)'\") > lsa/lsa_version.py" #lsa_version requires main() as an entry_point
+git_on_cmd="echo 'def main():\n\t print('\"'$(cat VERSION.txt); @GIT: $(git log --pretty=format:'%h' | head -n 1)')\" > lsa/lsa_version.py" #lsa_version requires main() as an entry_point
+#can test lsa_version before build
+#python -c "from lsa import lsa_version; lsa_version.main()"
 git_on=subprocess.call(git_on_cmd, shell=True)
 if git_on != 0:
   print("warning: git is required to include revision number in binary", file=sys.stderr) 
@@ -87,7 +90,7 @@ setup(name="lsa",
     #packages=['lsa'],
     #requires=['numpy(>=1.1)','scipy(>=0.6)','python(>=2.5)','matplotlib(>=0.98)'],
     zip_safe=False,
-    install_requires=["python >= 2.7","numpy >= 1.0","scipy >= 0.6","matplotlib"],
+    install_requires=["numpy>=1.0","scipy>=0.6","matplotlib"],
     provides=['lsa'],
     ext_modules = [Extension('lsa._compcore', sources = ['lsa/compcore_wrap.cpp', 'lsa/compcore.cpp'],
                                               depends = ['lsa/compcore.hpp'],

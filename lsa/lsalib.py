@@ -407,12 +407,12 @@ def permuPvalue(series1, series2, delayLimit, precisionP, \
 			series1(np.array): 	sequence data of Seq X
 			series2(np.array): 	sequence data of Seq Y
 			delayLimit(int): 	maximum time unit of delayed response allowed	
-      pvalueMethod(int): number of permutations
-      Smax(int): maximum LSA
+            pvalueMethod(int): number of permutations
+            Smax(int): maximum LSA
 			fTransform(func):	replicate summarizing function
 
     Return:
-      p-value
+            p-value
 
 	"""
   
@@ -953,10 +953,11 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
   assert secondRepNum == firstRepNum
   if onDiag:  # if assigned jobs are on the diagnal
     assert firstFactorNum == secondFactorNum
-    pairwiseNum = firstFactorNum*(firstFactorNum-1)/2
+    pairwiseNum = int(firstFactorNum*(firstFactorNum-1)/2)
   else:
     pairwiseNum = firstFactorNum*secondFactorNum
   lsaTable = None
+  #print(pairwiseNum)
   pvalues = np.zeros(pairwiseNum, dtype='float')
   pccpvalues = np.zeros(pairwiseNum, dtype='float')
   spccpvalues = np.zeros(pairwiseNum, dtype='float')
@@ -1126,6 +1127,7 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
           #Otherwise Yz may be changed, now it is copied
           #np.ma.array(copy=True) to copy, otherwise is only reference
           promisingP = 0.05 #this is according to convention of P-value
+          lsaP = -1 #needs to be defined in this scope
           if pvalueMethod in ['theo', 'mix']:
             #x = np.abs(Smax)*np.sqrt(timespots) # x=Rn/sqrt(n)=Smax*sqrt(n)
             #alpha=1-{#(nan+zeros)/timespots}
@@ -1143,6 +1145,9 @@ def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5,
             Yp = np.ma.array(Yz,copy=True)
             lsaP = permuPvalue(Xp, Yp, delayLimit, precisionP, np.abs(Smax), \
               fTransform, zNormalize, trendThresh)  # do Permutation Test
+
+          #print(pvalueMethod)
+          #print(lsaP)
 
           pvalues[ti] = lsaP
           #print "bootstrap computing..."
@@ -1640,14 +1645,24 @@ def test():
   oP_PCC = .5 + np.sign(oPCC)*(.5 - otcdf) #addhoc for perfect correlation
   print("nPCC", "nP_PCC", "oPCC", "oP_PCC", "otcdf", file=sys.stderr)
   print(nPCC, nP_PCC, oPCC, oP_PCC, otcdf, file=sys.stderr)
-  print("---applyAnalysis---", file=sys.stderr)
-  print(applyAnalysis(clean_data, clean_data, True, 1, .95, 10, 10, sdAverage, noZeroNormalize), file=sys.stderr)
-  print("---applyAnalysis---", file=sys.stderr)
-  print(applyAnalysis(clean_data, clean_data, True, 1, .95, 10, 10, simpleAverage, noZeroNormalize), file=sys.stderr)
-  print("---applyAnalysis---", file=sys.stderr)
-  print(applyAnalysis(clean_data, clean_data, True, 1, .95, 10, 10, simpleMedian, noZeroNormalize), file=sys.stderr)
-  print("---applyAnalysis---", file=sys.stderr)
-  print(applyAnalysis(clean_data, clean_data, True, 1, .95, 10, 10, madMedian, noZeroNormalize), file=sys.stderr)
+  #applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5, \
+  #  bootCI=.95, bootNum=0, pvalueMethod='perm', precisionP=1000,\
+  #  fTransform=simpleAverage, zNormalize=noZeroNormalize, approxVar=1, \
+  #  resultFile=tempfile.TemporaryFile('w'), trendThresh=None,\
+  #  firstFactorLabels=None, secondFactorLabels=None, qvalueMethod='R', progressive=0):
+  print("---applyAnalysis.sd---", file=sys.stderr)
+  print(applyAnalysis(clean_data, clean_data, onDiag=True, delayLimit=1, minOccur=.5, \
+    bootCI=.95, bootNum=0, pvalueMethod='perm', precisionP=1000,\
+    fTransform=sdAverage, zNormalize=noZeroNormalize, approxVar=1, \
+    resultFile=tempfile.TemporaryFile('w'), trendThresh=None,\
+    firstFactorLabels=None, secondFactorLabels=None, qvalueMethod='R', progressive=0), file=sys.stderr)
+  #print(applyAnalysis(clean_data, clean_data, True, 1, .95, 10, 10, sdAverage, noZeroNormalize), file=sys.stderr)
+  #print("---applyAnalysis.simple---", file=sys.stderr)
+  #print(applyAnalysis(clean_data, clean_data, True, 1, .95, 10, 10, simpleAverage, noZeroNormalize), file=sys.stderr)
+  #print("---applyAnalysis.median---", file=sys.stderr)
+  #print(applyAnalysis(clean_data, clean_data, True, 1, .95, 10, 10, simpleMedian, noZeroNormalize), file=sys.stderr)
+  #print("---applyAnalysis.mad---", file=sys.stderr)
+  #print(applyAnalysis(clean_data, clean_data, True, 1, .95, 10, 10, madMedian, noZeroNormalize), file=sys.stderr)
   #print >>sys.stderr, "---theoPvalue--- d=3, xi=(0 to 100)*100, x=(xi/100)*x_var"
   #D3_table = theoPvalue(Rmax=10, Dmax=3, precision=.00001, x_decimal=my_decimal)   #let's produce 2 tail-ed p-value
   #D2_table = theoPvalue(Rmax=10, Dmax=2, precision=.00001, x_decimal=my_decimal)   #let's produce 2 tail-ed p-value

@@ -1,5 +1,6 @@
 # Current LSA Tests
 echo "ELSA Tests"
+python -c "from lsa import lsa_version; lsa_version.main()"
 lsa_compute ../test/ARISA20.csv ../test/ARISA20.theo.lsa -r 1 -s 127 -d 3 -p theo -x 1000 -f none -n percentileZ -e ../test/ARISA20.csv -m 0 #72.951840
 lsa_compute ../test/ARISA20.csv ../test/ARISA20.mix.lsa -r 1 -s 127 -d 3 -p mix -x 1000 -f none -n percentileZ -e ../test/ARISA20.csv -m 0 #3501.449665
 lsa_compute ../test/ARISA20.csv ../test/ARISA20.perm.lsa -r 1 -s 127 -d 3 -p perm -x 1000 -f none -n percentileZ -e ../test/ARISA20.csv -m 0 #14737.259068
