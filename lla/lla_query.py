@@ -35,9 +35,11 @@ import numpy as np
 try:
   # installed 
   from lsa import laio
+  from lsa import lsalib
 except ImportError:
   # debug
   from . import laio
+  from . import lsalib
 import lsa
 
 rpy_import=False
@@ -61,9 +63,10 @@ rpy_import=False
 def main():
 
   __script__ = "la_query"
-  version_desc = "%s (rev: %s) - copyright Li Charlie Xia, lixia@stanford.edu" \
-            % (__script__, open(os.path.join(os.path.dirname(os.path.dirname(lsa.__file__)), 'VERSION.txt')).read().strip())
-  print(version_desc, file=sys.stderr)
+  version_desc = lsalib.safeCmd('lsa_version')
+  version_print = "%s (rev: %s) - copyright Li Charlie Xia, lcxia@scut.edu.cn" \
+    % (__script__, version_desc)
+  print(version_print, file=sys.stderr)
 
   # define arguments: delayLimit, fillMethod, permuNum
   parser = argparse.ArgumentParser(description="Auxillary tool to new LSA package for querying la results")

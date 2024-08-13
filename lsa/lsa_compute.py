@@ -47,6 +47,7 @@ import lsa
 #			    'VERSION.py')) #only one variable named version_desc
 
 def main():  
+
   __script__ = "lsa_compute"
   version_desc = lsalib.safeCmd('lsa_version')
   version_print = "%s (rev: %s) - copyright Li Charlie Xia, lcxia@scut.edu.cn" \

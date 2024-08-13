@@ -59,7 +59,8 @@ if os.path.exists('MANIFEST'): os.remove('MANIFEST')
 
 #compcore_module = Extension('lsa/_compcore', sources=['lsa/compcore_wrap.cpp', 'lsa/compcore.cpp'] , )
 # in above settings, put compcore.cpp, compcore.h, compcore.i file in lsa subdir
-# use swig -python -c++ lsa/compcore.i -o compcore_wrap.cpp 
+# and generate compcore.py file
+# swig -python -c++ -o compcore_wrap.cpp compcore.i
 # then use python setup.py build
 # _compcore.so shall appear in lsa subdir in build/build-arch dir
 # when import module shall use import lsa.xxx
