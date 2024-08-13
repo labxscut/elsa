@@ -236,6 +236,7 @@ def main():
   
   #start timing main
   start_time = time.time()
+  #print("starting1...")
 
   #datafile handling
   onDiag = False
@@ -243,17 +244,26 @@ def main():
     firstData=np.genfromtxt( \
         dataFile, comments='#', delimiter='\t', missing_values=['na','','NA'], \
         filling_values=np.nan, usecols=list(range(1,spotNum*repNum+1)) )
+    #print("starting10...")
     if len(firstData.shape)==1:
       firstData=np.array([firstData])
+    #print("starting101...")
     #print firstData.shape
     dataFile.seek(0)  #rewind
+    #print("starting102...")
     #print "we can get here"
-    firstFactorLabels=np.genfromtxt( dataFile, comments='#', delimiter='\t', \
-        usecols=range(0,1), dtype='string' ).tolist()
+    firstFactorLabels=np.genfromtxt( \
+        dataFile, comments='#', delimiter='\t', \
+        usecols=range(0,1), dtype='str' )
+    #print(firstFactorLabels)
+    firstFactorLabels=firstFactorLabels.tolist()
+    #print("starting103...")
     if type(firstFactorLabels)==str:
       firstFactorLabels=[firstFactorLabels]
+    #print("starting11...")
     #print "but we cann't get here"
     if not extraFile:
+      #print("starting12...")
       onDiag = True
       #print >>sys.stderr, "reading raw data from dataFile..."
       dataFile.seek(0)  #rewind
@@ -264,10 +274,11 @@ def main():
         secondData=np.array([secondData.shape])
       dataFile.seek(0)  #rewind
       secondFactorLabels=np.genfromtxt( dataFile, comments='#', delimiter='\t', \
-          usecols=range(0,1), dtype='string' ).tolist()
+          usecols=range(0,1), dtype='str' ).tolist()
       if type(secondFactorLabels)==str:
         secondFactorLabels=[secondFactorLabels]
     else:
+      #print("starting13...")
       #print "can we get here"
       #dataFile.close()  #incase feeding the same file twice
       extraFile.seek(0)
@@ -279,7 +290,7 @@ def main():
       print(secondData.shape)
       extraFile.seek(0)  #rewind
       secondFactorLabels=np.genfromtxt( extraFile, comments='#', delimiter='\t', \
-          usecols=range(0,1), dtype='string' ).tolist()
+          usecols=range(0,1), dtype='str' ).tolist()
       if type(secondFactorLabels)==str:
         secondFactorLabels=[secondFactorLabels]
   except ValueError:
@@ -298,6 +309,7 @@ def main():
     An in total, it shall have spotNum * repNum numeric cells \n \
     for repNum-replicated spotNum-timepoint series data. ", file=sys.stderr)
     exit(0)
+  #print("starting2...")
 
   ###print rawData, factorLabels
   cleanData = []
@@ -318,6 +330,7 @@ or use -e to specify another input file""", file=sys.stderr)
         tempData[i,j] = lsalib.fillMissing( tempData[i,j], fillMethod )
     cleanData.append(tempData)
   #print tempData
+  #print("starting3...")
     
   #calculation
   #[ Seq X's Idx, Seq Y's Idx, LS Score, CI_low, CI_high, X's Start Position, 

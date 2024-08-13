@@ -104,11 +104,10 @@ setup(name="lsa",
     entry_points = { 
         'console_scripts': [
             'lsa_compute = lsa.lsa_compute:main',
-            'la_compute = lsa.la_compute:main',
             'lsa_query = lsa.lsa_query:main',
-            'la_query = lsa.la_query:main',
-            'to_trend = lsa.to_trend:main',
+            'lsa_infer = lsa.lsa_infer:main',
             'lsa_sim = lsa.lsa_sim:main',
+            'to_trend = lsa.to_trend:main',
             'par_ana = lsa.par_ana:main',
 			'check_data = lsa.check_data:main',
 			'fix_qv = lsa.fix_qv:main',

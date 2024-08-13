@@ -41,7 +41,7 @@ def main():
       usecols=list(range(1,spotNum+1)) )
   dataFile.seek(0)  #rewind
   factorLabels=list(np.genfromtxt( dataFile, comments='#', delimiter='\t', \
-      usecols=range(0,1), dtype='string' ))
+      usecols=range(0,1), dtype='str' ))
 
   start_time = time.time()
 

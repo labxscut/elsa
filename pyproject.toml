@@ -23,20 +23,12 @@ dependencies = [
     "matplotlib"
 ]
 
-[project.optional-dependencies]
-extra = ["numpy>=1.1", "scipy>=0.6", "matplotlib>=0.98"]
-
 [project.scripts]
 lsa_compute = "lsa.lsa_compute:main"
-la_compute = "lsa.la_compute:main"
 lsa_query = "lsa.lsa_query:main"
-la_query = "lsa.la_query:main"
 to_trend = "lsa.to_trend:main"
 lsa_sim = "lsa.lsa_sim:main"
 par_ana = "lsa.par_ana:main"
 check_data = "lsa.check_data:main"
 fix_qv = "lsa.fix_qv:main"
 lsa_version = "lsa.lsa_version:main"
-
-[tool.setuptools.dynamic]
-long_description = { file = "README.rst" }
