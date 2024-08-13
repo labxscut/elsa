@@ -1663,9 +1663,16 @@ def test():
   #print >>sys.stderr, P=readPvalue(T_table, .1876, 140, x_var=1, x_decimal=my_decimal) # read two-tailed  
   #print >>sys.stderr, "theoP=", P
 
+def safeCmd(c):
+  try:
+    return os.popen(c).read().rstrip()
+  except Exception as e:
+    return str(e)
+
 if __name__=="__main__":
-  print("hello world!")
+  print("start testing lsa/lsalib.py")
   test()
+  print("end testing lsa/lsalib.py")
   exit(0)
 
 

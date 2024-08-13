@@ -43,6 +43,12 @@ except ImportError:
 
 def main():  
 
+  __script__ = "lla_compute"
+  version_desc = lsalib.safeCmd('lsa_version')
+  version_print = "%s (rev: %s) - copyright Li Charlie Xia, lcxia@scut.edu.cn" \
+    % (__script__, version_desc)
+  print(version_print, file=sys.stderr)
+
   # define arguments: delayLimit, fillMethod, pvalueMethod
   parser = argparse.ArgumentParser(description="New LSA Commandline Tool")
 

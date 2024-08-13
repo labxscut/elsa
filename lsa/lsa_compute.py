@@ -48,8 +48,8 @@ import lsa
 
 def main():  
   __script__ = "lsa_compute"
-  version_desc = os.popen("lsa_version").read().rstrip()
-  version_print = "%s (rev: %s) - copyright Li Charlie Xia, lixia@stanford.edu" \
+  version_desc = lsalib.safeCmd('lsa_version')
+  version_print = "%s (rev: %s) - copyright Li Charlie Xia, lcxia@scut.edu.cn" \
     % (__script__, version_desc) 
   print(version_print, file=sys.stderr)
 

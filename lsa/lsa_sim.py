@@ -16,6 +16,12 @@ except ImportError:
   from lsa import lsalib
 
 def main():
+  
+  __script__ = "lsa_sim"
+  version_desc = lsalib.safeCmd('lsa_version')
+  version_print = "%s (rev: %s) - copyright Li Charlie Xia, lcxia@scut.edu.cn" \
+    % (__script__, version_desc)
+  print(version_print, file=sys.stderr)
 
   # define arguments: delayLimit, fillMethod, permuNum
   parser = argparse.ArgumentParser(description="LSA and LTA Simulation Tool")

@@ -34,7 +34,7 @@ import optparse, sys, csv, re, os
 #numeric libs
 from numpy import array
 import pylab
-from scipy.io import read_array
+#from scipy.io import read_array
 from matplotlib.lines import Line2D
 #libs for debug use only
 import pdb
@@ -52,6 +52,12 @@ from lsa import lsalibx
 
 
 def main():
+
+  __script__ = "lsa_infer"
+  version_desc = lsalib.safeCmd('lsa_version')
+  version_print = "%s (rev: %s) - copyright Li Charlie Xia, lcxia@scut.edu.cn" \
+    % (__script__, version_desc)
+  print(version_print, file=sys.stderr)
 
   parser = optparse.OptionParser("usage: %prog [options] referFile fLabel1 fLabel2 outFile")
 

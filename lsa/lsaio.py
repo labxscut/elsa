@@ -515,6 +515,9 @@ def toSif( lsa_table, lsa_size, LS_idx=3, Delay_idx=9):
       sifTable.append( [node_x, relation, node_y] + list(r['as.character'](r.lsa_select.rx(i, True)))[2:] )
   return sifTable
 
+def main():
+  pass
+
 if __name__ == "__main__":
   main()
   exit(0)
