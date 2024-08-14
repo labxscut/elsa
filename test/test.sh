@@ -4,14 +4,14 @@ python -c "from lsa import lsa_version; lsa_version.main()"
 
 # Current LSA Tests
 echo "ELSA Tests"
-check_data ../test/ARISA20.csv 1 127 # no output is expected if no data errors found. 
+lsa_chkdat ../test/ARISA20.csv 1 127 # no output is expected if no data errors found. 
 lsa_compute ../test/ARISA20.csv ../test/ARISA20.theo.lsa -r 1 -s 127 -d 3 -p theo -x 1000 -f none -n percentileZ -e ../test/ARISA20.csv -m 0 #72.951840
 #lsa_compute ../test/ARISA20.csv ../test/ARISA20.mix.lsa -r 1 -s 127 -d 3 -p mix -x 1000 -f none -n percentileZ -e ../test/ARISA20.csv -m 0 #3501.449665
 #lsa_compute ../test/ARISA20.csv ../test/ARISA20.perm.lsa -r 1 -s 127 -d 3 -p perm -x 1000 -f none -n percentileZ -e ../test/ARISA20.csv -m 0 #14737.259068
 
 # Current LTA Tests 
 echo "LTA Tests"
-to_trend -T 1 -S 119 ARISA20.txt ARISA20.trend.txt
+lsa_totrend -T 1 -S 119 ARISA20.txt ARISA20.trend.txt
 lsa_compute ../test/ARISA20.csv ../test/ARISA20.theo.lta -r 1 -s 127 -d 3 -p theo -x 1000 -f none -n percentileZ -e ../test/ARISA20.csv -m 0 -a 0.5549 -T 1 #4.043180s
 #lsa_compute ../test/ARISA20.csv ../test/ARISA20.mix.lta -r 1 -s 127 -d 3 -p mix -x 1000 -f none -n percentileZ -e ../test/ARISA20.csv -m 0 -a 0.5549 -T 1 #
 #lsa_compute ../test/ARISA20.csv ../test/ARISA20.perm.lsa -r 1 -s 127 -d 3 -p perm -x 1000 -f none -n percentileZ -e ../test/ARISA20.csv -m 0 -a 0.5549 -T 1 #
