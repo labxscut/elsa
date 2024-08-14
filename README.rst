@@ -79,7 +79,7 @@ INSTALL
 -----------------
 
 
-    1. for use
+    (1). # for use #
 
     First, install the prerequisites: C++ (build-essential), Python(dev), 
     conda, numpy, scipy and matplotlib as specified in setup.py,
@@ -95,7 +95,7 @@ INSTALL
         elsa>  cd test && . test.sh                     # a test script is available
 
 
-    2. for development
+    (2). # for development #
 
     eLSA is open source and your contributions are greatly welcome.
 
@@ -147,9 +147,9 @@ Please cite the references 2 and 3 if any scripts of the ELSA software package w
 Please also cite the reference 4 if local trend analysis (LTA) scripts was used in your work. 
 Please also cite the reference 6 if local liquid association analysis (LLA) scripts was used in your work. 
 
-    1. Dongmei Ai, Lulu Chen, Jiemin Xie, Longwei Cheng, Fang Zhang, Yihui Luan, Yang Li, Shengwei Hou, Fengzhu Sun, Li Charlie Xia. Identifying local associations in biological time series: algorithms, statistical significance, and applications. Briefings in Bioinformatics 2023, 24(6):bbad390. (https://doi.org/10.1093/bib/bbad390) 
-    2. Li C Xia, Dongmei Ai, Jacob Cram, Jed A Fuhrman, Fengzhu Sun. Efficient Statistical Significance Approximation for Local Association Analysis of High-Throughput Time Series Data. Bioinformatics 2013, 29(2):230-237. (https://doi.org/10.1093/bioinformatics/bts668)
-    3. Li C Xia, Joshua A Steele, Jacob A Cram, Zoe G Cardon, Sheri L Simmons, Joseph J Vallino, Jed A Fuhrman and Fengzhu Sun. Extended local similarity analysis (eLSA) of microbial community and other time series data with replicates. BMC Systems Biology 2011, 5(S2):S15 (https://doi.org/10.1186/1752-0509-5-S2-S15)
-    4. Li C Xia, Dongmei Ai, Jacob Cram, Xiaoyi Liang, Jed Fuhrman, Fengzhu Sun. Statistical significance approximation in local trend analysis of high-throughput time-series data using the theory of Markov chains. BMC Bioinformatics 2015, 16, 301 (https://doi.org/10.1186/s12859-015-0732-8)
-    5. Quansong Ruan, Debojyoti Dutta, Michael S. Schwalbach, Joshua A. Steele, Jed A. Fuhrman and Fengzhu Sun Local similarity analysis reveals unique associations among marine bacterioplankton species and environmental factors Bioinformatics 2006, 22(20):2532-2538
-    6. Dongmei Ai, Xiaoxin Li, Hongfei Pan, Li Charlie Xia#. Explore Mediated Co-varying Dynamics in Microbial Community using Integrated Local Similarity and Liquid Association Analysis. Accepted bu APBC, to appear in BMC Genomics (2019).
+    1. (1) Dongmei Ai, Lulu Chen, Jiemin Xie, Longwei Cheng, Fang Zhang, Yihui Luan, Yang Li, Shengwei Hou, Fengzhu Sun, Li Charlie Xia. Identifying local associations in biological time series: algorithms, statistical significance, and applications. Briefings in Bioinformatics 2023, 24(6):bbad390. (https://doi.org/10.1093/bib/bbad390) 
+    2. (2) Li C Xia, Dongmei Ai, Jacob Cram, Jed A Fuhrman, Fengzhu Sun. Efficient Statistical Significance Approximation for Local Association Analysis of High-Throughput Time Series Data. Bioinformatics 2013, 29(2):230-237. (https://doi.org/10.1093/bioinformatics/bts668)
+    3. (3) Li C Xia, Joshua A Steele, Jacob A Cram, Zoe G Cardon, Sheri L Simmons, Joseph J Vallino, Jed A Fuhrman and Fengzhu Sun. Extended local similarity analysis (eLSA) of microbial community and other time series data with replicates. BMC Systems Biology 2011, 5(S2):S15 (https://doi.org/10.1186/1752-0509-5-S2-S15)
+    4. (4) Li C Xia, Dongmei Ai, Jacob Cram, Xiaoyi Liang, Jed Fuhrman, Fengzhu Sun. Statistical significance approximation in local trend analysis of high-throughput time-series data using the theory of Markov chains. BMC Bioinformatics 2015, 16, 301 (https://doi.org/10.1186/s12859-015-0732-8)
+    5. (5) Quansong Ruan, Debojyoti Dutta, Michael S. Schwalbach, Joshua A. Steele, Jed A. Fuhrman and Fengzhu Sun Local similarity analysis reveals unique associations among marine bacterioplankton species and environmental factors Bioinformatics 2006, 22(20):2532-2538
+    6. (6) Dongmei Ai, Xiaoxin Li, Hongfei Pan, Li Charlie Xia#. Explore Mediated Co-varying Dynamics in Microbial Community using Integrated Local Similarity and Liquid Association Analysis. Accepted bu APBC, to appear in BMC Genomics (2019).
