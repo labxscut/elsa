@@ -58,7 +58,7 @@ SOFTWARE
     More current information of this package is available at:
     http://github.com/labxscut/elsa
 
-DOCKER (Platform Independent and Preferred)
+DOCKER 
 ---------------------------------------------
 
   A Dockerfile is provided to build elsa enabled docker image from a standard Ubuntu docker image. 
@@ -79,22 +79,22 @@ INSTALL
 -----------------
 
 
-    1. Install for use
+    1. for use
 
-    Please fullfill the prerequisites of C++, Python (with development and setuptools),
-    numpy, scipy and matplotlib as described in setup.py before installing eLSA.
+    Please install the prerequisites: C++ (build-essential), Python(dev), 
+    conda, numpy, scipy and matplotlib as specified in setup.py.
 
-    [Linux] (e.g. in Ubuntu, Windows Subsystem Linux, or Conda like Virtual Env)
+    Works for Linux, Mac OS, Windows Subsystem Linux, via a Conda-like Virtual Env
 
-    Download and unzip the latest master branch to the elsa folder.
+    First, download and unzip the latest master branch to the elsa folder.
 
     ::
 
-        elsa> python setup.py install                            # or pip install .
-        elsa> cd test && . test.sh                               # a test script is available
+        conda> python setup.py install                            # or pip install .
+        conda> cd test && . test.sh                               # a test script is available
 
 
-    2. Install for development
+    2. for development
 
     eLSA is open source and your contributions are greatly welcome.
 
@@ -104,7 +104,7 @@ INSTALL
         
         > git clone ssh://git@github.com/your/elsa elsa
 
-    Make your edits and create a pull request.
+    Make your edits and create a pull request to merge back.
 
 EXECUTABLES
 --------------------
@@ -118,13 +118,13 @@ EXECUTABLES
       lsa_compute                       # main script for LSA/LTA computation to generat the .lsa result
       lsa_version                       # display the git commit hash, i.e. version, of installed esla
 
-      check_data                        # provided as is, check the input file's format compatibility
+      lsa_chkdat                        # provided as is, check the input file's format compatibility
       lsa_query                         # provided as is, query .lsa result and generate network (requires rpy)
       lsa_infer                         # provided as is, plot pairwise .lsa result (requires rpy)
       lsa_sim                           # provided as is, simulate a pair of time series
-      par_ana                           # provided as is, generate parallel jobs for a large input file 
-      fix_qv                            # provided as is, fix the q-values for the merged parallel .lsa results 
-      to_trend                          # provided as is, convert original series to trend series
+      lsa_para                          # provided as is, generate parallel jobs for a large input file 
+      lsa_fixqv                         # provided as is, fix the q-values for the merged parallel .lsa results 
+      lsa_totrend                       # provided as is, convert original series to trend series
     
 
 NOTES
