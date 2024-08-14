@@ -51,148 +51,104 @@ Figure 2. Liquid Association / Mediated correlation and example Cytoscape diagra
 SOFTWARE
 -------------
     Extended Local Similarity Analysis(ELSA)
-    Currently the package was developed for Linux (Ubuntu). 
-    For other platforms, see the DOCKER section for help.
 
-    More current information of this package is available @
-    http://bitbucket.org/charade/elsa
-    
-    ELSA Wiki (a must read and welcome to contribute) is available @
-    http://bitbucket.org/charade/elsa/wiki/Home
+    Currently the package is maintained only for Linux (Ubuntu). 
+    For other platforms, see the DOCKER section for use.
 
-    Use of external resources:
-
-    C++ build environment
-        e.g. build-essential and libstdc++6 in Ubuntu
-    Python(>=2.7) 
-        download @ http://www.python.org/
-    Numpy(>=1.0)
-        download @ http://www.scipy.org/
-    Scipy(>=0.6)
-        download @ http://www.scipy.org/
+    More current information of this package is available at:
+    http://github.com/labxscut/elsa
 
 DOCKER (Platform Independent and Preferred)
 ---------------------------------------------
 
   A Dockerfile is provided to build elsa enabled docker image from a standard Ubuntu docker image. 
   To build a docker image using 'docker build $ELSAPKG', where $ELSAPKG is the unzipped path of elsa.
-  Or directly download the Dockerfile directly at:
-
-    https://bitbucket.org/charade/elsa/raw/master/Dockerfile
 
     ::
       
-      docker build --no-cache -t charade/xlibbox:elsa .
+      docker build --no-cache -t elsa .
 
   Name the built container as your:container; Then mount current data directory to /var/data accessible by docker:
 
     ::
 
-      sudo docker run -it -v `pwd`:/var/data/ your:container
-      sudo docker run cd /var/data/ && lsa_compute ...
+      sudo docker run -it -v `pwd`:/var/data/ elsa
+      sudo docker run cd /var/data/ && lsa_compute --help
 
 INSTALL
 -----------------
 
 
-    1. Install Prerequisites
+    1. Install for use
 
     Please fullfill the prerequisites of C++, Python (with development and setuptools),
-    numpy, scipy and biopython as described in README.txt before installing eLSA.
-    
-    [Linux] (e.g. Ubuntu)
+    numpy, scipy and matplotlib as described in setup.py before installing eLSA.
 
-    Download the latest master branch of eLSA from https://bitbucket.org/charade/elsa/get/master.tar.gz .
-    Follow standard python module setup to install:
-        $tar -zxvf charade-elsa-master.tar.gz
-        $cd charade-elsa-$your_master_commit_id
-        $python setup.py install
-        $cd test      #test the scripts are workable
-        $. test.sh    #ad hoc test of the script on test data
+    [Linux] (e.g. in Ubuntu, Windows Subsystem Linux, or Conda like Virtual Env)
 
-    [Linux] (virtualenv)
+    Download and unzip the latest master branch to the elsa folder.
 
-    Install ELSA through system/site python and virtualenv
+    ::
 
-      **This is the MOST RECOMMENDED WAY for installation**
+        elsa> python setup.py install                            # or pip install .
+        elsa> cd test && . test.sh                               # a test script is available
 
-     (1.1) virtualenv command is standard with Python 2.7 or later. If it is not present, please see https://virtualenv.pypa.io for details to install virtualenv for your python. Possibly as simple as:
 
-      ::
+    2. Install for development
 
-        sudo easy_install pip
-        sudo pip install virtualenv
+    eLSA is open source and your contributions are greatly welcome.
 
-      Ask your IT manager to help install it for you if you have permission difficulties.
+    Use git to fork a copy:
 
-      (1.2) When your system python has virtualenv, make sure your $PYTHONPATH is set to empty and follow steps below:
+    ::
+        
+        > git clone ssh://git@github.com/your/elsa elsa
 
-      ::
-
-        >virtualenv-2.7 vpy27 --no-site-packages
-
-      (1.3) Then you can activate this virtual python:
-
-      ::
-
-        >source vpy27/bin/activate
-        >pip install numpy
-        >pip install scipy
-
-      (1.4) Now under your virtualenv, the dependencies will be automatically setup:
-
-      ::
-
-        vpy27> python setup.py install
-
-      (1.5) Now the ELSA executables will be available from "$PWD/vpy27/bin". Because you installed ELSA via virtualenv, remember to activate the virtualenv first every time you use ELSA. Also export the environmental variable $ELSA_BIN=$PWD/vpy27/bin
-
-    2. Development
-
-    eLSA is open source and the version controlled repository is @:
-        https://bitbucket.org/charade/elsa.
-    Use git (http://github.org) to clone a local copy:
-        $git clone ssh://git@bitbucket.org/charade/elsa elsa
-
-    Follow standard python module setup to install:
-        $cd elsa
-        $python setup.py install
+    Make your edits and create a pull request.
 
 EXECUTABLES
 --------------------
 
-  ::
+    1. The following executables will be available from your python scripts directory (typically already in $PATH).
+    2. Use '$script_name -h' for its usage.
+    3. A few examples are available in 'test/test.sh' and explained there.
 
-    lsa_compute                       # for LSA/LTA computation
-    la_compute                        # for LA computation
+    ::
 
-USAGE
----------------------
+      lsa_compute                       # main script for LSA/LTA computation to generat the .lsa result
+      lsa_version                       # display the git commit hash, i.e. version, of installed esla
 
-    (i) Above executables will be available from your python scripts directory.
-      Use '-h' to read individual script usage.
-    (ii) A simple test example is available at 'test/test.sh' and explained within.
+      check_data                        # provided as is, check the input file's format compatibility
+      lsa_query                         # provided as is, query .lsa result and generate network (requires rpy)
+      lsa_infer                         # provided as is, plot pairwise .lsa result (requires rpy)
+      lsa_sim                           # provided as is, simulate a pair of time series
+      par_ana                           # provided as is, generate parallel jobs for a large input file 
+      fix_qv                            # provided as is, fix the q-values for the merged parallel .lsa results 
+      to_trend                          # provided as is, convert original series to trend series
+    
 
 NOTES
 ----------------------
     
-    A historical R version is available through Prof. Fengzhu Sun's page and is not supported any longer.
-    In case the integrated q-value does not work for you, there are many other independent false discovery rate calculation packages, such as locfdr, mixfdr, fuzzyFDR, pi0, fdrci, nFDR.
+    The historical R version of LSA is no longer offered, all its computation capacity is avaiblable through eLSA.
 
 
 CONTACT
 ----------------------
 
-    fsun at usc dot edu and/or lixia at stanford dot edu
+    lcxia at scut dot edu dot cn
 
 CITATIONS
 ----------------------
 
-Please cite the references 1 and 2 if any part of the ELSA python package was used in your study. Please also cite 3 if local trend analysis (LTA) was used in your study. Please also cite reference 6 if extended liquid association analysis (ELA) was used in your study. Please also cite the reference 4 and 5 if you used the old LSA R script, which is no loger maintained. 
+Please cite the references 1, 2, 3, 4 and 5 if the LSA or LTA algorithms and statistical theories was used or reviewed in your work. 
+Please cite the references 2 and 3 if any scripts of the ELSA software package was used in your work. 
+Please also cite the reference 4 if local trend analysis (LTA) scripts was used in your work. 
+Please also cite the reference 6 if local liquid association analysis (LLA) scripts was used in your work. 
 
-    1. Li C Xia, Dongmei Ai, Jacob Cram, Jed A Fuhrman, Fengzhu Sun. Efficient Statistical Significance Approximation for Local Association Analysis of High-Throughput Time Series Data. Bioinformatics 2013, 29(2):230-237. (https://doi.org/10.1093/bioinformatics/bts668)
-    2. Li C Xia, Joshua A Steele, Jacob A Cram, Zoe G Cardon, Sheri L Simmons, Joseph J Vallino, Jed A Fuhrman and Fengzhu Sun. Extended local similarity analysis (eLSA) of microbial community and other time series data with replicates. BMC Systems Biology 2011, 5(S2):S15 (https://doi.org/10.1186/1752-0509-5-S2-S15)
-    3. Li C Xia, Dongmei Ai, Jacob Cram, Xiaoyi Liang, Jed Fuhrman, Fengzhu Sun. Statistical significance approximation in local trend analysis of high-throughput time-series data using the theory of Markov chains. BMC Bioinformatics 2015, 16, 301 (https://doi.org/10.1186/s12859-015-0732-8)
-    4. Joshua A Steele, Peter D Countway, Li Xia, Patrick D Vigil, J Michael Beman, Diane Y Kim, Cheryl-Emiliane T Chow, Rohan Sachdeva, Adriane C Jones, Michael S Schwalbach, Julie M Rose, Ian Hewson, Anand Patel, Fengzhu Sun, David A Caron, Jed A Fuhrman. Marine bacterial, archaeal and protistan association networks reveal ecological linkages The ISME Journal 2011, 51414–1425
+    1. Dongmei Ai, Lulu Chen, Jiemin Xie, Longwei Cheng, Fang Zhang, Yihui Luan, Yang Li, Shengwei Hou, Fengzhu Sun, Li Charlie Xia. Identifying local associations in biological time series: algorithms, statistical significance, and applications. Briefings in Bioinformatics 2023, 24(6):bbad390. (https://academic.oup.com/bib/article/24/6/bbad390/7337690) 
+    2. Li C Xia, Dongmei Ai, Jacob Cram, Jed A Fuhrman, Fengzhu Sun. Efficient Statistical Significance Approximation for Local Association Analysis of High-Throughput Time Series Data. Bioinformatics 2013, 29(2):230-237. (https://doi.org/10.1093/bioinformatics/bts668)
+    3. Li C Xia, Joshua A Steele, Jacob A Cram, Zoe G Cardon, Sheri L Simmons, Joseph J Vallino, Jed A Fuhrman and Fengzhu Sun. Extended local similarity analysis (eLSA) of microbial community and other time series data with replicates. BMC Systems Biology 2011, 5(S2):S15 (https://doi.org/10.1186/1752-0509-5-S2-S15)
+    4. Li C Xia, Dongmei Ai, Jacob Cram, Xiaoyi Liang, Jed Fuhrman, Fengzhu Sun. Statistical significance approximation in local trend analysis of high-throughput time-series data using the theory of Markov chains. BMC Bioinformatics 2015, 16, 301 (https://doi.org/10.1186/s12859-015-0732-8)
     5. Quansong Ruan, Debojyoti Dutta, Michael S. Schwalbach, Joshua A. Steele, Jed A. Fuhrman and Fengzhu Sun Local similarity analysis reveals unique associations among marine bacterioplankton species and environmental factors Bioinformatics 2006, 22(20):2532-2538
     6. Dongmei Ai, Xiaoxin Li, Hongfei Pan, Li Charlie Xia#. Explore Mediated Co-varying Dynamics in Microbial Community using Integrated Local Similarity and Liquid Association Analysis. Accepted bu APBC, to appear in BMC Genomics (2019).

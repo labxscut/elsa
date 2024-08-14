@@ -1,4 +1,2 @@
 TODO:
-  [0] Migrate to use git version control?
   [1] Smarter Tab delimited file handling
-  [2] Learn resolve conflicts in git and hg?
