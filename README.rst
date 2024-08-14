@@ -66,14 +66,14 @@ DOCKER
 
     ::
       
-      docker build --no-cache -t elsa .
+      host> docker build --no-cache -t labx-elsa .
 
   Name the built container as your:container; Then mount current data directory to /var/data accessible by docker:
 
     ::
 
-      sudo docker run -it -v `pwd`:/var/data/ elsa
-      sudo docker run cd /var/data/ && lsa_compute --help
+      host> docker run --name elsa -it -v `pwd`:/var/data/ labx-elsa 
+      elsa> lsa_compute --help
 
 INSTALL
 -----------------
@@ -81,30 +81,31 @@ INSTALL
 
     1. for use
 
-    Please install the prerequisites: C++ (build-essential), Python(dev), 
-    conda, numpy, scipy and matplotlib as specified in setup.py.
+    First, install the prerequisites: C++ (build-essential), Python(dev), 
+    conda, numpy, scipy and matplotlib as specified in setup.py,
+    create and activate a virtual env named elsa. 
 
-    Works for Linux, Mac OS, Windows Subsystem Linux, via a Conda-like Virtual Env
+    Same for Linux, Mac OS, Windows Subsystem Linux, with a Conda-like Virtual Env
 
-    First, download and unzip the latest master branch to the elsa folder.
+    Then, download and unzip the latest master branch to the elsa folder.
 
     ::
 
-        conda> python setup.py install                            # or pip install .
-        conda> cd test && . test.sh                               # a test script is available
+        elsa>  pip install .                            # or python setup.py install
+        elsa>  cd test && . test.sh                     # a test script is available
 
 
     2. for development
 
     eLSA is open source and your contributions are greatly welcome.
 
-    Use git to fork a copy:
+    First, use git to fork a copy of elsa on github.com:
 
     ::
         
-        > git clone ssh://git@github.com/your/elsa elsa
+        elsa> git clone ssh://git@github.com/your/elsa elsa
 
-    Make your edits and create a pull request to merge back.
+    Then, make your edits and create a pull request to merge back.
 
 EXECUTABLES
 --------------------
