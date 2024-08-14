@@ -1,2 +1,4 @@
 TODO:
-  [1] Smarter Tab delimited file handling
+  1. Smarter Tab delimited file handling
+  2. make pyproject.toml work
+  

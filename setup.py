@@ -45,7 +45,7 @@ doclines=__doc__.splitlines()
 #os.environ['CC'] = 'g++'  #temporary measure to trick distutils use g++, need update to distutils2
 #lines = open("VERSION.txt", 'rU').readlines()
 #version_desc = ','.join([lines[1].strip(), lines[0].strip()])
-print("pls install using pip install .", file=sys.stderr)
+print("works with python setup.py install or pipx install .", file=sys.stderr)
 
 print("testing git availability ...", file=sys.stderr)
 git_on_cmd="echo 'def main():\n\t print('\"'$(cat VERSION.txt); @GIT: $(git log --pretty=format:'%h' | head -n 1)')\" > lsa/lsa_version.py" #lsa_version requires main() as an entry_point
@@ -77,7 +77,7 @@ class my_build(build.build):
         ('build_scripts', build.build.has_scripts), ] 
 
 setup(name="lsa",
-    version="1.0.2",
+    version="2.0.0",
     description=doclines[0],
     long_description="\n".join(doclines[2:]),
     author="Li Charlie Xia",
@@ -87,10 +87,8 @@ setup(name="lsa",
     platforms=["Linux"],
     packages=find_packages(exclude=['ez_setup', 'test', 'doc']),
     include_package_data=True,
-    #packages=['lsa'],
-    #requires=['numpy(>=1.1)','scipy(>=0.6)','python(>=2.5)','matplotlib(>=0.98)'],
     zip_safe=False,
-    install_requires=["numpy>=1.0","scipy>=0.6","matplotlib"],
+    install_requires=["numpy>=1.0","scipy>=0.6","matplotlib>=1"],
     provides=['lsa'],
     ext_modules = [Extension('lsa._compcore', sources = ['lsa/compcore_wrap.cpp', 'lsa/compcore.cpp'],
                                               depends = ['lsa/compcore.hpp'],
@@ -107,10 +105,10 @@ setup(name="lsa",
             'lsa_query = lsa.lsa_query:main',
             'lsa_infer = lsa.lsa_infer:main',
             'lsa_sim = lsa.lsa_sim:main',
-            'to_trend = lsa.to_trend:main',
-            'par_ana = lsa.par_ana:main',
-			'check_data = lsa.check_data:main',
-			'fix_qv = lsa.fix_qv:main',
+            'lsa_totrend = lsa.lsa_totrend:main',
+            'lsa_para = lsa.lsa_para:main',
+			'lsa_chkdat = lsa.lsa_chkdat:main',
+			'lsa_fixqv = lsa.lsa_fixqv:main',
 			'lsa_version = lsa.lsa_version:main'
         ]
     },
