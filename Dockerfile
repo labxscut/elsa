@@ -34,12 +34,3 @@ RUN conda create -n elsa -y python=3.8 && \
     lsa_compute --help && \
     cd test && \
     . test.sh
-
-# Install PyNotebook server via conda, port 8888
-#RUN conda install notebook 
-
-# Install RStudio server, port 8787
-# -v /path/to/local/folder:/home/rstudio/data
-#RUN apt-get -y install gdebi-core                    
-#RUN curl -sLo rstudio-server.deb wget https://download2.rstudio.org/server/jammy/amd64/rstudio-server-2024.04.2-764-amd64.deb && sudo gdebi -n rstudio-server.deb && rm rstudio-server.deb
-#RUN useradd -m -s /bin/bash rstudio && echo "rstudio:rstudio" | chpasswd 
