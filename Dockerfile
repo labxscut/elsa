@@ -10,7 +10,7 @@ RUN apt-get -y install python-is-python3 python-dev-is-python3
 RUN apt-get -y install pipx                              
 # Install elsa
 RUN git clone --verbose https://github.com/labxscut/elsa.git 
-RUN cd elsa && git lfs checkout py3
+RUN cd elsa && git lfs checkout devel
 RUN cd elsa && git lfs pull
 RUN cd elsa && pipx install .
 # Run elsa prompt
