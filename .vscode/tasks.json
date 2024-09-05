@@ -1,0 +1,54 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "docker-build",
+			"label": "docker-build",
+			"dockerBuild": {
+				"tag": "elsa:latest",
+				"dockerfile": "${workspaceFolder}/Dockerfile",
+				"context": "${workspaceFolder}",
+				"pull": true
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "docker-run-interactive",
+			"type": "shell",
+			"command": "docker",
+			"dependsOn": "docker-build",
+			"args": [
+				"run",
+				"-it",
+				"--rm",
+				"elsa:latest",
+				"/bin/bash"
+			],
+			"problemMatcher": [],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"presentation": {
+				"echo": true,
+				"reveal": "always",
+				"focus": true,
+				"panel": "shared",
+				"showReuseMessage": false,
+				"clear": false
+			}
+		}
+	]
+}
+
+// To use this task file:
+// 1. Open the Command Palette (Ctrl+Shift+P or Cmd+Shift+P on Mac)
+// 2. Type "Tasks: Run Task" and select it
+// 3. Choose one of the following tasks:
+//    - "docker-build:devel": Builds the development Docker image
+//    - "docker-build": Builds the production Docker image
+//    - "docker-run:devel": Runs the development Docker container and executes tests
+//    - "docker-run": Runs the production Docker container and executes tests
+// 
+// Note: The "docker-run" tasks depend on their respective "docker-build" tasks,
+// so they will automatically build the image before running if necessary.
