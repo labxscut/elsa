@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 #lsa-compute -- computation script for LSA package to perform lsa table calculation 
 
 #License: BSD
@@ -38,7 +38,7 @@ try:
   from . import lsalib
 except ImportError:
   #install import
-  from lsa import lsalib
+  from lsa import lsalib_core, lsalib_stats, lsalib_normalization, lsalib_analysis, lsalib_utils
   #np.seterr(all='raise')
 import lsa
 
@@ -49,7 +49,7 @@ import lsa
 def main():  
 
   __script__ = "lsa_compute"
-  version_desc = lsalib.safeCmd('lsa_version')
+  version_desc = lsalib_utils.safeCmd('lsa_version')
   version_print = "%s (rev: %s) - copyright Li Charlie Xia, lcxia@scut.edu.cn" \
     % (__script__, version_desc) 
   print(version_print, file=sys.stderr)
@@ -67,7 +67,7 @@ def main():
   arg_precision_default=1000
   arg_delayLimit_default=0
 
-  parser.add_argument("dataFile", metavar="dataFile", type=argparse.FileType('rU'), \
+  parser.add_argument("dataFile", metavar="dataFile", type=argparse.FileType('r'), \
       help="the input data file,\n \
       m by (r * s)tab delimited text; top left cell start with \
       '#' to mark this is the header line; \n \
@@ -78,7 +78,7 @@ def main():
   parser.add_argument("resultFile", metavar="resultFile", type=argparse.FileType('w'), \
       help="the output result file")
   parser.add_argument("-e", "--extraFile", dest="extraFile", default=None, \
-      type=argparse.FileType('rU'),
+      type=argparse.FileType('r'),
       help="specify an extra datafile, otherwise the first datafile will be used \n \
             and only lower triangle entries of pairwise matrix will be computed")
   parser.add_argument("-d", "--delayLimit", dest="delayLimit", default=arg_delayLimit_default, type=int,\
@@ -192,13 +192,13 @@ def main():
 
   #assign transform function
   if transFunc == 'SD':
-    fTransform = lsalib.sdAverage
+    fTransform = lsalib_normalization.sdAverage
   elif transFunc == 'Med':
-    fTransform = lsalib.simpleMedian   # Median
+    fTransform = lsalib_normalization.simpleMedian   # Median
   elif transFunc == 'MAD':
-    fTransform = lsalib.madMedian      # Median/MAD
+    fTransform = lsalib_normalization.madMedian      # Median/MAD
   else:
-    fTransform = lsalib.simpleAverage   # fallback to default Avg
+    fTransform = lsalib_normalization.simpleAverage   # fallback to default Avg
   
   #check transFunc and repNum compatibility
   if repNum < 5 and ( transFunc == 'SD' ):
@@ -211,19 +211,19 @@ def main():
 
   #check normMethod
   if normMethod == 'none':
-    zNormalize = lsalib.noneNormalize
+    zNormalize = lsalib_normalization.noneNormalize
   elif normMethod == 'percentile':
-    zNormalize = lsalib.percentileNormalize
+    zNormalize = lsalib_normalization.percentileNormalize
   elif normMethod == 'percentileZ':
-    zNormalize = lsalib.percentileZNormalize
+    zNormalize = lsalib_normalization.percentileZNormalize
   elif normMethod == 'robustZ':
-    zNormalize = lsalib.robustZNormalize
+    zNormalize = lsalib_normalization.robustZNormalize
   elif normMethod == 'pnz':
-    zNormalize = lsalib.noZeroNormalize
+    zNormalize = lsalib_normalization.noZeroNormalize
   elif normMethod == 'rnz':
-    zNormalize = lsalib.robustNoZeroNormalize
+    zNormalize = lsalib_normalization.robustNoZeroNormalize
   else:
-    zNormalize = lsalib.percentileZNormalize # fallback to default
+    zNormalize = lsalib_normalization.percentileZNormalize # fallback to default
 
   assert precision>0, "precision %s is not positive" % str(precision) 
   
@@ -327,7 +327,7 @@ or use -e to specify another input file""", file=sys.stderr)
           quit()
     for i in range(0, factorNum):
       for j in range(0, repNum):
-        tempData[i,j] = lsalib.fillMissing( tempData[i,j], fillMethod )
+        tempData[i,j] = lsalib_utils.fillMissing( tempData[i,j], fillMethod )
     cleanData.append(tempData)
   #print tempData
   #print("starting3...")
@@ -341,7 +341,7 @@ or use -e to specify another input file""", file=sys.stderr)
   print("secondData factorNum, repNum, spotNum = %s, %s, %s" \
       % (cleanData[1].shape[0], cleanData[1].shape[1], cleanData[1].shape[2]), file=sys.stderr)
   print("calculating ", cleanData[0].shape[0]*cleanData[1].shape[0], "pairwise local similarity scores...", file=sys.stderr)
-  lsalib.applyAnalysis(cleanData[0], cleanData[1], onDiag=onDiag, \
+  lsalib_analysis.applyAnalysis(cleanData[0], cleanData[1], onDiag=onDiag, \
       delayLimit=delayLimit, bootNum=bootNum, minOccur=minOccur/100.,\
       pvalueMethod=pvalueMethod, precisionP=precision, fTransform=fTransform,\
       zNormalize=zNormalize, approxVar=approxVar, resultFile=resultFile,\

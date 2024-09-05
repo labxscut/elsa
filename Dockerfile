@@ -1,36 +1,36 @@
-# From Ubuntu Noble
-FROM ubuntu:latest
-# All Necessary configs
-ENV DEBIAN_FRONTEND=noninteractive
-SHELL ["/bin/bash", "-c"]
-WORKDIR /setup
+# Use an official Python runtime as a parent image
+FROM python:3.9-slim-buster
 
-# Install C prerequisites
-RUN apt-get update --fix-missing && \
-    apt-get -y install curl git git-lfs build-essential && \
-    rm -rf /var/lib/apt/lists/*
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-# Install Python and Conda
-RUN apt-get update --fix-missing && \
-    apt-get -y install python3 python3-dev python3-pip && \
-    curl -sLo miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
-    bash miniconda.sh -b -p ~/miniconda && \
-    echo 'export PATH=~/miniconda/bin:$PATH' >> ~/.bashrc && \
-    rm miniconda.sh && \
-    rm -rf /var/lib/apt/lists/*
+# Set work directory
+WORKDIR /app
 
-# Install elsa
-ENV PATH=~/miniconda/bin:$PATH
-RUN conda create -n elsa -y python=3.8 && \ 
-    echo "source activate elsa" >> ~/.bashrc && \
-    . ~/miniconda/etc/profile.d/conda.sh && \
-    conda activate elsa && \
-    pip install numpy scipy matplotlib && \
-    git clone https://github.com/labxscut/elsa.git && \
-    cd elsa && \
-    git checkout devel && \
-    git pull && \
-    pip install . && \
-    lsa_compute --help && \
-    cd test && \
-    . test.sh
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpq-dev \
+    gcc \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the current directory contents into the container at /app
+COPY . /app
+
+# Install the ELSA package
+RUN python setup.py install
+
+# Change to the test directory
+WORKDIR /app/test
+
+# Make test.sh executable
+RUN chmod +x test.sh
+
+# Run tests when the container launches
+CMD ["./test.sh"]
