@@ -3,16 +3,6 @@
 	"tasks": [
 		{
 			"type": "docker-build",
-			"label": "docker-build:devel",
-			"dockerBuild": {
-				"tag": "elsa:latest",
-				"dockerfile": "${workspaceFolder}/Dockerfile.devel",
-				"context": "${workspaceFolder}",
-				"pull": true
-			}
-		},
-		{
-			"type": "docker-build",
 			"label": "docker-build",
 			"dockerBuild": {
 				"tag": "elsa:latest",
@@ -20,33 +10,25 @@
 				"context": "${workspaceFolder}",
 				"pull": true
 			},
-			"problemMatcher": [],
+			"problemMatcher": ["$docker"],
 			"group": {
 				"kind": "build",
 				"isDefault": true
 			}
-		},
-		{
-			"type": "docker-run",
-			"label": "docker-run:devel",
-			"dependsOn": [
-				"docker-build:devel"
-			],
-			"dockerRun": {
-				"command": "/bin/bash -c 'cd /app/test && ./test.sh'"
-			}
-		},
-		{
-			"type": "docker-run",
-			"label": "docker-run",
-			"dependsOn": [
-				"docker-build"
-			],
-			"dockerRun": {
-				"command": "/bin/bash -c 'cd /app/test && ./test.sh'"
-			}
 		}
-	]
+	],
+		"problemMatchers": {
+		"$docker": {
+			"owner": "docker",
+			"fileLocation": ["relative", "${workspaceFolder}"],
+			"pattern": [
+				{
+					"regexp": "^ERROR: (.*)$",
+					"message": 1
+				}
+			]
+		}
+	}
 }
 
 // To use this task file:

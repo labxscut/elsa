@@ -20,4 +20,17 @@ from .lsalib_normalization import *
 from .lsalib_analysis import *
 from .lsalib_utils import *
 
-# Remove any function definitions that are now in other modules
+# Global variables
+rpy_import = False
+P_table = dict()
+
+try:
+    from lsa import compcore
+    np.seterr(all='ignore')
+except ImportError:
+    from . import compcore
+    np.seterr(all='warn')
+
+# Add any other necessary imports or global variables here
+
+# Note: All function definitions have been moved to their respective modules

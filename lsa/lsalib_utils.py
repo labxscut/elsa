@@ -1,8 +1,16 @@
 import numpy as np
 import scipy.interpolate
+import subprocess
+import os
 
 def ma_average(ts, axis=0):
     ns = np.ma.mean(ts, axis=0)
+    if type(ns.mask) == np.bool_:
+        ns.mask = [ns.mask] * ns.shape[axis]
+    return ns
+
+def ma_median(ts, axis=0):
+    ns = np.ma.median(ts, axis=axis)
     if type(ns.mask) == np.bool_:
         ns.mask = [ns.mask] * ns.shape[axis]
     return ns
@@ -42,4 +50,14 @@ def fillMissing(tseries, method):
     
     return tseries
 
-# Add other utility functions here
+def safeCmd(cmd):
+    try:
+        return subprocess.check_output(cmd, shell=True, universal_newlines=True).strip()
+    except subprocess.CalledProcessError as e:
+        return f"Error: {e}"
+
+def float_equal(a, b, tol=1e-6):
+    return abs(a - b) <= tol
+
+# Add any other utility functions here that were in the original lsalib.py
+# but not included in other new modules
