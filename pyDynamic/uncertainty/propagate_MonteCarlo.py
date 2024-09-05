@@ -1,6 +1,0 @@
-from scipy.stats import norm, uniform  # Import specific distributions from scipy.stats
-
-def MC(x, ux, N, runs=1000, *args, **kwargs):
-    # ... existing code ...
-    Xn = norm.rvs(loc=0, scale=1, size=(N, runs))  # Use scipy.stats.norm.rvs
-    # ... existing code ...

@@ -145,13 +145,13 @@ def main():
 
   #assign transform function
   if transFunc == 'SD':
-    fTransform = lsalib_normalization.sdAverage
+    fTransform = lsalib_stats.sdAverage
   elif transFunc == 'Med':
-    fTransform = lsalib_normalization.simpleMedian   # Median
+    fTransform = lsalib_stats.simpleMedian   # Median
   elif transFunc == 'MAD':
-    fTransform = lsalib_normalization.madMedian      # Median/MAD
+    fTransform = lsalib_stats.madMedian      # Median/MAD
   else:
-    fTransform = lsalib_normalization.simpleAverage   # fallback to default Avg
+    fTransform = lsalib_stats.simpleAverage   # fallback to default Avg
   
   #check transFunc and repNum compatibility
   if repNum < 5 and ( transFunc == 'SD' ):

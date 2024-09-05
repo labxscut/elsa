@@ -79,7 +79,91 @@ def tied_rank(values):
     
     return sV
 
+def simpleMedian(tseries):
+    """ simple median
+
+    Args:
+      tseries(2d np.mp.array):  one time series with replicates, each row is a replicate
+
+    Returns:
+      1d np.mp.array: one row with replicates summarized by median
+
+    Note:
+      if nan in tseries, it is treated as zeros, this will happen if fTransform before zNormalize
+    """
+    
+    Xf = ma_median(tseries, axis=0)
+    return Xf
+
+def madMedian(tseries):
+    """	MAD weighted averaging 
+
+    Args:
+      tseries(2d np.ma.array):  one time series with replicates, each row is a replicate
+
+    Returns:
+      1d np.ma.array: one row with replicates summarized by MAD weighted median
+
+    Note:
+      if nan in tseries, it is treated as zeros, this will happen if fTransform before zNormalize
+    """
+    Xf = tseries
+    mad = ma_median(np.ma.abs(Xf - ma_median(Xf, axis=0)), axis=0)
+    if np.any(mad.mask) or (np.ma.sum(mad==0))>0:
+        return simpleMedian(tseries)                  #mad = 0, fall back to simpleMedian
+    Xf = ma_median(Xf, axis=0)*(1/mad)*(1/np.ma.sum(1/mad))*(1/mad)                   #mad-weighted sample
+    return Xf
+
+def simpleAverage(tseries):
+    """ simple averaging 
+
+    Args:
+      tseries(np.ma.array):  one 2d time series (masked array) with replicates, each row is a replicate
+
+    Returns:
+      (1d np.ma.array) one row with replicates averaged
+
+    Note:
+      if nan in tseries, it is treated as zeros, this will happen if fTransform before zNormalize
+    """
+    Xf = ma_average(tseries, axis=0)
+    return Xf
+
+def sdAverage(tseries):
+    """	SD weighted averaging 
+
+    Args:
+      tseries(np.ma.array):  one 2d time series (masked array) with replicates, each row is a replicate
+
+    Returns:
+      (1d np.ma.array): one row with replicates SD weighted averaged
+
+    Note:
+      if nan in tseries, it is treated as zeros, this will happen if fTransform before zNormalize
+    """
+    try:
+        sd = np.ma.std(tseries, axis=0, ddof=1)
+    except FloatingPointError:
+        return simpleAverage(tseries)                       #sd = 0, fall back to simpleAverage
+    if np.any(sd.mask) or (np.ma.sum(sd==0))>0:
+        return simpleAverage(tseries)                       #sd = 0, fall back to simpleAverage
+    Xf = ma_average(tseries, axis=0)*(1/sd)*(1/np.ma.sum(1/sd))*(1/sd)   #sd-weighted sample
+    return Xf
+
 def storeyQvalue(pvalues, lam=np.arange(0, Q_lam_max, Q_lam_step), method='smoother', robust=False, smooth_df=3):
+    """ do Q-value calculation
+
+    Args:
+      pvalues(np.array):  a set of p-values
+      lam(np.array):  tentative lambda data
+      method(str):  calculating method, currently only support 'smoother'
+      robust(bool): use robust static or not, default not
+      smooth_df(int): order of spline function
+
+    Returns:
+      qvalues(np.array): a set of qvalues
+    """
+    
     try:
         mpvalues = np.ma.masked_invalid(pvalues, copy=True)
         rpvalues = mpvalues[~mpvalues.mask]
@@ -197,4 +281,4 @@ def calc_shift_corr(Xz, Yz, D, corfunc=calc_pearsonr):
             p_max = cor[1]
     return (r_max, p_max, d_max)
 
-# Add any other statistical functions here
+# ... (keep other existing functions)
