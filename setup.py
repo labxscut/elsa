@@ -55,8 +55,8 @@ git_on=subprocess.call(git_on_cmd, shell=True)
 if git_on != 0:
   print("warning: git is required to include revision number in binary", file=sys.stderr) 
   nohg_confirm = input("do you want to continue without revision (type yes to continue) ? ")
-  if nohg_confirm not in ['y','Y','yes','Yes']:
-    quit("Abort setup. Try to install git first")
+  if nohg_confirm.lower() not in ['y', 'yes']:
+    sys.exit("Abort setup. Try to install git first")
 
 if os.path.exists('MANIFEST'): os.remove('MANIFEST')
 
@@ -88,7 +88,12 @@ setup(name="lsa",
     packages=find_packages(exclude=['ez_setup', 'test', 'doc']),
     include_package_data=True,
     zip_safe=False,
-    install_requires=["numpy>=1.0","scipy>=0.6","matplotlib>=1"],
+    install_requires=[
+        'numpy>=1.20.0',  # Updated to a version that supports the new float dtypes
+        'scipy>=1.6.0',
+        'matplotlib>=3.3.0',
+        # Add other dependencies as needed
+    ],
     provides=['lsa'],
     ext_modules = [Extension('lsa._compcore', sources = ['lsa/compcore_wrap.cpp', 'lsa/compcore.cpp'],
                                               depends = ['lsa/compcore.hpp'],
