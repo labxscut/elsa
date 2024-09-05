@@ -48,15 +48,14 @@ doclines=__doc__.splitlines()
 print("works with python setup.py install or pipx install .", file=sys.stderr)
 
 print("testing git availability ...", file=sys.stderr)
-git_on_cmd="echo 'def main():\n\t print('\"'$(cat VERSION.txt); @GIT: $(git log --pretty=format:'%h' | head -n 1)')\" > lsa/lsa_version.py" #lsa_version requires main() as an entry_point
-#can test lsa_version before build
-#python -c "from lsa import lsa_version; lsa_version.main()"
-git_on=subprocess.call(git_on_cmd, shell=True)
-if git_on != 0:
-  print("warning: git is required to include revision number in binary", file=sys.stderr) 
-  nohg_confirm = input("do you want to continue without revision (type yes to continue) ? ")
-  if nohg_confirm.lower() not in ['y', 'yes']:
-    sys.exit("Abort setup. Try to install git first")
+git_on_cmd = "echo 'def main():\n\t print('\\\"'$(cat VERSION.txt); @GIT: $(git log --pretty=format:'%h' | head -n 1)')\\\" > lsa/lsa_version.py"
+try:
+    subprocess.check_call(git_on_cmd, shell=True)
+    print("Git commit number included in version info.", file=sys.stderr)
+except subprocess.CalledProcessError:
+    print("Git not available. Skipping commit number in version info.", file=sys.stderr)
+    with open('lsa/lsa_version.py', 'w') as f:
+        f.write("def main():\n\tprint('{}')".format(open('VERSION.txt').read().strip()))
 
 if os.path.exists('MANIFEST'): os.remove('MANIFEST')
 
