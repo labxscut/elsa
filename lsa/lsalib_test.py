@@ -3,6 +3,7 @@ from .lsalib_stats import *
 from .lsalib_normalization import *
 from .lsalib_analysis import *
 from .lsalib_utils import *
+from .lsalib_theory import *
 from .lsalib_trend import *
 
 def test():

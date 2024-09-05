@@ -5,7 +5,7 @@
 import sys, csv, re, os, time, argparse, string, tempfile
 import numpy as np
 import scipy as sp
-from lsa import lsalib_core, lsalib_stats, lsalib_normalization, lsalib_analysis, lsalib_utils, lsalib_trend
+from lsa import lsalib_core, lsalib_stats, lsalib_normalization, lsalib_analysis, lsalib_utils, lsalib_trend, lsalib_theory
 
 def main():  
 
@@ -103,7 +103,7 @@ def main():
             ")
             #R: use R's qvalue package, require X connection")
   parser.add_argument("-T", "--trendThresh", dest="trendThresh", default=None, \
-      type=float, \
+      type=float,
       help="if trend series based analysis is desired, use this option \n \
             NOTE: when this is used, must also supply reasonble \n \
             values for -p, -a, -n options")
