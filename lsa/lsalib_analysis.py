@@ -1,6 +1,6 @@
 import numpy as np
 import scipy as sp
-from .lsalib_stats import storeyQvalue, tied_rank
+from .lsalib_stats import storeyQvalue, tied_rank, calc_pearsonr, calc_spearmanr, calc_shift_corr, readPvalue
 from .lsalib_utils import ma_average, sample_wr, fillMissing
 from .lsalib_normalization import *
 from . import compcore
@@ -84,30 +84,6 @@ def permuPvalue(series1, series2, delayLimit, precisionP, Smax, fTransform, zNor
     else:
         P_two_tail = np.sum(-np.abs(PP_set) <= Smax)/float(precisionP)
     return P_two_tail
-
-def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5, bootCI=.95, bootNum=0, pvalueMethod='perm', precisionP=1000,
-                  fTransform=None, zNormalize=None, approxVar=1, resultFile=None, trendThresh=None,
-                  firstFactorLabels=None, secondFactorLabels=None, qvalueMethod='scipy', progressive=0):
-    # This function is quite long, so I'll provide a skeleton. You should fill in the details from the original lsalib.py
-    firstFactorNum, secondFactorNum = firstData.shape[0], secondData.shape[0]
-    spotNum = firstData.shape[2]
-    
-    # Initialize variables
-    lsaTable = [None] * (firstFactorNum * secondFactorNum)
-    pvalues = np.zeros(firstFactorNum * secondFactorNum)
-    
-    # Main analysis loop
-    for i in range(firstFactorNum):
-        for j in range(secondFactorNum):
-            # Perform LSA analysis
-            # Calculate statistics
-            # Store results
-    
-    # Calculate q-values
-    qvalues = storeyQvalue(pvalues)
-    
-    # Write results to file
-    # ... (implement the writing logic here)
 
 def ji_calc_trend(oSeries, lengthSeries, thresh):
     tSeries = np.zeros(lengthSeries-1, dtype='float')

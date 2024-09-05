@@ -89,7 +89,7 @@ setup(name="lsa",
     zip_safe=False,
     install_requires=[
         'numpy>=1.20.0',  # Updated to a version that supports the new float dtypes
-        'scipy>=1.6.0',
+        'scipy>=1.6.0',  # Ensure this version or higher is available
         'matplotlib>=3.3.0',
         # Add other dependencies as needed
     ],
