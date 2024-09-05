@@ -440,11 +440,11 @@ def permuPvalue(series1, series2, delayLimit, precisionP, \
     lsad.assign( delayLimit, Xz, Yz)
     PP_set[i] = compcore.DP_lsa(lsad, False).score
   #PP_set[pvalueMethod]=Smax  #the original test shall not be considerred
-  #print "PP_set", PP_set, PP_set >= Smax, np.sum(PP_set>=Smax), np.float(pvalueMethod)
+  #print "PP_set", PP_set, PP_set >= Smax, np.sum(PP_set>=Smax), float(pvalueMethod)
   if Smax >= 0:
-    P_two_tail = np.sum(np.abs(PP_set) >= Smax)/np.float(precisionP)
+    P_two_tail = np.sum(np.abs(PP_set) >= Smax)/float(precisionP)
   else:
-    P_two_tail = np.sum(-np.abs(PP_set) <= Smax)/np.float(precisionP)
+    P_two_tail = np.sum(-np.abs(PP_set) <= Smax)/float(precisionP)
   return P_two_tail
 
 #Q_lam_step = 0.05
@@ -1561,9 +1561,9 @@ def to_markov(threshold, timeNum, randomFunc): #t is threshold vector
 #    np.random.shuffle(Z.T)
 #    PP_set[i] = compcore.calc_LA(X, Y, zNormalize(fTransform(Z)))
 #  if LA_score >= 0:
-#    P_two_tail = np.sum(np.abs(PP_set) >= LA_score)/np.float(pvalueMethod)
+#    P_two_tail = np.sum(np.abs(PP_set) >= LA_score)/float(pvalueMethod)
 #  else:
-#    P_two_tail = np.sum(-np.abs(PP_set) <= LA_score)/np.float(pvalueMethod)
+#    P_two_tail = np.sum(-np.abs(PP_set) <= LA_score)/float(pvalueMethod)
 #  return P_two_tail
 
 
@@ -1641,7 +1641,7 @@ def test():
   print("---PCC---", file=sys.stderr)
   (nPCC, nP_PCC) = sp.stats.pearsonr(np.mean(np.nan_to_num(test_data[0]), axis=0), np.mean(np.nan_to_num(test_data[1]), axis=0))
   oPCC = sp.corrcoef( np.mean(np.nan_to_num(test_data[0]),axis=0), np.mean(np.nan_to_num(test_data[1]),axis=0) )[0,1]
-  otcdf = sp.stats.distributions.t.cdf(oPCC*np.sqrt((test_tN-2)/np.float(1.000000001-oPCC**2)), (test_tN-2))
+  otcdf = sp.stats.distributions.t.cdf(oPCC*np.sqrt((test_tN-2)/float(1.000000001-oPCC**2)), (test_tN-2))
   oP_PCC = .5 + np.sign(oPCC)*(.5 - otcdf) #addhoc for perfect correlation
   print("nPCC", "nP_PCC", "oPCC", "oP_PCC", "otcdf", file=sys.stderr)
   print(nPCC, nP_PCC, oPCC, oP_PCC, otcdf, file=sys.stderr)
