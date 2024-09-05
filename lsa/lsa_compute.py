@@ -5,7 +5,7 @@
 import sys, csv, re, os, time, argparse, string, tempfile
 import numpy as np
 import scipy as sp
-from lsa import lsalib_core, lsalib_stats, lsalib_normalization, lsalib_analysis, lsalib_utils
+from lsa import lsalib_core, lsalib_stats, lsalib_normalization, lsalib_analysis, lsalib_utils, lsalib_trend
 
 def main():  
 

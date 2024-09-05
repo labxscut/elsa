@@ -3,11 +3,7 @@ import scipy.stats
 from scipy import interpolate
 import sys
 from .lsalib_core import Q_lam_max, Q_lam_step, my_decimal, Rmax_min, Rmax_max, kcut_min, pipi, pipi_inv
-from .lsalib_stats import storeyQvalue, tied_rank, calc_pearsonr, calc_spearmanr, calc_shift_corr, readPvalue, theoPvalue
-from .lsalib_normalization import *
-from .lsalib_analysis import singleLSA, bootstrapCI, permuPvalue, applyAnalysis
-from .lsalib_utils import ma_average, ma_median, sample_wr, fillMissing, safeCmd, float_equal
-from . import compcore
+from .lsalib_utils import ma_average, ma_median, sample_wr, fillMissing, float_equal
 
 def tied_rank(values):
     assert type(values) == np.ma.MaskedArray
@@ -101,33 +97,17 @@ def storeyQvalue(pvalues, lam=np.arange(0, Q_lam_max, Q_lam_step), method='smoot
 
     return qvalues
 
-def rpy_spearmanr(Xz, Yz):
-    try:
-        sr = r('''cor.test''')(Xz, Yz, method='spearman')
-        return (sr[3][0], sr[2][0])
-    except rpy2.rinterface.RRuntimeError:
-        return (np.nan, np.nan)
-
-def rpy_pearsonr(Xz, Yz):
-    try:
-        sr = r('''cor.test''')(Xz, Yz, method='pearson')
-        return (sr[3][0], sr[2][0])
-    except rpy2.rinterface.RRuntimeError:
-        return (np.nan, np.nan)
-
 def scipy_spearmanr(Xz, Yz):
     try:
         return scipy.stats.spearmanr(Xz, Yz)
     except:
         return (np.nan, np.nan)
 
-def calc_spearmanr(Xz, Yz, sfunc=rpy_spearmanr):
-    if not rpy_import:
-        sfunc = scipy_spearmanr
+def calc_spearmanr(Xz, Yz):
     mask = np.logical_or(Xz.mask, Yz.mask)
     Xz.mask = mask
     Yz.mask = mask
-    (SCC, P_SCC) = sfunc(Xz.compressed(), Yz.compressed())  # two tailed p-value
+    (SCC, P_SCC) = scipy_spearmanr(Xz.compressed(), Yz.compressed())  # two tailed p-value
     return (SCC, P_SCC)
 
 def scipy_pearsonr(Xz, Yz):
@@ -136,13 +116,11 @@ def scipy_pearsonr(Xz, Yz):
     except:
         return (np.nan, np.nan)
 
-def calc_pearsonr(Xz, Yz, pfunc=rpy_pearsonr):
-    if not rpy_import:
-        pfunc = scipy_pearsonr
+def calc_pearsonr(Xz, Yz):
     mask = np.logical_or(Xz.mask, Yz.mask)
     Xz.mask = mask
     Yz.mask = mask
-    (PCC, P_PCC) = pfunc(Xz.compressed(), Yz.compressed())  # two tailed p-value
+    (PCC, P_PCC) = scipy_pearsonr(Xz.compressed(), Yz.compressed())  # two tailed p-value
     return (PCC, P_PCC)
 
 def calc_shift_corr(Xz, Yz, D, corfunc=calc_pearsonr):

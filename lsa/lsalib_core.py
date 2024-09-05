@@ -14,15 +14,7 @@ pipi_inv = 1/pipi
 Q_lam_step = 0.05
 Q_lam_max = 0.95
 
-# Import other modules
-from .lsalib_stats import *
-from .lsalib_normalization import *
-from .lsalib_analysis import *
-from .lsalib_utils import *
-from .lsalib_trend import *
-
 # Global variables
-rpy_import = False
 P_table = dict()
 
 try:
@@ -33,5 +25,3 @@ except ImportError:
     np.seterr(all='warn')
 
 # Add any other necessary imports or global variables here
-
-# Note: All function definitions have been moved to their respective modules
