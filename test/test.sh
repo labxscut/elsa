@@ -30,8 +30,4 @@ lsa_compute ../test/ARISA20.csv ../test/ARISA20.perm.lsa -r 1 -s 127 -d 3 -p per
 #par_ana ARISA20.txt ARISA20.la 'la_compute %s ARISA20.laq %s -s 127 -r 1 -p 1000' $PWD
 
 #deactivate elsa virtual v
-<<<<<<< HEAD
-# conda deactivate 
-=======
 #conda deactivate
->>>>>>> py3
