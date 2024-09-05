@@ -202,7 +202,7 @@ def LApermuPvalue(series1, series2, series3, precision, LA_score, fTransform, zN
     np.random.shuffle(Z.T)
     PP_set[i] = compcore.calc_LA(X, Y, zNormalize(fTransform(Z)))
   if LA_score >= 0:
-    P_two_tail = np.sum(np.abs(PP_set) >= LA_score)/np.float(precision)
+    P_two_tail = np.sum(np.abs(PP_set) >= LA_score)/float(precision)
   else:
-    P_two_tail = np.sum(-np.abs(PP_set) <= LA_score)/np.float(precision)
+    P_two_tail = np.sum(-np.abs(PP_set) <= LA_score)/float(precision)
   return P_two_tail

@@ -43,20 +43,19 @@ import os, sys, subprocess
 doclines=__doc__.splitlines()
 
 #os.environ['CC'] = 'g++'  #temporary measure to trick distutils use g++, need update to distutils2
-#lines = open("VERSION.txt", 'rU').readlines()
+#lines = open("VERSION.txt", 'r').readlines()
 #version_desc = ','.join([lines[1].strip(), lines[0].strip()])
 print("works with python setup.py install or pipx install .", file=sys.stderr)
 
 print("testing git availability ...", file=sys.stderr)
-git_on_cmd="echo 'def main():\n\t print('\"'$(cat VERSION.txt); @GIT: $(git log --pretty=format:'%h' | head -n 1)')\" > lsa/lsa_version.py" #lsa_version requires main() as an entry_point
-#can test lsa_version before build
-#python -c "from lsa import lsa_version; lsa_version.main()"
-git_on=subprocess.call(git_on_cmd, shell=True)
-if git_on != 0:
-  print("warning: git is required to include revision number in binary", file=sys.stderr) 
-  nohg_confirm = input("do you want to continue without revision (type yes to continue) ? ")
-  if nohg_confirm not in ['y','Y','yes','Yes']:
-    quit("Abort setup. Try to install git first")
+git_on_cmd = "echo 'def main():\n\t print('\\\"'$(cat VERSION.txt); @GIT: $(git log --pretty=format:'%h' | head -n 1)')\\\" > lsa/lsa_version.py"
+try:
+    subprocess.check_call(git_on_cmd, shell=True)
+    print("Git commit number included in version info.", file=sys.stderr)
+except subprocess.CalledProcessError:
+    print("Git not available. Skipping commit number in version info.", file=sys.stderr)
+    with open('lsa/lsa_version.py', 'w') as f:
+        f.write("def main():\n\tprint('{}')".format(open('VERSION.txt').read().strip()))
 
 if os.path.exists('MANIFEST'): os.remove('MANIFEST')
 
@@ -88,7 +87,12 @@ setup(name="lsa",
     packages=find_packages(exclude=['ez_setup', 'test', 'doc']),
     include_package_data=True,
     zip_safe=False,
-    install_requires=["numpy>=1.0","scipy>=0.6","matplotlib>=1"],
+    install_requires=[
+        'numpy>=1.20.0',  # Updated to a version that supports the new float dtypes
+        'scipy>=1.6.0',
+        'matplotlib>=3.3.0',
+        # Add other dependencies as needed
+    ],
     provides=['lsa'],
     ext_modules = [Extension('lsa._compcore', sources = ['lsa/compcore_wrap.cpp', 'lsa/compcore.cpp'],
                                               depends = ['lsa/compcore.hpp'],

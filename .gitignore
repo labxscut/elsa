@@ -1,0 +1,35 @@
+# Ignore Python bytecode files
+__pycache__/
+*.py[cod]
+
+# Ignore virtual environment directories
+venv/
+env/
+.venv/
+
+# Ignore build and distribution directories
+build/
+dist/
+*.egg-info/
+
+# Ignore IDE-specific files
+.vscode/
+.idea/
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore log files
+*.log
+
+# Ignore temporary files
+*.tmp
+*.bak
+*.swp
+
+# Ignore compiled C extensions
+*.so
+
+# Ignore package manager directories
+node_modules/

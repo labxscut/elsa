@@ -67,7 +67,7 @@ def main():
   arg_precision_default=1000
   arg_delayLimit_default=0
 
-  parser.add_argument("dataFile", metavar="dataFile", type=argparse.FileType('rU'), \
+  parser.add_argument("dataFile", metavar="dataFile", type=argparse.FileType('r'), \
       help="the input data file,\n \
       m by (r * s)tab delimited text; top left cell start with \
       '#' to mark this is the header line; \n \
@@ -78,7 +78,7 @@ def main():
   parser.add_argument("resultFile", metavar="resultFile", type=argparse.FileType('w'), \
       help="the output result file")
   parser.add_argument("-e", "--extraFile", dest="extraFile", default=None, \
-      type=argparse.FileType('rU'),
+      type=argparse.FileType('r'),
       help="specify an extra datafile, otherwise the first datafile will be used \n \
             and only lower triangle entries of pairwise matrix will be computed")
   parser.add_argument("-d", "--delayLimit", dest="delayLimit", default=arg_delayLimit_default, type=int,\
