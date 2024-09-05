@@ -1,0 +1,5 @@
+TODO:
+  1. Smarter Tab delimited file handling
+  2. make pyproject.toml work
+  3. split lsalib.py into multiple files
+  
