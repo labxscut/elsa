@@ -1,32 +1,6 @@
 #!/usr/bin/env python3
-#lsa-compute -- computation script for LSA package to perform lsa table calculation 
-
-#License: BSD
-
-#Copyright (c) 2008 Li Charles Xia
-#All rights reserved.
-#
-#Redistribution and use in source and binary forms, with or without
-#modification, are permitted provided that the following conditions
-#are met:
-#1. Redistributions of source code must retain the above copyright
-#   notice, this list of conditions and the following disclaimer.
-#2. Redistributions in binary form must reproduce the above copyright
-#   notice, this list of conditions and the following disclaimer in the
-#   documentation and/or other materials provided with the distribution.
-#3. The name of the author may not be used to endorse or promote products
-#   derived from this software without specific prior written permission.
-#
-#THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
-#IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
-#OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-#IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
-#INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-#NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-#DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-#THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-#(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
-#THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+#lsa-compute -- computation script for LSA package to perform lsa table calculation
+#see github.com/labxscut/elsa for license
 
 #public libs
 import sys, csv, re, os, time, argparse, string, tempfile
@@ -40,28 +14,16 @@ except ImportError:
   #install import
   from lsa import lsalib_core, lsalib_stats, lsalib_normalization, lsalib_analysis, lsalib_utils
   #np.seterr(all='raise')
-import lsa
-
-# let's display something about VERSION first, need to put VERSION.py there
-#execfile(os.path.join(os.path.dirname(os.path.dirname(lsa.__file__)),\
-#			    'VERSION.py')) #only one variable named version_desc
+import lsa  
 
 def main():  
 
   __script__ = "lsa_compute"
-  version_desc = lsalib_utils.safeCmd('lsa_version')
+  version_desc = lsalib_utils.safeCmd('lsa_version') #to people concerned about version, display VERSION first
   version_print = "%s (rev: %s) - copyright Li Charlie Xia, lcxia@scut.edu.cn" \
     % (__script__, version_desc) 
   print(version_print, file=sys.stderr)
 
-  #version_desc = "lsa_compute (rev: %s) - copyright Li Charlie Xia, lixia@stanford.edu" \
-  #    % open(os.path.join(os.path.dirname(os.path.dirname(lsa.__file__)), 'VERSION.txt')).read().strip()
-  #lsa.__version__
-  #print >>sys.stderr, version_desc
-  #print >>sys.stderr, "lsa package revision and tag:", 
-  #print >>sys.stderr, "for package version, see VERSION.txt in your lsa package installation path"
-
-  # define arguments: delayLimit, fillMethod, pvalueMethod
   parser = argparse.ArgumentParser()
 
   arg_precision_default=1000

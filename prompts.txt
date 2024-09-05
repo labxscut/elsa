@@ -1,0 +1,2 @@
+based on lsalib.py's symbols, any of them are missing in lsalib_*.py
+ignore lsalib.py; check double defined symbols and remove redundancy; check all imports in *.py are correct

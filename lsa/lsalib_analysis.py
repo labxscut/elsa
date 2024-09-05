@@ -3,6 +3,8 @@ import scipy as sp
 from .lsalib_stats import storeyQvalue, tied_rank, calc_pearsonr, calc_spearmanr, calc_shift_corr, readPvalue
 from .lsalib_utils import ma_average, sample_wr, fillMissing
 from .lsalib_normalization import *
+from .lsalib_trend import ji_calc_trend
+from .lsalib_core import P_table
 from . import compcore
 
 def singleLSA(series1, series2, delayLimit, fTransform, zNormalize, trendThresh=None, keepTrace=True):
@@ -85,27 +87,95 @@ def permuPvalue(series1, series2, delayLimit, precisionP, Smax, fTransform, zNor
         P_two_tail = np.sum(-np.abs(PP_set) <= Smax)/float(precisionP)
     return P_two_tail
 
-def ji_calc_trend(oSeries, lengthSeries, thresh):
-    tSeries = np.zeros(lengthSeries-1, dtype='float')
-    for i in range(lengthSeries-1):
-        if oSeries[i] == 0 and oSeries[i+1] > 0:
-            trend = 1
-        elif oSeries[i] == 0 and oSeries[i+1] < 0:
-            trend = -1
-        elif oSeries[i] == 0 and oSeries[i+1] == 0:
-            trend = 0
-        else:
-            trend = (oSeries[i+1]-oSeries[i])/np.abs(oSeries[i])
-
-        if np.isnan(trend):
-            tSeries[i] = np.nan
-        elif trend >= thresh:
-            tSeries[i] = 1
-        elif trend <= -thresh:
-            tSeries[i] = -1
-        else:
-            tSeries[i] = 0
-
-    return tSeries
-
-# Add other analysis functions here if needed
+def applyAnalysis(firstData, secondData, onDiag=True, delayLimit=3, minOccur=.5, bootCI=.95, bootNum=0, pvalueMethod='perm', precisionP=1000,
+                  fTransform=None, zNormalize=None, approxVar=1, resultFile=None, trendThresh=None,
+                  firstFactorLabels=None, secondFactorLabels=None, qvalueMethod='scipy', progressive=0):
+    firstFactorNum, secondFactorNum = firstData.shape[0], secondData.shape[0]
+    spotNum = firstData.shape[2]
+    
+    lsaTable = [None] * (firstFactorNum * secondFactorNum)
+    pvalues = np.zeros(firstFactorNum * secondFactorNum)
+    pccpvalues = np.zeros(firstFactorNum * secondFactorNum)
+    spccpvalues = np.zeros(firstFactorNum * secondFactorNum)
+    sccpvalues = np.zeros(firstFactorNum * secondFactorNum)
+    ssccpvalues = np.zeros(firstFactorNum * secondFactorNum)
+    
+    ti = 0
+    for i in range(firstFactorNum):
+        for j in range(secondFactorNum):
+            if onDiag and j <= i:
+                continue
+            
+            Xz = firstData[i]
+            Yz = secondData[j]
+            
+            if np.all(np.isnan(Xz)) or np.all(np.isnan(Yz)):
+                lsaTable[ti] = [i, j, 0, 0, 0, -1, -1, 0, 0, 1, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan, np.nan]
+                pvalues[ti] = np.nan
+                pccpvalues[ti] = np.nan
+                spccpvalues[ti] = np.nan
+                sccpvalues[ti] = np.nan
+                ssccpvalues[ti] = np.nan
+            else:
+                LSA_result = singleLSA(Xz, Yz, delayLimit, fTransform, zNormalize, trendThresh, True)
+                
+                Smax = LSA_result.score
+                Al = len(LSA_result.trace)
+                PCC, P_PCC = calc_pearsonr(ma_average(Xz, axis=0), ma_average(Yz, axis=0))
+                SCC, P_SCC = calc_spearmanr(ma_average(Xz, axis=0), ma_average(Yz, axis=0))
+                
+                try:
+                    SPCC, P_SPCC, D_SPCC = calc_shift_corr(ma_average(Xz, axis=0), ma_average(Yz, axis=0), delayLimit, calc_pearsonr)
+                    SSCC, P_SSCC, D_SSCC = calc_shift_corr(ma_average(Xz, axis=0), ma_average(Yz, axis=0), delayLimit, calc_spearmanr)
+                except FloatingPointError:
+                    SPCC, P_SPCC, D_SPCC = np.nan, np.nan, np.nan
+                    SSCC, P_SSCC, D_SSCC = np.nan, np.nan, np.nan
+                
+                pccpvalues[ti] = P_PCC
+                spccpvalues[ti] = P_SPCC
+                sccpvalues[ti] = P_SCC
+                ssccpvalues[ti] = P_SSCC
+                
+                if Al == 0:
+                    pvalues[ti] = np.nan
+                    lsaTable[ti] = [i, j, 0, 0, 0, -1, -1, 0, 0, 1, PCC, P_PCC, SPCC, P_SPCC, D_SPCC, SCC, P_SCC, SSCC, P_SSCC, D_SSCC]
+                else:
+                    Xs, Ys, Al = LSA_result.trace[Al-1][0], LSA_result.trace[Al-1][1], len(LSA_result.trace)
+                    
+                    lsaP = -1
+                    if pvalueMethod in ['theo', 'mix']:
+                        lsaP = readPvalue(P_table, R=np.abs(Smax)*spotNum, N=spotNum, x_sd=1, M=1, alpha=1., beta=1., x_decimal=2)
+                    
+                    if (pvalueMethod in ['mix'] and lsaP <= 0.05) or (pvalueMethod in ['perm']):
+                        Xp = np.ma.array(Xz, copy=True)
+                        Yp = np.ma.array(Yz, copy=True)
+                        lsaP = permuPvalue(Xp, Yp, delayLimit, precisionP, np.abs(Smax), fTransform, zNormalize, trendThresh)
+                    
+                    pvalues[ti] = lsaP
+                    
+                    if bootNum > 0:
+                        Xb = np.ma.array(Xz, copy=True)
+                        Yb = np.ma.array(Yz, copy=True)
+                        Smax, Sl, Su = bootstrapCI(Xb, Yb, Smax, delayLimit, bootCI, bootNum, fTransform, zNormalize, trendThresh)
+                    else:
+                        Sl, Su = Smax, Smax
+                    
+                    lsaTable[ti] = [i, j, Smax, Sl, Su, Xs, Ys, Al, Xs-Ys, lsaP, PCC, P_PCC, SPCC, P_SPCC, D_SPCC, SCC, P_SCC, SSCC, P_SSCC, D_SSCC]
+            
+            ti += 1
+    
+    qvalues = storeyQvalue(pvalues)
+    pccqvalues = storeyQvalue(pccpvalues)
+    spccqvalues = storeyQvalue(spccpvalues)
+    sccqvalues = storeyQvalue(sccpvalues)
+    ssccqvalues = storeyQvalue(ssccpvalues)
+    
+    for k in range(len(qvalues)):
+        lsaTable[k].extend([qvalues[k], pccqvalues[k], spccqvalues[k], sccqvalues[k], ssccqvalues[k]])
+    
+    if resultFile:
+        for row in lsaTable:
+            if row:
+                print("\t".join(['%s']*len(row)) % tuple(row), file=resultFile)
+    
+    return lsaTable

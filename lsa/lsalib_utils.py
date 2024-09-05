@@ -56,8 +56,5 @@ def safeCmd(cmd):
     except subprocess.CalledProcessError as e:
         return f"Error: {e}"
 
-def float_equal(a, b, tol=1e-6):
-    return abs(a - b) <= tol
-
 # Add any other utility functions here that were in the original lsalib.py
 # but not included in other new modules

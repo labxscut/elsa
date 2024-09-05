@@ -1,6 +1,6 @@
 import numpy as np
 import scipy.stats
-
+from .lsalib_stats import tied_rank
 def percentileNormalize(tseries):
     ranks = tied_rank(tseries)
     nt = np.ma.masked_invalid(scipy.stats.norm.ppf(ranks / (len(ranks) - np.sum(ranks.mask) + 1)), copy=True)
