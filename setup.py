@@ -43,7 +43,7 @@ import os, sys, subprocess
 doclines=__doc__.splitlines()
 
 #os.environ['CC'] = 'g++'  #temporary measure to trick distutils use g++, need update to distutils2
-#lines = open("VERSION.txt", 'rU').readlines()
+#lines = open("VERSION.txt", 'r').readlines()
 #version_desc = ','.join([lines[1].strip(), lines[0].strip()])
 print("works with python setup.py install or pipx install .", file=sys.stderr)
 

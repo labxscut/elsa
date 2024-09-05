@@ -6,7 +6,7 @@ import numpy as np
 def main():
   # check_data datafile.txt
   parser = argparse.ArgumentParser(description="Auxillary tool to new LSA package for checking data format")
-  parser.add_argument("dataFile", metavar= "dataFile", type=argparse.FileType('rU'), help="the data file")
+  parser.add_argument("dataFile", metavar= "dataFile", type=argparse.FileType('r'), help="the data file")
   parser.add_argument("repNum", metavar= "repNum", type=int, help="replicates number")
   parser.add_argument("spotNum", metavar= "spotNum", type=int, help="timepoints number")
 

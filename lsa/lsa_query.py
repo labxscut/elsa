@@ -72,7 +72,7 @@ def main():
   # define arguments: delayLimit, fillMethod, permuNum
   parser = argparse.ArgumentParser(description="Auxillary tool to new LSA package for querying lsa results")
 
-  parser.add_argument("rawFile", metavar= "rawFile", type=argparse.FileType('rU'), help="the raw lsa file")
+  parser.add_argument("rawFile", metavar= "rawFile", type=argparse.FileType('r'), help="the raw lsa file")
   parser.add_argument("entryFile", metavar= "entryFile", type=argparse.FileType('w'), help="the query result file")
 
   parser.add_argument("-q", "--queryLine", dest="queryLine", default=None,

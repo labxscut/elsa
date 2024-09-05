@@ -16,7 +16,7 @@ def main():
   parser = argparse.ArgumentParser(\
       description="Tool Convert Profile Series to Trend Series")
   parser.add_argument("dataFile", metavar= "dataFile", \
-      type=argparse.FileType('rU'), \
+      type=argparse.FileType('r'), \
       help="the input data filename, use null for simulation")
   parser.add_argument("resultFile", metavar= "resultFile", \
       type=argparse.FileType('w'), \
