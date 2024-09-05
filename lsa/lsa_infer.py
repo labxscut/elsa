@@ -83,7 +83,7 @@ def main():
   outFile = args[3]
   
   print("testing referFile and outputFile...", file=sys.stderr)
-  dataTable = lsaio.tryIO(referFile, "rU")
+  dataTable = lsaio.tryIO(referFile, "r")
   outFig = lsaio.tryIO(outFile, "w")
   lsaio.closeIO(outFig)
   
@@ -92,7 +92,7 @@ def main():
   rawData = []
   try:
     #rawData = read_array(referFile, separator='\t', columns=(1,-1), lines=(1,-1), missing=0)
-    csvReader = csv.reader( open(referFile, "rU"), delimiter="\t", quoting=csv.QUOTE_NONE )
+    csvReader = csv.reader( open(referFile, "r"), delimiter="\t", quoting=csv.QUOTE_NONE )
     i = 0
     for row in csvReader:
         i += 1
