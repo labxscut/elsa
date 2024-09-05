@@ -1,20 +1,67 @@
-#!/usr/bin/env python3
-#lsa-compute -- computation script for LSA package to perform lsa table calculation
-#see github.com/labxscut/elsa for license
+#!/usr/bin/env python
+#lsa-compute -- computation script for LSA package to perform lsa table calculation 
 
+#License: BSD
+
+#Copyright (c) 2008 Li Charles Xia
+#All rights reserved.
+#
+#Redistribution and use in source and binary forms, with or without
+#modification, are permitted provided that the following conditions
+#are met:
+#1. Redistributions of source code must retain the above copyright
+#   notice, this list of conditions and the following disclaimer.
+#2. Redistributions in binary form must reproduce the above copyright
+#   notice, this list of conditions and the following disclaimer in the
+#   documentation and/or other materials provided with the distribution.
+#3. The name of the author may not be used to endorse or promote products
+#   derived from this software without specific prior written permission.
+#
+#THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+#IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+#OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+#IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+#INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+#NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+#DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+#THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+#(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+#THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+#public libs
 import sys, csv, re, os, time, argparse, string, tempfile
+#numeric libs
 import numpy as np
 import scipy as sp
-from lsa import lsalib_core, lsalib_stats, lsalib_normalization, lsalib_analysis, lsalib_utils, lsalib_trend, lsalib_theory
+try:
+  #debug import
+  from . import lsalib
+except ImportError:
+  #install import
+  from lsa import lsalib
+  #np.seterr(all='raise')
+import lsa
+
+# let's display something about VERSION first, need to put VERSION.py there
+#execfile(os.path.join(os.path.dirname(os.path.dirname(lsa.__file__)),\
+#			    'VERSION.py')) #only one variable named version_desc
 
 def main():  
 
   __script__ = "lsa_compute"
-  version_desc = lsalib_utils.safeCmd('lsa_version') #to people concerned about version, display VERSION first
+  version_desc = lsalib.safeCmd('lsa_version')
   version_print = "%s (rev: %s) - copyright Li Charlie Xia, lcxia@scut.edu.cn" \
     % (__script__, version_desc) 
   print(version_print, file=sys.stderr)
 
+  #version_desc = "lsa_compute (rev: %s) - copyright Li Charlie Xia, lixia@stanford.edu" \
+  #    % open(os.path.join(os.path.dirname(os.path.dirname(lsa.__file__)), 'VERSION.txt')).read().strip()
+  #lsa.__version__
+  #print >>sys.stderr, version_desc
+  #print >>sys.stderr, "lsa package revision and tag:", 
+  #print >>sys.stderr, "for package version, see VERSION.txt in your lsa package installation path"
+
+  # define arguments: delayLimit, fillMethod, pvalueMethod
   parser = argparse.ArgumentParser()
 
   arg_precision_default=1000
@@ -103,7 +150,7 @@ def main():
             ")
             #R: use R's qvalue package, require X connection")
   parser.add_argument("-T", "--trendThresh", dest="trendThresh", default=None, \
-      type=float,
+      type=float, \
       help="if trend series based analysis is desired, use this option \n \
             NOTE: when this is used, must also supply reasonble \n \
             values for -p, -a, -n options")
@@ -145,13 +192,13 @@ def main():
 
   #assign transform function
   if transFunc == 'SD':
-    fTransform = lsalib_stats.sdAverage
+    fTransform = lsalib.sdAverage
   elif transFunc == 'Med':
-    fTransform = lsalib_stats.simpleMedian   # Median
+    fTransform = lsalib.simpleMedian   # Median
   elif transFunc == 'MAD':
-    fTransform = lsalib_stats.madMedian      # Median/MAD
+    fTransform = lsalib.madMedian      # Median/MAD
   else:
-    fTransform = lsalib_stats.simpleAverage   # fallback to default Avg
+    fTransform = lsalib.simpleAverage   # fallback to default Avg
   
   #check transFunc and repNum compatibility
   if repNum < 5 and ( transFunc == 'SD' ):
@@ -164,19 +211,19 @@ def main():
 
   #check normMethod
   if normMethod == 'none':
-    zNormalize = lsalib_normalization.noneNormalize
+    zNormalize = lsalib.noneNormalize
   elif normMethod == 'percentile':
-    zNormalize = lsalib_normalization.percentileNormalize
+    zNormalize = lsalib.percentileNormalize
   elif normMethod == 'percentileZ':
-    zNormalize = lsalib_normalization.percentileZNormalize
+    zNormalize = lsalib.percentileZNormalize
   elif normMethod == 'robustZ':
-    zNormalize = lsalib_normalization.robustZNormalize
+    zNormalize = lsalib.robustZNormalize
   elif normMethod == 'pnz':
-    zNormalize = lsalib_normalization.noZeroNormalize
+    zNormalize = lsalib.noZeroNormalize
   elif normMethod == 'rnz':
-    zNormalize = lsalib_normalization.robustNoZeroNormalize
+    zNormalize = lsalib.robustNoZeroNormalize
   else:
-    zNormalize = lsalib_normalization.percentileZNormalize # fallback to default
+    zNormalize = lsalib.percentileZNormalize # fallback to default
 
   assert precision>0, "precision %s is not positive" % str(precision) 
   
@@ -280,7 +327,7 @@ or use -e to specify another input file""", file=sys.stderr)
           quit()
     for i in range(0, factorNum):
       for j in range(0, repNum):
-        tempData[i,j] = lsalib_utils.fillMissing( tempData[i,j], fillMethod )
+        tempData[i,j] = lsalib.fillMissing( tempData[i,j], fillMethod )
     cleanData.append(tempData)
   #print tempData
   #print("starting3...")
@@ -294,7 +341,7 @@ or use -e to specify another input file""", file=sys.stderr)
   print("secondData factorNum, repNum, spotNum = %s, %s, %s" \
       % (cleanData[1].shape[0], cleanData[1].shape[1], cleanData[1].shape[2]), file=sys.stderr)
   print("calculating ", cleanData[0].shape[0]*cleanData[1].shape[0], "pairwise local similarity scores...", file=sys.stderr)
-  lsalib_analysis.applyAnalysis(cleanData[0], cleanData[1], onDiag=onDiag, \
+  lsalib.applyAnalysis(cleanData[0], cleanData[1], onDiag=onDiag, \
       delayLimit=delayLimit, bootNum=bootNum, minOccur=minOccur/100.,\
       pvalueMethod=pvalueMethod, precisionP=precision, fTransform=fTransform,\
       zNormalize=zNormalize, approxVar=approxVar, resultFile=resultFile,\
