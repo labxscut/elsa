@@ -1,2 +1,3 @@
-based on lsalib.py's symbols, any of them are missing in lsalib_*.py
-ignore lsalib.py; check double defined symbols and remove redundancy; check all imports in *.py are correct
+based on lsalib.py's symbols, any of them are missing in lsalib_*.py after the restructuring; 
+ignore lsalib.py; check double defined symbols and remove redundancy; check all imports in *.py are correct, particularly circular imports.
+check if any .py file has bloated file size, i.e. >200 lines, if so, make plan for breakup

@@ -2,8 +2,12 @@ import numpy as np
 import scipy.stats
 from scipy import interpolate
 import sys
-from .lsalib_utils import ma_average, ma_median, sample_wr
 from .lsalib_core import Q_lam_max, Q_lam_step, my_decimal, Rmax_min, Rmax_max, kcut_min, pipi, pipi_inv
+from .lsalib_stats import storeyQvalue, tied_rank, calc_pearsonr, calc_spearmanr, calc_shift_corr, readPvalue, theoPvalue
+from .lsalib_normalization import *
+from .lsalib_analysis import singleLSA, bootstrapCI, permuPvalue, applyAnalysis
+from .lsalib_utils import ma_average, ma_median, sample_wr, fillMissing, safeCmd, float_equal
+from . import compcore
 
 def tied_rank(values):
     assert type(values) == np.ma.MaskedArray

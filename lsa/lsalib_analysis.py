@@ -1,7 +1,6 @@
 import numpy as np
 import scipy as sp
-from .lsalib_stats import storeyQvalue, tied_rank, calc_pearsonr, calc_spearmanr, calc_shift_corr, readPvalue
-from .lsalib_utils import ma_average, sample_wr, fillMissing
+from .lsalib_stats import storeyQvalue, tied_rank, calc_pearsonr, calc_spearmanr, calc_shift_corr, readPvalue, ma_average, sample_wr, fillMissing
 from .lsalib_normalization import *
 from .lsalib_trend import ji_calc_trend
 from .lsalib_core import P_table

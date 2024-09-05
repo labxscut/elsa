@@ -2,19 +2,10 @@
 #lsa-compute -- computation script for LSA package to perform lsa table calculation
 #see github.com/labxscut/elsa for license
 
-#public libs
 import sys, csv, re, os, time, argparse, string, tempfile
-#numeric libs
 import numpy as np
 import scipy as sp
-try:
-  #debug import
-  from . import lsalib
-except ImportError:
-  #install import
-  from lsa import lsalib_core, lsalib_stats, lsalib_normalization, lsalib_analysis, lsalib_utils
-  #np.seterr(all='raise')
-import lsa  
+from lsa import lsalib_core, lsalib_stats, lsalib_normalization, lsalib_analysis, lsalib_utils
 
 def main():  
 
