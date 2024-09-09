@@ -67,13 +67,25 @@ if os.path.exists('MANIFEST'): os.remove('MANIFEST')
 # _compcore.so shall appear in lsa subdir in build/build-arch dir
 # when import module shall use import lsa.xxx
 
-class my_build(build.build): 
-    # different order: build_ext *before* build_py, so that 
-    # build_py can already use ctypes! 
-    sub_commands = [('build_ext', build.build.has_ext_modules), 
-        ('build_py', build.build.has_pure_modules), 
-        ('build_clib', build.build.has_c_libraries), 
-        ('build_scripts', build.build.has_scripts), ] 
+class my_build(build.build):
+    """
+    Custom build class that changes the order of build sub-commands.
+
+    This class modifies the order of build sub-commands to ensure that
+    build_ext is executed before build_py. This allows build_py to use
+    ctypes that may be generated during the build_ext phase.
+
+    Attributes:
+        sub_commands (list): A list of tuples representing the build
+                             sub-commands in the desired order.
+    """
+
+    sub_commands = [
+        ('build_ext', build.build.has_ext_modules),
+        ('build_py', build.build.has_pure_modules),
+        ('build_clib', build.build.has_c_libraries),
+        ('build_scripts', build.build.has_scripts),
+    ]
 
 setup(name="lsa",
     version="2.0.0",
