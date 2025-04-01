@@ -17,7 +17,7 @@ Functions:
 """
 
 # Import all symbols from the compiled _compcore module
-from ._compcore import (
+from lsa._compcore import (
     LSA_Data,      # Container for LSA input data
     LSA_Result,    # Container for LSA results
     DP_lsa,        # Main LSA computation function

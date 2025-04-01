@@ -121,7 +121,8 @@ ext_modules = [
             "lsa"
         ],
         language='c++',
-        extra_compile_args=['-std=c++11']
+        extra_compile_args=['-std=c++11', '-fPIC'],
+        extra_link_args=['-shared']
     ),
 ]
 
@@ -143,6 +144,7 @@ setup(
         'numpy>=1.20.0',
         'scipy>=1.6.0',
         'matplotlib>=3.3.0',
+        'pybind11>=2.6.0'
     ],
     provides=['lsa', 'lla'],
     ext_modules=ext_modules,
@@ -154,6 +156,8 @@ setup(
         'lsa.lsalib_analysis',
         'lsa.lsalib_utils',
         'lsa.lsaio',
+        'lsa.lsalib_test',
+        'lla.llalib_test',
     ],
     cmdclass={'build': my_build},
     data_files=[('', ['README.rst', 'LICENSE.txt', 'VERSION.txt'])],
@@ -169,7 +173,8 @@ setup(
             'lsa_fixqv=lsa.lsa_fixqv:main',
             'lsa_version=lsa.lsa_version:main',
             'lla_compute=lla.lla_compute:main',
-            'lla_query=lla.lla_query:main'
+            'lla_query=lla.lla_query:main',
+            'lla_compute_test=lla.lla_compute_test:main'
         ]
     },
 )
