@@ -54,7 +54,7 @@ rpy_import = False
 
 try:
     # When running as installed package
-    from lsa._compcore import (
+    from lsa.compcore import (
         LSA_Data,      # Container for LSA input data
         LSA_Result,    # Container for LSA results
         DP_lsa,        # Main LSA computation function
@@ -66,7 +66,7 @@ try:
     )
 except ImportError:
     # When running in development mode
-    from ._compcore import (
+    from .compcore import (
         LSA_Data,
         LSA_Result,
         DP_lsa,
@@ -1575,4 +1575,9 @@ if __name__=="__main__":
 
 
 #############  FUNCTIONS NO IN USE AFTER THIS LINE ####################
+
+def calculate_theoretical_pvalues(x_values, Rmax=None, Dmax=0, precision=0.001):
+    if Rmax is None:
+        Rmax = max(x_values) * 2
+    P_table = theoPvalue(Rmax=Rmax, Dmax=Dmax, precision=precision)
 
