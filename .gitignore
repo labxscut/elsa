@@ -33,3 +33,12 @@ Thumbs.db
 
 # Ignore package manager directories
 node_modules/
+
+# Ignore all markdown files
+*.md
+
+# Data directory rules
+data/*
+!data/check_data.py
+!data/convert_otu.ipynb
+!data/otu_matrix.csv
