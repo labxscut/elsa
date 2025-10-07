@@ -269,7 +269,8 @@ def applyLLAnalysis(cleanData, factorLabels, delayLimit=3, bootCI=.95, bootNum=1
                     laTable.append([Xi, Yi, Zi, la_score, lowCI, upCI, pvalue])
                     
                 except Exception as e:
-                    print(f"Error processing triplet ({Xi},{Yi},{Zi}): {str(e)}", file=sys.stderr)
+                    print("Error during analysis:", file=sys.stderr)
+                    traceback.print_exc()
                     continue
     
     # Calculate q-values and write results

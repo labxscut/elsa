@@ -33,6 +33,9 @@ import sys, csv, re, os, time, argparse, string, tempfile
 #numeric libs
 import numpy as np
 import scipy as sp
+sys.path.insert(0, "/workspace")
+sys.path.insert(0, "/workspace/lla")
+print(">>> sys.path 前三项:", sys.path[:3], file=sys.stderr)
 
 try:
     # When running as installed package
@@ -184,6 +187,10 @@ def main():
         factorLabels = np.genfromtxt(args.dataFile, comments='#', delimiter='\t',
                                   usecols=[0], dtype=str).tolist()
         
+        print("Data shape:", firstData.shape, file=sys.stderr)
+        print("Number of factor labels:", len(factorLabels), file=sys.stderr)
+        print("Expected variables:", firstData.shape[0], file=sys.stderr)
+        
         factorNum = firstData.shape[0]
         
         # Create masked array and reshape
@@ -209,7 +216,8 @@ def main():
                             resultFile=args.resultFile)
                             
     except Exception as e:
-        print(f"Error during analysis: {str(e)}", file=sys.stderr)
+        print("Error during analysis:", file=sys.stderr)
+        traceback.print_exc()
         sys.exit(1)
 
     print("Finishing up...", file=sys.stderr)
