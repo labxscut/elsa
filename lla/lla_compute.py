@@ -29,7 +29,7 @@
 #THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #public libs
-import sys, csv, re, os, time, argparse, string, tempfile
+import sys, csv, re, os, time, argparse, string, tempfile, traceback
 #numeric libs
 import numpy as np
 import scipy as sp
@@ -69,32 +69,6 @@ def validate_input_dimensions(data, repNum, spotNum):
         raise ValueError(f"Data has {data.shape[1]} columns but expected {expected_cols} "
                         f"(spotNum={spotNum} × repNum={repNum})")
 
-def transform_data(data, fTransform, zNormalize):
-    """Transform data while preserving masked array structure.
-    
-    Args:
-        data: numpy.ma.MaskedArray input
-        fTransform: transform function to apply
-        zNormalize: normalization function to apply
-        
-    Returns:
-        transformed numpy.ma.MaskedArray
-    """
-    # Ensure input is masked array
-    if not isinstance(data, np.ma.MaskedArray):
-        data = np.ma.array(data)
-        
-    # Apply transform while preserving mask
-    transformed = fTransform(data)
-    if not isinstance(transformed, np.ma.MaskedArray):
-        transformed = np.ma.array(transformed, mask=data.mask)
-        
-    # Apply normalization while preserving mask
-    normalized = zNormalize(transformed)
-    if not isinstance(normalized, np.ma.MaskedArray):
-        normalized = np.ma.array(normalized, mask=data.mask)
-        
-    return normalized
 
 def main():
     start_time = time.time()
@@ -133,6 +107,8 @@ def main():
     parser.add_argument("-t", "--transFunc", dest="transFunc", default='simple',
                        choices=['simple', 'SD', 'Med', 'MAD'],
                        help="replicate summarization method (default: simple)")
+    parser.add_argument("-k", "--keep-trace", dest="keep_trace", action='store_true',
+                    help="Enable trace output for LLA analysis (records optimal path indices; memory intensive)")
     parser.add_argument("-f", "--fillMethod", dest="fillMethod", default='linear',
                        choices=['none', 'zero', 'linear', 'quadratic', 'cubic', 'slinear', 'nearest'],
                        help="missing value fill method (default: linear)")
@@ -144,11 +120,11 @@ def main():
 
     # Print parameters
     print("\t".join(['delayLimit','fillMethod','pvalueMethod','dataFile','resultFile',
-                    'repNum','spotNum','bootNum','transFunc','normMethod','precision']))
-    print("\t".join(['%s']*11) % (args.delayLimit, args.fillMethod, args.pvalueMethod,
+                    'repNum','spotNum','bootNum','transFunc','normMethod','precision','keep_trace']))
+    print("\t".join(['%s']*12) % (args.delayLimit, args.fillMethod, args.pvalueMethod,
                                  args.dataFile.name, args.resultFile.name, args.repNum,
                                  args.spotNum, args.bootNum, args.transFunc,
-                                 args.normMethod, args.precision))
+                                 args.normMethod, args.precision, args.keep_trace))
 
     try:
         # Map transformation function names to actual functions
@@ -186,11 +162,6 @@ def main():
         args.dataFile.seek(0)
         factorLabels = np.genfromtxt(args.dataFile, comments='#', delimiter='\t',
                                   usecols=[0], dtype=str).tolist()
-        
-        print("Data shape:", firstData.shape, file=sys.stderr)
-        print("Number of factor labels:", len(factorLabels), file=sys.stderr)
-        print("Expected variables:", firstData.shape[0], file=sys.stderr)
-        
         factorNum = firstData.shape[0]
         
         # Create masked array and reshape
@@ -200,6 +171,7 @@ def main():
                 series = firstData[i][j::args.repNum]
                 filled = fillMissing(series, args.fillMethod)
                 cleanData[i,j] = np.ma.array(filled, mask=np.isnan(filled))
+        # cleanData[i, j, k] = ith factor, jth replicates, kth time spots.
         
         # Run analysis with transformed data and specified functions
         llalib.applyLLAnalysis(cleanData, factorLabels,
@@ -213,7 +185,8 @@ def main():
                             normMethod=args.normMethod,
                             fTransform=fTransform,
                             zNormalize=zNormalize,
-                            resultFile=args.resultFile)
+                            resultFile=args.resultFile,
+                            keep_trace=args.keep_trace)
                             
     except Exception as e:
         print("Error during analysis:", file=sys.stderr)

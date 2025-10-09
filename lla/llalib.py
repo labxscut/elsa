@@ -38,6 +38,7 @@ import csv
 import sys
 import os
 import random
+import traceback
 import numpy as np
 import scipy as sp
 import scipy.interpolate
@@ -176,7 +177,11 @@ def LAbootstrapCI(series1, series2, series3, LA_score, bootCI, bootNum, fTransfo
         BS_set[i] = calc_LA(Xb, Yb, Zb)
     BS_set.sort()                                 #from smallest to largest
     BS_mean = np.mean(BS_set)
-    return ( BS_mean, BS_set[np.floor(bootNum*a1)-1], BS_set[np.ceil(bootNum*a2)-1] )
+    # Calculate CI indices based on bootCI
+    alpha = 1 - bootCI
+    lower_idx = int(np.floor(bootNum * (alpha/2)))
+    upper_idx = int(np.ceil(bootNum * (1 - alpha/2))) - 1
+    return ( BS_mean, BS_set[lower_idx], BS_set[upper_idx] )
 
 def LApermuPvalue(series1, series2, series3, pvalueMethod, LA_score, fTransform, zNormalize):
     PP_set = np.zeros(pvalueMethod, dtype='float')
@@ -216,7 +221,7 @@ def transform_series(series, fTransform, zNormalize):
 def applyLLAnalysis(cleanData, factorLabels, delayLimit=3, bootCI=.95, bootNum=1000, minOccur=.50,
                    pvalueMethod="perm", precision=1000, fillMethod='linear', normMethod='pnz',
                    fTransform=lsalib.simpleAverage, zNormalize=lsalib.noZeroNormalize, 
-                   resultFile=None, qvalue_func=lsalib.storeyQvalue):
+                   resultFile=None, qvalue_func=lsalib.storeyQvalue,keep_trace=False):
     """Apply Local Liquid Association analysis to input data."""
     col_labels = ['X','Y','Z','LA','lowCI','upCI','P','Q','Xi','Yi','Zi','Delay']
     print("\t".join(col_labels), file=resultFile)
@@ -234,10 +239,10 @@ def applyLLAnalysis(cleanData, factorLabels, delayLimit=3, bootCI=.95, bootNum=1
     for Xi in range(inputFactorNum):
         for Yi in range(Xi + 1, inputFactorNum):
             for Zi in range(Yi + 1, inputFactorNum):
-                triplet = tuple(sorted([Xi, Yi, Zi]))
-                if triplet in processed:
-                    continue
-                processed.add(triplet)
+                # triplet = tuple(sorted([Xi, Yi, Zi]))
+                # if triplet in processed:
+                #     continue
+                # processed.add(triplet)
                 
                 try:
                     # Transform data while preserving masked array structure
@@ -252,7 +257,7 @@ def applyLLAnalysis(cleanData, factorLabels, delayLimit=3, bootCI=.95, bootNum=1
                     
                     # Calculate LA score and statistics
                     lla_data = compcore.LLA_Data(delayLimit, X, Y, Z)
-                    lla_result = compcore.DP_lla(lla_data)
+                    lla_result = compcore.DP_lla(lla_data, keep_trace=keep_trace) # keep_trace
                     
                     # Calculate p-value
                     pvalue = (LLApermuPvalue(X, Y, Z, delayLimit, precision, lla_result.score) 
