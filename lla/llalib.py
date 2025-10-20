@@ -218,12 +218,14 @@ def transform_series(series, fTransform, zNormalize):
     
     return normalized
 
-def applyLLAnalysis(cleanData, factorLabels, delayLimit=3, bootCI=.95, bootNum=1000, minOccur=.50,
+def applyLLAnalysis(cleanData, factorLabels, delayLimit, bootCI=.95, bootNum=1000, minOccur=.50,
                    pvalueMethod="perm", precision=1000, fillMethod='linear', normMethod='pnz',
                    fTransform=lsalib.simpleAverage, zNormalize=lsalib.noZeroNormalize, 
                    resultFile=None, qvalue_func=lsalib.storeyQvalue,keep_trace=False):
     """Apply Local Liquid Association analysis to input data."""
-    col_labels = ['X','Y','Z','LA','lowCI','upCI','P','Q','Xi','Yi','Zi','Delay']
+    # New requested output order:
+    # X Y Z LA Delay Start_X Start_Y Start_Z End_X End_Y End_Z lowCI upCI P Q Xi Yi Zi
+    col_labels = ['X','Y','Z','LA','Delay','Start_X','Start_Y','Start_Z','End_X','End_Y','End_Z','lowCI','upCI','P','Q','Xi','Yi','Zi']
     print("\t".join(col_labels), file=resultFile)
     
     inputFactorNum = cleanData.shape[0]
@@ -259,6 +261,15 @@ def applyLLAnalysis(cleanData, factorLabels, delayLimit=3, bootCI=.95, bootNum=1
                     lla_data = compcore.LLA_Data(delayLimit, X, Y, Z)
                     lla_result = compcore.DP_lla(lla_data, keep_trace=keep_trace) # keep_trace
                     
+                    # 默认值（当 keep_trace=False 时）
+                    start_triplet = [-1, -1, -1]
+                    end_triplet = [-1, -1, -1]
+
+                    if keep_trace and lla_result.trace:
+                        end_triplet = lla_result.trace[0]
+                        start_triplet = lla_result.trace[-1]
+                        # C++ trace 索引为 1-based，可直接用于输出
+                    
                     # Calculate p-value
                     pvalue = (LLApermuPvalue(X, Y, Z, delayLimit, precision, lla_result.score) 
                             if pvalueMethod == "perm" else pvalueMethod)
@@ -271,7 +282,22 @@ def applyLLAnalysis(cleanData, factorLabels, delayLimit=3, bootCI=.95, bootNum=1
                     else:
                         la_score = lowCI = upCI = lla_result.score
                     
-                    laTable.append([Xi, Yi, Zi, la_score, lowCI, upCI, pvalue])
+                    # 计算 Delay（最大配对索引差），当 keep_trace=False 或无 trace 时为 0
+                    if keep_trace and (start_triplet[0] != -1) and (end_triplet[0] != -1):
+                        delay_val = int(max(abs(end_triplet[0]-end_triplet[1]),
+                                            abs(end_triplet[0]-end_triplet[2]),
+                                            abs(end_triplet[1]-end_triplet[2])))
+                    else:
+                        delay_val = 0
+
+                    laTable.append([
+                        Xi, Yi, Zi,               # 0..2 indices (0-based)
+                        la_score, lowCI, upCI,    # 3..5
+                        pvalue,                   # 6
+                        delay_val,                # 7
+                        start_triplet[0], start_triplet[1], start_triplet[2],  # 8..10 Start_X/Y/Z (1-based or -1)
+                        end_triplet[0], end_triplet[1], end_triplet[2]         # 11..13 End_X/Y/Z (1-based or -1)
+                    ])
                     
                 except Exception as e:
                     print("Error during analysis:", file=sys.stderr)
@@ -281,14 +307,28 @@ def applyLLAnalysis(cleanData, factorLabels, delayLimit=3, bootCI=.95, bootNum=1
     # Calculate q-values and write results
     if pvalues:
         qvalues = qvalue_func(np.array(pvalues))
+
         for k, row in enumerate(laTable):
-            laTable[k] = row[:7] + [qvalues[k]] + [x+1 for x in row[:3]] + [0]
-            
-        for row in laTable:
-            print("\t".join(['%s']*len(col_labels)) % 
-                  tuple([factorLabels[row[0]], factorLabels[row[1]], factorLabels[row[2]]] + 
-                        [f"{v:.8f}" if isinstance(v, float) else v for v in row[3:]]), 
-                  file=resultFile)
+            Xi, Yi, Zi = row[0], row[1], row[2]
+            la_score, lowCI, upCI = row[3], row[4], row[5]
+            pvalue = row[6]
+            delay_val = row[7]
+            start_x, start_y, start_z = row[8], row[9], row[10]
+            end_x, end_y, end_z = row[11], row[12], row[13]
+
+            # Construct output row in the requested order:
+            # X, Y, Z, LA, Delay, Start_X, Start_Y, Start_Z, End_X, End_Y, End_Z, lowCI, upCI, P, Q, Xi, Yi, Zi
+            out_values = [
+                factorLabels[Xi], factorLabels[Yi], factorLabels[Zi],    # X, Y, Z
+                f"{la_score:.8f}",                                      # LA
+                delay_val,                                               # Delay
+                start_x, start_y, start_z,                               # Start_X/Y/Z
+                end_x, end_y, end_z,                                     # End_X/Y/Z
+                f"{lowCI:.8f}", f"{upCI:.8f}",                       # lowCI, upCI
+                f"{pvalue:.8f}", f"{qvalues[k]:.8f}",                 # P, Q
+                Xi+1, Yi+1, Zi+1                                          # Xi, Yi, Zi (1-based)
+            ]
+            print("\t".join([str(v) for v in out_values]), file=resultFile)
     else:
         print("No valid triplets found for analysis", file=sys.stderr)
 

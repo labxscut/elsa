@@ -90,23 +90,29 @@ LLA_Result DP_lla(const LLA_Data& data, bool keep_trace) {
     // Initialize tracking variables
     const size_t n = data.X.size();
     int max_p[3] = {0};
-    double max_s = -std::numeric_limits<double>::max();
+    double max_s = 0.0; // non-negative best absolute score
+    int best_len = 0;    // length of best segment (for tie-breaking: prefer shorter)
+    int best_sign = 1;   // 1 for positive, -1 for negative winner
 
-    // Initialize score matrix
-    vector<vector<vector<double>>> sm(n + 1, 
-        vector<vector<double>>(n + 1, 
+    // Positive/Negative score matrices and lengths
+    vector<vector<vector<double>>> psm(n + 1,
+        vector<vector<double>>(n + 1,
             vector<double>(n + 1, 0.0)));
+    vector<vector<vector<double>>> nsm(n + 1,
+        vector<vector<double>>(n + 1,
+            vector<double>(n + 1, 0.0)));
+    vector<vector<vector<int>>> lpsm(n + 1,
+        vector<vector<int>>(n + 1,
+            vector<int>(n + 1, 0)));
+    vector<vector<vector<int>>> lnsm(n + 1,
+        vector<vector<int>>(n + 1,
+            vector<int>(n + 1, 0)));
 
-    // Initialize trace matrix only if needed
-    vector<vector<vector<int>>> tm;
+    // Direction matrices for backtracking (only when keep_trace is true)
+    vector<vector<vector<bool>>> p_ext, n_ext;
     if (keep_trace) {
-        tm.resize(n + 1, 
-            vector<vector<int>>(n + 1, 
-                vector<int>(n + 1, 0)));
-    }
-
-    // Reserve space for trace if needed
-    if (keep_trace) {
+        p_ext.resize(n + 1, vector<vector<bool>>(n + 1, vector<bool>(n + 1, false)));
+        n_ext.resize(n + 1, vector<vector<bool>>(n + 1, vector<bool>(n + 1, false)));
         lla_result.trace.reserve(n);
     }
 
@@ -114,7 +120,7 @@ LLA_Result DP_lla(const LLA_Data& data, bool keep_trace) {
     for (size_t i = 1; i <= n; i++) {
         for (size_t j = 1; j <= n; j++) {
             for (size_t k = 1; k <= n; k++) {
-                // Skip if any pair is outside shift constraint
+                // Shift constraint
                 if (data.max_shift != std::numeric_limits<int>::max()) {
                     if (abs((int)i - (int)j) > data.max_shift || 
                         abs((int)i - (int)k) > data.max_shift || 
@@ -123,55 +129,128 @@ LLA_Result DP_lla(const LLA_Data& data, bool keep_trace) {
                     }
                 }
 
-                // Calculate current and previous scores
                 double s1 = data.X[i - 1] * data.Y[j - 1] * data.Z[k - 1];
-                double s0 = sm[i - 1][j - 1][k - 1];
-                
-                // Determine direction based on scores
-                int t = 0x0000;
-                if (s0 > 0) {
-                    t = (s1 > 0) ? 0x0111 : 0x0000;
-                } else if (s0 < 0) {
-                    t = (s1 < 0) ? 0x0111 : 0x0000;
+
+                // Positive accumulation
+                double prev_p = psm[i - 1][j - 1][k - 1];
+                double cand_p = prev_p + s1;
+                if (cand_p > 0) {
+                    psm[i][j][k] = cand_p;
+                    lpsm[i][j][k] = lpsm[i - 1][j - 1][k - 1] + 1;
+                    if (keep_trace) p_ext[i][j][k] = (lpsm[i - 1][j - 1][k - 1] > 0);
+                } else {
+                    psm[i][j][k] = 0.0;
+                    lpsm[i][j][k] = 0;
+                    if (keep_trace) p_ext[i][j][k] = false;
                 }
 
-                // Update score
-                sm[i][j][k] = (t == 0x0000) ? s1 : s0 + s1;
-
-                // Update trace if needed
-                if (keep_trace) {
-                    tm[i][j][k] = t;
+                // Negative accumulation
+                double prev_n = nsm[i - 1][j - 1][k - 1];
+                double cand_n = prev_n - s1; // accumulate negative
+                if (cand_n > 0) {
+                    nsm[i][j][k] = cand_n;
+                    lnsm[i][j][k] = lnsm[i - 1][j - 1][k - 1] + 1;
+                    if (keep_trace) n_ext[i][j][k] = (lnsm[i - 1][j - 1][k - 1] > 0);
+                } else {
+                    nsm[i][j][k] = 0.0;
+                    lnsm[i][j][k] = 0;
+                    if (keep_trace) n_ext[i][j][k] = false;
                 }
 
-                // Update maximum score if needed
-                if (abs(sm[i][j][k]) > max_s) {
-                    max_p[0] = i;
-                    max_p[1] = j;
-                    max_p[2] = k;
-                    max_s = abs(sm[i][j][k]);
+                // Decide current best at (i,j,k)
+                double cur_abs = 0.0; int cur_len = 0; int cur_sign = 1;
+                if (psm[i][j][k] >= nsm[i][j][k]) {
+                    cur_abs = psm[i][j][k];
+                    cur_len = lpsm[i][j][k];
+                    cur_sign = 1;
+                } else {
+                    cur_abs = nsm[i][j][k];
+                    cur_len = lnsm[i][j][k];
+                    cur_sign = -1;
+                }
+
+                if (cur_abs > 0) {
+                    bool better = false;
+                    if (cur_abs > max_s) {
+                        better = true;
+                    } else if (cur_abs == max_s) {
+                        // tie-break: prefer shorter length
+                        if (cur_len > 0 && (best_len == 0 || cur_len < best_len)) {
+                            better = true;
+                        } else if (cur_len == best_len && best_len > 0) {
+                            // then lexicographically smallest end index
+                            if ( (int)i < max_p[0] ||
+                                 ( (int)i == max_p[0] && ( (int)j < max_p[1] || ( (int)j == max_p[1] && (int)k < max_p[2] ) ) ) ) {
+                                better = true;
+                            }
+                        }
+                    }
+                    if (better) {
+                        max_s = cur_abs;
+                        best_len = cur_len;
+                        best_sign = cur_sign;
+                        max_p[0] = (int)i;
+                        max_p[1] = (int)j;
+                        max_p[2] = (int)k;
+                    }
                 }
             }
         }
     }
 
-    // Store the maximum score in `lla_result`
-   lla_result.score = sm[max_p[0]][max_p[1]][max_p[2]]/data.X.size();
+    if (max_s == 0.0) {
+        lla_result.score = 0.0;
+        return lla_result;
+    }
+
+    // Store the maximum score in `lla_result` (normalize by length of X for consistency)
+    double signed_score = (best_sign == 1) ? psm[max_p[0]][max_p[1]][max_p[2]] : -nsm[max_p[0]][max_p[1]][max_p[2]];
+    lla_result.score = signed_score / data.X.size();
 
     // Backtrace if requested
-    if (keep_trace) {
-        vector<int> step(3);
-        for (int i = max_p[0], j = max_p[1], k = max_p[2]; ;
-             i -= (tm[i][j][k] & 0x0001),
-             j -= (tm[i][j][k] & 0x0010) >> 4,
-             k -= (tm[i][j][k] & 0x0100) >> 8) {
-            
-            step[0] = i;
-            step[1] = j;
-            step[2] = k;
-            lla_result.trace.push_back(step);
-
-            if (tm[i][j][k] == 0x0000) break;
+    if (keep_trace && best_len > 0) {
+        int i = max_p[0], j = max_p[1], k = max_p[2];
+        
+        // Choose the correct direction matrix based on best_sign
+        vector<vector<vector<bool>>>* ext_matrix;
+        if (best_sign == 1) {
+            ext_matrix = &p_ext;
+        } else {
+            ext_matrix = &n_ext;
         }
+        
+        // Debug: print max position and constraints
+        // std::cout << "Debug: max_p = [" << i << ", " << j << ", " << k << "], best_sign = " << best_sign << std::endl;
+        // std::cout << "Debug: delayLimit = " << data.max_shift << std::endl;
+        
+        // Backtrack along the path
+        while (i > 0 && j > 0 && k > 0 && (*ext_matrix)[i][j][k]) {
+            lla_result.trace.push_back({i, j, k});
+            i--; j--; k--;
+            
+            // Ensure we still satisfy delay constraints after decrement
+            if (data.max_shift != std::numeric_limits<int>::max()) {
+                if (abs(i - j) > data.max_shift || 
+                    abs(i - k) > data.max_shift || 
+                    abs(j - k) > data.max_shift) {
+                    // std::cout << "Debug: Breaking due to constraint violation at [" << i << ", " << j << ", " << k << "]" << std::endl;
+                    break;
+                }
+            }
+        }
+        // Add the starting position
+        lla_result.trace.push_back({i, j, k});
+        
+    // Debug: print final trace before reverse (only when DEBUG_COMPCORE is defined)
+#ifdef DEBUG_COMPCORE
+    std::cout << "Debug: Final trace before reverse: ";
+    for (const auto& pos : lla_result.trace) {
+        std::cout << "[" << pos[0] << ", " << pos[1] << ", " << pos[2] << "] ";
+    }
+    std::cout << std::endl;
+#endif
+        
+    // Keep trace in end->start order (consistent with DP_lsa and Python expectations)
     }
 
     return lla_result;
