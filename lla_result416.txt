@@ -1,0 +1,2 @@
+X	Y	Z	LA	Delay	Start_X	Start_Y	Start_Z	End_X	End_Y	End_Z	lowCI	upCI	P	Q	Xi	Yi	Zi
+S1	S2	S3	0.51904250	0	3	3	3	17	17	17	0.51904250	0.51904250	0.07600000	nan	1	2	3

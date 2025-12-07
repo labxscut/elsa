@@ -118,80 +118,153 @@ LLA_Result DP_lla(const LLA_Data& data, bool keep_trace) {
 
     // Main DP loop
     for (size_t i = 1; i <= n; i++) {
-        for (size_t j = 1; j <= n; j++) {
-            for (size_t k = 1; k <= n; k++) {
-                // Shift constraint
-                if (data.max_shift != std::numeric_limits<int>::max()) {
-                    if (abs((int)i - (int)j) > data.max_shift || 
-                        abs((int)i - (int)k) > data.max_shift || 
-                        abs((int)j - (int)k) > data.max_shift) {
-                        continue;
+        if (data.max_shift == 0) {
+            // Special case for max_shift = 0, only consider i == j == k (no delay)
+            for (size_t j = i; j <= i; j++) {
+                for (size_t k = i; k <= i; k++) {
+                    double s1 = data.X[i - 1] * data.Y[j - 1] * data.Z[k - 1];
+
+                    // Positive accumulation
+                    double prev_p = psm[i - 1][j - 1][k - 1];
+                    double cand_p = prev_p + s1;
+                    if (cand_p > 0) {
+                        psm[i][j][k] = cand_p;
+                        lpsm[i][j][k] = lpsm[i - 1][j - 1][k - 1] + 1;
+                        if (keep_trace) p_ext[i][j][k] = (lpsm[i - 1][j - 1][k - 1] > 0);
+                    } else {
+                        psm[i][j][k] = 0.0;
+                        lpsm[i][j][k] = 0;
+                        if (keep_trace) p_ext[i][j][k] = false;
                     }
-                }
 
-                double s1 = data.X[i - 1] * data.Y[j - 1] * data.Z[k - 1];
+                    // Negative accumulation
+                    double prev_n = nsm[i - 1][j - 1][k - 1];
+                    double cand_n = prev_n - s1; // accumulate negative
+                    if (cand_n > 0) {
+                        nsm[i][j][k] = cand_n;
+                        lnsm[i][j][k] = lnsm[i - 1][j - 1][k - 1] + 1;
+                        if (keep_trace) n_ext[i][j][k] = (lnsm[i - 1][j - 1][k - 1] > 0);
+                    } else {
+                        nsm[i][j][k] = 0.0;
+                        lnsm[i][j][k] = 0;
+                        if (keep_trace) n_ext[i][j][k] = false;
+                    }
 
-                // Positive accumulation
-                double prev_p = psm[i - 1][j - 1][k - 1];
-                double cand_p = prev_p + s1;
-                if (cand_p > 0) {
-                    psm[i][j][k] = cand_p;
-                    lpsm[i][j][k] = lpsm[i - 1][j - 1][k - 1] + 1;
-                    if (keep_trace) p_ext[i][j][k] = (lpsm[i - 1][j - 1][k - 1] > 0);
-                } else {
-                    psm[i][j][k] = 0.0;
-                    lpsm[i][j][k] = 0;
-                    if (keep_trace) p_ext[i][j][k] = false;
-                }
+                    // Decide current best at (i,j,k)
+                    double cur_abs = 0.0; int cur_len = 0; int cur_sign = 1;
+                    if (psm[i][j][k] >= nsm[i][j][k]) {
+                        cur_abs = psm[i][j][k];
+                        cur_len = lpsm[i][j][k];
+                        cur_sign = 1;
+                    } else {
+                        cur_abs = nsm[i][j][k];
+                        cur_len = lnsm[i][j][k];
+                        cur_sign = -1;
+                    }
 
-                // Negative accumulation
-                double prev_n = nsm[i - 1][j - 1][k - 1];
-                double cand_n = prev_n - s1; // accumulate negative
-                if (cand_n > 0) {
-                    nsm[i][j][k] = cand_n;
-                    lnsm[i][j][k] = lnsm[i - 1][j - 1][k - 1] + 1;
-                    if (keep_trace) n_ext[i][j][k] = (lnsm[i - 1][j - 1][k - 1] > 0);
-                } else {
-                    nsm[i][j][k] = 0.0;
-                    lnsm[i][j][k] = 0;
-                    if (keep_trace) n_ext[i][j][k] = false;
-                }
-
-                // Decide current best at (i,j,k)
-                double cur_abs = 0.0; int cur_len = 0; int cur_sign = 1;
-                if (psm[i][j][k] >= nsm[i][j][k]) {
-                    cur_abs = psm[i][j][k];
-                    cur_len = lpsm[i][j][k];
-                    cur_sign = 1;
-                } else {
-                    cur_abs = nsm[i][j][k];
-                    cur_len = lnsm[i][j][k];
-                    cur_sign = -1;
-                }
-
-                if (cur_abs > 0) {
-                    bool better = false;
-                    if (cur_abs > max_s) {
-                        better = true;
-                    } else if (cur_abs == max_s) {
-                        // tie-break: prefer shorter length
-                        if (cur_len > 0 && (best_len == 0 || cur_len < best_len)) {
+                    if (cur_abs > 0) {
+                        bool better = false;
+                        if (cur_abs > max_s) {
                             better = true;
-                        } else if (cur_len == best_len && best_len > 0) {
-                            // then lexicographically smallest end index
-                            if ( (int)i < max_p[0] ||
-                                 ( (int)i == max_p[0] && ( (int)j < max_p[1] || ( (int)j == max_p[1] && (int)k < max_p[2] ) ) ) ) {
+                        } else if (cur_abs == max_s) {
+                            // tie-break: prefer longer length
+                            if (cur_len > 0 && (best_len == 0 || cur_len > best_len)) {
                                 better = true;
+                            } else if (cur_len == best_len && best_len > 0) {
+                                // then lexicographically smallest end index
+                                if ( (int)i < max_p[0] ||
+                                     ( (int)i == max_p[0] && ( (int)j < max_p[1] || ( (int)j == max_p[1] && (int)k < max_p[2] ) ) ) ) {
+                                    better = true;
+                                }
                             }
                         }
+                        if (better) {
+                            max_s = cur_abs;
+                            best_len = cur_len;
+                            best_sign = cur_sign;
+                            max_p[0] = (int)i;
+                            max_p[1] = (int)j;
+                            max_p[2] = (int)k;
+                        }
                     }
-                    if (better) {
-                        max_s = cur_abs;
-                        best_len = cur_len;
-                        best_sign = cur_sign;
-                        max_p[0] = (int)i;
-                        max_p[1] = (int)j;
-                        max_p[2] = (int)k;
+                }
+            }
+        } else {
+            // General case for max_shift > 0: X-Y synchronous (i==j), Y-Z delayed (|j-k| <= max_shift)
+            // This simplifies the delay model to only allow Y-Z delay, not X-Y delay
+            for (size_t j = i; j <= i; j++) {  // Force i == j (X-Y synchronous)
+                for (size_t k = 1; k <= n; k++) {
+                    // Y-Z delay constraint: |j - k| <= max_shift
+                    if (data.max_shift != std::numeric_limits<int>::max()) {
+                        if (abs((int)j - (int)k) > data.max_shift) {
+                            continue;
+                        }
+                    }
+
+                    double s1 = data.X[i - 1] * data.Y[j - 1] * data.Z[k - 1];
+
+                    // Positive accumulation
+                    double prev_p = psm[i - 1][j - 1][k - 1];
+                    double cand_p = prev_p + s1;
+                    if (cand_p > 0) {
+                        psm[i][j][k] = cand_p;
+                        lpsm[i][j][k] = lpsm[i - 1][j - 1][k - 1] + 1;
+                        if (keep_trace) p_ext[i][j][k] = (lpsm[i - 1][j - 1][k - 1] > 0);
+                    } else {
+                        psm[i][j][k] = 0.0;
+                        lpsm[i][j][k] = 0;
+                        if (keep_trace) p_ext[i][j][k] = false;
+                    }
+
+                    // Negative accumulation
+                    double prev_n = nsm[i - 1][j - 1][k - 1];
+                    double cand_n = prev_n - s1; // accumulate negative
+                    if (cand_n > 0) {
+                        nsm[i][j][k] = cand_n;
+                        lnsm[i][j][k] = lnsm[i - 1][j - 1][k - 1] + 1;
+                        if (keep_trace) n_ext[i][j][k] = (lnsm[i - 1][j - 1][k - 1] > 0);
+                    } else {
+                        nsm[i][j][k] = 0.0;
+                        lnsm[i][j][k] = 0;
+                        if (keep_trace) n_ext[i][j][k] = false;
+                    }
+
+                    // Decide current best at (i,j,k)
+                    double cur_abs = 0.0; int cur_len = 0; int cur_sign = 1;
+                    if (psm[i][j][k] >= nsm[i][j][k]) {
+                        cur_abs = psm[i][j][k];
+                        cur_len = lpsm[i][j][k];
+                        cur_sign = 1;
+                    } else {
+                        cur_abs = nsm[i][j][k];
+                        cur_len = lnsm[i][j][k];
+                        cur_sign = -1;
+                    }
+
+                    if (cur_abs > 0) {
+                        bool better = false;
+                        if (cur_abs > max_s) {
+                            better = true;
+                        } else if (cur_abs == max_s) {
+                            // tie-break: prefer longer length
+                            if (cur_len > 0 && (best_len == 0 || cur_len > best_len)) {
+                                better = true;
+                            } else if (cur_len == best_len && best_len > 0) {
+                                // then lexicographically smallest end index
+                                if ( (int)i < max_p[0] ||
+                                     ( (int)i == max_p[0] && ( (int)j < max_p[1] || ( (int)j == max_p[1] && (int)k < max_p[2] ) ) ) ) {
+                                    better = true;
+                                }
+                            }
+                        }
+                        if (better) {
+                            max_s = cur_abs;
+                            best_len = cur_len;
+                            best_sign = cur_sign;
+                            max_p[0] = (int)i;
+                            max_p[1] = (int)j;
+                            max_p[2] = (int)k;
+                        }
                     }
                 }
             }
@@ -219,21 +292,20 @@ LLA_Result DP_lla(const LLA_Data& data, bool keep_trace) {
             ext_matrix = &n_ext;
         }
         
-        // Debug: print max position and constraints
-        // std::cout << "Debug: max_p = [" << i << ", " << j << ", " << k << "], best_sign = " << best_sign << std::endl;
-        // std::cout << "Debug: delayLimit = " << data.max_shift << std::endl;
-        
         // Backtrack along the path
         while (i > 0 && j > 0 && k > 0 && (*ext_matrix)[i][j][k]) {
             lla_result.trace.push_back({i, j, k});
             i--; j--; k--;
             
             // Ensure we still satisfy delay constraints after decrement
-            if (data.max_shift != std::numeric_limits<int>::max()) {
-                if (abs(i - j) > data.max_shift || 
-                    abs(i - k) > data.max_shift || 
-                    abs(j - k) > data.max_shift) {
-                    // std::cout << "Debug: Breaking due to constraint violation at [" << i << ", " << j << ", " << k << "]" << std::endl;
+            // For max_shift > 0: i must equal j (X-Y synchronous), |j-k| <= max_shift (Y-Z delay)
+            // For max_shift == 0: i == j == k (no delay, already satisfied by DP)
+            if (data.max_shift > 0) {
+                if (i != j || abs(j - k) > data.max_shift) {
+                    break;
+                }
+            } else if (data.max_shift == 0) {
+                if (i != j || i != k) {
                     break;
                 }
             }

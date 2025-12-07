@@ -223,10 +223,32 @@ def applyLLAnalysis(cleanData, factorLabels, delayLimit, bootCI=.95, bootNum=100
                    fTransform=lsalib.simpleAverage, zNormalize=lsalib.noZeroNormalize, 
                    resultFile=None, qvalue_func=lsalib.storeyQvalue,keep_trace=False):
     """Apply Local Liquid Association analysis to input data."""
-    # New requested output order:
-    # X Y Z LA Delay Start_X Start_Y Start_Z End_X End_Y End_Z lowCI upCI P Q Xi Yi Zi
-    col_labels = ['X','Y','Z','LA','Delay','Start_X','Start_Y','Start_Z','End_X','End_Y','End_Z','lowCI','upCI','P','Q','Xi','Yi','Zi']
-    print("\t".join(col_labels), file=resultFile)
+    # Define column format specifications
+    col_formats = {
+        'X': ('%-6s', '%-6s'),      # (header_fmt, data_fmt) - Name columns left-aligned
+        'Y': ('%-6s', '%-6s'),
+        'Z': ('%-6s', '%-6s'),
+        'LLA': ('%-8s', '%-8.4f'),     # Numeric columns with 4 decimal places
+        'Delay': ('%-6s', '%-6d'),     # Y-Z delay (X-Y always synchronous)
+        'Start_X': ('%-8s', '%-8d'),
+        'Start_Y': ('%-8s', '%-8d'),
+        'Start_Z': ('%-8s', '%-8d'),
+        'End_X': ('%-6s', '%-6d'),
+        'End_Y': ('%-6s', '%-6d'),
+        'End_Z': ('%-6s', '%-6d'),
+        'lowCI': ('%-8s', '%-8.4f'),
+        'upCI': ('%-8s', '%-8.4f'),
+        'P': ('%-8s', '%-8.4f')
+    }
+    
+    # Column order
+    columns = ['X', 'Y', 'Z', 'LLA', 
+              'Start_X', 'Start_Y', 'Start_Z', 'End_X', 'End_Y', 'End_Z',
+              'P', 'lowCI', 'upCI', 'Delay']
+    
+    # 格式化表头
+    header_parts = [col_formats[col][0] % col for col in columns]
+    print(' '.join(header_parts), file=resultFile)
     
     inputFactorNum = cleanData.shape[0]
     inputRepNum = cleanData.shape[1]
@@ -282,19 +304,18 @@ def applyLLAnalysis(cleanData, factorLabels, delayLimit, bootCI=.95, bootNum=100
                     else:
                         la_score = lowCI = upCI = lla_result.score
                     
-                    # 计算 Delay（最大配对索引差），当 keep_trace=False 或无 trace 时为 0
+                    # Calculate Delay (Y-Z only, since X-Y are always synchronous)
+                    # Note: X-Y are always synchronous (i==j), so we only track Y-Z delay
                     if keep_trace and (start_triplet[0] != -1) and (end_triplet[0] != -1):
-                        delay_val = int(max(abs(end_triplet[0]-end_triplet[1]),
-                                            abs(end_triplet[0]-end_triplet[2]),
-                                            abs(end_triplet[1]-end_triplet[2])))
+                        delay = end_triplet[2] - end_triplet[1]  # Y-Z delay (can be non-zero)
                     else:
-                        delay_val = 0
+                        delay = 0
 
                     laTable.append([
                         Xi, Yi, Zi,               # 0..2 indices (0-based)
                         la_score, lowCI, upCI,    # 3..5
                         pvalue,                   # 6
-                        delay_val,                # 7
+                        delay,                    # 7 Y-Z delay only
                         start_triplet[0], start_triplet[1], start_triplet[2],  # 8..10 Start_X/Y/Z (1-based or -1)
                         end_triplet[0], end_triplet[1], end_triplet[2]         # 11..13 End_X/Y/Z (1-based or -1)
                     ])
@@ -312,37 +333,44 @@ def applyLLAnalysis(cleanData, factorLabels, delayLimit, bootCI=.95, bootNum=100
             Xi, Yi, Zi = row[0], row[1], row[2]
             la_score, lowCI, upCI = row[3], row[4], row[5]
             pvalue = row[6]
-            delay_val = row[7]
+            delay = row[7]
             start_x, start_y, start_z = row[8], row[9], row[10]
             end_x, end_y, end_z = row[11], row[12], row[13]
 
-            # Construct output row in the requested order:
-            # X, Y, Z, LA, Delay, Start_X, Start_Y, Start_Z, End_X, End_Y, End_Z, lowCI, upCI, P, Q, Xi, Yi, Zi
-            out_values = [
-                factorLabels[Xi], factorLabels[Yi], factorLabels[Zi],    # X, Y, Z
-                f"{la_score:.8f}",                                      # LA
-                delay_val,                                               # Delay
-                start_x, start_y, start_z,                               # Start_X/Y/Z
-                end_x, end_y, end_z,                                     # End_X/Y/Z
-                f"{lowCI:.8f}", f"{upCI:.8f}",                       # lowCI, upCI
-                f"{pvalue:.8f}", f"{qvalues[k]:.8f}",                 # P, Q
-                Xi+1, Yi+1, Zi+1                                          # Xi, Yi, Zi (1-based)
+            # Use predefined formats to construct each column
+            data_values = [
+                col_formats['X'][1] % factorLabels[Xi],
+                col_formats['Y'][1] % factorLabels[Yi],
+                col_formats['Z'][1] % factorLabels[Zi],
+                col_formats['LLA'][1] % la_score,
+                col_formats['Start_X'][1] % start_x,
+                col_formats['Start_Y'][1] % start_y,
+                col_formats['Start_Z'][1] % start_z,
+                col_formats['End_X'][1] % end_x,
+                col_formats['End_Y'][1] % end_y,
+                col_formats['End_Z'][1] % end_z,
+                col_formats['P'][1] % pvalue,
+                col_formats['lowCI'][1] % lowCI,
+                col_formats['upCI'][1] % upCI,
+                col_formats['Delay'][1] % delay,
             ]
-            print("\t".join([str(v) for v in out_values]), file=resultFile)
+            
+            # Join all columns with spaces
+            print(' '.join(data_values), file=resultFile)
     else:
         print("No valid triplets found for analysis", file=sys.stderr)
 
-def LLApermuPvalue(X, Y, Z, delayLimit, precisionP, LA_score):
+def LLApermuPvalue(X, Y, Z, delayLimit, precisionP, LLA_score):
     """Compute permutation-based p-value for LLA score.
     
     Args:
         X, Y, Z: Masked arrays containing time series data
         delayLimit: Maximum time delay to consider
         precisionP: Number of permutations
-        LA_score: Observed LA score
+        LLA_score: Observed LLA score
         
     Returns:
-        float: Two-tailed p-value
+        float: Two-tailed p-value with +1 correction
     """
     PP_set = np.zeros(precisionP, dtype='float')
     
@@ -360,13 +388,18 @@ def LLApermuPvalue(X, Y, Z, delayLimit, precisionP, LA_score):
         lla_data = compcore.LLA_Data(delayLimit, X, Y, Zp)
         PP_set[i] = compcore.DP_lla(lla_data).score
 
-    if LA_score >= 0:
-        P_two_tail = np.sum(np.abs(PP_set) >= LA_score) / float(precisionP)
-    else:
-        P_two_tail = np.sum(-np.abs(PP_set) <= LA_score) / float(precisionP)
-    return P_two_tail
+    # Filter out NaN values from permutation results
+    PP_set = PP_set[~np.isnan(PP_set)]
+    
+    # Calculate two-tailed p-value with +1 correction
+    # Count how many permuted |scores| >= |observed score|
+    b = np.count_nonzero(np.abs(PP_set) >= abs(LLA_score))
+    p = (b + 1) / (len(PP_set) + 1)
+    
+    # Ensure p-value doesn't exceed 1.0
+    return float(np.minimum(1.0, p))
 
-def LLAbootstrapCI(X, Y, Z, LA_score, delayLimit, bootCI, bootNum):
+def LLAbootstrapCI(X, Y, Z, LLA_score, delayLimit, bootCI, bootNum):
     """Compute bootstrap confidence intervals for LLA score.
     
     Args:
@@ -380,7 +413,7 @@ def LLAbootstrapCI(X, Y, Z, LA_score, delayLimit, bootCI, bootNum):
         tuple: (mean LA score, lower CI, upper CI)
     """
     if len(X) <= 1:  # Not enough data points
-        return LA_score, LA_score, LA_score
+        return LLA_score, LLA_score, LLA_score
         
     BS_set = np.zeros(bootNum, dtype='float')
     

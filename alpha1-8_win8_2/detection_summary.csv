@@ -1,0 +1,7 @@
+,,,,,detected,detected,detected,abs_lla_score,abs_lla_score
+,,,,,mean,std,count,mean,std
+n,alpha,delay_yz,is_global,is_control,,,,,
+80,0.8,0,False,False,1.0,0.0,50,0.4627,0.0801
+80,1.0,0,False,False,1.0,0.0,50,0.4706,0.0502
+100,0.8,0,False,False,1.0,0.0,50,0.4647,0.0641
+100,1.0,0,False,False,1.0,0.0,50,0.4885,0.0511

@@ -50,7 +50,7 @@ except ImportError:
         from . import lsalib
         from .lsalib import noZeroNormalize, percentileNormalize, noneNormalize
         from .lsalib import simpleAverage, sdAverage, simpleMedian, madMedian
-        from .lsalib import fillMissing, ma_average, percentileZNormalize
+        from .lsalib import fillMissing, ma_average
         from . import llalib
     except ImportError:
         import lsalib

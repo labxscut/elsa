@@ -1,0 +1,4 @@
+n,effect_size,delay_yz,is_global,Recall,Recall_std,n_exp,lla_score_mean,lla_score_std,FPR,FPR_std,n_ctrl,batch_time_seconds
+100,0.5,0,False,1.0,0.0,50,0.6147,0.0295,0.06,0.2399,50,876.31
+100,0.6,0,False,1.0,0.0,50,0.6107,0.0329,0.02,0.1414,50,821.73
+100,0.7,0,False,1.0,0.0,50,0.6144,0.0344,0.02,0.1414,50,749.67

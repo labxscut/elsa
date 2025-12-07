@@ -1,0 +1,2 @@
+n,R_assoc,R_null,alpha,precision,Power,Power_SE,FPR,FPR_SE,LA_mean_assoc,LA_mean_null
+100,50,50,0.05,1000,1.0,0.0,0.02,0.01979898987322333,0.979034,-0.013980000000000001

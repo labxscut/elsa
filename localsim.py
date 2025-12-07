@@ -19,12 +19,12 @@ def main():
 
     # Generate z as {-1, +1}
     n = args.n
-    z = np.random.randint(0, 2, size=n) * 2 - 1
+    z = np.random.choice([-1, 1], size=n)
 
     # generate x and y depending on z （no noise, local)
     x, y = np.zeros(n), np.zeros(n)  # 初始化x和y数组
 
-    corr_start, corr_end = 4, 12  # 在以外的区间非随机（保持逻辑不变）
+    corr_start, corr_end = 10, 20  # 在以外的区间非随机（保持逻辑不变）
 
     for i in range(n):
         if corr_start <= i <= corr_end:
