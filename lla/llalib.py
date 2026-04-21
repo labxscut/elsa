@@ -37,6 +37,7 @@
 import csv
 import sys
 import os
+import json
 import random
 import traceback
 import numpy as np
@@ -221,7 +222,8 @@ def transform_series(series, fTransform, zNormalize):
 def applyLLAnalysis(cleanData, factorLabels, delayLimit, bootCI=.95, bootNum=1000, minOccur=.50,
                    pvalueMethod="perm", precision=1000, fillMethod='linear', normMethod='pnz',
                    fTransform=lsalib.simpleAverage, zNormalize=lsalib.noZeroNormalize, 
-                   resultFile=None, qvalue_func=lsalib.storeyQvalue,keep_trace=False):
+                   resultFile=None, qvalue_func=lsalib.storeyQvalue, keep_trace=False,
+                   checkpoint_file=None, resume=False, flush_every=100, checkpoint_every=1000):
     """Apply Local Liquid Association analysis to input data."""
     # Define column format specifications
     col_formats = {
@@ -246,37 +248,96 @@ def applyLLAnalysis(cleanData, factorLabels, delayLimit, bootCI=.95, bootNum=100
               'Start_X', 'Start_Y', 'Start_Z', 'End_X', 'End_Y', 'End_Z',
               'P', 'lowCI', 'upCI', 'Delay']
     
-    # 格式化表头
-    header_parts = [col_formats[col][0] % col for col in columns]
-    print(' '.join(header_parts), file=resultFile)
+    # Skip header when appending to an existing non-empty result file
+    file_has_content = False
+    if hasattr(resultFile, 'tell') and hasattr(resultFile, 'seek'):
+        cur_pos = resultFile.tell()
+        resultFile.seek(0, os.SEEK_END)
+        file_has_content = resultFile.tell() > 0
+        resultFile.seek(cur_pos, os.SEEK_SET)
+
+    if not (resume and file_has_content):
+        header_parts = [col_formats[col][0] % col for col in columns]
+        print(' '.join(header_parts), file=resultFile)
+        resultFile.flush()
     
     inputFactorNum = cleanData.shape[0]
     inputRepNum = cleanData.shape[1]
     inputSpotNum = cleanData.shape[2]
     
-    laTable = []
-    pvalues = []
-    
-    # Track processed triplets to avoid redundancy
-    processed = set()
+    # Restore checkpoint if requested
+    resume_from = (0, 1, 2)
+    completed_rows = 0
+    if resume and checkpoint_file and os.path.exists(checkpoint_file):
+        try:
+            with open(checkpoint_file, 'r') as ckf:
+                state = json.load(ckf)
+            if state.get('completed', False):
+                print("Checkpoint indicates completed analysis; skipping computation.", file=sys.stderr)
+                return
+            last_triplet = state.get('last_triplet')
+            if isinstance(last_triplet, list) and len(last_triplet) == 3:
+                lx, ly, lz = [int(v) for v in last_triplet]
+                if lz + 1 < inputFactorNum:
+                    resume_from = (lx, ly, lz + 1)
+                elif ly + 1 < inputFactorNum - 1:
+                    resume_from = (lx, ly + 1, ly + 2)
+                elif lx + 1 < inputFactorNum - 2:
+                    resume_from = (lx + 1, lx + 2, lx + 3)
+                else:
+                    print("Checkpoint points to end of search space; marking complete.", file=sys.stderr)
+                    return
+            completed_rows = int(state.get('rows_written', 0))
+            print(f"Resuming from triplet index {resume_from}, rows_written={completed_rows}", file=sys.stderr)
+        except Exception:
+            print("Warning: failed to load checkpoint; restarting from beginning.", file=sys.stderr)
+            traceback.print_exc(file=sys.stderr)
+            resume_from = (0, 1, 2)
+
+    def _before_resume_point(xi, yi, zi, start):
+        return (xi < start[0] or
+                (xi == start[0] and yi < start[1]) or
+                (xi == start[0] and yi == start[1] and zi < start[2]))
+
+    def _write_checkpoint(last_triplet, rows_written, completed=False):
+        if not checkpoint_file:
+            return
+        state = {
+            'last_triplet': list(last_triplet) if last_triplet is not None else None,
+            'rows_written': int(rows_written),
+            'completed': bool(completed)
+        }
+        tmp_path = checkpoint_file + '.tmp'
+        with open(tmp_path, 'w') as ckf:
+            json.dump(state, ckf)
+            ckf.flush()
+            os.fsync(ckf.fileno())
+        os.replace(tmp_path, checkpoint_file)
+
+    # Precompute transformed series and occurrence validity once per factor
+    transformed = [None] * inputFactorNum
+    valid_occurrence = [False] * inputFactorNum
+    for i in range(inputFactorNum):
+        series_i = transform_series(cleanData[i], fTransform, zNormalize)
+        transformed[i] = series_i
+        valid_occurrence[i] = (np.sum(~np.ma.getmask(series_i)) / float(inputSpotNum)) >= minOccur
+
+    written_since_flush = 0
+    last_triplet_written = None
     
     for Xi in range(inputFactorNum):
         for Yi in range(Xi + 1, inputFactorNum):
             for Zi in range(Yi + 1, inputFactorNum):
-                # triplet = tuple(sorted([Xi, Yi, Zi]))
-                # if triplet in processed:
-                #     continue
-                # processed.add(triplet)
+                if resume and _before_resume_point(Xi, Yi, Zi, resume_from):
+                    continue
                 
                 try:
-                    # Transform data while preserving masked array structure
-                    X = transform_series(cleanData[Xi], fTransform, zNormalize)
-                    Y = transform_series(cleanData[Yi], fTransform, zNormalize)
-                    Z = transform_series(cleanData[Zi], fTransform, zNormalize)
+                    X = transformed[Xi]
+                    Y = transformed[Yi]
+                    Z = transformed[Zi]
                     
                     # Check minimum occurrence criteria
-                    if not all(np.sum(~np.ma.getmask(s))/float(inputSpotNum) >= minOccur 
-                             for s in [X, Y, Z]):
+                    if not (valid_occurrence[Xi] and valid_occurrence[Yi] and valid_occurrence[Zi]):
                         continue
                     
                     # Calculate LA score and statistics
@@ -295,7 +356,6 @@ def applyLLAnalysis(cleanData, factorLabels, delayLimit, bootCI=.95, bootNum=100
                     # Calculate p-value
                     pvalue = (LLApermuPvalue(X, Y, Z, delayLimit, precision, lla_result.score) 
                             if pvalueMethod == "perm" else pvalueMethod)
-                    pvalues.append(pvalue)
                     
                     # Calculate bootstrap CI if requested
                     if bootNum > 0:
@@ -311,54 +371,46 @@ def applyLLAnalysis(cleanData, factorLabels, delayLimit, bootCI=.95, bootNum=100
                     else:
                         delay = 0
 
-                    laTable.append([
-                        Xi, Yi, Zi,               # 0..2 indices (0-based)
-                        la_score, lowCI, upCI,    # 3..5
-                        pvalue,                   # 6
-                        delay,                    # 7 Y-Z delay only
-                        start_triplet[0], start_triplet[1], start_triplet[2],  # 8..10 Start_X/Y/Z (1-based or -1)
-                        end_triplet[0], end_triplet[1], end_triplet[2]         # 11..13 End_X/Y/Z (1-based or -1)
-                    ])
+                    data_values = [
+                        col_formats['X'][1] % factorLabels[Xi],
+                        col_formats['Y'][1] % factorLabels[Yi],
+                        col_formats['Z'][1] % factorLabels[Zi],
+                        col_formats['LLA'][1] % la_score,
+                        col_formats['Start_X'][1] % start_triplet[0],
+                        col_formats['Start_Y'][1] % start_triplet[1],
+                        col_formats['Start_Z'][1] % start_triplet[2],
+                        col_formats['End_X'][1] % end_triplet[0],
+                        col_formats['End_Y'][1] % end_triplet[1],
+                        col_formats['End_Z'][1] % end_triplet[2],
+                        col_formats['P'][1] % pvalue,
+                        col_formats['lowCI'][1] % lowCI,
+                        col_formats['upCI'][1] % upCI,
+                        col_formats['Delay'][1] % delay,
+                    ]
+
+                    print(' '.join(data_values), file=resultFile)
+                    completed_rows += 1
+                    written_since_flush += 1
+                    last_triplet_written = (Xi, Yi, Zi)
+
+                    if written_since_flush >= max(1, int(flush_every)):
+                        resultFile.flush()
+                        written_since_flush = 0
+
+                    if last_triplet_written is not None and completed_rows % max(1, int(checkpoint_every)) == 0:
+                        _write_checkpoint(last_triplet_written, completed_rows, completed=False)
                     
                 except Exception as e:
                     print("Error during analysis:", file=sys.stderr)
                     traceback.print_exc()
                     continue
-    
-    # Calculate q-values and write results
-    if pvalues:
-        qvalues = qvalue_func(np.array(pvalues))
+    if written_since_flush > 0:
+        resultFile.flush()
 
-        for k, row in enumerate(laTable):
-            Xi, Yi, Zi = row[0], row[1], row[2]
-            la_score, lowCI, upCI = row[3], row[4], row[5]
-            pvalue = row[6]
-            delay = row[7]
-            start_x, start_y, start_z = row[8], row[9], row[10]
-            end_x, end_y, end_z = row[11], row[12], row[13]
-
-            # Use predefined formats to construct each column
-            data_values = [
-                col_formats['X'][1] % factorLabels[Xi],
-                col_formats['Y'][1] % factorLabels[Yi],
-                col_formats['Z'][1] % factorLabels[Zi],
-                col_formats['LLA'][1] % la_score,
-                col_formats['Start_X'][1] % start_x,
-                col_formats['Start_Y'][1] % start_y,
-                col_formats['Start_Z'][1] % start_z,
-                col_formats['End_X'][1] % end_x,
-                col_formats['End_Y'][1] % end_y,
-                col_formats['End_Z'][1] % end_z,
-                col_formats['P'][1] % pvalue,
-                col_formats['lowCI'][1] % lowCI,
-                col_formats['upCI'][1] % upCI,
-                col_formats['Delay'][1] % delay,
-            ]
-            
-            # Join all columns with spaces
-            print(' '.join(data_values), file=resultFile)
-    else:
+    if completed_rows == 0:
         print("No valid triplets found for analysis", file=sys.stderr)
+
+    _write_checkpoint(last_triplet_written, completed_rows, completed=True)
 
 def LLApermuPvalue(X, Y, Z, delayLimit, precisionP, LLA_score):
     """Compute permutation-based p-value for LLA score.

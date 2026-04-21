@@ -83,11 +83,11 @@ def main():
     # define arguments: delayLimit, fillMethod, pvalueMethod
     parser = argparse.ArgumentParser(description="Local Liquid Association Analysis Tool")
 
-    parser.add_argument("dataFile", metavar="dataFile", type=argparse.FileType('r'), 
+    parser.add_argument("dataFile", metavar="dataFile", type=str,
                        help="input data file: m by (r * s) tab delimited text; \n \
                              first row starts with '#' as header; \n \
                              m variables, r replicates, s time spots")
-    parser.add_argument("resultFile", metavar="resultFile", type=argparse.FileType('w'), 
+    parser.add_argument("resultFile", metavar="resultFile", type=str,
                        help="output result file")
     parser.add_argument("-d", "--delayLimit", dest="delayLimit", default=3, type=int,
                        help="maximum time delay (default: 3, range: 0-6)")
@@ -115,18 +115,34 @@ def main():
     parser.add_argument("-n", "--normMethod", dest="normMethod", default='pnz',
                        choices=['percentile', 'pnz', 'none'],
                        help="data normalization method (default: pnz)")
+    parser.add_argument("--resume", dest="resume", action='store_true',
+                        help="resume from checkpoint and append to existing result file")
+    parser.add_argument("--checkpoint-file", dest="checkpoint_file", default=None,
+                        help="checkpoint path (default: <resultFile>.ckpt.json)")
+    parser.add_argument("--flush-every", dest="flush_every", default=100, type=int,
+                        help="flush output file every N rows (default: 100)")
+    parser.add_argument("--checkpoint-every", dest="checkpoint_every", default=1000, type=int,
+                        help="save checkpoint every N rows (default: 1000)")
 
     args = parser.parse_args()
 
     # Print parameters
+    checkpoint_file = args.checkpoint_file or (args.resultFile + ".ckpt.json")
+
     print("\t".join(['delayLimit','fillMethod','pvalueMethod','dataFile','resultFile',
-                    'repNum','spotNum','bootNum','transFunc','normMethod','precision','keep_trace']))
-    print("\t".join(['%s']*12) % (args.delayLimit, args.fillMethod, args.pvalueMethod,
-                                 args.dataFile.name, args.resultFile.name, args.repNum,
+                    'repNum','spotNum','bootNum','transFunc','normMethod','precision','keep_trace',
+                    'resume','checkpoint_file','flush_every','checkpoint_every']))
+    print("\t".join(['%s']*16) % (args.delayLimit, args.fillMethod, args.pvalueMethod,
+                                 args.dataFile, args.resultFile, args.repNum,
                                  args.spotNum, args.bootNum, args.transFunc,
-                                 args.normMethod, args.precision, args.keep_trace))
+                                 args.normMethod, args.precision, args.keep_trace,
+                                 args.resume, checkpoint_file, args.flush_every, args.checkpoint_every))
 
     try:
+        data_handle = open(args.dataFile, 'r')
+        result_mode = 'a' if args.resume else 'w'
+        result_handle = open(args.resultFile, result_mode)
+
         # Map transformation function names to actual functions
         transform_funcs = {
             'simple': lsalib.simpleAverage,
@@ -151,7 +167,7 @@ def main():
             raise ValueError(f"Invalid normalization method: {args.normMethod}")
 
         # Read and validate input data
-        firstData = np.genfromtxt(args.dataFile, comments='#', delimiter='\t',
+        firstData = np.genfromtxt(data_handle, comments='#', delimiter='\t',
                                missing_values=['na','','NA'],
                                filling_values=np.nan,
                                usecols=list(range(1, args.spotNum*args.repNum+1)))
@@ -159,8 +175,8 @@ def main():
         validate_input_dimensions(firstData, args.repNum, args.spotNum)
         
         # Read factor labels
-        args.dataFile.seek(0)
-        factorLabels = np.genfromtxt(args.dataFile, comments='#', delimiter='\t',
+        data_handle.seek(0)
+        factorLabels = np.genfromtxt(data_handle, comments='#', delimiter='\t',
                                   usecols=[0], dtype=str).tolist()
         factorNum = firstData.shape[0]
         
@@ -185,16 +201,28 @@ def main():
                             normMethod=args.normMethod,
                             fTransform=fTransform,
                             zNormalize=zNormalize,
-                            resultFile=args.resultFile,
-                            keep_trace=args.keep_trace)
+                            resultFile=result_handle,
+                            keep_trace=args.keep_trace,
+                            checkpoint_file=checkpoint_file,
+                            resume=args.resume,
+                            flush_every=args.flush_every,
+                            checkpoint_every=args.checkpoint_every)
                             
     except Exception as e:
         print("Error during analysis:", file=sys.stderr)
         traceback.print_exc()
         sys.exit(1)
+    finally:
+        try:
+            data_handle.close()
+        except Exception:
+            pass
+        try:
+            result_handle.close()
+        except Exception:
+            pass
 
     print("Finishing up...", file=sys.stderr)
-    args.resultFile.close()
     end_time = time.time()
     print(f"Time elapsed {end_time-start_time:.2f} seconds", file=sys.stderr)
 
