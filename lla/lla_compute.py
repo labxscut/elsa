@@ -40,6 +40,7 @@ print(">>> sys.path 前三项:", sys.path[:3], file=sys.stderr)
 try:
     # When running as installed package
     from lsa import lsalib
+    from lsa import compcore
     from lsa.lsalib import noZeroNormalize, percentileNormalize, noneNormalize
     from lsa.lsalib import simpleAverage, sdAverage, simpleMedian, madMedian
     from lsa.lsalib import fillMissing, ma_average, percentileZNormalize
@@ -58,6 +59,12 @@ except ImportError:
         from lsalib import simpleAverage, sdAverage, simpleMedian, madMedian
         from lsalib import fillMissing, ma_average, percentileZNormalize
         import llalib
+
+print(
+    f">>> compcore backend: {getattr(compcore, 'BACKEND_NAME', 'unknown')} "
+    f"(using_gpu={getattr(compcore, 'USING_GPU', False)})",
+    file=sys.stderr,
+)
 
 def validate_input_dimensions(data, repNum, spotNum):
     """Validate input data dimensions and format."""
