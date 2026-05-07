@@ -99,7 +99,7 @@ def main():
     parser.add_argument("-d", "--delayLimit", dest="delayLimit", default=3, type=int,
                        help="maximum time delay (default: 3, range: 0-6)")
     parser.add_argument("-p", "--pvalueMethod", dest="pvalueMethod", default="perm",
-                       help="p-value calculation method (default: perm)")
+                       help="p-value calculation method (default: perm; supported: perm, theo, mix)")
     parser.add_argument("-x", "--precision", dest="precision", default=1000, type=int,
                        help="precision for p-value calculation (default: 1000)")
     parser.add_argument("-b", "--bootNum", dest="bootNum", default=0, type=int,

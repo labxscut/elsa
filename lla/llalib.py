@@ -55,8 +55,8 @@ except ImportError:
         from . import lsalib
         from . import compcore
     except ImportError:
-        import lsalib
-        import compcore
+        from lsa import lsalib
+        from lsa import compcore
 
 #global variable, stores calculated p-values.
 disp_decimal = 8
@@ -354,8 +354,18 @@ def applyLLAnalysis(cleanData, factorLabels, delayLimit, bootCI=.95, bootNum=100
                         # C++ trace 索引为 1-based，可直接用于输出
                     
                     # Calculate p-value
-                    pvalue = (LLApermuPvalue(X, Y, Z, delayLimit, precision, lla_result.score) 
-                            if pvalueMethod == "perm" else pvalueMethod)
+                    if pvalueMethod == "perm":
+                        pvalue = LLApermuPvalue(X, Y, Z, delayLimit, precision, lla_result.score)
+                    elif pvalueMethod == "theo":
+                        pvalue = LLAtheoPvalue(lla_result.score, inputSpotNum, delayLimit, precision)
+                    elif pvalueMethod == "mix":
+                        theo_p = LLAtheoPvalue(lla_result.score, inputSpotNum, delayLimit, precision)
+                        if theo_p <= 0.05:
+                            pvalue = LLApermuPvalue(X, Y, Z, delayLimit, precision, lla_result.score)
+                        else:
+                            pvalue = theo_p
+                    else:
+                        pvalue = float(pvalueMethod)
                     
                     # Calculate bootstrap CI if requested
                     if bootNum > 0:
@@ -493,3 +503,32 @@ def LLAbootstrapCI(X, Y, Z, LLA_score, delayLimit, bootCI, bootNum):
     upper_idx = int(np.ceil(bootNum * (1 - alpha/2))) - 1
     
     return BS_mean, BS_set[lower_idx], BS_set[upper_idx]
+
+
+def LLAtheoPvalue(LLA_score, series_length, delayLimit, precisionP, x_sd=1.0):
+    """Approximate an LLA p-value with the LSA theoretical lookup table.
+
+    The current LLA pipeline is used with delayLimit=0 in our benchmark setup,
+    so the score is treated as the range of a standardized partial-sum process
+    over the product sequence after normalization.
+    """
+    precisionP = max(1, int(abs(precisionP)))
+    P_table = lsalib.theoPvalue(
+        Rmax=series_length,
+        Dmax=delayLimit,
+        precision=1.0 / float(precisionP),
+        x_decimal=lsalib.my_decimal,
+    )
+    observed_range = abs(LLA_score) * float(series_length)
+    return float(
+        lsalib.readPvalue(
+            P_table,
+            R=observed_range,
+            N=series_length,
+            x_sd=x_sd,
+            M=1.0,
+            alpha=1.0,
+            beta=1.0,
+            x_decimal=lsalib.my_decimal,
+        )
+    )
