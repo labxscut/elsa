@@ -7,6 +7,7 @@ Tests:
 2. Localization Accuracy: Can LLA identify the correct regulation window?
 3. Delay Estimation: Can LLA recover the true Y-Z delay?
 4. Robustness: How does performance vary with α, n, window size, delay?
+5. P-value method comparison: Compare theo vs perm on the same synthetic triplets.
 """
 
 import numpy as np
@@ -30,9 +31,34 @@ except ImportError:
     sys.exit(1)
 
 
+def build_seed(
+    base_seed: int,
+    n: int,
+    effect_index: int,
+    delay_index: int,
+    window_index: int,
+    replicate_index: int,
+    is_control: bool,
+) -> int:
+    """Build a deterministic seed for a benchmark case."""
+
+    seed = (
+        int(base_seed)
+        + int(n) * 1_000_000
+        + int(effect_index) * 10_000
+        + int(delay_index) * 1_000
+        + int(window_index) * 100
+        + int(replicate_index)
+    )
+    if is_control:
+        seed += 50_000_000
+    return seed
+
+
 def run_lla_analysis(
     input_file: str,
     n: int,
+    pvalue_method: str = 'perm',
     delay_limit: int = 0,
     precision: int = 1000,
     keep_trace: bool = True
@@ -44,12 +70,12 @@ def run_lla_analysis(
     
     try:
         cmd = [
-            sys.executable, 'lla/lla_compute.py',
+            sys.executable, '-m', 'lla.lla_compute',
             input_file, output_file,
             '-s', str(n),
             '-r', '1',
             '-d', str(delay_limit),
-            '-p', 'perm',
+            '-p', pvalue_method,
             '-x', str(precision),
             '-n', 'pnz',
             '-f', 'linear'
@@ -57,8 +83,21 @@ def run_lla_analysis(
         
         if keep_trace:
             cmd.append('--keep-trace')
+
+        env = os.environ.copy()
+        repo_root = str(Path(__file__).resolve().parent)
+        env['PYTHONPATH'] = os.pathsep.join(
+            [repo_root, env.get('PYTHONPATH', '')] if env.get('PYTHONPATH') else [repo_root]
+        )
         
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            timeout=300,
+            cwd=repo_root,
+            env=env,
+        )
         
         if result.returncode != 0:
             print(f"LLA command failed: {result.stderr}", file=sys.stderr)
@@ -252,7 +291,8 @@ def run_single_experiment(
     method: str = 'additive',
     noise_sd: float = 0.1,
     sigma_y: float = 1.0,
-    z_encoding: str = '01'
+    z_encoding: str = '01',
+    pvalue_method: str = 'perm'
 ) -> Tuple[Dict, float]:
     """Run a single experiment and evaluate all metrics.
     
@@ -288,6 +328,7 @@ def run_single_experiment(
         df = run_lla_analysis(
             input_file=input_file,
             n=n,
+            pvalue_method=pvalue_method,
             delay_limit=delay_limit,
             precision=precision,
             keep_trace=True
@@ -326,6 +367,7 @@ def run_single_experiment(
         # Combine all metrics
         result = {
             **metadata,
+            'pvalue_method': pvalue_method,
             **detection_metrics,
             **localization_metrics,
             **delay_metrics
@@ -350,9 +392,15 @@ def run_benchmark_suite(
     method: str = 'additive',
     noise_sd: float = 0.1,
     sigma_y: float = 1.0,
-    z_encoding: str = '01'
+    z_encoding: str = '01',
+    pvalue_methods: List[str] = None,
+    base_seed: int = 12345,
 ) -> pd.DataFrame:
     """Run comprehensive benchmark suite."""
+
+    if pvalue_methods is None:
+        pvalue_methods = ['perm']
+    pvalue_methods = list(dict.fromkeys(pvalue_methods))
     
     Path(output_dir).mkdir(parents=True, exist_ok=True)
     
@@ -364,10 +412,8 @@ def run_benchmark_suite(
         for effect_size in effect_size_values:
             for delay in delay_values:
                 for frac in window_fractions:
-                    # Experimental group
-                    total_experiments += n_replicates
-                    # Control group (for both global and local cases)
-                    total_experiments += n_replicates
+                    # Experimental group + control group, for every p-value method.
+                    total_experiments += n_replicates * 2 * len(pvalue_methods)
     
     print(f"Running {total_experiments} experiments...", file=sys.stderr)
     completed = 0
@@ -375,10 +421,10 @@ def run_benchmark_suite(
     # Track batch timing per condition
     batch_timings = []
     
-    for n in n_values:
-        for effect_size in effect_size_values:
-            for delay_yz in delay_values:
-                for window_frac in window_fractions:
+    for n_index, n in enumerate(n_values):
+        for effect_index, effect_size in enumerate(effect_size_values):
+            for delay_index, delay_yz in enumerate(delay_values):
+                for window_index, window_frac in enumerate(window_fractions):
                     # Define window
                     # Note: argparse may parse "1" as int, so check both 1.0 and 1
                     if window_frac == 1.0 or window_frac == 1:
@@ -392,84 +438,103 @@ def run_benchmark_suite(
                         window_start = (n - window_length) // 2
                         window_end = window_start + window_length
                         is_global = False
-                    
-                    # Track times for this batch
-                    batch_times = []
-                    batch_start = time.time()
-                    
-                    # Run experimental replicates
-                    for rep in range(n_replicates):
-                        seed = hash((n, effect_size, delay_yz, window_frac, rep, 'exp')) % (2**31)
-                        
-                        result, comp_time = run_single_experiment(
-                            n=n,
-                            effect_size=effect_size,
-                            window_start=window_start,
-                            window_end=window_end,
-                            delay_yz=delay_yz,
-                            is_control=False,
-                            seed=seed,
-                            delay_limit=delay_limit,
-                            precision=precision,
-                            method=method,
-                            noise_sd=noise_sd,
-                            sigma_y=sigma_y,
-                            z_encoding=z_encoding
-                        )
-                        result['replicate'] = rep
-                        result['computation_time'] = comp_time
-                        results.append(result)
-                        batch_times.append(comp_time)
-                        
-                        completed += 1
-                        if completed % 10 == 0:
-                            print(f"Progress: {completed}/{total_experiments}", file=sys.stderr)
-                    
-                    # Run control replicates (for both global and local cases)
-                    # Control: same Z structure, but X and Y are independent noise
-                    for rep in range(n_replicates):
-                        seed = hash((n, effect_size, delay_yz, window_frac, rep, 'ctrl')) % (2**31)
-                        
-                        result, comp_time = run_single_experiment(
-                            n=n,
-                            effect_size=effect_size,
-                            window_start=window_start,
-                            window_end=window_end,
-                            delay_yz=delay_yz,
-                            is_control=True,
-                            seed=seed,
-                            delay_limit=delay_limit,
-                            precision=precision,
-                            method=method,
-                            noise_sd=noise_sd,
-                            sigma_y=sigma_y,
-                            z_encoding=z_encoding
-                        )
-                        result['replicate'] = rep
-                        result['computation_time'] = comp_time
-                        results.append(result)
-                        batch_times.append(comp_time)
-                        
-                        completed += 1
-                        if completed % 10 == 0:
-                            print(f"Progress: {completed}/{total_experiments}", file=sys.stderr)
-                    
-                    # Record batch timing statistics
-                    batch_total = time.time() - batch_start
-                    batch_timings.append({
-                        'n': n,
-                        'effect_size': effect_size,
-                        'delay_yz': delay_yz,
-                        'is_global': is_global,
-                        'window_fraction': window_frac,
-                        'batch_time_seconds': batch_total,
-                        'n_runs': n_replicates * 2  # exp + ctrl
-                    })
-                    
-                    print(f"Batch (n={n}, E={effect_size}, global={is_global}): "
-                          f"{batch_total:.1f}s total, "
-                          f"{np.median(batch_times):.2f}s median/run", 
-                          file=sys.stderr)
+                    for pvalue_method in pvalue_methods:
+                        # Track times for this batch and method
+                        batch_times = []
+                        batch_start = time.time()
+
+                        # Run experimental replicates
+                        for rep in range(n_replicates):
+                            seed = build_seed(
+                                base_seed=base_seed,
+                                n=n,
+                                effect_index=effect_index,
+                                delay_index=delay_index,
+                                window_index=window_index,
+                                replicate_index=rep,
+                                is_control=False,
+                            )
+
+                            result, comp_time = run_single_experiment(
+                                n=n,
+                                effect_size=effect_size,
+                                window_start=window_start,
+                                window_end=window_end,
+                                delay_yz=delay_yz,
+                                is_control=False,
+                                seed=seed,
+                                delay_limit=delay_limit,
+                                precision=precision,
+                                method=method,
+                                noise_sd=noise_sd,
+                                sigma_y=sigma_y,
+                                z_encoding=z_encoding,
+                                pvalue_method=pvalue_method,
+                            )
+                            result['replicate'] = rep
+                            result['computation_time'] = comp_time
+                            results.append(result)
+                            batch_times.append(comp_time)
+
+                            completed += 1
+                            if completed % 10 == 0:
+                                print(f"Progress: {completed}/{total_experiments}", file=sys.stderr)
+
+                        # Run control replicates (for both global and local cases)
+                        # Control: same Z structure, but X and Y are independent noise
+                        for rep in range(n_replicates):
+                            seed = build_seed(
+                                base_seed=base_seed,
+                                n=n,
+                                effect_index=effect_index,
+                                delay_index=delay_index,
+                                window_index=window_index,
+                                replicate_index=rep,
+                                is_control=True,
+                            )
+
+                            result, comp_time = run_single_experiment(
+                                n=n,
+                                effect_size=effect_size,
+                                window_start=window_start,
+                                window_end=window_end,
+                                delay_yz=delay_yz,
+                                is_control=True,
+                                seed=seed,
+                                delay_limit=delay_limit,
+                                precision=precision,
+                                method=method,
+                                noise_sd=noise_sd,
+                                sigma_y=sigma_y,
+                                z_encoding=z_encoding,
+                                pvalue_method=pvalue_method,
+                            )
+                            result['replicate'] = rep
+                            result['computation_time'] = comp_time
+                            results.append(result)
+                            batch_times.append(comp_time)
+
+                            completed += 1
+                            if completed % 10 == 0:
+                                print(f"Progress: {completed}/{total_experiments}", file=sys.stderr)
+
+                        # Record batch timing statistics per method.
+                        batch_total = time.time() - batch_start
+                        batch_timings.append({
+                            'n': n,
+                            'effect_size': effect_size,
+                            'delay_yz': delay_yz,
+                            'is_global': is_global,
+                            'window_fraction': window_frac,
+                            'pvalue_method': pvalue_method,
+                            'batch_time_seconds': batch_total,
+                            'n_runs': n_replicates * 2,
+                        })
+
+                        print(f"Batch (n={n}, E={effect_size}, global={is_global}, method={pvalue_method}): "
+                              f"{batch_total:.1f}s total, "
+                              f"{np.median(batch_times):.2f}s median/run", 
+                              file=sys.stderr)
     
     # Convert to DataFrame
     df = pd.DataFrame(results)
@@ -478,13 +543,13 @@ def run_benchmark_suite(
     # Create a mapping from condition to batch time
     batch_timing_map = {}
     for bt in batch_timings:
-        key = (bt['n'], bt['effect_size'], bt['delay_yz'], bt['is_global'])
+        key = (bt['n'], bt['effect_size'], bt['delay_yz'], bt['is_global'], bt['pvalue_method'])
         batch_timing_map[key] = bt['batch_time_seconds']
     
     # Add batch_time column to each row
     df['batch_time_seconds'] = df.apply(
         lambda row: batch_timing_map.get(
-            (row['n'], row['effect_size'], row['delay_yz'], row['is_global']), 
+            (row['n'], row['effect_size'], row['delay_yz'], row['is_global'], row['pvalue_method']), 
             None
         ), 
         axis=1
@@ -505,14 +570,14 @@ def summarize_results(df: pd.DataFrame, batch_timings: List[Dict], output_dir: s
         print("Error: DataFrame is empty. No results to summarize.", file=sys.stderr)
         return
 
-    required_columns = {'n', 'effect_size', 'delay_yz', 'is_global', 'is_control'}
+    required_columns = {'n', 'effect_size', 'delay_yz', 'is_global', 'is_control', 'pvalue_method'}
     if not required_columns.issubset(df.columns):
         missing = required_columns - set(df.columns)
         print(f"Error: Missing required columns in DataFrame: {missing}", file=sys.stderr)
         return
 
     # Detection power by condition
-    detection_summary = df.groupby(['n', 'effect_size', 'delay_yz', 'is_global', 'is_control']).agg({
+    detection_summary = df.groupby(['n', 'effect_size', 'delay_yz', 'is_global', 'pvalue_method', 'is_control']).agg({
         'detected': ['mean', 'std', 'count'],
         'lla_score': ['mean', 'std']
     }).round(4)
@@ -547,7 +612,7 @@ def summarize_results(df: pd.DataFrame, batch_timings: List[Dict], output_dir: s
     })
     
     # Merge on condition keys
-    merge_keys = ['n', 'effect_size', 'delay_yz', 'is_global']
+    merge_keys = ['n', 'effect_size', 'delay_yz', 'is_global', 'pvalue_method']
     detection_summary_final = exp_detections[merge_keys + ['Recall', 'Recall_std', 'n_exp', 'lla_score_mean', 'lla_score_std']].merge(
         ctrl_detections[merge_keys + ['FPR', 'FPR_std', 'n_ctrl']],
         on=merge_keys,
@@ -567,12 +632,12 @@ def summarize_results(df: pd.DataFrame, batch_timings: List[Dict], output_dir: s
     # Add batch timing information
     batch_timing_map = {}
     for bt in batch_timings:
-        key = (bt['n'], bt['effect_size'], bt['delay_yz'], bt['is_global'])
+        key = (bt['n'], bt['effect_size'], bt['delay_yz'], bt['is_global'], bt['pvalue_method'])
         batch_timing_map[key] = bt['batch_time_seconds']
     
     detection_summary_final['batch_time_seconds'] = detection_summary_final.apply(
         lambda row: batch_timing_map.get(
-            (row['n'], row['effect_size'], row['delay_yz'], row['is_global']), 
+            (row['n'], row['effect_size'], row['delay_yz'], row['is_global'], row['pvalue_method']), 
             None
         ), 
         axis=1
@@ -590,7 +655,7 @@ def summarize_results(df: pd.DataFrame, batch_timings: List[Dict], output_dir: s
     # Localization accuracy (experimental only)
     exp_only = df[~df['is_control']]
     if len(exp_only) > 0:
-        localization_summary = exp_only.groupby(['n', 'effect_size', 'delay_yz', 'is_global']).agg({
+        localization_summary = exp_only.groupby(['n', 'effect_size', 'delay_yz', 'is_global', 'pvalue_method']).agg({
             'window_overlap': ['mean', 'std'],
             'start_error': ['mean', 'std'],
             'end_error': ['mean', 'std']
@@ -603,7 +668,7 @@ def summarize_results(df: pd.DataFrame, batch_timings: List[Dict], output_dir: s
     # Delay estimation accuracy (delayed cases only)
     delayed_exp = exp_only[exp_only['delay_yz'] != 0]
     if len(delayed_exp) > 0:
-        delay_summary = delayed_exp.groupby(['n', 'effect_size', 'delay_yz']).agg({
+        delay_summary = delayed_exp.groupby(['n', 'effect_size', 'delay_yz', 'pvalue_method']).agg({
             'delay_correct': ['mean', 'std'],
             'delay_error': ['mean', 'std']
         }).round(4)
@@ -611,6 +676,38 @@ def summarize_results(df: pd.DataFrame, batch_timings: List[Dict], output_dir: s
         delay_output = os.path.join(output_dir, 'delay_summary.csv')
         delay_summary.to_csv(delay_output)
         print(f"Delay summary saved to: {delay_output}", file=sys.stderr)
+
+    # theo-vs-perm comparison summary (only when both methods are present)
+    available_methods = set(str(v) for v in df['pvalue_method'].dropna().unique())
+    if {'theo', 'perm'}.issubset(available_methods):
+        compare_keys = ['n', 'effect_size', 'delay_yz', 'is_global', 'is_control', 'replicate']
+        compare_df = df[df['pvalue_method'].isin(['theo', 'perm'])].copy()
+        compare_pivot = compare_df.pivot_table(
+            index=compare_keys,
+            columns='pvalue_method',
+            values=['p_value', 'detected', 'computation_time'],
+            aggfunc='first'
+        )
+        compare_pivot.columns = [f'{left}_{right}' for left, right in compare_pivot.columns.to_flat_index()]
+        compare_pivot = compare_pivot.reset_index()
+
+        if {'p_value_theo', 'p_value_perm'}.issubset(compare_pivot.columns):
+            compare_pivot['abs_p_diff'] = (compare_pivot['p_value_theo'] - compare_pivot['p_value_perm']).abs()
+            compare_pivot['rel_p_diff'] = compare_pivot['abs_p_diff'] / compare_pivot[['p_value_theo', 'p_value_perm']].abs().max(axis=1).clip(lower=1e-12)
+        if {'detected_theo', 'detected_perm'}.issubset(compare_pivot.columns):
+            compare_pivot['detected_agree'] = (compare_pivot['detected_theo'] == compare_pivot['detected_perm']).astype(float)
+        if {'computation_time_theo', 'computation_time_perm'}.issubset(compare_pivot.columns):
+            compare_pivot['time_ratio_perm_over_theo'] = compare_pivot['computation_time_perm'] / compare_pivot['computation_time_theo'].clip(lower=1e-12)
+
+        compare_summary = compare_pivot.groupby(['n', 'effect_size', 'delay_yz', 'is_global', 'is_control']).agg({
+            'abs_p_diff': ['mean', 'std'],
+            'rel_p_diff': ['mean', 'std'],
+            'detected_agree': ['mean', 'std'],
+            'time_ratio_perm_over_theo': ['mean', 'std'],
+        }).round(4)
+        compare_output = os.path.join(output_dir, 'pvalue_method_comparison_summary.csv')
+        compare_summary.to_csv(compare_output)
+        print(f"P-value comparison summary saved to: {compare_output}", file=sys.stderr)
 
 
 def main():
@@ -642,6 +739,10 @@ def main():
                        help='Window sizes as fraction of n (default: 0.8; 1.0=global)')
     parser.add_argument('--n_replicates', type=int, default=50,
                        help='Number of replicates per condition (default: 50)')
+    parser.add_argument('--pvalue_methods', nargs='+', default=['perm'], choices=['perm', 'theo', 'mix'],
+                       help='P-value methods to run (default: perm; use perm theo to compare)')
+    parser.add_argument('--base_seed', type=int, default=12345,
+                       help='Base seed for deterministic synthetic data generation (default: 12345)')
     parser.add_argument('--delay_limit', type=int, default=0,
                        help='Maximum delay for LLA search (default: 0)')
     parser.add_argument('--precision', type=int, default=1000,
@@ -674,7 +775,9 @@ def main():
         method=args.method,
         noise_sd=args.noise_sd,
         sigma_y=args.sigma_y,
-        z_encoding=args.z_encoding
+        z_encoding=args.z_encoding,
+        pvalue_methods=args.pvalue_methods,
+        base_seed=args.base_seed,
     )
     
     # Generate summaries

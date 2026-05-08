@@ -33,3 +33,4 @@ Thumbs.db
 
 # Ignore package manager directories
 node_modules/
+*.ckpt.json
