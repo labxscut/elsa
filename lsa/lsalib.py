@@ -101,6 +101,9 @@ pipi_inv = 1/pipi
 Q_lam_step = 0.05
 Q_lam_max = 0.95
 
+# In-memory cache for theo p-value tables to avoid recomputation during a run.
+# Keyed by (Rmax, Dmax, precision, x_decimal). Keeps a single entry per unique parameter set.
+_theoP_cache = {}
 ###############################
 # applyAnalsys
 # return a list-of-list, where the i-th list is:
@@ -360,9 +363,36 @@ def theoPvalue(Rmax, Dmax=0, precision=.001, x_decimal=my_decimal):
   # x_decimal is for augment x_index
   Rmax = np.max((Rmax, Rmax_min))
   Rmax = np.min((Rmax, Rmax_max)) #avoid extreme time consuming for long series
+
+  # Use a cache to avoid recomputing the same P_table multiple times
+  cache_key = (int(Rmax), int(Dmax), float(precision), int(x_decimal))
+  # Try in-memory cache first
+  if cache_key in _theoP_cache:
+    return _theoP_cache[cache_key]
+
+  # Optional disk cache: if LSA_THEO_CACHE_DIR is set, try load/save cache files
+  cache_dir = os.environ.get('LSA_THEO_CACHE_DIR', None)
+  if cache_dir:
+    try:
+      cache_fname = os.path.join(cache_dir, f"lsa_theo_R{cache_key[0]}_D{cache_key[1]}_p{int(1.0/precision)}_x{cache_key[3]}.pkl")
+      if os.path.exists(cache_fname):
+        import pickle
+        with open(cache_fname, 'rb') as fh:
+          P_table = pickle.load(fh)
+        _theoP_cache[cache_key] = P_table
+        return P_table
+    except Exception:
+      # non-fatal: ignore disk-cache errors and continue to compute
+      pass
+
   print("computing p_table with Rmax=", Rmax, file=sys.stderr)
   P_table = dict()
-  for xi in range(0,Rmax*10**(x_decimal)+1): 
+  try:
+    max_xi = int(Rmax * 10**(x_decimal))
+  except OverflowError:
+    max_xi = int(Rmax) * (10**int(x_decimal))
+
+  for xi in range(0, max_xi + 1): 
     if xi == 0:
       P_table[xi] = 1
       continue
@@ -377,8 +407,8 @@ def theoPvalue(Rmax, Dmax=0, precision=.001, x_decimal=my_decimal):
     #print alpha
     #print np.log(alpha*xx*(1-np.exp(-pipi_over_xx))/(8**B)/2)
     #print np.log(alpha*xx*(1-np.exp(-pipi_over_xx))/(8**B)/2) / pipi_over_xx
-    Kcut = np.max((kcut_min, int(np.ceil(.5\
-      - np.log((alpha/(2**B-1))**(1/B)*xx*(1-np.exp(-pipi_over_xx))/8/2)\
+    Kcut = np.max((kcut_min, int(np.ceil(.5
+      - np.log((alpha/(2**B-1))**(1/B)*xx*(1-np.exp(-pipi_over_xx))/8/2)
       /pipi_over_xx ))))
     #Kcut = 200
     A = 1/xx
@@ -394,6 +424,25 @@ def theoPvalue(Rmax, Dmax=0, precision=.001, x_decimal=my_decimal):
         P_two_tail = P_current
     #P_two_tail >= 0 is already ensured above
     P_table[xi] = P_two_tail
+
+  # store in cache for subsequent calls
+  try:
+    _theoP_cache[cache_key] = P_table
+  except Exception:
+    # non-fatal: if cache insertion fails, just return computed table
+    pass
+
+  # save to disk cache if requested
+  if cache_dir:
+    try:
+      import pickle
+      os.makedirs(cache_dir, exist_ok=True)
+      cache_fname = os.path.join(cache_dir, f"lsa_theo_R{cache_key[0]}_D{cache_key[1]}_p{int(1.0/precision)}_x{cache_key[3]}.pkl")
+      with open(cache_fname, 'wb') as fh:
+        pickle.dump(P_table, fh, protocol=pickle.HIGHEST_PROTOCOL)
+    except Exception:
+      # ignore disk cache write errors
+      pass
 
   return P_table
 	

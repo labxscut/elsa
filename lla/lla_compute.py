@@ -77,6 +77,28 @@ def validate_input_dimensions(data, repNum, spotNum):
                         f"(spotNum={spotNum} × repNum={repNum})")
 
 
+def build_clean_data(first_data, rep_num, spot_num, fill_method):
+    """Build the masked analysis tensor from the flat input matrix.
+
+    The common benchmark case uses rep_num == 1 and no missing values. In that
+    case we can skip the nested Python loops and construct the masked array
+    directly, which reduces wrapper overhead without changing the analysis.
+    """
+    factor_num = first_data.shape[0]
+
+    if rep_num == 1 and not np.isnan(first_data).any():
+        return np.ma.array(first_data[:, np.newaxis, :], mask=False, copy=False)
+
+    clean_data = np.ma.zeros((factor_num, rep_num, spot_num), dtype='float')
+    for i in range(factor_num):
+        for j in range(rep_num):
+            series = first_data[i][j::rep_num]
+            filled = fillMissing(series, fill_method)
+            clean_data[i, j] = np.ma.array(filled, mask=np.isnan(filled))
+
+    return clean_data
+
+
 def main():
     start_time = time.time()
     
@@ -146,6 +168,7 @@ def main():
                                  args.resume, checkpoint_file, args.flush_every, args.checkpoint_every))
 
     try:
+        preprocess_start = time.time()
         data_handle = open(args.dataFile, 'r')
         result_mode = 'a' if args.resume else 'w'
         result_handle = open(args.resultFile, result_mode)
@@ -185,18 +208,12 @@ def main():
         data_handle.seek(0)
         factorLabels = np.genfromtxt(data_handle, comments='#', delimiter='\t',
                                   usecols=[0], dtype=str).tolist()
-        factorNum = firstData.shape[0]
-        
-        # Create masked array and reshape
-        cleanData = np.ma.zeros((factorNum, args.repNum, args.spotNum), dtype='float')
-        for i in range(factorNum):
-            for j in range(args.repNum):
-                series = firstData[i][j::args.repNum]
-                filled = fillMissing(series, args.fillMethod)
-                cleanData[i,j] = np.ma.array(filled, mask=np.isnan(filled))
-        # cleanData[i, j, k] = ith factor, jth replicates, kth time spots.
+        cleanData = build_clean_data(firstData, args.repNum, args.spotNum, args.fillMethod)
+        preprocess_elapsed = time.time() - preprocess_start
+        print(f"Preprocessing elapsed {preprocess_elapsed:.2f} seconds", file=sys.stderr)
         
         # Run analysis with transformed data and specified functions
+        analysis_start = time.time()
         llalib.applyLLAnalysis(cleanData, factorLabels,
                             delayLimit=args.delayLimit,
                             bootCI=0.95,
@@ -214,6 +231,8 @@ def main():
                             resume=args.resume,
                             flush_every=args.flush_every,
                             checkpoint_every=args.checkpoint_every)
+        analysis_elapsed = time.time() - analysis_start
+        print(f"Analysis elapsed {analysis_elapsed:.2f} seconds", file=sys.stderr)
                             
     except Exception as e:
         print("Error during analysis:", file=sys.stderr)
