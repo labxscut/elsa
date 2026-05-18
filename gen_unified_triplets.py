@@ -1,3 +1,5 @@
+import os
+from pathlib import Path
 #!/usr/bin/env python
 """
 Unified triplet generator for LLA validation experiments.
@@ -13,6 +15,7 @@ Supports both global and local association patterns with:
 import numpy as np
 import argparse
 import sys
+import json
 from typing import Optional, Tuple
 
 
@@ -214,6 +217,51 @@ def write_triplet_to_file(
         # Row for Z
         row_z = [labels[2]] + [f'{v:.6f}' for v in Z]
         f.write('\t'.join(row_z) + '\n')
+
+
+def generate_and_save(
+    out_dir: str,
+    n: int,
+    effect_size: float = 1.0,
+    window_start: Optional[int] = None,
+    window_end: Optional[int] = None,
+    delay_yz: int = 0,
+    is_control: bool = False,
+    seed: Optional[int] = None,
+    method: str = 'additive',
+    noise_sd: float = 0.1,
+    sigma_y: float = 1.0,
+    z_encoding: str = '01'
+) -> str:
+    """Generate a triplet and save to out_dir with metadata JSON. Returns filepath."""
+    Path(out_dir).mkdir(parents=True, exist_ok=True)
+    if seed is None:
+        seed = np.random.randint(0, 100000000)
+    X, Y, Z, metadata = generate_unified_triplet(
+        n=n,
+        alpha=1.0,
+        method=method,
+        effect_size=effect_size,
+        noise_sd=noise_sd,
+        sigma_y=sigma_y,
+        z_encoding=z_encoding,
+        window_start=window_start,
+        window_end=window_end,
+        delay_yz=delay_yz,
+        is_control=is_control,
+        seed=seed
+    )
+    # Compose filename
+    kind = 'ctrl' if is_control else 'exp'
+    window_tag = 'global' if metadata['is_global'] else f"w{metadata['window_start']}_{metadata['window_end']}"
+    name = f"n{n}_E{effect_size}_d{delay_yz}_{window_tag}_{kind}_s{seed}.tsv"
+    out_path = os.path.join(out_dir, name)
+    write_triplet_to_file(out_path, X, Y, Z)
+    # Save metadata
+    meta_path = out_path + '.meta.json'
+    with open(meta_path, 'w') as mf:
+        json.dump(metadata, mf)
+    return out_path
 
 
 def main():

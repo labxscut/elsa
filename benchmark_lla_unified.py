@@ -23,8 +23,10 @@ from typing import List, Dict, Tuple
 import json
 
 # Import the unified generator
+import glob
+import shutil
 try:
-    from gen_unified_triplets import generate_unified_triplet, write_triplet_to_file
+    from gen_unified_triplets import generate_unified_triplet, write_triplet_to_file, generate_and_save
 except ImportError:
     print("Error: Cannot import gen_unified_triplets.py", file=sys.stderr)
     print("Make sure gen_unified_triplets.py is in the same directory", file=sys.stderr)
@@ -292,7 +294,9 @@ def run_single_experiment(
     noise_sd: float = 0.1,
     sigma_y: float = 1.0,
     z_encoding: str = '01',
-    pvalue_method: str = 'perm'
+    pvalue_method: str = 'perm',
+    sim_out_dir: str = None,
+    reuse_sim_dir: str = None,
 ) -> Tuple[Dict, float]:
     """Run a single experiment and evaluate all metrics.
     
@@ -316,23 +320,61 @@ def run_single_experiment(
         seed=seed
     )
     
-    # Write to temp file
-    with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as tmp_in:
-        input_file = tmp_in.name
-    
-    try:
+    # Determine output/input file handling: reuse existing sim, persist to sim_out_dir, or temp
+    kind = 'ctrl' if is_control else 'exp'
+    window_tag = 'global' if (window_start is None or window_end is None) else f"w{window_start}_{window_end}"
+
+    expected_name = f"n{n}_E{effect_size}_d{delay_yz}_{window_tag}_{kind}_s{seed}.tsv"
+    input_file = None
+
+    # Try reuse if requested
+    if reuse_sim_dir:
+        cand = os.path.join(reuse_sim_dir, expected_name)
+        if os.path.exists(cand):
+            input_file = cand
+
+    # If not reusing, write to sim_out_dir (persist) or temp
+    if input_file is None and sim_out_dir:
+        input_file = generate_and_save(sim_out_dir, n=n, effect_size=effect_size,
+                                       window_start=window_start, window_end=window_end,
+                                       delay_yz=delay_yz, is_control=is_control, seed=seed,
+                                       method=method, noise_sd=noise_sd, sigma_y=sigma_y,
+                                       z_encoding=z_encoding)
+
+    # If still no file, create a temporary input file
+    temp_created = False
+    if input_file is None:
+        with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as tmp_in:
+            input_file = tmp_in.name
         write_triplet_to_file(input_file, X, Y, Z)
-        
+        temp_created = True
+
+    try:
         # Run LLA analysis and time it
         start_time = time.time()
-        df = run_lla_analysis(
-            input_file=input_file,
-            n=n,
-            pvalue_method=pvalue_method,
-            delay_limit=delay_limit,
-            precision=precision,
-            keep_trace=True
-        )
+        # Run both theo and perm if requested for comparison
+        if pvalue_method == 'both':
+            df_theo = run_lla_analysis(input_file, n=n, pvalue_method='theo', delay_limit=delay_limit, precision=precision, keep_trace=True)
+            df_perm = run_lla_analysis(input_file, n=n, pvalue_method='perm', delay_limit=delay_limit, precision=precision, keep_trace=True)
+            # Merge theo and perm into a single DF keyed by X,Y,Z rows if possible
+            if df_theo is None and df_perm is None:
+                df = None
+            elif df_theo is None:
+                df = df_perm
+            elif df_perm is None:
+                df = df_theo
+            else:
+                # Align rows by X,Y,Z and keep both P columns
+                df = df_theo.merge(df_perm, on=['X','Y','Z'], suffixes=('_theo','_perm'))
+        else:
+            df = run_lla_analysis(
+                input_file=input_file,
+                n=n,
+                pvalue_method=pvalue_method,
+                delay_limit=delay_limit,
+                precision=precision,
+                keep_trace=True
+            )
         computation_time = time.time() - start_time
         
         # Evaluate detection
@@ -376,8 +418,25 @@ def run_single_experiment(
         return result, computation_time
         
     finally:
-        if os.path.exists(input_file):
-            os.remove(input_file)
+        # Clean up temporary file if we created it
+        if temp_created and input_file and os.path.exists(input_file):
+            try:
+                os.remove(input_file)
+            except Exception:
+                pass
+
+
+def run_from_simfile(
+    simfile: str,
+    pvalue_method: str = 'perm',
+    n: int = 100,
+    delay_limit: int = 0,
+    precision: int = 1000
+) -> Tuple[pd.DataFrame, Dict]:
+    """Run LLA on an existing simulation file and return dataframe and metadata."""
+    df = run_lla_analysis(simfile, n=n, pvalue_method=pvalue_method, delay_limit=delay_limit, precision=precision)
+    meta = {'simfile': simfile}
+    return df, meta
 
 
 def run_benchmark_suite(
@@ -395,6 +454,8 @@ def run_benchmark_suite(
     z_encoding: str = '01',
     pvalue_methods: List[str] = None,
     base_seed: int = 12345,
+    sim_out_dir: str = None,
+    reuse_sim_dir: str = None,
 ) -> pd.DataFrame:
     """Run comprehensive benchmark suite."""
 
@@ -455,6 +516,7 @@ def run_benchmark_suite(
                                 is_control=False,
                             )
 
+                            # allow generating simulations and saving them for reuse
                             result, comp_time = run_single_experiment(
                                 n=n,
                                 effect_size=effect_size,
@@ -470,6 +532,8 @@ def run_benchmark_suite(
                                 sigma_y=sigma_y,
                                 z_encoding=z_encoding,
                                 pvalue_method=pvalue_method,
+                                sim_out_dir=sim_out_dir,
+                                reuse_sim_dir=reuse_sim_dir,
                             )
                             result['replicate'] = rep
                             result['computation_time'] = comp_time
@@ -508,6 +572,8 @@ def run_benchmark_suite(
                                 sigma_y=sigma_y,
                                 z_encoding=z_encoding,
                                 pvalue_method=pvalue_method,
+                                sim_out_dir=sim_out_dir,
+                                reuse_sim_dir=reuse_sim_dir,
                             )
                             result['replicate'] = rep
                             result['computation_time'] = comp_time
@@ -709,6 +775,16 @@ def summarize_results(df: pd.DataFrame, batch_timings: List[Dict], output_dir: s
         compare_summary.to_csv(compare_output)
         print(f"P-value comparison summary saved to: {compare_output}", file=sys.stderr)
 
+    # Additionally, export raw theo vs perm table for smear plots if both present
+    if {'theo', 'perm'}.issubset(available_methods):
+        raw_compare = df[df['pvalue_method'].isin(['theo','perm'])].copy()
+        # normalize column name variations
+        if 'P' in raw_compare.columns:
+            raw_compare = raw_compare.rename(columns={'P':'p_value'})
+        raw_out = os.path.join(output_dir, 'pvalue_theo_perm_raw.csv')
+        raw_compare.to_csv(raw_out, index=False)
+        print(f"Raw theo/perm p-value table saved to: {raw_out}", file=sys.stderr)
+
 
 def main():
     parser = argparse.ArgumentParser(description='Comprehensive LLA benchmark')
@@ -749,6 +825,14 @@ def main():
                        help='Permutation precision (default: 1000)')
     parser.add_argument('--output_dir', type=str, default='additive_results',
                        help='Output directory (default: additive_results)')
+    parser.add_argument('--sim_out_dir', type=str, default=None,
+                       help='Directory to save generated simulation files (optional)')
+    parser.add_argument('--reuse_sim_dir', type=str, default=None,
+                       help='Directory of pre-generated simulation files to reuse (optional)')
+    parser.add_argument('--export_smear', action='store_true',
+                       help='Generate theo vs perm p-value pairs (smear table) for n values')
+    parser.add_argument('--smear_replicates', type=int, default=200,
+                       help='Number of replicates per n for smear export (default: 200)')
     
     args = parser.parse_args()
     
@@ -763,6 +847,106 @@ def main():
         effect_size_values = args.effect_size_values
     
     # Run benchmark
+    # If user requested smear export, run simplified generation+analysis
+    if args.export_smear:
+        Path(args.output_dir).mkdir(parents=True, exist_ok=True)
+        ns = args.n_values
+        replicates = args.smear_replicates
+        effect_size = effect_size_values[0]
+        delay_yz = args.delay_values[0] if len(args.delay_values) > 0 else 0
+        window_frac = args.window_fractions[0] if len(args.window_fractions) > 0 else 1.0
+        for n in ns:
+            if window_frac == 1.0 or window_frac == 1:
+                window_start = None
+                window_end = None
+                window_tag = 'global'
+            else:
+                window_length = max(10, int(n * window_frac))
+                window_start = (n - window_length) // 2
+                window_end = window_start + window_length
+                window_tag = f"w{window_start}_{window_end}"
+
+            rows = []
+            for rep in range(replicates):
+                seed = build_seed(args.base_seed, n, 0, 0, 0, rep, False)
+                expected_name = f"n{n}_E{effect_size}_d{delay_yz}_{window_tag}_exp_s{seed}.tsv"
+
+                tmpname = None
+                simfile = None
+                if args.reuse_sim_dir:
+                    cand = os.path.join(args.reuse_sim_dir, expected_name)
+                    if os.path.exists(cand):
+                        simfile = cand
+
+                if simfile is None and args.sim_out_dir:
+                    simfile = generate_and_save(
+                        out_dir=args.sim_out_dir,
+                        n=n,
+                        effect_size=effect_size,
+                        window_start=window_start,
+                        window_end=window_end,
+                        delay_yz=delay_yz,
+                        is_control=False,
+                        seed=seed,
+                        method=args.method,
+                        noise_sd=args.noise_sd,
+                        sigma_y=args.sigma_y,
+                        z_encoding=args.z_encoding,
+                    )
+
+                if simfile is None:
+                    X, Y, Z, _ = generate_unified_triplet(
+                        n=n,
+                        method=args.method,
+                        effect_size=effect_size,
+                        noise_sd=args.noise_sd,
+                        sigma_y=args.sigma_y,
+                        z_encoding=args.z_encoding,
+                        seed=seed,
+                        window_start=window_start,
+                        window_end=window_end,
+                        delay_yz=delay_yz,
+                        is_control=False,
+                    )
+                    with tempfile.NamedTemporaryFile(mode='w', suffix='.txt', delete=False) as tf:
+                        tmpname = tf.name
+                    write_triplet_to_file(tmpname, X, Y, Z)
+                    simfile = tmpname
+
+                # run both theo and perm
+                df_theo = run_lla_analysis(simfile, n=n, pvalue_method='theo', delay_limit=args.delay_limit, precision=args.precision)
+                df_perm = run_lla_analysis(simfile, n=n, pvalue_method='perm', delay_limit=args.delay_limit, precision=args.precision)
+                if df_theo is not None and df_perm is not None:
+                    # try to find S1-S2-S3 row
+                    row_t = df_theo[(df_theo['X']=='S1') & (df_theo['Y']=='S2') & (df_theo['Z']=='S3')]
+                    row_p = df_perm[(df_perm['X']=='S1') & (df_perm['Y']=='S2') & (df_perm['Z']=='S3')]
+                    if len(row_t)>0 and len(row_p)>0:
+                        p_t = float(row_t.iloc[0]['P']) if 'P' in row_t.columns else None
+                        p_p = float(row_p.iloc[0]['P']) if 'P' in row_p.columns else None
+                        rows.append({
+                            'n': n,
+                            'seed': seed,
+                            'effect_size': effect_size,
+                            'window_fraction': window_frac,
+                            'window_start': window_start,
+                            'window_end': window_end,
+                            'delay_yz': delay_yz,
+                            'p_theo': p_t,
+                            'p_perm': p_p,
+                            'theo_minus_perm': (p_t - p_p) if (p_t is not None and p_p is not None) else None,
+                            'abs_diff': abs(p_t - p_p) if (p_t is not None and p_p is not None) else None,
+                        })
+                if tmpname is not None:
+                    try:
+                        os.remove(tmpname)
+                    except Exception:
+                        pass
+            out_csv = os.path.join(args.output_dir, f'smear_n{n}_wf{window_frac}.csv')
+            pd.DataFrame(rows).to_csv(out_csv, index=False)
+            print(f"Smear table saved to: {out_csv}", file=sys.stderr)
+        print("Smear export complete", file=sys.stderr)
+        return
+
     df, batch_timings = run_benchmark_suite(
         n_values=args.n_values,
         effect_size_values=effect_size_values,
@@ -778,6 +962,8 @@ def main():
         z_encoding=args.z_encoding,
         pvalue_methods=args.pvalue_methods,
         base_seed=args.base_seed,
+        sim_out_dir=args.sim_out_dir,
+        reuse_sim_dir=args.reuse_sim_dir,
     )
     
     # Generate summaries
