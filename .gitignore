@@ -31,5 +31,8 @@ Thumbs.db
 # Ignore compiled C extensions
 *.so
 
+# Local archive bundles (not for git)
+archive/*.bundle
+
 # Ignore package manager directories
 node_modules/

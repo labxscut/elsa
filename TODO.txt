@@ -7,4 +7,5 @@ NOTE (2026-05-22):
   ELSA on origin/master and origin/devel remains the Python 2 / SWIG line.
   Do not merge wyx's sxELA into devel. Plan: merge devel into wyx's new sxELA
   repository so sxELA carries ELSA functionality with GPU acceleration.
-  Do not merge lla/pybind11 or elsa_broken into devel for now.
+  Do not merge lla/pybind11 into devel for now. (Local elsa_broken clone
+  removed 2026-05-22; see archive/ for bundle backup.)
