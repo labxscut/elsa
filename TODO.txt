@@ -4,6 +4,7 @@ TODO:
   3. split lsalib.py into multiple files
 
 NOTE (2026-05-22):
-  ELSA on origin/master and origin/devel is still effectively the Python 2 / SWIG
-  line. Do not merge lla/pybind11 or elsa_broken here for now; wait for wyx's
-  Python 3 upgrade branch before rebasing devel onto py3.
+  ELSA on origin/master and origin/devel remains the Python 2 / SWIG line.
+  Do not merge wyx's sxELA into devel. Plan: merge devel into wyx's new sxELA
+  repository so sxELA carries ELSA functionality with GPU acceleration.
+  Do not merge lla/pybind11 or elsa_broken into devel for now.
